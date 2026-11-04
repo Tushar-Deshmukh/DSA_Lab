@@ -10,7 +10,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts'],
+    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts', 'tests/content/**/*.test.ts'],
     environment: 'node',
     testTimeout: 30_000,
     // Integration tests start an in-memory MongoDB replica set; the first run downloads the binary.
