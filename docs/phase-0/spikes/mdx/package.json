@@ -1,0 +1,2 @@
+{ "name":"mdxcheck","private":true,"type":"module","version":"0.0.0",
+  "dependencies":{"@mdx-js/mdx":"3.1.1","remark-gfm":"4.0.1","marked":"15.0.12","react":"19.3.1","react-dom":"19.3.1"} }
