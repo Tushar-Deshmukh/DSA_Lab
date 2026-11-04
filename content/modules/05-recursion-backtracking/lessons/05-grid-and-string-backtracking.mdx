@@ -1,0 +1,93 @@
+---
+slug: grid-and-string-backtracking
+legacyId: w5d5
+title: Grid and string backtracking
+goal: Backtrack on a grid by marking and restoring cells, generate strings from counting state, and partition strings into valid pieces.
+why: Word Search and Generate Parentheses are two of the most common backtracking interview questions. One tests disciplined mark-and-restore; the other tests choosing a smaller state than the whole path.
+prereqs:
+  - Matrix directions and bounds checks (Module 1 lesson 5)
+  - Backtracking (lessons 2–4)
+outcomes:
+  - Write Word Search with mark-and-restore and bounds checks
+  - Generate parentheses with the state (open, close)
+  - Partition a string into palindromes by choosing where each piece ends
+  - Place N-Queens with column and diagonal sets
+ready:
+  - 79 restores every cell it marks
+  - 22's state is (open, close), and I can say both rules
+  - I ran Word Search for "ABC" on a 3 × 3 board, showing marks and restores
+summary:
+  - 'Grid DFS: bounds → mismatch → mark → 4 directions → restore.'
+  - Restoring lets the cell be used by a different path later.
+  - 'Parentheses: add `(` if open < n, `)` if close < open; every leaf is valid.'
+  - 'Partitioning: choose the end of the next piece; recurse on the rest.'
+  - 'N-Queens: one row per level; columns, `r − c` and `r + c` in sets.'
+revision: Write the five lines of `dfs(r, c, k)` for Word Search in order, and say what goes wrong if the restore line is missing.
+warmup:
+  problem: 39
+topic: Grid and string backtracking; mark and restore; counting-state generation
+implement: Run Word Search for "ABC" on a 3×3 board, showing marks and restores
+problemsText: 'C: 22, 79 · S: 131 · O: 51'
+problems:
+  - num: 22
+    tier: C
+  - num: 79
+    tier: C
+  - num: 131
+    tier: S
+  - num: 51
+    tier: O
+doneWhen: 79 restores every cell it marks; 22's state is (open, close)
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="constrained-generation-parentheses" kind="theory" title="Constrained generation: parentheses">
+
+Generate Parentheses (22) could be solved by generating every string of `(` and `)` and filtering the valid ones: 2²ⁿ strings. The better state is two counts. A `(` is allowed while fewer than n have been used; a `)` is allowed only while it would close an unmatched `(`. With those two rules every complete string is valid, so nothing is filtered afterwards.
+
+<Viz id="bt-parens" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="grid-backtracking-word-search" kind="theory" title="Grid backtracking: Word Search">
+
+<Include id="patterns/grid-and-string-backtracking" />
+
+<Viz id="word-search" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="optional-n-queens-51" kind="stretch" title="Optional: N-Queens (51)">
+
+Place one queen per row. A cell (r, c) is attacked if its column, its diagonal (`r − c`) or its anti-diagonal (`r + c`) already holds a queen; three Sets make that check O(1).
+
+<Viz id="n-queens" />
+
+</Unit>
+
+<Unit id="string-backtracking-palindrome-partitioning-stretch" kind="theory" title="String backtracking: Palindrome Partitioning (Stretch)">
+
+Problem 131 asks for every way to cut a string into palindromic pieces. The decision at each level is **where the next piece ends**: from `start`, try every `end` such that `s[start..end]` is a palindrome, push that piece, recurse from `end + 1`, pop. Record when `start` reaches the end of the string.
+
+<Exercise id="ex-04" />
+
+<Include id="theory/recursion-backtracking/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

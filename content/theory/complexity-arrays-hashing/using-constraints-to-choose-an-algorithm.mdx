@@ -1,0 +1,24 @@
+---
+slug: using-constraints-to-choose-an-algorithm
+title: Using constraints to choose an algorithm
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Using constraints to choose an algorithm
+  lines:
+    - 222
+    - 231
+---
+
+**Using constraints to choose an algorithm.** LeetCode's JavaScript runtime handles roughly 10⁷–10⁸ simple operations per second. Read `n` from the constraints before choosing an approach.
+
+| Constraint on n | Acceptable complexity | Typical techniques |
+| --- | --- | --- |
+| n ≤ 10–12 | O(n!), O(n·2ⁿ) | Permutations, brute-force backtracking |
+| n ≤ 20–25 | O(2ⁿ) | Subsets, bitmasks |
+| n ≤ 500 | O(n³) | Triple loops, interval DP |
+| n ≤ 5,000 | O(n²) | Pairwise loops, 2-D DP |
+| n ≤ 10⁶ | O(n log n) or O(n) | Sorting, hashing, two pointers, heaps, linear DP |
+| n up to 10⁹ or more | O(log n) or O(1) | Binary search on the answer, maths |

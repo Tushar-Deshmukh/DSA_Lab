@@ -1,0 +1,73 @@
+---
+slug: flattened-matrices-peak-finding
+legacyId: w3d4
+title: Flattened matrices and peak finding
+goal: Binary-search a sorted matrix as one array, and find a peak in an unsorted array by following the slope.
+why: These two problems stretch the idea in opposite directions. The matrix shows that binary search is about an order on indices, not about the shape of the data; the peak shows that it needs a rule that keeps an answer in the range, not sorted data.
+prereqs:
+  - '`[lo, hi)` and `[lo, hi]` conventions'
+  - Matrix indexing (Module 1 lesson 5)
+outcomes:
+  - Map a flat index i to `(Math.floor(i / n), i % n)` and back with `r * n + c`
+  - Search problem 74 in O(log(m·n))
+  - Explain why moving towards the larger neighbour always finds a peak
+ready:
+  - I mapped every index of a 3 × 4 matrix to (row, column) and back
+  - 'I can explain 162: why moving towards the larger neighbour always finds a peak'
+  - I know why the staircase search (240) does not need the rows to chain together
+summary:
+  - 'Row-major order: `i = r * n + c`; `r = Math.floor(i / n)`, `c = i % n`.'
+  - '74''s matrix, read row by row, is one sorted array: one binary search.'
+  - 'Peak: if `nums[mid] < nums[mid + 1]`, a peak exists to the right; else at mid or left.'
+  - Binary search works whenever each step keeps a guaranteed answer in the range.
+revision: Convert index 7 of a 3 × 4 matrix to (row, column), then explain in two sentences why `findPeakElement` can discard the left half when `nums[mid] < nums[mid + 1]`.
+warmup:
+  problem: 875
+topic: 2-D matrix as a flattened array; peak finding (compare with neighbour)
+implement: Map index i ↔ (i / n, i % n) on a 3×4 matrix
+problemsText: 'C: 74, 162 · S: 33 (if not done)'
+problems:
+  - num: 74
+    tier: C
+  - num: 162
+    tier: C
+  - num: 33
+    tier: S
+doneWhen: '162 explained: why moving towards the larger neighbour always finds a peak'
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="a-matrix-as-one-sorted-array" kind="theory" title="A matrix as one sorted array">
+
+In problem 74, each row is sorted and each row starts above the previous row's end. Reading the rows one after another gives a single sorted list of m·n values. You do not need to build it: index arithmetic converts a flat position to a cell.
+
+<Viz id="bs-matrix" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="peaks-without-sorted-data" kind="theory" title="Peaks without sorted data">
+
+Find Peak Element (162) asks for any index whose value is greater than both neighbours, with `nums[−1] = nums[n] = −∞`. The array is not sorted, yet O(log n) is possible. Look at `mid` and its right neighbour. If the right neighbour is larger, you are walking uphill: keep going right and either the values keep rising until the end (the last element is then a peak, because `nums[n] = −∞`) or they fall at some point (the top before the fall is a peak). Either way a peak exists right of `mid`. Otherwise `mid` is a peak or the slope goes up to the left, and by the mirror argument a peak exists in `[lo, mid]`.
+
+<Viz id="bs-peak" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

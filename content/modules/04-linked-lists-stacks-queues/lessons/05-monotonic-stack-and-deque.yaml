@@ -1,0 +1,196 @@
+exercises:
+  - id: ex-01
+    legacyId: w4d5-1
+    type: trace
+    tag: Lesson 5 dry run
+    q: Run `nextGreater([2, 1, 5, 3, 6])`. Give the stack (as indices, bottom first) after processing each index, then the result.
+    rows:
+      - prompt: Stack after i = 1
+        answer:
+          - '[0,1]'
+          - 0,1
+      - prompt: Stack after i = 2
+        answer:
+          - '[2]'
+          - '2'
+        why: 5 pops index 1 (value 1) and index 0 (value 2).
+      - prompt: Stack after i = 4
+        answer:
+          - '[4]'
+          - '4'
+      - prompt: Result
+        answer:
+          - '[5,5,6,6,-1]'
+    verify: |
+      const nums = [2, 1, 5, 3, 6]; const ans = new Array(nums.length).fill(-1), st = []; const S = [];
+      for (let i = 0; i < nums.length; i++) { while (st.length && nums[st.at(-1)] < nums[i]) ans[st.pop()] = nums[i]; st.push(i); S.push(JSON.stringify(st)); }
+      console.log(S[1]); console.log(S[2]); console.log(S[4]); console.log(JSON.stringify(ans));
+    explain: Index 4 is never popped, so its answer stays −1.
+    hints:
+      - Pop while the top's value is smaller than nums[i], then push i.
+  - id: ex-02
+    legacyId: w4d5-2
+    type: complexity
+    tag: Amortised again
+    q: 'nextGreater on n elements: a `for` loop with a `while` inside.'
+    fields:
+      - label: Time
+        answer: O(n)
+        why:
+          O(n²): 'Count pushes and pops over the whole run: each index is pushed exactly once and popped at most once, so the while loop body runs at most n times in total.'
+      - label: Extra space
+        answer: O(n)
+    explain: 'Same amortised argument as the sliding window: bound the total work, not the work per iteration.'
+    hints:
+      - How many times can one index be popped?
+  - id: ex-03
+    legacyId: w4d5-3
+    type: code
+    tag: Adapt it
+    q: 'Write `previousSmaller(nums)`: for each i, the **index** of the nearest element to the left that is strictly smaller than `nums[i]`, or −1. O(n).'
+    fn: previousSmaller
+    starter: |
+      function previousSmaller(nums) {
+
+      }
+    solution: |
+      function previousSmaller(nums) {
+        const res = new Array(nums.length).fill(-1), st = [];
+        for (let i = 0; i < nums.length; i++) {
+          while (st.length && nums[st.at(-1)] >= nums[i]) st.pop();
+          if (st.length) res[i] = st.at(-1);
+          st.push(i);
+        }
+        return res;
+      }
+    tests:
+      - args:
+          - - 3
+            - 7
+            - 8
+            - 4
+        expect:
+          - -1
+          - 0
+          - 1
+          - 0
+      - args:
+          - - 2
+            - 1
+            - 5
+            - 3
+            - 6
+        expect:
+          - -1
+          - -1
+          - 1
+          - 1
+          - 3
+      - args:
+          - - 5
+            - 5
+            - 5
+        expect:
+          - -1
+          - -1
+          - -1
+      - args:
+          - - 1
+        expect:
+          - -1
+        hidden: true
+      - args:
+          - - 4
+            - 3
+            - 2
+            - 1
+        expect:
+          - -1
+          - -1
+          - -1
+          - -1
+        hidden: true
+    explain: 'For "previous" variants, read the answer from the stack top *before* pushing: after popping everything ≥ nums[i], the top is the nearest smaller element to the left.'
+    hints:
+      - Keep a stack of indices with increasing values.
+      - Pop everything ≥ nums[i]; whatever is on top now is the answer for i.
+  - id: ex-04
+    legacyId: w4d5-4
+    type: interview
+    title: Next Greater Element II (LeetCode 503)
+    q: 'Given a **circular** array `nums` (the element after the last is the first), return the next greater number for every element, or −1 if none exists. Example: `[1, 2, 1]` → `[2, -1, 2]`.'
+    model:
+      clarify: |
+        - Circular: search continues from the start after the end.
+        - Duplicates allowed; "greater" means strictly greater.
+      brute: 'For each i, scan up to n − 1 elements forward with wrap-around: O(n²).'
+      optimize: 'Monotonic stack, but iterate twice: i from 0 to 2n − 1, using `nums[i % n]`. The second pass lets elements near the end find greater elements near the start. Push indices only during the first pass (i < n); every index is still pushed once and popped at most once.'
+      edges: |
+        - all equal `[5, 5, 5]` → all −1
+        - maximum element → −1
+        - single element → [−1]
+      complexity: O(n) time (2n iterations, n pushes, ≤ n pops), O(n) space.
+    fn: nextGreaterElements
+    starter: |
+      function nextGreaterElements(nums) {
+
+      }
+    solution: |
+      function nextGreaterElements(nums) {
+        const n = nums.length, res = new Array(n).fill(-1), st = [];
+        for (let i = 0; i < 2 * n; i++) {
+          const x = nums[i % n];
+          while (st.length && nums[st.at(-1)] < x) res[st.pop()] = x;
+          if (i < n) st.push(i);
+        }
+        return res;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 1
+        expect:
+          - 2
+          - -1
+          - 2
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 3
+        expect:
+          - 2
+          - 3
+          - 4
+          - -1
+          - 4
+      - args:
+          - - 5
+            - 5
+            - 5
+        expect:
+          - -1
+          - -1
+          - -1
+      - args:
+          - - 7
+        expect:
+          - -1
+        hidden: true
+      - args:
+          - - 3
+            - 1
+            - 2
+        expect:
+          - -1
+          - 2
+          - 3
+        hidden: true
+    explain: Walking the array twice is the standard trick for circular "next" problems.
+    hints:
+      - How would you simulate wrap-around without copying the array?
+      - Loop i from 0 to 2n − 1 and use i % n.
+      - Only push indices during the first pass.
+annotated: []

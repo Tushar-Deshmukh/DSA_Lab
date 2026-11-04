@@ -1,0 +1,24 @@
+---
+slug: mistake-categories-and-what-to-change
+section: 8
+title: 8.3 Mistake categories and what to change
+source:
+  file: source/roadmap.md
+  section: 8
+  key: 8.3 Mistake categories and what to change
+  lines:
+    - 3365
+    - 3376
+---
+
+| Code | Mistake | Example | What to change in revision |
+| --- | --- | --- | --- |
+| P | Did not recognise the pattern | Did not see 560 as prefix sums | Add the clue to your own pattern table; do the 7.3 drill; next time, write "clues" before anything else |
+| A | Could not derive the algorithm | Knew it was DP, could not find the state | Re-derive brute force → bottleneck on paper; redo the theory example for that pattern; re-solve a simpler sibling first |
+| D | Wrong data structure | Used an array where a heap was needed | Review the cost table (6.1) and the "when not to use" lines in the module theory; state each operation's cost before choosing |
+| L | Logic or implementation bug | Off-by-one in the window, lost list pointer | Write pseudocode first; dry-run on paper before running; re-type the template from memory 3 times |
+| E | Edge case missed | Empty input, all negatives, single node | Add the case to your personal edge-case checklist; always test boundary inputs at step 11 |
+| C | Complexity analysis error | Forgot the sort or recursion stack | Redo the Module 1 snippet drill; analyse three tracker problems aloud |
+| R | Understood the solution but could not reproduce it | Read 146's solution, blank at re-solve | Shorten the interval to 1 day; explain it aloud without code; then re-implement in two separate sessions |
+
+If the same code appears three times in one module, spend your next session on that category (e.g. three **L** mistakes → re-implement five templates from section 6 from memory).

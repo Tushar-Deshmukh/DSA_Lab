@@ -1,0 +1,73 @@
+---
+slug: level-order-bfs
+legacyId: w6d2
+title: Level-order BFS
+goal: Traverse a tree level by level with a head-pointer queue and a level-size snapshot, and adapt it for views and minimum depth.
+why: Level-based questions (views, averages, zigzag, minimum depth) all use the same loop. The size snapshot is a small idea that separates a clean solution from a tangle of depth bookkeeping, and BFS is the core of Module 8's graph work.
+prereqs:
+  - Queues with a head index instead of `shift()` (Module 4 lesson 4)
+outcomes:
+  - Write level order with `const levelSize = queue.length − head`
+  - Derive Right Side View from level order by changing one line
+  - Explain why BFS can stop at the first leaf for minimum depth
+ready:
+  - I derived 199 from 102 by changing one line
+  - My queue trace for `[3,9,20,null,null,15,7]` matches the visualizer
+  - I can say why `shift()` is avoided here
+summary:
+  - Queue + head index; snapshot the level size before the inner loop.
+  - Children enqueued during the loop belong to the next level.
+  - Right Side View = keep the last value of each level.
+  - 'Minimum depth: BFS returns at the first leaf; DFS must explore everything.'
+  - O(n) time, O(width) space.
+revision: Write the level-order loop from memory and point to the line you would change for Right Side View and for Zigzag.
+warmup:
+  problem: 94
+topic: BFS level order with a head pointer; level size snapshot; early exit for minimum depth
+implement: Trace level order on the same tree, showing the queue after each level
+problemsText: 'C: 102, 199 · S: 111'
+problems:
+  - num: 102
+    tier: C
+  - num: 199
+    tier: C
+  - num: 111
+    tier: S
+doneWhen: 199 derived from 102 by changing one line
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="level-by-level" kind="code" title="Level by level">
+
+<Include id="theory/binary-trees-bst/breadth-first-traversal" />
+
+<Include id="theory/binary-trees-bst/example-4" />
+
+<Viz id="tree-bfs" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Include id="patterns/level-order-bfs" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="minimum-depth-stop-at-the-first-leaf-stretch" kind="theory" title="Minimum depth: stop at the first leaf (Stretch)">
+
+Minimum Depth (111) is where BFS beats DFS: levels are visited in order, so the first leaf BFS dequeues is the shallowest one, and you can return immediately. DFS would have to explore every path. The trap: a node with one child is **not** a leaf, so `1 + min(left, right)` with a null side counted as depth 0 is wrong.
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

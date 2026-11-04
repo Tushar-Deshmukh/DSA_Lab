@@ -1,0 +1,2119 @@
+problems:
+  - num: 1
+    title: Two Sum
+    url: https://leetcode.com/problems/two-sum/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: complexity-arrays-hashing
+    lesson: complexity-first-hash-map
+    pattern: Hash lookup
+    prereq: Map
+    why: The canonical brute force → hash map optimisation
+    hint: Store value → index; check for the complement before inserting
+  - num: 217
+    title: Contains Duplicate
+    url: https://leetcode.com/problems/contains-duplicate/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: complexity-arrays-hashing
+    lesson: complexity-first-hash-map
+    pattern: Hash set
+    prereq: Set
+    why: Same output with O(n²), O(n log n), O(n) solutions
+    hint: Compare the sort and Set trade-offs aloud
+  - num: 26
+    title: Remove Duplicates from Sorted Array
+    url: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: complexity-arrays-hashing
+    lesson: arrays-in-place-read-write-pointers
+    pattern: Read/write pointers
+    prereq: Arrays
+    why: Teaches an in-place invariant
+    hint: Compare with the last *kept* value
+  - num: 283
+    title: Move Zeroes
+    url: https://leetcode.com/problems/move-zeroes/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: complexity-arrays-hashing
+    lesson: arrays-in-place-read-write-pointers
+    pattern: Read/write pointers
+    prereq: '26'
+    why: Stable in-place partition
+    hint: Write non-zeros forward, then fill zeros (or swap)
+  - num: 121
+    title: Best Time to Buy and Sell Stock
+    url: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: complexity-arrays-hashing
+    lesson: arrays-in-place-read-write-pointers
+    pattern: Running minimum
+    prereq: Arrays
+    why: One pass with a running state
+    hint: Track the cheapest price so far; profit if sold today
+  - num: 242
+    title: Valid Anagram
+    url: https://leetcode.com/problems/valid-anagram/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: complexity-arrays-hashing
+    lesson: hash-tables-map-set-grouping
+    pattern: Frequency count
+    prereq: Map / 26-array
+    why: Counting beats sorting
+    hint: Increment for s, decrement for t; all counts end at zero
+  - num: 49
+    title: Group Anagrams
+    url: https://leetcode.com/problems/group-anagrams/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: complexity-arrays-hashing
+    lesson: hash-tables-map-set-grouping
+    pattern: Group by canonical key
+    prereq: '242'
+    why: Choosing a key that identifies a group
+    hint: Sorted letters, or 26 counts joined with `#`
+  - num: 128
+    title: Longest Consecutive Sequence
+    url: https://leetcode.com/problems/longest-consecutive-sequence/
+    difficulty: Medium
+    tier: S
+    role: Challenge
+    module: complexity-arrays-hashing
+    lesson: hash-tables-map-set-grouping
+    pattern: Hash set, sequence starts
+    prereq: Set
+    why: O(n) by expanding only from sequence starts
+    hint: Start counting only at x where x − 1 is absent
+  - num: 169
+    title: Majority Element
+    url: https://leetcode.com/problems/majority-element/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: complexity-arrays-hashing
+    lesson: frequency-counting-buckets-majority
+    pattern: Frequency / Boyer-Moore
+    prereq: Map
+    why: Count-based reasoning plus an O(1)-space idea
+    hint: Count with a Map first; then votes that cancel
+  - num: 347
+    title: Top K Frequent Elements
+    url: https://leetcode.com/problems/top-k-frequent-elements/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: complexity-arrays-hashing
+    lesson: frequency-counting-buckets-majority
+    pattern: Bucket by frequency
+    prereq: Frequency map
+    why: O(n) top-K; redone with a heap in Module 7
+    hint: Bucket index = count; read buckets from high to low
+  - num: 36
+    title: Valid Sudoku
+    url: https://leetcode.com/problems/valid-sudoku/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: complexity-arrays-hashing
+    lesson: frequency-counting-buckets-majority
+    pattern: Keyed hash sets
+    prereq: Set
+    why: Several sets keyed by row, column, box
+    hint: Box index = `Math.floor(r/3)*3 + Math.floor(c/3)`
+  - num: 54
+    title: Spiral Matrix
+    url: https://leetcode.com/problems/spiral-matrix/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: complexity-arrays-hashing
+    lesson: matrices-boundaries-rotation
+    pattern: Boundary walk
+    prereq: Matrix
+    why: Shrinking boundaries in O(1) space
+    hint: Check top ≤ bottom and left ≤ right before the return passes
+  - num: 48
+    title: Rotate Image
+    url: https://leetcode.com/problems/rotate-image/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: complexity-arrays-hashing
+    lesson: matrices-boundaries-rotation
+    pattern: Transpose + reverse
+    prereq: Matrix
+    why: In-place matrix transform
+    hint: Transpose, then reverse each row
+  - num: 73
+    title: Set Matrix Zeroes
+    url: https://leetcode.com/problems/set-matrix-zeroes/
+    difficulty: Medium
+    tier: O
+    role: Challenge
+    module: complexity-arrays-hashing
+    lesson: matrices-boundaries-rotation
+    pattern: In-place markers
+    prereq: Matrix
+    why: Using the input as storage
+    hint: First row/column as flags; handle them last
+  - num: 125
+    title: Valid Palindrome
+    url: https://leetcode.com/problems/valid-palindrome/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: two-pointers-windows-prefix-sums
+    lesson: opposite-end-two-pointers
+    pattern: Two pointers (ends)
+    prereq: Strings
+    why: Skip rules inside a two-pointer loop
+    hint: Advance past non-alphanumerics; compare lower-case
+  - num: 167
+    title: Two Sum II - Input Array Is Sorted
+    url: https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: opposite-end-two-pointers
+    pattern: Two pointers (sorted)
+    prereq: '1'
+    why: Sorted input removes the need for a map
+    hint: Sum too small → l++; too large → r−−
+  - num: 15
+    title: 3Sum
+    url: https://leetcode.com/problems/3sum/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: two-pointers-windows-prefix-sums
+    lesson: opposite-end-two-pointers
+    pattern: Sort + two pointers
+    prereq: '167'
+    why: Reduce k-sum to 2-sum; deduplicate
+    hint: Fix i; two-pointer the rest; skip equal values
+  - num: 11
+    title: Container With Most Water
+    url: https://leetcode.com/problems/container-with-most-water/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: partitioning-and-kadane
+    pattern: Two pointers with proof
+    prereq: '167'
+    why: Proving which pointer to move
+    hint: Move the shorter wall; the taller one cannot help
+  - num: 53
+    title: Maximum Subarray
+    url: https://leetcode.com/problems/maximum-subarray/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: partitioning-and-kadane
+    pattern: Kadane
+    prereq: Prefix idea
+    why: First one-variable DP
+    hint: Extend or restart at each index
+  - num: 75
+    title: Sort Colors
+    url: https://leetcode.com/problems/sort-colors/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: two-pointers-windows-prefix-sums
+    lesson: partitioning-and-kadane
+    pattern: Dutch national flag
+    prereq: '283'
+    why: Three-way in-place partition
+    hint: Do not advance `mid` after swapping with `high`
+  - num: 42
+    title: Trapping Rain Water
+    url: https://leetcode.com/problems/trapping-rain-water/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: two-pointers-windows-prefix-sums
+    lesson: partitioning-and-kadane
+    pattern: Two pointers / prefix max
+    prereq: '11'
+    why: Water = min(maxLeft, maxRight) − height
+    hint: Move the side with the smaller max
+  - num: 643
+    title: Maximum Average Subarray I
+    url: https://leetcode.com/problems/maximum-average-subarray-i/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: two-pointers-windows-prefix-sums
+    lesson: sliding-window
+    pattern: Fixed window
+    prereq: Prefix sums
+    why: Rolling sum
+    hint: Add `a[r]`, subtract `a[r − k]`
+  - num: 3
+    title: Longest Substring Without Repeating Characters
+    url: https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: sliding-window
+    pattern: Variable window
+    prereq: Map
+    why: The canonical variable window
+    hint: Jump `l` past the last copy only if it is inside the window
+  - num: 424
+    title: Longest Repeating Character Replacement
+    url: https://leetcode.com/problems/longest-repeating-character-replacement/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: two-pointers-windows-prefix-sums
+    lesson: sliding-window
+    pattern: Window + counts
+    prereq: '3'
+    why: Validity as an inequality
+    hint: Valid while `len − maxCount ≤ k`
+  - num: 567
+    title: Permutation in String
+    url: https://leetcode.com/problems/permutation-in-string/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: windows-with-counts-minimum-windows
+    pattern: Fixed window of counts
+    prereq: '242'
+    why: Sliding count comparison
+    hint: Track how many letters match instead of comparing 26 counts
+  - num: 209
+    title: Minimum Size Subarray Sum
+    url: https://leetcode.com/problems/minimum-size-subarray-sum/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: windows-with-counts-minimum-windows
+    pattern: Variable window (minimum)
+    prereq: '3'
+    why: Update the answer inside the shrink loop
+    hint: Positive numbers keep the window monotone
+  - num: 76
+    title: Minimum Window Substring
+    url: https://leetcode.com/problems/minimum-window-substring/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: two-pointers-windows-prefix-sums
+    lesson: windows-with-counts-minimum-windows
+    pattern: Window + need counts
+    prereq: 567, 209
+    why: The hardest standard window
+    hint: Track a `missing` count; shrink while it is 0
+  - num: 303
+    title: Range Sum Query - Immutable
+    url: https://leetcode.com/problems/range-sum-query-immutable/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: two-pointers-windows-prefix-sums
+    lesson: prefix-sums-difference-arrays
+    pattern: Prefix sums
+    prereq: Arrays
+    why: '`pre[r+1] − pre[l]`'
+    hint: Build once in the constructor
+  - num: 560
+    title: Subarray Sum Equals K
+    url: https://leetcode.com/problems/subarray-sum-equals-k/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: two-pointers-windows-prefix-sums
+    lesson: prefix-sums-difference-arrays
+    pattern: Prefix sum + map
+    prereq: 303, 1
+    why: Works with negative numbers
+    hint: 'Count earlier prefixes equal to cur − k; seed `{0: 1}`'
+  - num: 238
+    title: Product of Array Except Self
+    url: https://leetcode.com/problems/product-of-array-except-self/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: two-pointers-windows-prefix-sums
+    lesson: prefix-sums-difference-arrays
+    pattern: Prefix/suffix products
+    prereq: '303'
+    why: Two passes, no division
+    hint: Left products in the output; multiply by a running right product
+  - num: 1109
+    title: Corporate Flight Bookings
+    url: https://leetcode.com/problems/corporate-flight-bookings/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: two-pointers-windows-prefix-sums
+    lesson: prefix-sums-difference-arrays
+    pattern: Difference array
+    prereq: '303'
+    why: O(1) per range update
+    hint: '`diff[first−1] += seats; diff[last] −= seats`'
+  - num: 704
+    title: Binary Search
+    url: https://leetcode.com/problems/binary-search/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-search-sorting
+    lesson: binary-search-first-true
+    pattern: Closed-interval search
+    prereq: Sorted arrays
+    why: A template derived from the invariant
+    hint: '`while (lo <= hi)`; return mid on a match'
+  - num: 35
+    title: Search Insert Position
+    url: https://leetcode.com/problems/search-insert-position/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-search-sorting
+    lesson: binary-search-first-true
+    pattern: Lower bound
+    prereq: '704'
+    why: Lower bound = insertion point
+    hint: First index with `nums[i] >= target`
+  - num: 34
+    title: Find First and Last Position of Element in Sorted Array
+    url: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: binary-search-first-true
+    pattern: Lower/upper bound
+    prereq: '35'
+    why: Two boundary searches
+    hint: first = lb(t); last = ub(t) − 1; check existence
+  - num: 278
+    title: First Bad Version
+    url: https://leetcode.com/problems/first-bad-version/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-search-sorting
+    lesson: predicates-rotated-arrays
+    pattern: First true predicate
+    prereq: '35'
+    why: Predicate-based search
+    hint: Search \[1, n\]; `isBadVersion` is the predicate
+  - num: 153
+    title: Find Minimum in Rotated Sorted Array
+    url: https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: predicates-rotated-arrays
+    pattern: Rotated boundary
+    prereq: '278'
+    why: Which half is sorted
+    hint: Compare `nums[mid]` with `nums[hi]`
+  - num: 33
+    title: Search in Rotated Sorted Array
+    url: https://leetcode.com/problems/search-in-rotated-sorted-array/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: binary-search-sorting
+    lesson: predicates-rotated-arrays
+    pattern: Rotated search
+    prereq: '153'
+    why: Sortedness check plus a target-range check
+    hint: Find the sorted half; is the target inside it?
+  - num: 875
+    title: Koko Eating Bananas
+    url: https://leetcode.com/problems/koko-eating-bananas/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: binary-search-on-the-answer
+    pattern: Binary search on the answer
+    prereq: '278'
+    why: Monotone feasibility
+    hint: Hours = Σ ceil(p / k); smallest k with hours ≤ h
+  - num: 1011
+    title: Capacity To Ship Packages Within D Days
+    url: https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: binary-search-on-the-answer
+    pattern: Binary search on the answer
+    prereq: '875'
+    why: A greedy check inside a search
+    hint: lo = max weight, hi = sum; count days greedily
+  - num: 410
+    title: Split Array Largest Sum
+    url: https://leetcode.com/problems/split-array-largest-sum/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: binary-search-sorting
+    lesson: binary-search-on-the-answer
+    pattern: Binary search on the answer
+    prereq: '1011'
+    why: 1011 in disguise
+    hint: Minimise the largest piece with ≤ k pieces
+  - num: 74
+    title: Search a 2D Matrix
+    url: https://leetcode.com/problems/search-a-2d-matrix/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: flattened-matrices-peak-finding
+    pattern: Flattened binary search
+    prereq: '704'
+    why: Index mapping
+    hint: i → (floor(i / n), i % n)
+  - num: 162
+    title: Find Peak Element
+    url: https://leetcode.com/problems/find-peak-element/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: flattened-matrices-peak-finding
+    pattern: Binary search on slope
+    prereq: '153'
+    why: Binary search without sorted data
+    hint: If `nums[mid] < nums[mid+1]`, a peak lies right
+  - num: 88
+    title: Merge Sorted Array
+    url: https://leetcode.com/problems/merge-sorted-array/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-search-sorting
+    lesson: sorting-merge-quick-comparators
+    pattern: Merge from the back
+    prereq: Two pointers
+    why: The merge step of merge sort
+    hint: Fill `nums1` from the end
+  - num: 912
+    title: Sort an Array
+    url: https://leetcode.com/problems/sort-an-array/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-search-sorting
+    lesson: sorting-merge-quick-comparators
+    pattern: Merge sort / quicksort
+    prereq: Recursion
+    why: Implement an O(n log n) sort
+    hint: Merge sort is safe; naive quicksort can time out on duplicates
+  - num: 179
+    title: Largest Number
+    url: https://leetcode.com/problems/largest-number/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: binary-search-sorting
+    lesson: sorting-merge-quick-comparators
+    pattern: Custom comparator
+    prereq: Sorting
+    why: Comparator correctness
+    hint: a before b if a + b > b + a; all zeros → "0"
+  - num: 206
+    title: Reverse Linked List
+    url: https://leetcode.com/problems/reverse-linked-list/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: linked-lists-stacks-queues
+    lesson: linked-lists-dummy-nodes-reversal
+    pattern: Pointer rewiring
+    prereq: '6.6'
+    why: Base of all list manipulation
+    hint: Save next, point back, advance
+  - num: 21
+    title: Merge Two Sorted Lists
+    url: https://leetcode.com/problems/merge-two-sorted-lists/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: linked-lists-stacks-queues
+    lesson: linked-lists-dummy-nodes-reversal
+    pattern: Dummy-node merge
+    prereq: '206'
+    why: A dummy node removes head special cases
+    hint: Attach the smaller head; append the leftover list
+  - num: 203
+    title: Remove Linked List Elements
+    url: https://leetcode.com/problems/remove-linked-list-elements/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: linked-lists-stacks-queues
+    lesson: linked-lists-dummy-nodes-reversal
+    pattern: Dummy node
+    prereq: '21'
+    why: Deleting nodes that may include the head
+    hint: Do not advance after a deletion
+  - num: 876
+    title: Middle of the Linked List
+    url: https://leetcode.com/problems/middle-of-the-linked-list/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: linked-lists-stacks-queues
+    lesson: fast-and-slow-pointers
+    pattern: Fast/slow
+    prereq: '206'
+    why: Middle in one pass
+    hint: '`while (fast && fast.next)`'
+  - num: 141
+    title: Linked List Cycle
+    url: https://leetcode.com/problems/linked-list-cycle/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: fast-and-slow-pointers
+    pattern: Floyd cycle detection
+    prereq: '876'
+    why: O(1)-space cycle detection
+    hint: Fast meets slow iff there is a cycle
+  - num: 19
+    title: Remove Nth Node From End of List
+    url: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: fast-and-slow-pointers
+    pattern: Gap pointers + dummy
+    prereq: '141'
+    why: One-pass k-th from the end
+    hint: Advance `fast` n + 1 steps from the dummy
+  - num: 142
+    title: Linked List Cycle II
+    url: https://leetcode.com/problems/linked-list-cycle-ii/
+    difficulty: Medium
+    tier: O
+    role: Challenge
+    module: linked-lists-stacks-queues
+    lesson: fast-and-slow-pointers
+    pattern: Floyd cycle start
+    prereq: '141'
+    why: The maths behind Floyd
+    hint: After meeting, restart one pointer at the head; step both by 1
+  - num: 143
+    title: Reorder List
+    url: https://leetcode.com/problems/reorder-list/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: composing-list-techniques-lru-cache
+    pattern: Middle + reverse + merge
+    prereq: 876, 206, 21
+    why: Composing three techniques
+    hint: Cut at the middle, reverse the second half, interleave; null the tail
+  - num: 146
+    title: LRU Cache
+    url: https://leetcode.com/problems/lru-cache/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: composing-list-techniques-lru-cache
+    pattern: Map + doubly linked list
+    prereq: 21, Map
+    why: Classic product-company design question
+    hint: Map key → node; sentinels; move to front on every access
+  - num: 92
+    title: Reverse Linked List II
+    url: https://leetcode.com/problems/reverse-linked-list-ii/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: linked-lists-stacks-queues
+    lesson: composing-list-techniques-lru-cache
+    pattern: Sub-range reversal
+    prereq: '206'
+    why: Reconnecting a reversed segment
+    hint: Dummy; walk to the node before `left`; head-insert the segment
+  - num: 20
+    title: Valid Parentheses
+    url: https://leetcode.com/problems/valid-parentheses/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: linked-lists-stacks-queues
+    lesson: stacks-queues-deques
+    pattern: Stack matching
+    prereq: Stacks
+    why: LIFO matches nesting
+    hint: Map closer → opener; stack must end empty
+  - num: 155
+    title: Min Stack
+    url: https://leetcode.com/problems/min-stack/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: stacks-queues-deques
+    pattern: Augmented stack
+    prereq: '20'
+    why: Storing extra state per element
+    hint: Push `[val, minSoFar]`
+  - num: 150
+    title: Evaluate Reverse Polish Notation
+    url: https://leetcode.com/problems/evaluate-reverse-polish-notation/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: linked-lists-stacks-queues
+    lesson: stacks-queues-deques
+    pattern: Stack evaluation
+    prereq: '20'
+    why: Operand order; integer division
+    hint: '`b = pop(), a = pop()`; `Math.trunc(a / b)`'
+  - num: 232
+    title: Implement Queue using Stacks
+    url: https://leetcode.com/problems/implement-queue-using-stacks/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: linked-lists-stacks-queues
+    lesson: stacks-queues-deques
+    pattern: Two stacks, amortised
+    prereq: Queues
+    why: Amortised analysis in practice
+    hint: Move in → out only when out is empty
+  - num: 496
+    title: Next Greater Element I
+    url: https://leetcode.com/problems/next-greater-element-i/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: linked-lists-stacks-queues
+    lesson: monotonic-stack-and-deque
+    pattern: Monotonic stack
+    prereq: '20'
+    why: Your first monotonic stack
+    hint: Build value → next greater over nums2
+  - num: 739
+    title: Daily Temperatures
+    url: https://leetcode.com/problems/daily-temperatures/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: linked-lists-stacks-queues
+    lesson: monotonic-stack-and-deque
+    pattern: Monotonic stack of indices
+    prereq: '496'
+    why: Distances from stored indices
+    hint: When index j is popped at i, `ans[j] = i − j`
+  - num: 84
+    title: Largest Rectangle in Histogram
+    url: https://leetcode.com/problems/largest-rectangle-in-histogram/
+    difficulty: Hard
+    tier: S
+    role: Challenge
+    module: linked-lists-stacks-queues
+    lesson: monotonic-stack-and-deque
+    pattern: Monotonic stack for widths
+    prereq: '739'
+    why: Previous and next smaller in one pass
+    hint: Append a height-0 sentinel to flush the stack
+  - num: 509
+    title: Fibonacci Number
+    url: https://leetcode.com/problems/fibonacci-number/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: recursion-backtracking
+    lesson: recursion-contracts-call-stacks-trees
+    pattern: Recursion → memo
+    prereq: Recursion
+    why: Seeing repeated work in a recursion tree
+    hint: Draw calls for n = 5, then cache
+  - num: 50
+    title: Pow(x, n)
+    url: https://leetcode.com/problems/powx-n/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: recursion-contracts-call-stacks-trees
+    pattern: Divide and conquer
+    prereq: '509'
+    why: Halving recursion; negative exponents
+    hint: Compute the half once; n < 0 → 1 / x^(−n)
+  - num: 24
+    title: Swap Nodes in Pairs
+    url: https://leetcode.com/problems/swap-nodes-in-pairs/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: recursion-backtracking
+    lesson: recursion-contracts-call-stacks-trees
+    pattern: Recursion on lists
+    prereq: '206'
+    why: Recursive pointer reasoning
+    hint: Swap the first two; their tail = swapPairs(rest)
+  - num: 78
+    title: Subsets
+    url: https://leetcode.com/problems/subsets/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: backtracking-and-subsets
+    pattern: Include/exclude
+    prereq: Recursion
+    why: The base of backtracking
+    hint: Record at every node (way B) or at leaves (way A)
+  - num: 90
+    title: Subsets II
+    url: https://leetcode.com/problems/subsets-ii/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: backtracking-and-subsets
+    pattern: Subsets + dedupe
+    prereq: '78'
+    why: Same-level duplicate skipping
+    hint: Sort; skip when `i > start` and equal to previous
+  - num: 46
+    title: Permutations
+    url: https://leetcode.com/problems/permutations/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: permutations-combinations-pruning
+    pattern: Used-array backtracking
+    prereq: '78'
+    why: Order matters
+    hint: '`used[]` flags; undo after recursing'
+  - num: 77
+    title: Combinations
+    url: https://leetcode.com/problems/combinations/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: permutations-combinations-pruning
+    pattern: Start index + pruning
+    prereq: '78'
+    why: Size-k selections
+    hint: Stop when too few elements remain
+  - num: 47
+    title: Permutations II
+    url: https://leetcode.com/problems/permutations-ii/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: recursion-backtracking
+    lesson: permutations-combinations-pruning
+    pattern: Permutations + dedupe
+    prereq: 46, 90
+    why: Duplicate rule with `used[]`
+    hint: Skip if equal to previous and previous is unused
+  - num: 39
+    title: Combination Sum
+    url: https://leetcode.com/problems/combination-sum/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: combination-sum-letter-combinations
+    pattern: Reuse allowed
+    prereq: '77'
+    why: Recurse with `i` to allow reuse
+    hint: Sort; break when candidate > remaining
+  - num: 17
+    title: Letter Combinations of a Phone Number
+    url: https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: combination-sum-letter-combinations
+    pattern: One level per position
+    prereq: '78'
+    why: Branching varies per level
+    hint: Recurse once per digit over its letters
+  - num: 40
+    title: Combination Sum II
+    url: https://leetcode.com/problems/combination-sum-ii/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: recursion-backtracking
+    lesson: combination-sum-letter-combinations
+    pattern: No reuse + dedupe
+    prereq: 39, 90
+    why: Combining two rules
+    hint: Recurse with `i + 1`; skip duplicates at the same level
+  - num: 22
+    title: Generate Parentheses
+    url: https://leetcode.com/problems/generate-parentheses/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: grid-and-string-backtracking
+    pattern: Constrained generation
+    prereq: '17'
+    why: State = counts, not path content
+    hint: Add `(` if open < n; `)` if close < open
+  - num: 79
+    title: Word Search
+    url: https://leetcode.com/problems/word-search/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: recursion-backtracking
+    lesson: grid-and-string-backtracking
+    pattern: Grid backtracking
+    prereq: '22'
+    why: Mark and restore on a grid
+    hint: Overwrite the cell temporarily; restore after 4 directions
+  - num: 131
+    title: Palindrome Partitioning
+    url: https://leetcode.com/problems/palindrome-partitioning/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: recursion-backtracking
+    lesson: grid-and-string-backtracking
+    pattern: String backtracking
+    prereq: '79'
+    why: Choosing where each piece ends
+    hint: Try every end where `s[start..end]` is a palindrome
+  - num: 51
+    title: N-Queens
+    url: https://leetcode.com/problems/n-queens/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: recursion-backtracking
+    lesson: grid-and-string-backtracking
+    pattern: Constraint backtracking
+    prereq: '46'
+    why: Pruning with sets
+    hint: Track columns, r − c and r + c diagonals
+  - num: 104
+    title: Maximum Depth of Binary Tree
+    url: https://leetcode.com/problems/maximum-depth-of-binary-tree/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-trees-bst
+    lesson: tree-vocabulary-traversals-question-types
+    pattern: Bottom-up
+    prereq: Recursion
+    why: The simplest return-value recursion
+    hint: 1 + max(left, right)
+  - num: 226
+    title: Invert Binary Tree
+    url: https://leetcode.com/problems/invert-binary-tree/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-trees-bst
+    lesson: tree-vocabulary-traversals-question-types
+    pattern: DFS
+    prereq: '104'
+    why: Structural recursion
+    hint: Swap children, recurse
+  - num: 94
+    title: Binary Tree Inorder Traversal
+    url: https://leetcode.com/problems/binary-tree-inorder-traversal/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: tree-vocabulary-traversals-question-types
+    pattern: Iterative DFS
+    prereq: Stacks
+    why: Explicit-stack traversal
+    hint: Push lefts, pop, visit, go right
+  - num: 100
+    title: Same Tree
+    url: https://leetcode.com/problems/same-tree/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: tree-vocabulary-traversals-question-types
+    pattern: Paired recursion
+    prereq: '104'
+    why: Recursing on two trees at once
+    hint: Both null → true; one null or values differ → false
+  - num: 102
+    title: Binary Tree Level Order Traversal
+    url: https://leetcode.com/problems/binary-tree-level-order-traversal/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: level-order-bfs
+    pattern: Level BFS
+    prereq: Queues
+    why: The level-size snapshot
+    hint: Record the queue length before the inner loop
+  - num: 199
+    title: Binary Tree Right Side View
+    url: https://leetcode.com/problems/binary-tree-right-side-view/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: level-order-bfs
+    pattern: Level BFS
+    prereq: '102'
+    why: Last node per level
+    hint: Keep the last value of each level
+  - num: 111
+    title: Minimum Depth of Binary Tree
+    url: https://leetcode.com/problems/minimum-depth-of-binary-tree/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: level-order-bfs
+    pattern: BFS with early exit
+    prereq: '102'
+    why: The definition of a leaf matters
+    hint: Return at the first leaf BFS reaches
+  - num: 543
+    title: Diameter of Binary Tree
+    url: https://leetcode.com/problems/diameter-of-binary-tree/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: bottom-up-height-diameter-balance
+    pattern: Bottom-up + global
+    prereq: '104'
+    why: Return one value, track another
+    hint: '`best = max(best, L + R)`'
+  - num: 110
+    title: Balanced Binary Tree
+    url: https://leetcode.com/problems/balanced-binary-tree/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: bottom-up-height-diameter-balance
+    pattern: Bottom-up with sentinel
+    prereq: '543'
+    why: Short-circuiting with −1
+    hint: Return −1 as soon as any subtree is unbalanced
+  - num: 572
+    title: Subtree of Another Tree
+    url: https://leetcode.com/problems/subtree-of-another-tree/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: bottom-up-height-diameter-balance
+    pattern: Recursion reusing 100
+    prereq: '100'
+    why: A helper called at every node
+    hint: Run isSame at each node; O(m · n)
+  - num: 124
+    title: Binary Tree Maximum Path Sum
+    url: https://leetcode.com/problems/binary-tree-maximum-path-sum/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: binary-trees-bst
+    lesson: bottom-up-height-diameter-balance
+    pattern: Bottom-up + global
+    prereq: '543'
+    why: Clamping negative branches
+    hint: Return node + max(0, best branch)
+  - num: 112
+    title: Path Sum
+    url: https://leetcode.com/problems/path-sum/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: binary-trees-bst
+    lesson: top-down-lowest-common-ancestor
+    pattern: Top-down
+    prereq: Recursion
+    why: Passing the remaining sum down
+    hint: Check only at leaves
+  - num: 236
+    title: Lowest Common Ancestor of a Binary Tree
+    url: https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: top-down-lowest-common-ancestor
+    pattern: Bottom-up search
+    prereq: '543'
+    why: A contract with three cases
+    hint: Both sides non-null → current node is the LCA
+  - num: 113
+    title: Path Sum II
+    url: https://leetcode.com/problems/path-sum-ii/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: top-down-lowest-common-ancestor
+    pattern: Top-down + backtracking
+    prereq: 112, 78
+    why: Collecting paths
+    hint: Push, recurse, pop; copy at leaves
+  - num: 1448
+    title: Count Good Nodes in Binary Tree
+    url: https://leetcode.com/problems/count-good-nodes-in-binary-tree/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: top-down-lowest-common-ancestor
+    pattern: Top-down maximum
+    prereq: '112'
+    why: Carrying a running max
+    hint: Good if `val >= max on the path`
+  - num: 98
+    title: Validate Binary Search Tree
+    url: https://leetcode.com/problems/validate-binary-search-tree/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: binary-search-trees-construction
+    pattern: Bounds passed down
+    prereq: '1448'
+    why: The classic BST trap
+    hint: Pass (low, high); strict inequalities
+  - num: 230
+    title: Kth Smallest Element in a BST
+    url: https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: binary-trees-bst
+    lesson: binary-search-trees-construction
+    pattern: Inorder traversal
+    prereq: '94'
+    why: Sorted traversal with an early stop
+    hint: Stop after k pops
+  - num: 235
+    title: Lowest Common Ancestor of a Binary Search Tree
+    url: https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: binary-trees-bst
+    lesson: binary-search-trees-construction
+    pattern: BST walk
+    prereq: '236'
+    why: The BST ordering shortcut
+    hint: Go left if both are smaller, right if both are larger
+  - num: 105
+    title: Construct Binary Tree from Preorder and Inorder Traversal
+    url: https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+    difficulty: Medium
+    tier: S
+    role: Challenge
+    module: binary-trees-bst
+    lesson: binary-search-trees-construction
+    pattern: Divide by root index
+    prereq: '94'
+    why: Index bounds instead of slicing
+    hint: Map inorder value → index; a pointer walks preorder
+  - num: 1046
+    title: Last Stone Weight
+    url: https://leetcode.com/problems/last-stone-weight/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: heaps-intervals-tries
+    lesson: the-binary-heap
+    pattern: Max-heap simulation
+    prereq: '6.13'
+    why: First use of your own heap
+    hint: Max-heap via comparator `(a, b) => b - a`
+  - num: 215
+    title: Kth Largest Element in an Array
+    url: https://leetcode.com/problems/kth-largest-element-in-an-array/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: the-binary-heap
+    pattern: Size-k heap / quickselect
+    prereq: Heap
+    why: Heap vs quickselect trade-off
+    hint: Min-heap of size k; its top is the answer
+  - num: 703
+    title: Kth Largest Element in a Stream
+    url: https://leetcode.com/problems/kth-largest-element-in-a-stream/
+    difficulty: Easy
+    tier: S
+    role: Transfer
+    module: heaps-intervals-tries
+    lesson: the-binary-heap
+    pattern: Persistent size-k heap
+    prereq: '215'
+    why: Streaming top-K
+    hint: Keep the heap across `add()` calls
+  - num: 973
+    title: K Closest Points to Origin
+    url: https://leetcode.com/problems/k-closest-points-to-origin/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: heaps-intervals-tries
+    lesson: top-k-and-k-way-merge
+    pattern: Size-k max-heap
+    prereq: '215'
+    why: Custom keys
+    hint: Compare x² + y²; no square root needed
+  - num: 23
+    title: Merge k Sorted Lists
+    url: https://leetcode.com/problems/merge-k-sorted-lists/
+    difficulty: Hard
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: top-k-and-k-way-merge
+    pattern: K-way merge
+    prereq: 21, heap
+    why: Hard but canonical
+    hint: Heap of list heads; push `node.next` after each pop
+  - num: 621
+    title: Task Scheduler
+    url: https://leetcode.com/problems/task-scheduler/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: two-heaps-heap-simulation
+    pattern: Counting greedy / heap simulation
+    prereq: Heap
+    why: Formula vs simulation
+    hint: max(tasks.length, (maxFreq − 1)(n + 1) + countOfMax)
+  - num: 295
+    title: Find Median from Data Stream
+    url: https://leetcode.com/problems/find-median-from-data-stream/
+    difficulty: Hard
+    tier: S
+    role: Challenge
+    module: heaps-intervals-tries
+    lesson: two-heaps-heap-simulation
+    pattern: Two heaps
+    prereq: Heap
+    why: A balancing invariant
+    hint: Max-heap for the low half, min-heap for the high half; sizes differ by ≤ 1
+  - num: 56
+    title: Merge Intervals
+    url: https://leetcode.com/problems/merge-intervals/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: intervals-merge-insert-select-sweep
+    pattern: Sort by start + merge
+    prereq: Sorting
+    why: Interval basics
+    hint: Extend the last end with `max`
+  - num: 435
+    title: Non-overlapping Intervals
+    url: https://leetcode.com/problems/non-overlapping-intervals/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: intervals-merge-insert-select-sweep
+    pattern: Sort by end (greedy)
+    prereq: '56'
+    why: Activity selection
+    hint: Count kept intervals by earliest end; answer = n − kept
+  - num: 57
+    title: Insert Interval
+    url: https://leetcode.com/problems/insert-interval/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: heaps-intervals-tries
+    lesson: intervals-merge-insert-select-sweep
+    pattern: Linear three-phase merge
+    prereq: '56'
+    why: No sort needed
+    hint: Before, overlapping (merge), after
+  - num: 452
+    title: Minimum Number of Arrows to Burst Balloons
+    url: https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: heaps-intervals-tries
+    lesson: intervals-merge-insert-select-sweep
+    pattern: Sort by end (greedy)
+    prereq: '435'
+    why: Closed-endpoint variant
+    hint: New arrow when start > current arrow position
+  - num: 1094
+    title: Car Pooling
+    url: https://leetcode.com/problems/car-pooling/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: heaps-intervals-tries
+    lesson: intervals-merge-insert-select-sweep
+    pattern: Sweep / difference array
+    prereq: 1109, 56
+    why: Meeting-rooms-style overlap without Premium
+    hint: +passengers at `from`, − at `to`; running sum ≤ capacity
+  - num: 208
+    title: Implement Trie (Prefix Tree)
+    url: https://leetcode.com/problems/implement-trie-prefix-tree/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: tries
+    pattern: Trie
+    prereq: Map
+    why: Building the structure
+    hint: One shared walk helper for search and startsWith
+  - num: 211
+    title: Design Add and Search Words Data Structure
+    url: https://leetcode.com/problems/design-add-and-search-words-data-structure/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: heaps-intervals-tries
+    lesson: tries
+    pattern: Trie + DFS
+    prereq: '208'
+    why: Wildcards via DFS
+    hint: On `.`, try every child
+  - num: 212
+    title: Word Search II
+    url: https://leetcode.com/problems/word-search-ii/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: heaps-intervals-tries
+    lesson: tries
+    pattern: Trie + grid backtracking
+    prereq: 79, 208
+    why: Combining two patterns
+    hint: Walk the trie while running DFS; remove found words
+  - num: 733
+    title: Flood Fill
+    url: https://leetcode.com/problems/flood-fill/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: graphs-traversal
+    lesson: graph-representations-traversal
+    pattern: Grid DFS
+    prereq: Graphs
+    why: The simplest traversal
+    hint: Return early if the new colour equals the old
+  - num: 200
+    title: Number of Islands
+    url: https://leetcode.com/problems/number-of-islands/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: graph-representations-traversal
+    pattern: Components on a grid
+    prereq: '733'
+    why: The canonical graph question
+    hint: Sink each island as you visit it
+  - num: 695
+    title: Max Area of Island
+    url: https://leetcode.com/problems/max-area-of-island/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-traversal
+    lesson: graph-representations-traversal
+    pattern: Components with size
+    prereq: '200'
+    why: Returning values from a traversal
+    hint: Count cells during the traversal
+  - num: 1971
+    title: Find if Path Exists in Graph
+    url: https://leetcode.com/problems/find-if-path-exists-in-graph/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: graphs-traversal
+    lesson: components-matrix-input-cloning
+    pattern: Adjacency-list BFS/DFS
+    prereq: '6.15'
+    why: Building a graph from edges
+    hint: 'Undirected: add both directions'
+  - num: 547
+    title: Number of Provinces
+    url: https://leetcode.com/problems/number-of-provinces/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: components-matrix-input-cloning
+    pattern: Components (matrix input)
+    prereq: '200'
+    why: Adjacency-matrix input
+    hint: DFS over `isConnected` rows
+  - num: 133
+    title: Clone Graph
+    url: https://leetcode.com/problems/clone-graph/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-traversal
+    lesson: components-matrix-input-cloning
+    pattern: Traversal + node map
+    prereq: '547'
+    why: A map as both visited set and copy table
+    hint: Create the copy when first seen, then wire neighbours
+  - num: 994
+    title: Rotting Oranges
+    url: https://leetcode.com/problems/rotting-oranges/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: bfs-shortest-paths-multi-source
+    pattern: Multi-source BFS
+    prereq: '102'
+    why: BFS levels as time steps
+    hint: Count fresh oranges; −1 if any remain
+  - num: 1091
+    title: Shortest Path in Binary Matrix
+    url: https://leetcode.com/problems/shortest-path-in-binary-matrix/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: bfs-shortest-paths-multi-source
+    pattern: BFS shortest path
+    prereq: '994'
+    why: 8 directions; blocked endpoints
+    hint: Path length counts cells, so the start is 1
+  - num: 542
+    title: 01 Matrix
+    url: https://leetcode.com/problems/01-matrix/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-traversal
+    lesson: bfs-shortest-paths-multi-source
+    pattern: Multi-source BFS
+    prereq: '994'
+    why: Start from all targets
+    hint: Enqueue every 0; distances spread outward
+  - num: 127
+    title: Word Ladder
+    url: https://leetcode.com/problems/word-ladder/
+    difficulty: Hard
+    tier: O
+    role: Challenge
+    module: graphs-traversal
+    lesson: bfs-shortest-paths-multi-source
+    pattern: BFS on an implicit graph
+    prereq: '994'
+    why: Generating neighbours efficiently
+    hint: 'Wildcard buckets: `h*t` → \[hot, hit\]'
+  - num: 207
+    title: Course Schedule
+    url: https://leetcode.com/problems/course-schedule/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: topological-sort-directed-cycles
+    pattern: Cycle detection / Kahn
+    prereq: Graphs
+    why: Dependency graphs
+    hint: Edge pre → course; were all nodes processed?
+  - num: 210
+    title: Course Schedule II
+    url: https://leetcode.com/problems/course-schedule-ii/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: topological-sort-directed-cycles
+    pattern: Topological order
+    prereq: '207'
+    why: Returning the order
+    hint: Kahn's output, or \[\] when a cycle exists
+  - num: 802
+    title: Find Eventual Safe States
+    url: https://leetcode.com/problems/find-eventual-safe-states/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: graphs-traversal
+    lesson: topological-sort-directed-cycles
+    pattern: Three-state DFS
+    prereq: '207'
+    why: Directed cycle states
+    hint: Safe = finished (state 2) without reaching a cycle
+  - num: 785
+    title: Is Graph Bipartite?
+    url: https://leetcode.com/problems/is-graph-bipartite/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: bipartite-graphs-reverse-search
+    pattern: 2-colouring
+    prereq: BFS
+    why: Odd-cycle detection
+    hint: Start a BFS from every uncoloured node
+  - num: 417
+    title: Pacific Atlantic Water Flow
+    url: https://leetcode.com/problems/pacific-atlantic-water-flow/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-traversal
+    lesson: bipartite-graphs-reverse-search
+    pattern: Reverse multi-source search
+    prereq: '200'
+    why: Search from the targets
+    hint: Two uphill searches from each ocean; intersect
+  - num: 130
+    title: Surrounded Regions
+    url: https://leetcode.com/problems/surrounded-regions/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-traversal
+    lesson: bipartite-graphs-reverse-search
+    pattern: Border-connected marking
+    prereq: '417'
+    why: Complement reasoning
+    hint: Mark border-connected `O`s safe; flip the rest
+  - num: 743
+    title: Network Delay Time
+    url: https://leetcode.com/problems/network-delay-time/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: dijkstras-algorithm
+    pattern: Dijkstra
+    prereq: Heap, BFS
+    why: The canonical Dijkstra
+    hint: Answer = max distance, −1 if any node unreachable
+  - num: 1631
+    title: Path With Minimum Effort
+    url: https://leetcode.com/problems/path-with-minimum-effort/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-weighted-greedy
+    lesson: dijkstras-algorithm
+    pattern: Dijkstra (minimax)
+    prereq: '743'
+    why: Changing the path cost function
+    hint: Cost = max edge so far, not the sum
+  - num: 684
+    title: Redundant Connection
+    url: https://leetcode.com/problems/redundant-connection/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: union-find
+    pattern: Union-Find
+    prereq: '6.16'
+    why: The cycle-closing edge
+    hint: First edge whose `union` returns false
+  - num: 721
+    title: Accounts Merge
+    url: https://leetcode.com/problems/accounts-merge/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-weighted-greedy
+    lesson: union-find
+    pattern: Union-Find with string keys
+    prereq: '684'
+    why: Mapping strings to DSU indices
+    hint: Union accounts sharing an email; group by root; sort emails
+  - num: 1584
+    title: Min Cost to Connect All Points
+    url: https://leetcode.com/problems/min-cost-to-connect-all-points/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: minimum-spanning-trees
+    pattern: MST (Prim or Kruskal)
+    prereq: '684'
+    why: MST on a complete graph
+    hint: Manhattan distance; O(n²) array-based Prim
+  - num: 787
+    title: Cheapest Flights Within K Stops
+    url: https://leetcode.com/problems/cheapest-flights-within-k-stops/
+    difficulty: Medium
+    tier: O
+    role: Challenge
+    module: graphs-weighted-greedy
+    lesson: minimum-spanning-trees
+    pattern: Bellman-Ford / BFS by stops
+    prereq: '743'
+    why: When Dijkstra's assumption breaks
+    hint: k + 1 rounds of relaxation using a copy of `dist`
+  - num: 455
+    title: Assign Cookies
+    url: https://leetcode.com/problems/assign-cookies/
+    difficulty: Easy
+    tier: S
+    role: Intro
+    module: graphs-weighted-greedy
+    lesson: greedy-algorithms-counterexamples
+    pattern: Greedy with two sorted pointers
+    prereq: Sorting
+    why: The simplest exchange argument
+    hint: Smallest cookie that satisfies the least greedy child
+  - num: 55
+    title: Jump Game
+    url: https://leetcode.com/problems/jump-game/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: greedy-algorithms-counterexamples
+    pattern: Greedy reach
+    prereq: Arrays
+    why: A running reach
+    hint: Fail when i > farthest
+  - num: 45
+    title: Jump Game II
+    url: https://leetcode.com/problems/jump-game-ii/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: greedy-algorithms-counterexamples
+    pattern: Greedy levels
+    prereq: '55'
+    why: BFS-like layers in one pass
+    hint: Count a jump when i reaches the current level's end
+  - num: 763
+    title: Partition Labels
+    url: https://leetcode.com/problems/partition-labels/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: greedy-running-quantity
+    pattern: Greedy last occurrence
+    prereq: Map
+    why: Extending a part to cover its letters
+    hint: Record each character's last index first
+  - num: 134
+    title: Gas Station
+    url: https://leetcode.com/problems/gas-station/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: graphs-weighted-greedy
+    lesson: greedy-running-quantity
+    pattern: Greedy running balance
+    prereq: '55'
+    why: The reset argument
+    hint: If total ≥ 0 a start exists; reset the start when the tank goes negative
+  - num: 846
+    title: Hand of Straights
+    url: https://leetcode.com/problems/hand-of-straights/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: graphs-weighted-greedy
+    lesson: greedy-running-quantity
+    pattern: Greedy smallest-first
+    prereq: Map, sorting
+    why: Forced choices
+    hint: The smallest remaining card must start a group
+  - num: 70
+    title: Climbing Stairs
+    url: https://leetcode.com/problems/climbing-stairs/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: dynamic-programming-1
+    lesson: what-dp-is-four-steps
+    pattern: 1-D DP
+    prereq: Recursion
+    why: The four-step progression
+    hint: ways(n) = ways(n − 1) + ways(n − 2)
+  - num: 746
+    title: Min Cost Climbing Stairs
+    url: https://leetcode.com/problems/min-cost-climbing-stairs/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: dynamic-programming-1
+    lesson: what-dp-is-four-steps
+    pattern: 1-D DP (min)
+    prereq: '70'
+    why: Minimum instead of count
+    hint: The top is index n; you may start at 0 or 1
+  - num: 198
+    title: House Robber
+    url: https://leetcode.com/problems/house-robber/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: take-or-skip
+    pattern: Take/skip DP
+    prereq: '70'
+    why: Writing the state sentence
+    hint: '`dp[i] = max(dp[i−1], dp[i−2] + nums[i])`'
+  - num: 213
+    title: House Robber II
+    url: https://leetcode.com/problems/house-robber-ii/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: take-or-skip
+    pattern: Take/skip, circular
+    prereq: '198'
+    why: Reducing to a solved problem
+    hint: Max of two linear runs (without first / without last)
+  - num: 740
+    title: Delete and Earn
+    url: https://leetcode.com/problems/delete-and-earn/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: dynamic-programming-1
+    lesson: take-or-skip
+    pattern: Reduction to 198
+    prereq: '198'
+    why: Transforming the input
+    hint: Sum points per value; rob over values
+  - num: 322
+    title: Coin Change
+    url: https://leetcode.com/problems/coin-change/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: unbounded-knapsack
+    pattern: Unbounded knapsack (min)
+    prereq: '198'
+    why: Where greedy fails and DP works
+    hint: '`dp[a] = 1 + min dp[a − c]`; Infinity = impossible'
+  - num: 518
+    title: Coin Change II
+    url: https://leetcode.com/problems/coin-change-ii/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: unbounded-knapsack
+    pattern: Unbounded knapsack (count)
+    prereq: '322'
+    why: Loop order decides combinations vs sequences
+    hint: Coins in the outer loop, amounts inner
+  - num: 279
+    title: Perfect Squares
+    url: https://leetcode.com/problems/perfect-squares/
+    difficulty: Medium
+    tier: O
+    role: Transfer
+    module: dynamic-programming-1
+    lesson: unbounded-knapsack
+    pattern: Unbounded knapsack
+    prereq: '322'
+    why: Items generated from n
+    hint: Coins = squares ≤ n
+  - num: 62
+    title: Unique Paths
+    url: https://leetcode.com/problems/unique-paths/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: grid-dp
+    pattern: Grid DP
+    prereq: '70'
+    why: 2-D table → one row
+    hint: First row and column are 1
+  - num: 64
+    title: Minimum Path Sum
+    url: https://leetcode.com/problems/minimum-path-sum/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: grid-dp
+    pattern: Grid DP (min)
+    prereq: '62'
+    why: One-row DP
+    hint: Min of top and left plus the cell
+  - num: 63
+    title: Unique Paths II
+    url: https://leetcode.com/problems/unique-paths-ii/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: dynamic-programming-1
+    lesson: grid-dp
+    pattern: Grid DP with obstacles
+    prereq: '62'
+    why: Base cases with blocked cells
+    hint: Obstacle → 0; cells after an obstacle on the edges are 0
+  - num: 139
+    title: Word Break
+    url: https://leetcode.com/problems/word-break/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: string-partition-dp
+    pattern: String partition DP
+    prereq: '70'
+    why: Prefix feasibility
+    hint: '`dp[i]` true if some `dp[j]` is true and `s[j..i)` is in the Set'
+  - num: 91
+    title: Decode Ways
+    url: https://leetcode.com/problems/decode-ways/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-1
+    lesson: string-partition-dp
+    pattern: String partition DP (count)
+    prereq: '139'
+    why: Validity rules per piece
+    hint: One digit 1–9; two digits 10–26
+  - num: 152
+    title: Maximum Product Subarray
+    url: https://leetcode.com/problems/maximum-product-subarray/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: dynamic-programming-1
+    lesson: string-partition-dp
+    pattern: Kadane with min and max
+    prereq: '53'
+    why: Negatives swap the extremes
+    hint: Track `curMax` and `curMin` together
+  - num: 416
+    title: Partition Equal Subset Sum
+    url: https://leetcode.com/problems/partition-equal-subset-sum/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: knapsack-and-subset-sum
+    pattern: 0/1 knapsack
+    prereq: '322'
+    why: Downward iteration
+    hint: Odd total → false; target = total / 2
+  - num: 494
+    title: Target Sum
+    url: https://leetcode.com/problems/target-sum/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: dynamic-programming-2-bits
+    lesson: knapsack-and-subset-sum
+    pattern: 0/1 knapsack (count)
+    prereq: '416'
+    why: An algebraic transformation
+    hint: P = (total + target) / 2; count subsets summing to P
+  - num: 1143
+    title: Longest Common Subsequence
+    url: https://leetcode.com/problems/longest-common-subsequence/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: two-sequence-dp
+    pattern: Two-sequence DP
+    prereq: '62'
+    why: The (m+1) × (n+1) table
+    hint: Match → diagonal + 1; else max(top, left)
+  - num: 72
+    title: Edit Distance
+    url: https://leetcode.com/problems/edit-distance/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: two-sequence-dp
+    pattern: Two-sequence DP
+    prereq: '1143'
+    why: Three operations as three transitions
+    hint: '`dp[i][0] = i`, `dp[0][j] = j`'
+  - num: 300
+    title: Longest Increasing Subsequence
+    url: https://leetcode.com/problems/longest-increasing-subsequence/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: lis-and-palindromes
+    pattern: LIS DP
+    prereq: '198'
+    why: dp "ending at i"
+    hint: O(n²) first; tails + binary search after
+  - num: 5
+    title: Longest Palindromic Substring
+    url: https://leetcode.com/problems/longest-palindromic-substring/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: lis-and-palindromes
+    pattern: Expand around centre
+    prereq: '125'
+    why: 2n − 1 centres
+    hint: Expand odd and even centres; track the best bounds
+  - num: 647
+    title: Palindromic Substrings
+    url: https://leetcode.com/problems/palindromic-substrings/
+    difficulty: Medium
+    tier: S
+    role: Transfer
+    module: dynamic-programming-2-bits
+    lesson: lis-and-palindromes
+    pattern: Expand around centre (count)
+    prereq: '5'
+    why: Counting instead of maximising
+    hint: Count every successful expansion
+  - num: 309
+    title: Best Time to Buy and Sell Stock with Cooldown
+    url: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+    difficulty: Medium
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: state-machines-recognising-dp
+    pattern: State-machine DP
+    prereq: '198'
+    why: Modes as states
+    hint: hold, sold, rest; update from the previous day's values
+  - num: 136
+    title: Single Number
+    url: https://leetcode.com/problems/single-number/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: XOR
+    prereq: Bits
+    why: Pairs cancel
+    hint: Fold XOR over the array
+  - num: 191
+    title: Number of 1 Bits
+    url: https://leetcode.com/problems/number-of-1-bits/
+    difficulty: Easy
+    tier: C
+    role: Intro
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: Bit counting
+    prereq: Bits
+    why: '`x & (x − 1)`'
+    hint: Loop until 0
+  - num: 338
+    title: Counting Bits
+    url: https://leetcode.com/problems/counting-bits/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: Bits DP
+    prereq: '191'
+    why: DP over bit structure
+    hint: '`bits[i] = bits[i >> 1] + (i & 1)`'
+  - num: 268
+    title: Missing Number
+    url: https://leetcode.com/problems/missing-number/
+    difficulty: Easy
+    tier: C
+    role: Core
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: XOR / sum
+    prereq: '136'
+    why: Indices as data
+    hint: XOR all indices and values (or n(n+1)/2 − sum)
+  - num: 190
+    title: Reverse Bits
+    url: https://leetcode.com/problems/reverse-bits/
+    difficulty: Easy
+    tier: O
+    role: Transfer
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: Bit shifting
+    prereq: '191'
+    why: Logical vs arithmetic shifts in JS
+    hint: Shift `n` with `>>>`; the statement now takes even n ≤ 2³¹ − 2, so the result fits a signed int, but end with `>>> 0` for the general unsigned version
+  - num: 371
+    title: Sum of Two Integers
+    url: https://leetcode.com/problems/sum-of-two-integers/
+    difficulty: Medium
+    tier: O
+    role: Challenge
+    module: dynamic-programming-2-bits
+    lesson: bit-manipulation
+    pattern: Bitwise addition
+    prereq: '136'
+    why: Carry with AND and shift
+    hint: Loop while carry ≠ 0; JS operates on 32 bits
+  - num: 438
+    title: Find All Anagrams in a String
+    url: https://leetcode.com/problems/find-all-anagrams-in-a-string/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: interview-end-to-end
+    hiddenUntilAttempted: true
+    pattern: Fixed window of counts
+    prereq: '567'
+    why: Pattern transfer without a label
+    hint: Same as 567, collecting start indices
+  - num: 287
+    title: Find the Duplicate Number
+    url: https://leetcode.com/problems/find-the-duplicate-number/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: interview-end-to-end
+    hiddenUntilAttempted: true
+    pattern: Floyd on indices (or binary search on counts)
+    prereq: '142'
+    why: Seeing an array as a linked list
+    hint: i → nums\[i\] forms a cycle whose entry is the duplicate
+  - num: 853
+    title: Car Fleet
+    url: https://leetcode.com/problems/car-fleet/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: interview-end-to-end
+    hiddenUntilAttempted: true
+    pattern: Sort + monotonic stack
+    prereq: '739'
+    why: Combining sorting with a stack
+    hint: From closest to the target, a slower car ahead absorbs those behind
+  - num: 981
+    title: Time Based Key-Value Store
+    url: https://leetcode.com/problems/time-based-key-value-store/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: repairing-weak-patterns-getting-unstuck
+    hiddenUntilAttempted: true
+    pattern: Hash map + binary search
+    prereq: '34'
+    why: Design plus upper bound
+    hint: Timestamps are increasing; find the last ≤ t
+  - num: 380
+    title: Insert Delete GetRandom O(1)
+    url: https://leetcode.com/problems/insert-delete-getrandom-o1/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: repairing-weak-patterns-getting-unstuck
+    hiddenUntilAttempted: true
+    pattern: Map + array swap-remove
+    prereq: '146'
+    why: O(1) deletion by swapping with the last element
+    hint: Map value → index; swap with last, then pop
+  - num: 678
+    title: Valid Parenthesis String
+    url: https://leetcode.com/problems/valid-parenthesis-string/
+    difficulty: Medium
+    tier: C
+    role: Transfer
+    module: interview-readiness
+    lesson: mock-5-explaining-trade-offs
+    hiddenUntilAttempted: true
+    pattern: Greedy range
+    prereq: '20'
+    why: A range of possible states
+    hint: Track the min and max possible open count; `*` widens it
+  - num: 239
+    title: Sliding Window Maximum
+    url: https://leetcode.com/problems/sliding-window-maximum/
+    difficulty: Hard
+    extension: true
+    usedIn: Module 12 lesson 4 Hard option
+  - num: 297
+    title: Serialize and Deserialize Binary Tree
+    url: https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
+    difficulty: Hard
+    extension: true
+    usedIn: Module 12 lesson 4 Hard option
+  - num: 1480
+    title: Running Sum of 1d Array
+    url: https://leetcode.com/problems/running-sum-of-1d-array/
+    difficulty: Easy
+    extension: true
+    usedIn: Placement check B1
+  - num: 349
+    title: Intersection of Two Arrays
+    url: https://leetcode.com/problems/intersection-of-two-arrays/
+    difficulty: Easy
+    extension: true
+    usedIn: Placement check B2
+  - num: 14
+    title: Longest Common Prefix
+    url: https://leetcode.com/problems/longest-common-prefix/
+    difficulty: Easy
+    extension: true
+    usedIn: Placement check B3
+  - num: 2
+    title: Add Two Numbers
+    url: https://leetcode.com/problems/add-two-numbers/
+    difficulty: Medium
+    extension: true
+    usedIn: Placement check B4

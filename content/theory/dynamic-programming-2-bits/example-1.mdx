@@ -1,0 +1,35 @@
+---
+slug: example-1
+title: Example 1
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Example 1
+  lines:
+    - 2091
+    - 2111
+---
+
+**Example 1: Partition Equal Subset Sum (416) and why j goes downwards.**
+
+```js
+function canPartition(nums) {
+  const total = nums.reduce((a, b) => a + b, 0);
+  // odd total cannot split evenly
+  if (total % 2) return false;
+  const target = total / 2;
+  const dp = new Array(target + 1).fill(false);
+  dp[0] = true;                                 // empty subset makes 0
+  for (const x of nums) {
+    // downwards: dp[j - x] is from BEFORE this item
+    for (let j = target; j >= x; j--) {
+      if (dp[j - x]) dp[j] = true;
+    }
+  }
+  return dp[target];
+}
+```
+
+Why downwards: take a single item of weight 2 and a target of 4. Iterating j upwards sets `dp[2] = true` from `dp[0]`, then `dp[4] = true` from the just-updated `dp[2]`, which uses the same item twice. Iterating downwards reads `dp[2]` before it is updated for this item, so each item is used at most once.

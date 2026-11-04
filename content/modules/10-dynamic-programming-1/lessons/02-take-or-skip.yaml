@@ -1,0 +1,212 @@
+exercises:
+  - id: ex-01
+    legacyId: w10d2-1
+    type: trace
+    tag: Fill the table yourself
+    q: House Robber on `[2, 7, 9, 3, 1]`. Fill `dp` before stepping through the visualizer.
+    rows:
+      - prompt: dp[1]
+        answer: '7'
+      - prompt: dp[2]
+        answer: '11'
+      - prompt: dp[3]
+        answer: '11'
+        why: Skip (11) beats rob (dp[1] + 3 = 10).
+      - prompt: dp[4], the answer
+        answer: '12'
+    verify: |
+      const a = [2, 7, 9, 3, 1], dp = [a[0], Math.max(a[0], a[1])];
+      for (let i = 2; i < a.length; i++) dp[i] = Math.max(dp[i - 1], dp[i - 2] + a[i]);
+      console.log(dp[1]); console.log(dp[2]); console.log(dp[3]); console.log(dp[4]);
+    explain: 'Houses 0, 2 and 4: 2 + 9 + 1 = 12.'
+    hints:
+      - 'At each i: skip = dp[i − 1], rob = dp[i − 2] + nums[i].'
+  - id: ex-02
+    legacyId: w10d2-2
+    type: bug
+    tag: The second base case
+    q: This House Robber returns 3 for `[5, 3]` instead of 5. Click the line.
+    code: |
+      function rob(nums) {
+        if (nums.length === 1) return nums[0];
+        const dp = new Array(nums.length);
+        dp[0] = nums[0];
+        dp[1] = nums[1];
+        for (let i = 2; i < nums.length; i++) dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+        return dp[nums.length - 1];
+      }
+    bug:
+      - 4
+    kind: impl
+    explain: '`dp[1]` means "the best from houses 0..1", which is `max(nums[0], nums[1])`, not `nums[1]`. A base case must satisfy the same state sentence as every other cell.'
+    fix: |
+      dp[1] = Math.max(nums[0], nums[1]);
+    fine:
+      '1': A single house is a valid special case.
+      '5': The transition is correct.
+    hints:
+      - 'Read dp[1] using the state sentence: best from houses 0..1.'
+  - id: ex-03
+    legacyId: w10d2-3
+    type: code
+    tag: Delete and Earn (740, Optional)
+    q: 'Write `deleteAndEarn(nums)`: pick a value x to earn x points; then every x − 1 and x + 1 is deleted. Picking x again is allowed (each copy earns x). Return the maximum points. Reduce it to House Robber.'
+    fn: deleteAndEarn
+    starter: |
+      function deleteAndEarn(nums) {
+
+      }
+    solution: |
+      function deleteAndEarn(nums) {
+        const max = Math.max(...nums), points = new Array(max + 1).fill(0);
+        for (const x of nums) points[x] += x;
+        let prev2 = 0, prev1 = 0;
+        for (const p of points) [prev2, prev1] = [prev1, Math.max(prev1, prev2 + p)];
+        return prev1;
+      }
+    tests:
+      - args:
+          - - 3
+            - 4
+            - 2
+        expect: 6
+      - args:
+          - - 2
+            - 2
+            - 3
+            - 3
+            - 3
+            - 4
+        expect: 9
+      - args:
+          - - 1
+        expect: 1
+      - args:
+          - - 8
+            - 10
+            - 4
+            - 9
+            - 1
+            - 3
+            - 5
+            - 9
+            - 4
+            - 10
+        expect: 37
+        hidden: true
+    explain: '`points[v]` is the total for value v. Neighbouring values are neighbouring houses.'
+    hints:
+      - If you take value x, you might as well take every copy of it.
+      - Build points[v] = v × (count of v).
+      - Now run House Robber over points.
+  - id: ex-04
+    legacyId: w10d2-4
+    type: mcq
+    tag: When the state is missing something
+    q: 'Maximum Product Subarray (152): a student tries `dp[i]` = the largest product of a subarray ending at i, with `dp[i] = max(nums[i], dp[i−1] · nums[i])`. On `[-2, 3, -4]` it returns 3, but the answer is 24. What is missing?'
+    options:
+      - t: 'The smallest product ending at i: a large negative product becomes the largest after multiplying by a negative.'
+        ok: true
+        why: Keep both `curMax` and `curMin` (lesson 5 visualizer).
+      - t: A base case for i = 0.
+        why: dp[0] = nums[0] is fine; the problem is the information carried between cells.
+        kind: impl
+      - t: The array must be sorted first.
+        why: Sorting destroys contiguity, which the problem depends on.
+        kind: concept
+    explain: '"If you cannot write the transition from the state sentence, the state is missing information: add it."'
+    hints:
+      - What is −6 · −4?
+  - id: ex-05
+    legacyId: w10d2-5
+    type: interview
+    title: Solving Questions With Brainpower (LeetCode 2140)
+    q: '`questions[i] = [points, brainpower]`, processed in order. Solving question i earns `points` but you must skip the next `brainpower` questions; or you can skip question i. Return the maximum points. Example: `[[3,2],[4,3],[4,4],[2,5]]` → 5 (solve 0 and 3).'
+    model:
+      clarify: |
+        - Order is fixed; each question is solved or skipped.
+        - Up to 10⁵ questions; points up to 10⁵, so totals reach 10¹⁰ (fine in a JS number).
+      brute: 'Recursion over solve/skip at each index: exponential.'
+      optimize: |
+        The skip distance depends on i, so a forward state is awkward but a **suffix** state is natural. `dp[i]` = the best total from questions i..n−1. Transition: `dp[i] = max(dp[i + 1], points[i] + dp[i + brainpower[i] + 1])`, treating indices ≥ n as 0. Fill from right to left; the answer is dp[0].
+      edges: |
+        - brainpower 0 → behaves like plain addition
+        - a skip that jumps past the end
+        - one question
+      complexity: O(n) time and space.
+    fn: mostPoints
+    starter: |
+      function mostPoints(questions) {
+
+      }
+    solution: |
+      function mostPoints(questions) {
+        const n = questions.length, dp = new Array(n + 1).fill(0);
+        for (let i = n - 1; i >= 0; i--) {
+          const [p, b] = questions[i];
+          dp[i] = Math.max(dp[i + 1], p + (i + b + 1 <= n ? dp[i + b + 1] : 0));
+        }
+        return dp[0];
+      }
+    tests:
+      - args:
+          - - - 3
+              - 2
+            - - 4
+              - 3
+            - - 4
+              - 4
+            - - 2
+              - 5
+        expect: 5
+      - args:
+          - - - 1
+              - 1
+            - - 2
+              - 2
+            - - 3
+              - 3
+            - - 4
+              - 4
+            - - 5
+              - 5
+        expect: 7
+      - args:
+          - - - 10
+              - 0
+        expect: 10
+        hidden: true
+      - args:
+          - - - 1
+              - 0
+            - - 1
+              - 0
+            - - 1
+              - 0
+        expect: 3
+        hidden: true
+      - args:
+          - - - 21
+              - 5
+            - - 92
+              - 3
+            - - 74
+              - 2
+            - - 39
+              - 4
+            - - 58
+              - 2
+            - - 5
+              - 5
+            - - 49
+              - 4
+            - - 65
+              - 3
+        expect: 157
+        hidden: true
+    explain: Choosing a suffix state ("from i to the end") is the move to remember when a choice jumps forward by a variable amount.
+    hints:
+      - Is it easier to ask "best up to i" or "best from i onwards"?
+      - dp[i] = max(skip i, solve i and jump).
+      - Fill from right to left.
+annotated: []

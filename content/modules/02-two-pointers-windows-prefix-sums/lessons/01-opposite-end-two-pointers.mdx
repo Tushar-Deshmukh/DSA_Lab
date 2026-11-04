@@ -1,0 +1,218 @@
+---
+slug: opposite-end-two-pointers
+legacyId: w2d1
+title: Opposite-end two pointers
+goal: Find a pair in a sorted array in one pass, and prove that every pointer move is safe.
+why: Two pointers is the first pattern where the speed-up comes from a proof rather than a data structure. The same "discard what cannot win" argument returns in Container With Most Water in the next lesson, binary search in the next module and greedy algorithms in Module 9.
+prereqs:
+  - Arrays and indices; `O(n)` vs `O(n²)` (Module 1)
+  - Two Sum with a hash map (problem 1, Module 1)
+  - Reading a `while` loop and tracking two variables
+outcomes:
+  - Tell subarrays, substrings and subsequences apart and know how many of each there are
+  - Write the opposite-end two-pointer loop for a sorted pair search without looking
+  - Explain, with the pair grid, why moving the pointer at the smaller sum never skips the answer
+  - Skip characters inside a two-pointer loop without running past the other pointer
+  - Choose between two pointers and a hash map from the problem statement
+ready:
+  - I can explain why `sum < target` means `numbers[l]` can be discarded, using the words "largest partner"
+  - I wrote `isPalindrome` with skip rules and it passed every test, including `" .,"` and `"0P"`
+  - I can say when two pointers is the wrong tool (unsorted input where original indices matter)
+summary:
+  - Subarrays and substrings are contiguous (O(n²) of them); subsequences can skip (O(2ⁿ)).
+  - Opposite-end two pointers works when order tells you which end cannot be in any answer.
+  - 'Each step discards a whole row or column of the pair grid, so the loop runs at most n − 1 times: O(n) time, O(1) space.'
+  - Sum too small → the left value is too small even with the largest partner → `l++`. Too big → `r--`.
+  - Skip loops must re-check `l < r`; JavaScript strings are immutable, so edit an array and `join` it.
+revision: 'Without notes: write `twoSumSorted`, then explain in two sentences why `l++` is safe when `sum < target`. Then say what changes if the input is unsorted and you must return original indices.'
+warmup:
+  problem: 48
+topic: Subarray vs substring vs subsequence; opposite-end two pointers; JS strings (6.4)
+implement: Palindrome checker that skips non-alphanumerics; dry run 167
+problemsText: 'C: 125, 167 · S: 15'
+problems:
+  - num: 125
+    tier: C
+  - num: 167
+    tier: C
+  - num: 15
+    tier: S
+doneWhen: You can explain why moving the smaller-sum pointer never skips the answer
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-three-words-that-decide-the-pattern" kind="theory" title="The three words that decide the pattern">
+
+Before any algorithm, read the problem's nouns carefully. Most contiguous-range problems this module turn on one distinction:
+
+<Include id="theory/two-pointers-windows-prefix-sums/subarray-vs-substring-vs-subsequence" />
+
+Take `[3, 1, 2]`. Its subarrays are `[3] [1] [2] [3,1] [1,2] [3,1,2]`: six, which is n(n+1)/2 for n = 3. Its subsequences also include `[3, 2]`, which skips the 1: there are 2³ = 8 including the empty one. When a problem says "contiguous", "window", "substring" or "subarray", the search space is at most quadratic and a linear pattern is likely. When it says "subsequence", expect exponential brute force and DP or greedy.
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="intuition-sorted-order-tells-you-which-end-to-throw-away" kind="theory" title="Intuition: sorted order tells you which end to throw away">
+
+You want two numbers from a sorted list that add up to a target. Picture holding the smallest and the largest number. Add them.
+
+- If the sum is **too small**, the smallest number is hopeless: it is already paired with the biggest partner available, and that was not enough. Every other partner is smaller. Throw the smallest number away.
+- If the sum is **too large**, the largest number is hopeless for the mirror reason. Throw it away.
+- If the sum is exactly right, you are done.
+
+Each comparison removes one number from consideration *forever*, so with n numbers there are at most n − 1 comparisons. Nothing here needs extra memory.
+
+<Include id="theory/two-pointers-windows-prefix-sums/two-pointers" />
+
+</Unit>
+
+<Unit id="definition-and-the-invariant" kind="theory" title="Definition and the invariant">
+
+**Opposite-end two pointers**: indices `l` and `r` start at the two ends of a sorted (or symmetric) sequence and move toward each other. At every step a rule moves exactly one of them, and the rule is justified by an argument that the element being passed over cannot belong to any answer.
+
+The **invariant** that makes it correct: *if an answer exists, it lies inside `[l, r]`.* It is true at the start (the whole array), and each move keeps it true because the discarded index provably cannot be part of an answer. When `l` meets `r`, the range has no pairs left, so no answer exists.
+
+<Callout kind="key" title="The one sentence to remember">
+
+When `numbers[l] + numbers[r] < target`, `numbers[l]` is too small **even with its largest possible partner** (`numbers[r]`), so no pair using index `l` can work. When the sum is too big, `numbers[r]` is too big even with its smallest partner.
+
+</Callout>
+
+</Unit>
+
+<Unit id="see-it-the-pair-grid" kind="visual" title="See it: the pair grid">
+
+The grid below lists every pair (i, j) with i \< j and shows its sum. Because the array is sorted, sums grow to the right along a row and downward along a column. The brute force checks cells one at a time; two pointers start at the top-right corner and delete a whole row (`l++`) or a whole column (`r--`) with each comparison.
+
+<Viz id="two-sum-sorted" />
+
+Try the presets. With "No pair exists", watch the whole triangle become grey after only n − 1 sums. With "Duplicates", the algorithm still works: sorted order is all it needs, not distinct values.
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="the-code-line-by-line" kind="code" title="The code, line by line">
+
+<AnnotatedCode id="anno-01" />
+
+Here is the handbook's version with the reasoning written as comments, followed by its dry run:
+
+<Include id="theory/two-pointers-windows-prefix-sums/example-1" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="worked-dry-run" kind="dryrun" title="Worked dry run">
+
+Trace `numbers = [1, 2, 4, 7, 11, 15]`, `target = 15` by hand before checking. Write `l`, `r` and the sum for each step.
+
+| step | l | r | numbers[l] + numbers[r] | decision |
+| --- | --- | --- | --- | --- |
+| 1 | 0 | 5 | 1 + 15 = 16 | too big → r = 4 |
+| 2 | 0 | 4 | 1 + 11 = 12 | too small → l = 1 |
+| 3 | 1 | 4 | 2 + 11 = 13 | too small → l = 2 |
+| 4 | 2 | 4 | 4 + 11 = 15 | found → return [3, 5] |
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="complexity-derived" kind="complexity" title="Complexity, derived">
+
+Count the loop iterations, not the lines. Every iteration either returns or moves one pointer one step inward, so the gap `r − l` shrinks by exactly 1 per iteration. It starts at n − 1 and the loop stops at 0: **at most n − 1 iterations, each O(1), so O(n) time.** The only memory is `l`, `r` and `sum`: **O(1) extra space.**
+
+Compare the alternatives for a sorted input:
+
+| Method | Time | Extra space | Notes |
+| --- | --- | --- | --- |
+| Brute force, every pair | O(n²) | O(1) | ignores sorted order |
+| Binary search for each partner | O(n log n) | O(1) | uses order, but only half of what it tells you |
+| Hash map (problem 1) | O(n) | O(n) | needed when input is unsorted |
+| Two pointers | O(n) | O(1) | best when input is already sorted |
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="skipping-characters-valid-palindrome" kind="code" title="Skipping characters: valid palindrome">
+
+The same loop works on strings that read the same in both directions. Problem 125 adds a twist: ignore everything that is not a letter or digit, and ignore case. That means a pointer sometimes has to *skip* instead of compare. JavaScript's string rules matter here:
+
+<Include id="theory/two-pointers-windows-prefix-sums/strings-in-javascript" />
+
+<Viz id="palindrome" />
+
+<Exercise id="ex-06" />
+
+<Exercise id="ex-07" />
+
+<Exercise id="ex-08" />
+
+</Unit>
+
+<Unit id="trade-offs-and-when-not-to-use-it" kind="tradeoffs" title="Trade-offs and when not to use it">
+
+Two pointers needs a reason to discard an end. Sorted order gives one; symmetry (palindromes) gives one. Without it, the moves are guesses. The most important counter-example is the problem you solved in Module 1:
+
+<Callout kind="warn" title="Two Sum (problem 1) is not a two-pointer problem">
+
+The input is unsorted and the answer is a pair of **original** indices. Sorting would cost O(n log n) and scramble the indices, so you would need to sort `[value, index]` pairs and map back. A hash map does it in one O(n) pass. Reach for two pointers when the input is *already* sorted, or when sorting loses nothing you need.
+
+</Callout>
+
+| Situation | Use | Why |
+| --- | --- | --- |
+| Sorted, find a pair with sum / difference | Two pointers | O(n), O(1) space |
+| Unsorted, return original indices | Hash map | sorting would lose the indices |
+| Unsorted, return the values, or count pairs | Sort + two pointers, or hash map | both O(n log n) / O(n); two pointers saves memory |
+| Need every pair | Neither helps | the output alone is O(n²) |
+
+<Exercise id="ex-09" />
+
+<Exercise id="ex-10" />
+
+</Unit>
+
+<Unit id="pattern-recognition" kind="pattern" title="Pattern recognition">
+
+<Include id="patterns/opposite-end-two-pointers" />
+
+<Callout kind="mistake" title="Mistakes that cost the most time">
+
+- Writing `while (l <= r)` for a pair search: when `l === r` you pair an element with itself.
+- Returning 0-based indices on problem 167, which asks for 1-based ones.
+- Skip loops (`while (!isAlnum(s[l])) l++`) without `l < r`: they run off the end on `" .,"`.
+- Building a cleaned string with a regex first. It works, but uses O(n) space and is not what interviewers want to see when they ask for O(1).
+- Comparing `'0'` and `'P'` case-insensitively by mistake: digits must be kept as they are.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-11" />
+
+<Callout kind="interview" title="How this sounds in an interview">
+
+"The array is sorted, so for a pair sum I'd use two pointers instead of a hash map: O(n) time and O(1) space. If the sum is too small, the left value can't work even with the largest partner, so I move left; symmetric on the right. Each step discards one candidate for good, so at most n − 1 steps." Say the invariant before you code, then dry-run the first two steps on the example.
+
+</Callout>
+
+</Unit>
+
+<Unit id="stretch-from-2-sum-to-3sum" kind="stretch" title="Stretch: from 2-sum to 3Sum">
+
+3Sum (problem 15, this lesson's Stretch) reduces to the code above: sort, fix `nums[i]`, then run two pointers on the rest for target `−nums[i]`. The new difficulty is duplicates. After sorting, equal values are adjacent, so skip `i` when `nums[i] === nums[i − 1]`, and after recording a triplet move both pointers past equal values. Complexity: O(n log n) to sort plus n scans of O(n) = **O(n²)**, which is optimal for listing all triplets in the worst case.
+
+<Exercise id="ex-12" />
+
+</Unit>

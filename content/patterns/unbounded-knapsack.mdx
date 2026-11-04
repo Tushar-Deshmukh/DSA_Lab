@@ -1,0 +1,25 @@
+---
+slug: unbounded-knapsack
+number: '10.2'
+title: Unbounded knapsack (coins, squares, ways to make a sum)
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Pattern 10.2
+  lines:
+    - 2003
+    - 2012
+---
+
+**Pattern 10.2: Unbounded knapsack (coins, squares, ways to make a sum)**
+
+1. *Recognise:* reach a target sum using items that can be reused; min count or number of ways.
+2. *Clues:* "fewest coins", "number of combinations that make up", "perfect squares", "infinite supply".
+3. *From brute force:* recursion `f(remaining)` tries every item; remaining amounts repeat.
+4. *Why it works:* the optimal solution for amount a ends with some item c, leaving an optimal solution for a − c.
+5. *Template:* Examples 3 and 4.
+6. *Complexity:* O(target × items).
+7. *Variations:* 279 perfect squares (items = squares ≤ n), 518 (combinations, coins outer), 377 (permutations, amount outer).
+8. *Inappropriate when:* each item may be used once (0/1 knapsack, Module 11: iterate amounts downwards).

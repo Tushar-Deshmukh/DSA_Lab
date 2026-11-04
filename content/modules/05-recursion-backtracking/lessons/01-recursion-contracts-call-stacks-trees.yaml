@@ -1,0 +1,293 @@
+exercises:
+  - id: ex-01
+    legacyId: w5d1-1
+    type: mcq
+    tag: Contracts
+    q: You want `count(node)` to return the number of nodes in a linked list starting at `node`. Which is a correct base case plus transition?
+    options:
+      - t: if (!node) return 0; return 1 + count(node.next);
+        ok: true
+        why: The empty list has 0 nodes; a non-empty list has its first node plus the count of the rest.
+      - t: if (!node.next) return 1; return 1 + count(node.next);
+        why: 'It fails on the empty list: `node.next` is read from null. The empty input must be a base case.'
+        kind: impl
+      - t: return 1 + count(node.next);
+        why: 'No base case: the recursion never stops (it throws when node becomes null).'
+        kind: concept
+    explain: 'The smallest input (here: no node) is usually the cleanest base case.'
+    hints:
+      - What is the smallest possible list?
+  - id: ex-02
+    legacyId: w5d1-2
+    type: predict
+    tag: Order of execution
+    q: What does this print?
+    code: |
+      function f(n) {
+        if (n === 0) return;
+        console.log("in " + n);
+        f(n - 1);
+        console.log("out " + n);
+      }
+      f(2);
+    answer: |-
+      in 2
+      in 1
+      out 1
+      out 2
+    normalize: exact
+    traps:
+      ? "in 2\nout 2\nin 1\nout 1"
+      : 'f(2) does not print "out 2" until f(1) has returned: the call waits on the stack.'
+      ? "in 2\nin 1\nout 2\nout 1"
+      : The innermost call returns first (last in, first out), so "out 1" comes before "out 2".
+    explain: Calls are entered top-down and finished bottom-up. Code before the recursive call runs on the way down; code after it runs on the way back up. Tree traversals (Module 6) depend on exactly this.
+    hints:
+      - When does f(2) print its second line?
+  - id: ex-03
+    legacyId: w5d1-3
+    type: trace
+    tag: Count the calls
+    q: Naive `fib` (no memo). Count calls, including the base cases.
+    rows:
+      - prompt: Calls made by fib(4)
+        answer: '9'
+      - prompt: Calls made by fib(5)
+        answer: '15'
+        why: 'calls(n) = 1 + calls(n − 1) + calls(n − 2): 1 + 9 + 5.'
+      - prompt: How many times is fib(2) computed inside fib(5)?
+        answer: '3'
+    verify: |
+      let calls = 0; const cnt = {};
+      function fib(n) { calls++; cnt[n] = (cnt[n] || 0) + 1; return n <= 1 ? n : fib(n - 1) + fib(n - 2); }
+      fib(4); console.log(calls); calls = 0; for (const k in cnt) delete cnt[k]; fib(5); console.log(calls); console.log(cnt[2]);
+    explain: The repeated subtrees are the waste that memoisation (and Module 10's DP) removes.
+    hints:
+      - calls(0) = calls(1) = 1.
+  - id: ex-04
+    legacyId: w5d1-4
+    type: complexity
+    tag: Store it or not
+    q: 'Two versions of `myPow(x, n)` for n ≥ 0:'
+    code: |
+      // A
+      const half = myPow(x, Math.floor(n / 2));
+      return n % 2 === 0 ? half * half : half * half * x;
+      // B
+      return n % 2 === 0 ? myPow(x, n >> 1) * myPow(x, n >> 1)
+                         : myPow(x, n >> 1) * myPow(x, n >> 1) * x;
+    fields:
+      - label: Version A, time
+        answer: O(log n)
+      - label: Version B, time
+        answer: O(n)
+        why:
+          O(log n): Two calls per level make a binary tree of depth log n, which has about 2^(log n) = n nodes.
+          O(n log n): Each node does O(1) work; there are O(n) nodes.
+    explain: Same depth, different branching factor. 2^(log₂ n) = n.
+    hints:
+      - How many nodes does a binary tree of depth log₂ n have?
+  - id: ex-05
+    legacyId: w5d1-5
+    type: bug
+    tag: Progress
+    q: This version returns 2 for `myPow(2, -1)` instead of 0.5. Click the line responsible.
+    code: |
+      function myPow(x, n) {
+        if (n === 0) return 1;
+        const half = myPow(x, Math.trunc(n / 2));
+        return n % 2 === 0 ? half * half : half * half * x;
+      }
+    bug:
+      - 3
+    kind: concept
+    explain: 'For negative odd n, `n % 2` is −1, so this line takes the odd branch and *multiplies* by x where it should divide: 2⁻¹ comes out as 1 · 1 · 2 = 2. Handle the sign once at the top, `if (n < 0) return 1 / myPow(x, -n);`, so the rest only ever sees n ≥ 0. Always test a negative input.'
+    fix: |
+      function myPow(x, n) {
+        if (n < 0) return 1 / myPow(x, -n);
+        if (n === 0) return 1;
+        const half = myPow(x, Math.floor(n / 2));
+        return n % 2 === 0 ? half * half : half * half * x;
+      }
+    fine:
+      '1': The base case is right.
+      '2': Halving towards 0 is the right progress for n ≥ 0.
+    hints:
+      - Try myPow(2, -1) by hand. What is −1 % 2 in JavaScript?
+  - id: ex-06
+    legacyId: w5d1-6
+    type: code
+    tag: Recursive flatten
+    q: 'Write `flatten(arr)`: return a new array containing every number in `arr`, which may contain nested arrays to any depth, in left-to-right order. Write the contract as a comment first. Do not use `Array.prototype.flat`.'
+    fn: flatten
+    starter: |
+      // contract: flatten(arr) returns ...
+      function flatten(arr) {
+
+      }
+    solution: |
+      // contract: flatten(arr) returns all numbers in arr, in order, with nesting removed
+      function flatten(arr) {
+        const out = [];
+        for (const x of arr) {
+          if (Array.isArray(x)) out.push(...flatten(x));
+          else out.push(x);
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - 1
+            - - 2
+              - - 3
+                - 4
+            - 5
+        expect:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+      - args:
+          - []
+        expect: []
+      - args:
+          - - - - - 1
+        expect:
+          - 1
+      - args:
+          - - []
+            - - 1
+              - []
+            - 2
+        expect:
+          - 1
+          - 2
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+        hidden: true
+    explain: '`out.push(...flatten(x))` spreads the child''s result. For extremely large children, spreading can hit argument limits; a version that passes `out` down avoids that.'
+    hints:
+      - 'For each element: if it is an array, flatten it (trust the call); otherwise keep it.'
+  - id: ex-07
+    legacyId: w5d1-7
+    type: code
+    tag: With an explicit stack
+    q: Now write `flattenIter(arr)` with no recursion at all, using an explicit stack. Same output order.
+    fn: flattenIter
+    starter: |
+      function flattenIter(arr) {
+
+      }
+    solution: |
+      function flattenIter(arr) {
+        const out = [], stack = [[arr, 0]];          // [array, next index]
+        while (stack.length) {
+          const top = stack[stack.length - 1];
+          const [a, i] = top;
+          if (i === a.length) { stack.pop(); continue; }
+          top[1]++;
+          if (Array.isArray(a[i])) stack.push([a[i], 0]);
+          else out.push(a[i]);
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - 1
+            - - 2
+              - - 3
+                - 4
+            - 5
+        expect:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+      - args:
+          - []
+        expect: []
+      - args:
+          - - - - - 1
+        expect:
+          - 1
+      - args:
+          - - []
+            - - 1
+              - []
+            - 2
+        expect:
+          - 1
+          - 2
+        hidden: true
+    explain: 'The stack holds exactly what the call stack held: which array each pending call was in, and where it had got to. An alternative is to push elements in reverse order and pop one at a time.'
+    hints:
+      - Each stack entry needs the array and the position you have reached in it.
+      - When an entry's position reaches the end of its array, pop it.
+  - id: ex-08
+    legacyId: w5d1-8
+    type: interview
+    title: K-th Symbol in Grammar (LeetCode 779)
+    q: 'Row 1 is `0`. Each next row replaces every 0 with `01` and every 1 with `10`. Given n and k (1-indexed), return the k-th symbol of row n. Rows: `0`, `01`, `0110`, `01101001`. Example: n = 3, k = 3 → 1. Constraints: 1 ≤ n ≤ 30, 1 ≤ k ≤ 2ⁿ⁻¹.'
+    model:
+      clarify: |
+        - 1-indexed k.
+        - Row n has 2ⁿ⁻¹ symbols: up to about 5·10⁸, so building it is out.
+      brute: 'Build every row as a string: row n has 2ⁿ⁻¹ characters, O(2ⁿ) time and memory: impossible at n = 30.'
+      optimize: 'Contract: `kth(n, k)` returns the symbol. Symbol k of row n comes from symbol ⌈k/2⌉ of row n − 1 (its parent): an odd k is the parent''s first child (same symbol), an even k the second child (flipped). Base case: n = 1 → 0. One call per row: O(n).'
+      edges: |
+        - n = 1 → 0
+        - k = 1 → always 0
+        - last symbol of a row
+      complexity: O(n) time, O(n) stack (at most 30 frames).
+    fn: kthGrammar
+    starter: |
+      function kthGrammar(n, k) {
+
+      }
+    solution: |
+      function kthGrammar(n, k) {
+        if (n === 1) return 0;
+        const parent = kthGrammar(n - 1, Math.ceil(k / 2));
+        return k % 2 === 1 ? parent : 1 - parent;
+      }
+    tests:
+      - args:
+          - 1
+          - 1
+        expect: 0
+      - args:
+          - 2
+          - 1
+        expect: 0
+      - args:
+          - 2
+          - 2
+        expect: 1
+      - args:
+          - 3
+          - 3
+        expect: 1
+      - args:
+          - 4
+          - 5
+        expect: 1
+        hidden: true
+      - args:
+          - 30
+          - 434991989
+        expect: 0
+        hidden: true
+    explain: 'A recursion on the problem''s own structure: each symbol has exactly one parent in the previous row.'
+    hints:
+      - Where does symbol k of row n come from in row n − 1?
+      - 'Odd k: first child of its parent. Even k: second child.'
+annotated: []

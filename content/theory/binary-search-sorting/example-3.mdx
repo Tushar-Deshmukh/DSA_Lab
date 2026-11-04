@@ -1,0 +1,32 @@
+---
+slug: example-3
+title: Example 3
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Example 3
+  lines:
+    - 672
+    - 689
+---
+
+**Example 3: binary search on the answer (Koko Eating Bananas, 875).** Brute force: try every speed from 1 to max(piles), O(max · n). Observation: if speed k works, every speed > k works (monotone). So binary-search the smallest working k.
+
+```js
+function minEatingSpeed(piles, h) {
+  const hoursAt = (k) =>
+    piles.reduce((sum, p) => sum + Math.ceil(p / k), 0);
+  // spread is fine here: piles.length <= 10^4
+  let lo = 1, hi = Math.max(...piles);
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (hoursAt(mid) <= h) hi = mid;    // feasible: try slower
+    else lo = mid + 1;                  // too slow: must be faster
+  }
+  return lo;
+}
+```
+
+Complexity: O(n log max). Note `Math.max(...arr)` can throw a RangeError for arrays above roughly 10⁵ elements; use a loop when n is large.

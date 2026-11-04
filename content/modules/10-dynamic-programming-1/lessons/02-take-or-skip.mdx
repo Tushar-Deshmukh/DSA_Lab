@@ -1,0 +1,73 @@
+---
+slug: take-or-skip
+legacyId: w10d2
+title: Take or skip
+goal: Derive linear take/skip DP from the choice at each element, write the state sentence first, and reduce new problems (circular houses, delete-and-earn) to one you have solved.
+why: 'House Robber is the model for a large family of interview questions: "pick elements, no two adjacent / with a cooldown, maximise the total". Recognising the reduction (213 → two runs of 198; 740 → 198 over values) is what interviewers look for.'
+prereqs:
+  - Lesson 1's four steps
+outcomes:
+  - Fill the House Robber table for `[2,7,9,3,1]` by hand
+  - Write 198 with two variables
+  - Solve 213 by reusing 198 on two ranges
+  - Transform 740's input so 198 applies
+ready:
+  - 213 reuses your 198 function on two ranges
+  - I filled the House Robber table for `[2,7,9,3,1]` by hand
+  - I can say what extra information 152 needs in its state
+summary:
+  - 'Choice at i: rob (add nums[i] to dp[i − 2]) or skip (keep dp[i − 1]).'
+  - '`dp[i] = max(dp[i − 1], dp[i − 2] + nums[i])`; two variables suffice.'
+  - 'Circular: max of the run without the first house and the run without the last.'
+  - If the state is not enough to write the transition, add information (152 keeps both max and min).
+revision: Write 198 with two variables from memory, then explain 213's reduction in one sentence.
+warmup:
+  problem: 746
+topic: Linear take/skip DP; writing the state sentence; circular variant
+implement: Fill the House Robber table for `[2,7,9,3,1]` yourself
+problemsText: 'C: 198, 213 · O: 740'
+problems:
+  - num: 198
+    tier: C
+  - num: 213
+    tier: C
+  - num: 740
+    tier: O
+doneWhen: 213 reuses your 198 function on two ranges
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="deriving-the-state" kind="theory" title="Deriving the state">
+
+<Include id="theory/dynamic-programming-1/example-2" />
+
+<Viz id="house-robber" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Include id="patterns/linear-dp" />
+
+</Unit>
+
+<Unit id="reducing-to-a-solved-problem" kind="code" title="Reducing to a solved problem">
+
+House Robber II (213) puts the houses in a circle, so the first and last are neighbours. At most one of them is robbed, so run 198 twice: once without the last house and once without the first, and take the larger. Delete and Earn (740, Optional) needs a bigger transformation: taking a value earns every copy of it but deletes the values one above and below, which is exactly "no two adjacent" over the sorted values.
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

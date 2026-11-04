@@ -1,0 +1,338 @@
+exercises:
+  - id: ex-01
+    legacyId: w3d1-1
+    type: mcq
+    tag: Mixing conventions
+    q: Someone writes `while (lo <= hi)` together with `hi = mid` and `lo = mid + 1`, starting from `lo = 0, hi = n − 1`. What can happen?
+    options:
+      - t: When `lo === hi` and the predicate is true at `mid`, `hi = mid` changes nothing, so the loop never ends.
+        ok: true
+        why: With `lo <= hi`, the loop still runs when the range has one element, and `hi = mid = lo` does not shrink it.
+      - t: Nothing; the conventions are interchangeable.
+        why: Each convention's loop condition and updates are derived together. Mixing them breaks the termination argument.
+        kind: concept
+      - t: It returns one index too far to the right.
+        why: 'The failure is worse than an off-by-one: it is an infinite loop.'
+        kind: concept
+    explain: Pick `[lo, hi)` with `lo < hi`, `hi = mid` for boundaries; pick `[lo, hi]` with `lo <= hi`, `mid ± 1` for exact search. Never mix.
+    hints:
+      - Trace the loop when the range has exactly one element.
+  - id: ex-02
+    legacyId: w3d1-2
+    type: bug
+    tag: The classic infinite loop
+    q: This boundary search never finishes on `nums = [1, 3]`, target 3. Click the line that causes it.
+    code: |
+      function lowerBound(nums, target) {
+        let lo = 0, hi = nums.length;
+        while (lo < hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (nums[mid] < target) lo = mid;
+          else hi = mid;
+        }
+        return lo;
+      }
+    bug:
+      - 4
+    kind: impl
+    explain: 'When `nums[mid] < target`, mid is known to be false and must be excluded: `lo = mid + 1`. Trace it: lo = 0, hi = 2 → mid = 1, `3 < 3` is false → hi = 1. Now lo = 0, hi = 1 → mid = 0, `1 < 3` is true → lo = mid = 0, and the range [0, 1) never changes. Because mid rounds down, `lo = mid` can leave the range the same size.'
+    fix: |
+      if (nums[mid] < target) lo = mid + 1;
+      else hi = mid;
+    fine:
+      '1': '`hi = nums.length` is right for a half-open range.'
+      '3': 'Rounding down is correct for `[lo, hi)`: it guarantees `mid < hi`.'
+      '5': '`hi = mid` is right: mid could be the first true index.'
+    hints:
+      - When the range is `[lo, lo + 1)`, what is mid, and does the range shrink?
+  - id: ex-03
+    legacyId: w3d1-3
+    type: code
+    tag: Write both bounds
+    q: 'Write `lowerBound(nums, target)`: the first index i with `nums[i] >= target`, or `nums.length` if none. The tests include an empty array, one element, all-equal values and absent targets.'
+    fn: lowerBound
+    starter: |
+      function lowerBound(nums, target) {
+
+      }
+    solution: |
+      function lowerBound(nums, target) {
+        let lo = 0, hi = nums.length;
+        while (lo < hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (nums[mid] >= target) hi = mid;
+          else lo = mid + 1;
+        }
+        return lo;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 2
+            - 5
+          - 2
+        expect: 1
+      - args:
+          - - 1
+            - 3
+            - 5
+            - 6
+          - 5
+        expect: 2
+      - args:
+          - - 1
+            - 3
+            - 5
+            - 6
+          - 2
+        expect: 1
+      - args:
+          - - 1
+            - 3
+            - 5
+            - 6
+          - 7
+        expect: 4
+      - args:
+          - []
+          - 3
+        expect: 0
+        hidden: true
+      - args:
+          - - 4
+          - 4
+        expect: 0
+        hidden: true
+      - args:
+          - - 4
+          - 5
+        expect: 1
+        hidden: true
+      - args:
+          - - 2
+            - 2
+            - 2
+          - 2
+        expect: 0
+        hidden: true
+      - args:
+          - - 1
+            - 3
+            - 5
+            - 6
+          - 0
+        expect: 0
+        hidden: true
+    explain: This is exactly problem 35 (Search Insert Position). Change `>=` to `>` and you have upperBound.
+    hints:
+      - Which index means "none"? Start `hi` there.
+      - 'True at mid: could mid be the answer?'
+  - id: ex-04
+    legacyId: w3d1-4
+    type: trace
+    tag: Upper bound by hand
+    q: Run `upperBound([1, 2, 2, 2, 5], 2)` (predicate `nums[mid] > 2`). Write lo and hi after each iteration.
+    rows:
+      - prompt: 'After iteration 1 (mid = 2): lo,hi'
+        answer: 3,5
+        why: nums[2] = 2 > 2 is false → lo = 3.
+      - prompt: 'After iteration 2 (mid = 4): lo,hi'
+        answer: 3,4
+        why: nums[4] = 5 > 2 → hi = 4.
+      - prompt: 'After iteration 3 (mid = 3): lo,hi'
+        answer: 4,4
+        why: nums[3] = 2 > 2 is false → lo = 4.
+      - prompt: Last position of 2 = upperBound − 1 =
+        answer: '3'
+    verify: |
+      const nums = [1, 2, 2, 2, 5]; let lo = 0, hi = nums.length; const out = [];
+      while (lo < hi) { const mid = lo + ((hi - lo) >> 1); if (nums[mid] > 2) hi = mid; else lo = mid + 1; out.push(lo + ',' + hi); }
+      out.forEach((x) => console.log(x)); console.log(lo - 1);
+    explain: First position = lowerBound = 1, last = upperBound − 1 = 3. Two calls answer problem 34; check `first < n && nums[first] === target` for existence.
+    hints:
+      - 'Start: lo = 0, hi = 5.'
+  - id: ex-05
+    legacyId: w3d1-5
+    type: fill
+    tag: Problem 34 with two calls
+    q: Complete `searchRange` (problem 34) using a lower-bound helper `lb(nums, t)` that returns the first index with `nums[i] >= t`. Return `[-1, -1]` if the target is absent.
+    template: |
+      function lb(nums, t) {
+        let lo = 0, hi = nums.length;
+        while (lo < hi) { const mid = lo + ((hi - lo) >> 1); if (nums[mid] >= t) hi = mid; else lo = mid + 1; }
+        return lo;
+      }
+      function searchRange(nums, target) {
+        const first = lb(nums, target);
+        if (first === nums.length || [[0]]) return [-1, -1];
+        const last = lb(nums, [[1]]) - 1;
+        return [first, last];
+      }
+    blanks:
+      - accept:
+          - nums[first] !== target
+          - nums[first] != target
+          - target !== nums[first]
+      - accept:
+          - target + 1
+          - 1 + target
+    fn: searchRange
+    tests:
+      - args:
+          - - 5
+            - 7
+            - 7
+            - 8
+            - 8
+            - 10
+          - 8
+        expect:
+          - 3
+          - 4
+      - args:
+          - - 5
+            - 7
+            - 7
+            - 8
+            - 8
+            - 10
+          - 6
+        expect:
+          - -1
+          - -1
+      - args:
+          - []
+          - 0
+        expect:
+          - -1
+          - -1
+      - args:
+          - - 2
+            - 2
+          - 2
+        expect:
+          - 0
+          - 1
+      - args:
+          - - 1
+          - 1
+        expect:
+          - 0
+          - 0
+      - args:
+          - - 1
+            - 3
+          - 3
+        expect:
+          - 1
+          - 1
+    explain: For integers, "first index > t" is the same as "first index ≥ t + 1", so one helper gives both bounds. The existence check happens once, after the search.
+    hints:
+      - When is `first` not actually the target?
+      - For integers, which value's lower bound is the upper bound of t?
+  - id: ex-06
+    legacyId: w3d1-6
+    type: complexity
+    tag: Analyse it
+    q: 'searchRange with two binary searches on an array of n elements:'
+    fields:
+      - label: Time
+        answer: O(log n)
+        why:
+          O(n): Two O(log n) searches add up to O(log n). A linear scan from the first occurrence would be O(n) when the target repeats many times.
+      - label: Extra space
+        answer: O(1)
+    explain: 2 · log n is still O(log n).
+    hints:
+      - 'Two searches: add or multiply?'
+  - id: ex-07
+    legacyId: w3d1-7
+    type: interview
+    title: Find Smallest Letter Greater Than Target (LeetCode 744)
+    q: '`letters` is sorted in non-decreasing order and contains at least two different characters. Return the smallest character in `letters` that is lexicographically greater than `target`. If there is none, return the first character (the list wraps around). Example: `letters = ["c","f","j"]`, `target = "c"` → `"f"`.'
+    model:
+      clarify: |
+        - Strictly greater, not greater-or-equal.
+        - Duplicates allowed? (Yes.) Wrap-around when nothing is greater.
+      brute: 'Scan left to right and return the first letter > target, else letters[0]: O(n).'
+      optimize: 'The predicate `letters[i] > target` is monotone on sorted input: this is an upper bound. Find the first true index i in `[0, n)`; if i === n, wrap to 0. Strings compare with `>` lexicographically in JavaScript.'
+      edges: |
+        - target smaller than all letters → letters[0]
+        - target ≥ all letters → wrap to letters[0]
+        - duplicates of the target `[\"e\",\"e\",\"g\"]`, target \"e\" → \"g\"
+      complexity: O(log n) time, O(1) space.
+    fn: nextGreatestLetter
+    starter: |
+      function nextGreatestLetter(letters, target) {
+
+      }
+    solution: |
+      function nextGreatestLetter(letters, target) {
+        let lo = 0, hi = letters.length;
+        while (lo < hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (letters[mid] > target) hi = mid;
+          else lo = mid + 1;
+        }
+        return letters[lo % letters.length];
+      }
+    tests:
+      - args:
+          - - c
+            - f
+            - j
+          - a
+        expect: c
+      - args:
+          - - c
+            - f
+            - j
+          - c
+        expect: f
+      - args:
+          - - x
+            - x
+            - 'y'
+            - 'y'
+          - z
+        expect: x
+      - args:
+          - - e
+            - e
+            - g
+            - g
+          - e
+        expect: g
+        hidden: true
+      - args:
+          - - a
+            - b
+          - b
+        expect: a
+        hidden: true
+    explain: '`lo % n` handles the wrap in one expression.'
+    hints:
+      - 'Strictly greater: which bound is that?'
+      - What does the search return when nothing qualifies?
+annotated:
+  - id: anno-01
+    code: |-
+      function lowerBound(nums, target) {
+        let lo = 0, hi = nums.length;
+        while (lo < hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (nums[mid] >= target) hi = mid;
+          else lo = mid + 1;
+        }
+        return lo;
+      }
+    notes:
+      '2': The answer is in `[lo, hi]`; `hi = n` stands for "no element qualifies".
+      '3': 'Stop when the range is empty: `lo === hi` is the answer.'
+      '4': 'Rounds down, so `lo ≤ mid < hi`: mid is always a real index, never n.'
+      '5': 'True: mid may be the first true index, so keep it in the range.'
+      '6': 'False: mid and everything left of it are false, so skip past mid.'
+      '8': 'No check inside the loop for "found": the boundary is the answer.'
+    title: Lower bound, half-open

@@ -1,0 +1,195 @@
+exercises:
+  - id: ex-01
+    legacyId: w1d4-1
+    type: trace
+    tag: Lesson 4 trace
+    q: Bucket by frequency on `nums = [1,1,1,2,2,3]`, k = 2.
+    rows:
+      - prompt: buckets[3] contains
+        answer:
+          - '[1]'
+          - '1'
+        why: 1 appears three times.
+      - prompt: buckets[1] contains
+        answer:
+          - '[3]'
+          - '3'
+        why: 3 appears once.
+      - prompt: Answer (in the order read)
+        answer:
+          - '[1,2]'
+        why: 'Read bucket 3 (→ 1), then bucket 2 (→ 2): k = 2 values.'
+    verify: |
+      const nums = [1, 1, 1, 2, 2, 3], k = 2; const count = new Map();
+      for (const x of nums) count.set(x, (count.get(x) ?? 0) + 1);
+      const b = Array.from({ length: nums.length + 1 }, () => []);
+      for (const [x, c] of count) b[c].push(x);
+      const out = []; for (let c = nums.length; c >= 1 && out.length < k; c--) for (const x of b[c]) if (out.length < k) out.push(x);
+      console.log(JSON.stringify(b[3])); console.log(JSON.stringify(b[1])); console.log(JSON.stringify(out));
+    explain: Six elements, so bucket indices 0–6; only 1, 2 and 3 are used.
+    hints:
+      - Count first; the count is the bucket index.
+  - id: ex-02
+    legacyId: w1d4-2
+    type: mcq
+    tag: Why n + 1?
+    q: Why does `topKFrequent` create `nums.length + 1` buckets?
+    options:
+      - t: Counts range from 1 to n, and index n must exist; index 0 is unused.
+        ok: true
+        why: If every element is the same value, its count is n, so bucket n is needed.
+      - t: To leave room for k extra values.
+        why: k does not affect the number of buckets.
+        kind: concept
+      - t: Because JavaScript arrays are 1-based.
+        why: They are 0-based; that is exactly why n + 1 slots are needed for index n.
+        kind: impl
+    explain: Bucket count = range of possible counts. That range is what makes this O(n) instead of O(n log n).
+    hints:
+      - What is the largest possible count?
+  - id: ex-03
+    legacyId: w1d4-3
+    type: complexity
+    tag: Analyse it
+    q: 'Top K Frequent with buckets on n elements:'
+    fields:
+      - label: Time
+        answer: O(n)
+        why:
+          O(n log n): 'There is no sort: counting is O(n), placing is O(distinct) ≤ O(n), and scanning n + 1 buckets is O(n).'
+          O(n k): Each value is taken at most once; the k limit only stops early.
+      - label: Extra space
+        answer: O(n)
+    explain: Sorting the distinct values by count would be O(d log d). Module 7 does it with a size-k heap in O(n log k).
+    hints:
+      - Add up the three phases.
+  - id: ex-04
+    legacyId: w1d4-4
+    type: predict
+    tag: Without the guarantee
+    q: There is no majority in this input. What does Boyer–Moore print?
+    code: |
+      function majorityElement(nums) {
+        let candidate = null, votes = 0;
+        for (const x of nums) {
+          if (votes === 0) candidate = x;
+          votes += x === candidate ? 1 : -1;
+        }
+        return candidate;
+      }
+      console.log(majorityElement([1, 2, 3]));
+    answer: '3'
+    traps:
+      '1': 1 is cancelled by 2, then 3 becomes the new candidate.
+      'null': The candidate is reset whenever the votes reach 0, so the last element becomes the candidate here.
+    explain: It always returns *some* value. When no majority is guaranteed, count the candidate in a second pass and check that it appears more than n/2 times.
+    hints:
+      - Track candidate and votes after each element.
+  - id: ex-05
+    legacyId: w1d4-5
+    type: fill
+    tag: Box index
+    q: Complete the box number for cell `(r, c)` on a 9 × 9 board, boxes numbered 0–8 left to right, top to bottom.
+    template: |
+      function boxIndex(r, c) {
+        return [[0]] * 3 + [[1]];
+      }
+    blanks:
+      - accept:
+          - Math.floor(r / 3)
+          - Math.floor(r/3)
+          - Math.trunc(r / 3)
+      - accept:
+          - Math.floor(c / 3)
+          - Math.floor(c/3)
+          - Math.trunc(c / 3)
+    fn: boxIndex
+    tests:
+      - args:
+          - 0
+          - 0
+        expect: 0
+      - args:
+          - 1
+          - 4
+        expect: 1
+      - args:
+          - 4
+          - 4
+        expect: 4
+      - args:
+          - 8
+          - 2
+        expect: 6
+      - args:
+          - 8
+          - 8
+        expect: 8
+      - args:
+          - 5
+          - 6
+        expect: 5
+    explain: Box row × 3 + box column. `r / 3` without `Math.floor` would give fractions.
+    hints:
+      - Which box row is row 4 in? Which box column is column 7 in?
+  - id: ex-06
+    legacyId: w1d4-6
+    type: interview
+    title: Sort Characters By Frequency (LeetCode 451)
+    q: 'Given a string `s`, sort it in decreasing order of character frequency and return the result. Characters with equal frequency may appear in any order, but equal characters must be grouped together. Example: `"tree"` → `"eert"` or `"eetr"`.'
+    model:
+      clarify: |
+        - Case-sensitive? (Yes: "A" and "a" differ.) Digits allowed? (Yes.)
+        - Any order among characters with equal frequency.
+      brute: 'Count with a Map, then sort the entries by count: O(n + d log d), where d is the number of distinct characters. Perfectly acceptable to say first.'
+      optimize: 'Bucket by frequency, as in 347: `buckets[count]` holds the characters with that count; read from the highest count down and append each character `count` times. O(n), no comparison sort.'
+      edges: |
+        - Single character
+        - All characters distinct (any order)
+        - Mixed case `\"Aabb\"` → `\"bbAa\"` or `\"bbaA\"`
+      complexity: O(n) time; O(n) space for the buckets and output.
+    fn: frequencySort
+    checker: |
+      (got, [s]) => {
+        if (typeof got !== 'string' || [...got].sort().join('') !== [...s].sort().join('')) return false;
+        const runs = got.match(/(.)\1*/gs) || [];
+        if (new Set(runs.map((r) => r[0])).size !== runs.length) return false;
+        return runs.every((r, i) => i === 0 || r.length <= runs[i - 1].length);
+      }
+    starter: |
+      function frequencySort(s) {
+
+      }
+    solution: |
+      function frequencySort(s) {
+        const count = new Map();
+        for (const c of s) count.set(c, (count.get(c) ?? 0) + 1);
+        const buckets = Array.from({ length: s.length + 1 }, () => []);
+        for (const [c, k] of count) buckets[k].push(c);
+        const out = [];
+        for (let k = s.length; k >= 1; k--) for (const c of buckets[k]) out.push(c.repeat(k));
+        return out.join('');
+      }
+    tests:
+      - args:
+          - tree
+        expect: eert
+      - args:
+          - cccaaa
+        expect: cccaaa
+      - args:
+          - Aabb
+        expect: bbAa
+      - args:
+          - z
+        expect: z
+        hidden: true
+      - args:
+          - aaab
+        expect: aaab
+        hidden: true
+    explain: 'The tests accept any valid answer: same characters, each character in one group, groups in non-increasing size.'
+    hints:
+      - This is Top K Frequent with every k at once.
+      - Bucket characters by their count, then build the string from the top bucket down.
+annotated: []

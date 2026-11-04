@@ -1,0 +1,364 @@
+exercises:
+  - id: ex-01
+    legacyId: w3d5-1
+    type: code
+    tag: From memory
+    q: Write `mergeSort(a)` returning a new sorted array (ascending numbers). This is the algorithm 912 should be solved with in this lesson.
+    fn: mergeSort
+    starter: |
+      function mergeSort(a) {
+
+      }
+    solution: |
+      function mergeSort(a) {
+        if (a.length <= 1) return a;
+        const mid = a.length >> 1;
+        const left = mergeSort(a.slice(0, mid)), right = mergeSort(a.slice(mid));
+        const out = [];
+        let i = 0, j = 0;
+        while (i < left.length && j < right.length) out.push(left[i] <= right[j] ? left[i++] : right[j++]);
+        while (i < left.length) out.push(left[i++]);
+        while (j < right.length) out.push(right[j++]);
+        return out;
+      }
+    tests:
+      - args:
+          - - 5
+            - 2
+            - 3
+            - 1
+        expect:
+          - 1
+          - 2
+          - 3
+          - 5
+      - args:
+          - - 5
+            - 1
+            - 1
+            - 2
+            - 0
+            - 0
+        expect:
+          - 0
+          - 0
+          - 1
+          - 1
+          - 2
+          - 5
+      - args:
+          - []
+        expect: []
+      - args:
+          - - 1
+        expect:
+          - 1
+        hidden: true
+      - args:
+          - - -3
+            - 10
+            - -3
+            - 7
+            - 0
+        expect:
+          - -3
+          - -3
+          - 0
+          - 7
+          - 10
+        hidden: true
+      - args:
+          - - 9
+            - 8
+            - 7
+            - 6
+            - 5
+            - 4
+            - 3
+            - 2
+            - 1
+            - 0
+        expect:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+        hidden: true
+    explain: The two leftover loops copy whichever half still has elements; at most one of them runs.
+    hints:
+      - 'Base case: length 0 or 1.'
+      - Merge with two indices, taking the smaller head each time.
+  - id: ex-02
+    legacyId: w3d5-2
+    type: complexity
+    tag: Derive it
+    q: 'Merge sort on n elements:'
+    fields:
+      - label: Time
+        answer: O(n log n)
+        why:
+          O(n²): Each level of the recursion tree merges n elements in total, and there are about log₂ n levels.
+          O(n): One merge of n elements is O(n), but there are log n levels of merges.
+      - label: Extra space
+        answer: O(n)
+        why:
+          O(log n): The recursion depth is log n, but the merge buffers hold O(n) elements.
+          O(1): Merging needs an output array.
+    explain: Levels × work per level = log n × n.
+    hints:
+      - Draw the recursion tree and add the work level by level.
+  - id: ex-03
+    legacyId: w3d5-3
+    type: trace
+    tag: Lesson 5 dry run
+    q: Partition `[3, 1, 3, 2, 3]` once with pivot 3 using the three-way loop from 6.8. Give the array and the pointers after the partition.
+    rows:
+      - prompt: Array after the partition
+        answer:
+          - '[1,2,3,3,3]'
+      - prompt: lt
+        answer: '2'
+      - prompt: gt
+        answer: '4'
+    verify: |
+      const a = [3, 1, 3, 2, 3], pivot = 3; let lt = 0, i = 0, gt = 4;
+      const swap = (x, y) => { [a[x], a[y]] = [a[y], a[x]]; };
+      while (i <= gt) { if (a[i] < pivot) swap(lt++, i++); else if (a[i] > pivot) swap(i, gt--); else i++; }
+      console.log(JSON.stringify(a)); console.log(lt); console.log(gt);
+    explain: All three 3s are in their final positions [2..4]; only [0..1] needs another call.
+    hints:
+      - Nothing is greater than 3, so gt never moves.
+  - id: ex-04
+    legacyId: w3d5-4
+    type: mcq
+    tag: Worst case
+    q: When does quicksort degrade to O(n²)?
+    options:
+      - t: When the pivot is repeatedly the smallest or largest element, so each partition removes only one element.
+        ok: true
+        why: Then the recursion depth is n and the partitions cost n + (n−1) + … = O(n²).
+      - t: When the input is random.
+        why: 'Random input gives balanced partitions on average: O(n log n).'
+        kind: concept
+      - t: Never, if the code is correct.
+        why: Correct code can still be O(n²) with bad pivots, for example always taking a[lo] on sorted input.
+        kind: concept
+    explain: A random pivot makes the bad case unlikely; a three-way partition handles many equal keys.
+    hints:
+      - What does a partition look like if the pivot is the minimum?
+  - id: ex-05
+    legacyId: w3d5-5
+    type: predict
+    tag: The default sort
+    q: What does this print?
+    code: |
+      console.log(JSON.stringify([10, 9, 1, 100].sort()));
+      console.log(JSON.stringify([10, 9, 1, 100].sort((a, b) => a - b)));
+    answer: |-
+      [1,10,100,9]
+      [1,9,10,100]
+    normalize: exact
+    traps:
+      ? "[1,9,10,100]\n[1,9,10,100]"
+      : 'Without a comparator, `sort` converts elements to strings and compares them as text: "10" < "100" < "9".'
+    explain: Always pass a comparator for numbers.
+    hints:
+      - How does "9" compare with "10" as text?
+  - id: ex-06
+    legacyId: w3d5-6
+    type: bug
+    tag: Comparator bug
+    q: This comparator gives inconsistent results. Click the line.
+    code: |
+      const people = [{ name: 'Ann', age: 30 }, { name: 'Bob', age: 25 }, { name: 'Cy', age: 30 }];
+      people.sort((a, b) => a.age > b.age);
+      console.log(people.map((p) => p.name).join(','));
+    bug:
+      - 1
+    kind: impl
+    explain: 'A comparator must return a negative, zero or positive number. `a.age > b.age` returns a boolean: `true` becomes 1 and `false` becomes 0, so "a is less than b" is reported as "equal" and the engine may leave the array unsorted.'
+    fix: |
+      people.sort((a, b) => a.age - b.age);
+    fine:
+      '0': The data is fine.
+      '2': Printing the names is fine.
+    hints:
+      - What type must a comparator return?
+  - id: ex-07
+    legacyId: w3d5-7
+    type: code
+    tag: Two keys
+    q: 'Write `sortPeople(people)`: return the array sorted by `age` ascending, and by `name` ascending (string order) among people of the same age. Mutating the input is fine.'
+    fn: sortPeople
+    starter: |
+      function sortPeople(people) {
+
+      }
+    solution: |
+      function sortPeople(people) {
+        return people.sort((a, b) => a.age - b.age || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+      }
+    tests:
+      - args:
+          - - name: Cy
+              age: 30
+            - name: Bob
+              age: 25
+            - name: Ann
+              age: 30
+        expect:
+          - name: Bob
+            age: 25
+          - name: Ann
+            age: 30
+          - name: Cy
+            age: 30
+      - args:
+          - - name: b
+              age: 1
+            - name: a
+              age: 1
+        expect:
+          - name: a
+            age: 1
+          - name: b
+            age: 1
+      - args:
+          - []
+        expect: []
+      - args:
+          - - name: Zed
+              age: 5
+            - name: Amy
+              age: 50
+            - name: Max
+              age: 5
+        expect:
+          - name: Max
+            age: 5
+          - name: Zed
+            age: 5
+          - name: Amy
+            age: 50
+        hidden: true
+    explain: '`a.age - b.age || …` falls through to the name comparison only when the ages are equal (difference 0). Alternatively: stable-sort by name first, then by age; stability keeps names ordered within each age.'
+    hints:
+      - Compare ages first; if equal, compare names.
+      - '`x || y` evaluates y only when x is 0.'
+  - id: ex-08
+    legacyId: w3d5-8
+    type: pattern
+    tag: Choose the tool
+    q: You receive 10⁵ numbers once, then 10⁵ queries "how many numbers are ≤ x?". Which approach fits best?
+    options:
+      - t: Sort once (O(n log n)), then answer each query with an upper-bound binary search (O(log n)).
+        ok: true
+        why: The count of numbers ≤ x is upperBound(x). Total O((n + q) log n).
+      - t: Put the numbers in a Set and loop over it for each query.
+        why: 'A Set answers membership, not "how many are ≤ x"; looping is O(n) per query: O(n·q) = 10¹⁰.'
+        kind: concept
+      - t: Scan the array for each query.
+        why: 'O(n·q) = 10¹⁰: too slow.'
+        kind: concept
+    explain: Many queries on static data is the clue for sort + binary search.
+    hints:
+      - Which structure answers order questions?
+  - id: ex-09
+    legacyId: w3d5-9
+    type: interview
+    title: Sort Array by Increasing Frequency (LeetCode 1636)
+    q: 'Sort `nums` in increasing order of how often each value occurs. If several values have the same frequency, sort them in **decreasing** order of value. Example: `[1,1,2,2,2,3]` → `[3,1,1,2,2,2]`.'
+    model:
+      clarify: |
+        - Values can be negative (−100..100), n ≤ 100.
+        - Ties by frequency → larger value first.
+      brute: 'Count occurrences, then sort with a two-key comparator: frequency ascending, then value descending. O(n log n). This is already the intended solution; the work is getting the comparator right.'
+      optimize: Precompute counts in a Map so the comparator is O(1). `(a, b) => count.get(a) - count.get(b) || b - a`. Returning numbers, with `||` for the tie-break.
+      edges: |
+        - all values distinct → sorted descending
+        - negative values `[-1,1,-6,4,5,-6,1,4,1]` → `[5,-1,4,4,-6,-6,1,1,1]`
+        - single element
+      complexity: O(n log n) time, O(n) space for the counts.
+    fn: frequencySortNums
+    starter: |
+      function frequencySortNums(nums) {
+
+      }
+    solution: |
+      function frequencySortNums(nums) {
+        const count = new Map();
+        for (const x of nums) count.set(x, (count.get(x) ?? 0) + 1);
+        return nums.sort((a, b) => count.get(a) - count.get(b) || b - a);
+      }
+    tests:
+      - args:
+          - - 1
+            - 1
+            - 2
+            - 2
+            - 2
+            - 3
+        expect:
+          - 3
+          - 1
+          - 1
+          - 2
+          - 2
+          - 2
+      - args:
+          - - 2
+            - 3
+            - 1
+            - 3
+            - 2
+        expect:
+          - 1
+          - 3
+          - 3
+          - 2
+          - 2
+      - args:
+          - - -1
+            - 1
+            - -6
+            - 4
+            - 5
+            - -6
+            - 1
+            - 4
+            - 1
+        expect:
+          - 5
+          - -1
+          - 4
+          - 4
+          - -6
+          - -6
+          - 1
+          - 1
+          - 1
+      - args:
+          - - 7
+        expect:
+          - 7
+        hidden: true
+      - args:
+          - - 3
+            - 2
+            - 1
+        expect:
+          - 3
+          - 2
+          - 1
+        hidden: true
+    explain: 'Count once outside the comparator: counting inside it would make each comparison O(n).'
+    hints:
+      - Count first.
+      - 'Primary key: frequency ascending. Secondary key: value descending.'
+annotated: []

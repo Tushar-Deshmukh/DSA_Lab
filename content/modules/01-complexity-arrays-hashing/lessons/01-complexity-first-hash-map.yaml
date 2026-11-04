@@ -1,0 +1,323 @@
+exercises:
+  - id: ex-01
+    legacyId: w1d1-1
+    type: mcq
+    tag: Cases
+    q: Which statements are correct? Select all that apply.
+    options:
+      - t: Looking up a key in a `Map` is O(1) on average and O(n) in the worst case.
+        ok: true
+        why: Average over keys with a good hash; worst case when many keys collide.
+      - t: Binary search is O(n), because n is also an upper bound.
+        why: 'O(n) is technically an upper bound but not a useful one. Interviewers want the tight bound: O(log n).'
+        kind: concept
+      - t: '`arr.push(x)` is O(1) amortised, even though one push can cost O(n).'
+        ok: true
+        why: Resizes double the capacity, so their total cost over n pushes is O(n).
+      - t: Best case and worst case are the same thing as Ω and O.
+        why: Cases describe *which input* you analyse; O/Ω/Θ describe *how tightly you bound* the cost for that input. You can give a Θ bound for the worst case.
+        kind: concept
+    explain: Always say which case you mean, and give the tightest bound you can.
+    hints:
+      - Two of these are about hash maps and arrays; the other two confuse ideas.
+  - id: ex-02
+    legacyId: w1d1-2
+    type: complexity
+    tag: Snippet (a)
+    code: |
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < 100; j++) work();
+    fields:
+      - label: Time
+        answer: O(n)
+        why:
+          O(n²): The inner loop runs 100 times regardless of n. 100 is a constant, so 100·n = O(n).
+    explain: Constants inside loops are still constants.
+    hints:
+      - Does the inner loop's length grow with n?
+  - id: ex-03
+    legacyId: w1d1-3
+    type: complexity
+    tag: Snippet (b)
+    code: |
+      for (let i = n; i > 1; i = Math.floor(i / 2)) work();
+    fields:
+      - label: Time
+        answer: O(log n)
+        why:
+          O(n): 'i is halved, not decremented: n, n/2, n/4, … reaches 1 after about log₂ n steps.'
+    explain: Each step halves the remaining value.
+    hints:
+      - How many times can you halve 1,024 before you reach 1?
+  - id: ex-04
+    legacyId: w1d1-4
+    type: complexity
+    tag: Snippet (c)
+    code: |
+      for (let i = 0; i < n; i++)
+        for (let j = 1; j < n; j *= 2) work();
+    fields:
+      - label: Time
+        answer: O(n log n)
+        why:
+          O(n²): The inner index doubles, so the inner loop runs about log₂ n times, not n.
+          O(log n): The outer loop still runs n times.
+    explain: n outer iterations × log n inner iterations.
+    hints:
+      - Analyse the inner loop on its own first.
+  - id: ex-05
+    legacyId: w1d1-5
+    type: complexity
+    tag: Snippet (d)
+    code: |
+      const s = arr.join("");
+      for (let i = 0; i < n; i++) s.slice(i);
+    fields:
+      - label: Time (standard cost model)
+        answer: O(n²)
+        why:
+          O(n): '`slice(i)` can copy up to n − i characters, so it is not O(1). The total is n + (n−1) + … = O(n²).'
+    explain: Analyse string slices as O(length). V8 often shares memory for slices, but you should not rely on it in an interview.
+    hints:
+      - What does one `slice` cost?
+  - id: ex-06
+    legacyId: w1d1-6
+    type: complexity
+    tag: Snippet (e)
+    code: |
+      function f(n) { if (n <= 1) return; f(n - 1); f(n - 1); }
+    fields:
+      - label: Time
+        answer: O(2ⁿ)
+        why:
+          O(n): Each call makes two calls, so the number of calls doubles at every level of the recursion tree.
+          O(n²): 'Count the nodes of the recursion tree: 1 + 2 + 4 + … + 2ⁿ⁻¹.'
+      - label: Stack space
+        answer: O(n)
+        why:
+          O(2ⁿ): Only one chain of calls is on the stack at a time; the deepest chain has n frames.
+    explain: 'Calls double per level: ~2ⁿ calls of O(1) each. The stack holds one root-to-leaf path: O(n).'
+    hints:
+      - Draw the calls for n = 3.
+  - id: ex-07
+    legacyId: w1d1-7
+    type: complexity
+    tag: Snippet (f)
+    code: |
+      function g(n) { if (n <= 1) return; g(n / 2); }
+    fields:
+      - label: Time
+        answer: O(log n)
+      - label: Stack space
+        answer: O(log n)
+        why:
+          O(1): 'It is recursive: every call waits on the stack for the next one, and there are log₂ n of them.'
+    explain: 'One call per halving: log n calls, all on the stack at once.'
+    hints:
+      - How many calls happen before n reaches 1?
+  - id: ex-08
+    legacyId: w1d1-8
+    type: mcq
+    tag: Read the constraints
+    q: A problem says `1 ≤ nums.length ≤ 10⁵`. Which approaches are realistic? Select all that apply.
+    options:
+      - t: Sort, then one pass (O(n log n))
+        ok: true
+        why: 'About 1.7 million operations: fast.'
+      - t: A hash map in one pass (O(n))
+        ok: true
+        why: '10⁵ operations: instant.'
+      - t: Check every pair (O(n²))
+        why: '10¹⁰ operations: roughly 100 seconds or more at 10⁸ per second. It will time out.'
+        kind: concept
+      - t: Try every subset (O(2ⁿ))
+        why: 2¹⁰⁰⁰⁰⁰ is beyond astronomical; subsets need n ≤ 20–25.
+        kind: concept
+    explain: 'Do this the moment you read a problem: the constraint usually tells you the intended complexity.'
+    hints:
+      - Multiply out n² for n = 10⁵ and compare with 10⁸ per second.
+  - id: ex-09
+    legacyId: w1d1-9
+    type: complexity
+    tag: Hidden cost
+    q: What is the time complexity of this deduplication?
+    code: |
+      function unique(nums) {
+        const out = [];
+        for (const x of nums) if (!out.includes(x)) out.push(x);
+        return out;
+      }
+    fields:
+      - label: Time
+        answer: O(n²)
+        why:
+          O(n): '`includes` scans `out` from the start: O(n) per call, inside a loop of n.'
+    explain: 'Replace `out.includes(x)` with a `Set` and it becomes O(n) average: `const seen = new Set()`.'
+    hints:
+      - What does `includes` cost?
+  - id: ex-10
+    legacyId: w1d1-10
+    type: mcq
+    tag: Trade-offs
+    q: You must check for duplicates in a large array, memory is tight, and you are allowed to reorder the input. Which version fits best?
+    options:
+      - t: The `Set` version
+        why: Fastest (O(n) average) but uses O(n) extra memory.
+        kind: concept
+      - t: Sort in place, then compare neighbours
+        ok: true
+        why: O(n log n) time with little extra memory (O(1) with an in-place sort such as heapsort; V8's sort may use up to O(n) temporarily).
+      - t: The pair loop
+        why: O(1) space, but O(n²) time is too slow for large inputs.
+        kind: concept
+    explain: 'There is rarely one best answer: state the time/space trade-off and choose based on the constraints you were given.'
+    hints:
+      - Which version uses the least extra memory while still being fast?
+  - id: ex-11
+    legacyId: w1d1-11
+    type: code
+    tag: Write it
+    q: Write `containsDuplicate(nums)` (problem 217) in O(n) average time with a `Set`.
+    fn: containsDuplicate
+    starter: |
+      function containsDuplicate(nums) {
+
+      }
+    solution: |
+      function containsDuplicate(nums) {
+        const seen = new Set();
+        for (const x of nums) {
+          if (seen.has(x)) return true;
+          seen.add(x);
+        }
+        return false;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 1
+        expect: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+        expect: false
+      - args:
+          - - 1
+            - 1
+            - 1
+            - 3
+            - 3
+            - 4
+            - 3
+            - 2
+            - 4
+            - 2
+        expect: true
+      - args:
+          - - 7
+        expect: false
+        hidden: true
+      - args:
+          - - -1
+            - 0
+            - -1
+        expect: true
+        hidden: true
+      - args:
+          - - 0
+            - 0
+        expect: true
+        hidden: true
+    explain: '`new Set(nums).size !== nums.length` also works and is a fine one-liner; the loop version can stop early.'
+    hints:
+      - Ask "have I seen this value?" with a Set.
+  - id: ex-12
+    legacyId: w1d1-12
+    type: bug
+    tag: Order of operations
+    q: This version returns `[0, 0]` for `nums = [3, 2, 4]`, `target = 6`. Click the line that should move.
+    code: |
+      function twoSum(nums, target) {
+        const indexOf = new Map();
+        for (let i = 0; i < nums.length; i++) {
+          indexOf.set(nums[i], i);
+          const need = target - nums[i];
+          if (indexOf.has(need)) return [indexOf.get(need), i];
+        }
+        return [];
+      }
+    bug:
+      - 3
+    kind: impl
+    explain: 'Storing before checking lets 3 find itself: need = 3, which was just stored at index 0. Store *after* the check, so the map only holds earlier elements.'
+    fix: |
+      const need = target - nums[i];
+      if (indexOf.has(need)) return [indexOf.get(need), i];
+      indexOf.set(nums[i], i);
+    fine:
+      '1': A Map from value to index is the right structure.
+      '4': Computing the complement is correct.
+    hints:
+      - When i = 0, what is in the map at the moment of the check?
+  - id: ex-13
+    legacyId: w1d1-13
+    type: interview
+    title: Jewels and Stones (LeetCode 771)
+    q: '`jewels` lists the types of stones that are jewels (each character distinct), and `stones` lists the stones you have. Letters are case-sensitive. Return how many of your stones are jewels. Example: `jewels = "aA"`, `stones = "aAAbbbb"` → 3.'
+    model:
+      clarify: |
+        - Case-sensitive: "a" and "A" are different types.
+        - Lengths up to 50 here, but answer as if they could be large.
+        - Are jewel characters distinct? (Yes.)
+      brute: 'For each stone, scan `jewels` (or call `jewels.includes(c)`): O(s · j) time, O(1) space.'
+      optimize: 'The inner loop asks one question per stone: "is this character a jewel?" Store the jewels in a `Set` first, then each check is O(1) average. O(s + j).'
+      edges: |
+        - No jewels among the stones → 0
+        - Every stone is a jewel
+        - Case difference: jewels "a", stones "A" → 0
+      complexity: O(j + s) average time; O(j) space for the set.
+    fn: numJewelsInStones
+    starter: |
+      function numJewelsInStones(jewels, stones) {
+
+      }
+    solution: |
+      function numJewelsInStones(jewels, stones) {
+        const isJewel = new Set(jewels);
+        let count = 0;
+        for (const c of stones) if (isJewel.has(c)) count++;
+        return count;
+      }
+    tests:
+      - args:
+          - aA
+          - aAAbbbb
+        expect: 3
+      - args:
+          - z
+          - ZZ
+        expect: 0
+      - args:
+          - abc
+          - aabbcc
+        expect: 6
+        hidden: true
+      - args:
+          - a
+          - ''
+        expect: 0
+        hidden: true
+      - args:
+          - xyz
+          - ab
+        expect: 0
+        hidden: true
+    explain: '`new Set(jewels)` builds a set of characters, because a string is iterable.'
+    hints:
+      - What question does the inner loop of the brute force keep asking?
+      - Store the answers to that question in a structure with O(1) lookup.
+annotated: []

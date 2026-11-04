@@ -1,0 +1,217 @@
+exercises:
+  - id: ex-01
+    legacyId: diagnostic-1
+    type: mcq
+    tag: A1
+    q: What is the time complexity of `for (let i = 0; i < n; i++) for (let j = i; j < n; j++) {...}`?
+    options:
+      - t: O(n²)
+        ok: true
+        why: The inner loop runs n + (n − 1) + … + 1 = n(n + 1)/2 times.
+      - t: O(n log n)
+        why: The inner loop shrinks by one each time, not by half.
+        kind: concept
+      - t: O(n)
+        why: There are two nested loops over n, and the inner one averages n/2 iterations.
+        kind: concept
+    explain: 'n(n + 1)/2 is still Θ(n²): constants and lower terms are dropped.'
+    hints:
+      - Add up how many times the inner loop runs for each i.
+  - id: ex-02
+    legacyId: diagnostic-2
+    type: mcq
+    tag: A2
+    q: What is the complexity of `for (let i = 1; i < n; i *= 2) {...}`?
+    options:
+      - t: O(log n)
+        ok: true
+        why: i doubles each step, so it reaches n after about log₂ n steps.
+      - t: O(n)
+        why: i does not increase by 1; it doubles.
+        kind: concept
+      - t: O(√n)
+        why: That would be i * i < n with i++.
+        kind: concept
+    explain: Doubling (or halving) a counter gives a logarithmic number of iterations.
+    hints:
+      - How many doublings take 1 to n?
+  - id: ex-03
+    legacyId: diagnostic-3
+    type: mcq
+    tag: A3
+    q: You loop over an array of length n and call `arr.includes(x)` inside the loop. Total complexity?
+    options:
+      - t: O(n²)
+        ok: true
+        why: '`includes` is a linear scan, done n times.'
+      - t: O(n)
+        why: '`includes` is not O(1): arrays have no index by value. A Set''s `has` is O(1).'
+        kind: concept
+      - t: O(n log n)
+        why: No sorting or halving happens.
+        kind: concept
+    explain: 'Hidden loops inside built-ins count: `includes`, `indexOf`, `slice`, `shift`, spread.'
+    hints:
+      - What does `includes` do internally?
+  - id: ex-04
+    legacyId: diagnostic-4
+    type: mcq
+    tag: A4
+    q: What does `s = s.slice(1)` cost inside a loop that runs n times on a string of length n?
+    options:
+      - t: 'O(n²) total in the standard cost model: each slice can copy up to n characters'
+        ok: true
+        why: V8 often shares memory between a string and its slices, so it may run faster in practice, but interviewers expect O(n) per slice. Move an index instead.
+      - t: 'O(n) total: slicing is O(1)'
+        why: Not in the cost model interviewers use, and array slices always copy.
+        kind: concept
+      - t: O(log n) per slice
+        why: Slicing does not halve anything.
+        kind: concept
+    explain: Replace repeated slicing with an index that moves.
+    hints:
+      - How many characters can one slice copy?
+  - id: ex-05
+    legacyId: diagnostic-5
+    type: mcq
+    tag: A5
+    q: Why is calling `queue.shift()` in a BFS loop a problem in JavaScript?
+    options:
+      - t: '`shift` re-indexes the remaining elements, O(n) per call, so BFS becomes O(V²). Use a head pointer.'
+        ok: true
+      - t: '`shift` returns the last element, not the first.'
+        why: It returns the first element; the problem is its cost.
+        kind: impl
+      - t: 'It is not a problem: `shift` is O(1).'
+        why: Arrays are not linked lists; removing the front moves every other element.
+        kind: concept
+    explain: 'Section 6.5: an array plus a head index gives O(1) amortised dequeue.'
+    hints:
+      - What has to happen to every other element when the first one is removed?
+  - id: ex-06
+    legacyId: diagnostic-6
+    type: predict
+    tag: A6
+    q: What does this print, and why?
+    code: |
+      console.log(JSON.stringify([10, 9, 1, 2].sort()));
+    answer: '[1,10,2,9]'
+    normalize: exact
+    traps:
+      '[1,2,9,10]': The default sort compares elements as strings, so "10" comes before "2". Pass `(a, b) => a - b` for numbers.
+      '[10,9,2,1]': sort() is ascending, and it compares as strings.
+    explain: '`[1, 10, 2, 9]`: the default comparator converts to strings. Use `(a, b) => a - b`.'
+    hints:
+      - What type does the default comparator compare?
+  - id: ex-07
+    legacyId: diagnostic-7
+    type: mcq
+    tag: A7
+    q: Which are good reasons to prefer `Map` over a plain object for counting frequencies? Select all that apply.
+    options:
+      - t: 'Keys can be of any type: numbers stay numbers'
+        ok: true
+      - t: No prototype keys such as "constructor" or "__proto__" to collide with
+        ok: true
+      - t: '`size` is O(1) and iteration order is the insertion order'
+        ok: true
+      - t: A Map uses less memory than an array for 26 lowercase letters
+        why: For 26 lowercase letters a fixed array of 26 counts is smaller and faster than either.
+        kind: concept
+    explain: The handbook's written key accepts any two of the first three reasons; here the point needs all three selected.
+    hints:
+      - What can go wrong with `obj[key]` when key is "constructor"?
+  - id: ex-08
+    legacyId: diagnostic-8
+    type: complexity
+    tag: A8
+    q: 'Naive recursive Fibonacci, `fib(n) = fib(n − 1) + fib(n − 2)`:'
+    fields:
+      - label: Time
+        answer: O(2ⁿ)
+        options:
+          - O(n)
+          - O(n²)
+          - O(2ⁿ)
+          - O(log n)
+        why:
+          O(n): That is the memoised version; the naive one recomputes the same values exponentially often.
+      - label: Space
+        answer: O(n)
+        options:
+          - O(1)
+          - O(n)
+          - O(2ⁿ)
+        why:
+          O(2ⁿ): 'Only one path of the call tree is on the stack at a time: depth n.'
+    explain: More precisely O(φⁿ) ≈ O(1.618ⁿ), commonly stated as O(2ⁿ); the call stack is O(n) deep.
+    hints:
+      - 'Time: count the calls. Space: how deep does the stack get?'
+  - id: ex-09
+    legacyId: diagnostic-9
+    type: mcq
+    tag: A9
+    q: Constraints say n ≤ 10⁵. Which time complexities are acceptable? Select all that apply.
+    options:
+      - t: O(n)
+        ok: true
+      - t: O(n log n)
+        ok: true
+      - t: O(n √n), at a push
+        ok: true
+        why: 'About 3·10⁷: borderline but usually fine.'
+      - t: O(n²)
+        why: 'About 10¹⁰ operations: far too slow.'
+        kind: concept
+    explain: Budget roughly 10⁸ simple operations.
+    hints:
+      - Plug n = 10⁵ into each.
+  - id: ex-10
+    legacyId: diagnostic-10
+    type: trace
+    tag: A10
+    q: 'A subarray is contiguous; a subsequence keeps order but may skip elements. For an array of length n = 4:'
+    rows:
+      - prompt: Number of non-empty subarrays
+        answer: '10'
+        why: n(n + 1)/2.
+      - prompt: Number of non-empty subsequences
+        answer: '15'
+        why: 2ⁿ − 1.
+    verify: |
+      const n = 4; console.log(n * (n + 1) / 2); console.log(2 ** n - 1);
+    explain: In general n(n + 1)/2 subarrays (quadratic) and 2ⁿ − 1 subsequences (exponential).
+    hints:
+      - 'Subarrays: choose a start and an end. Subsequences: each element is in or out.'
+  - id: ex-11
+    legacyId: diagnostic-11
+    type: predict
+    tag: A11
+    q: What does this print?
+    code: |
+      console.log(1 << 31);
+    answer: '-2147483648'
+    normalize: exact
+    traps:
+      '2147483648': Bitwise operators produce signed 32-bit integers; bit 31 is the sign bit.
+    explain: '`1 << 31` sets the sign bit of a signed 32-bit integer.'
+    hints:
+      - What type do bitwise operators return in JavaScript?
+  - id: ex-12
+    legacyId: diagnostic-12
+    type: mcq
+    tag: A12
+    q: In closed-interval binary search on a sorted array, what must be true about `[lo, hi]` at the start of every iteration?
+    options:
+      - t: If the target exists, it lies inside [lo, hi]; each step must keep that true while shrinking the range
+        ok: true
+      - t: lo and hi are always both even
+        why: Parity is irrelevant.
+        kind: concept
+      - t: The middle element is always the target
+        why: Then no search would be needed.
+        kind: concept
+    explain: This is the loop invariant. Off-by-one bugs come from updates that break it (for example hi = mid when mid was already ruled out).
+    hints:
+      - What is the loop promising to preserve?
+annotated: []

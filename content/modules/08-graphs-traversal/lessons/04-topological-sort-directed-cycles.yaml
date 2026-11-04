@@ -1,0 +1,229 @@
+exercises:
+  - id: ex-01
+    legacyId: w8d4-1
+    type: trace
+    tag: Kahn dry run
+    q: Kahn on 4 courses with prerequisites `[[1,0],[2,0],[3,1],[3,2]]`.
+    rows:
+      - prompt: Initial in-degrees, as a list
+        answer:
+          - '[0,1,1,2]'
+      - prompt: In-degree of 3 after taking 1
+        answer: '1'
+      - prompt: Final order
+        answer:
+          - '[0,1,2,3]'
+    verify: |
+      const n = 4, pre = [[1, 0], [2, 0], [3, 1], [3, 2]]; const adj = Array.from({ length: n }, () => []), indeg = new Array(n).fill(0);
+      for (const [c, p] of pre) { adj[p].push(c); indeg[c]++; } console.log(JSON.stringify(indeg));
+      const q = []; for (let i = 0; i < n; i++) if (!indeg[i]) q.push(i); const order = []; let after1 = null;
+      for (let h = 0; h < q.length; h++) { const u = q[h]; order.push(u); for (const v of adj[u]) if (--indeg[v] === 0) q.push(v); if (u === 1) after1 = indeg[3]; }
+      console.log(after1); console.log(JSON.stringify(order));
+    explain: After 0, both 1 and 2 are free; 3 waits for both.
+    hints:
+      - '[1, 0] means 0 → 1.'
+  - id: ex-02
+    legacyId: w8d4-2
+    type: bug
+    tag: Edge direction
+    q: This Course Schedule II returns `[3,2,1,0]` for the 4-course example, an order that takes course 3 first. Click the line.
+    code: |
+      function findOrder(numCourses, prerequisites) {
+        const adj = Array.from({ length: numCourses }, () => []);
+        const indeg = new Array(numCourses).fill(0);
+        for (const [course, pre] of prerequisites) {
+          adj[course].push(pre);
+          indeg[pre]++;
+        }
+        const q = [];
+        for (let i = 0; i < numCourses; i++) if (indeg[i] === 0) q.push(i);
+        const order = [];
+        for (let h = 0; h < q.length; h++) { const u = q[h]; order.push(u); for (const v of adj[u]) if (--indeg[v] === 0) q.push(v); }
+        return order.length === numCourses ? order : [];
+      }
+    bug:
+      - 4
+    kind: concept
+    explain: '`[course, pre]` means pre must come first, so the edge is pre → course: `adj[pre].push(course); indeg[course]++`. This code reverses every edge and produces a reversed order.'
+    fix: |
+      adj[pre].push(course);
+      indeg[course]++;
+    fine:
+      '8': Starting with all in-degree-0 nodes is right.
+      '11': Comparing the order's length with numCourses detects cycles, which is right.
+    hints:
+      - Which course has to be finished first in [1, 0]?
+  - id: ex-03
+    legacyId: w8d4-3
+    type: mcq
+    tag: Why three?
+    q: In the diamond 0→1, 0→2, 1→3, 2→3, a DFS from 0 visits 1, then 3, then returns and visits 2, which has an edge to 3. What should happen at that edge?
+    options:
+      - t: 'Nothing: 3 is in state 2 (finished), so it is not on the current path; no cycle.'
+        ok: true
+        why: A cycle needs an edge back to a node that is still an ancestor on the current path (state 1).
+      - t: Report a cycle, because 3 was already visited.
+        why: 'That is the two-state mistake: being visited before is not the same as being an ancestor.'
+        kind: concept
+      - t: Visit 3 again to make sure.
+        why: Revisiting finished nodes makes DFS exponential on DAGs with many paths.
+        kind: concept
+    explain: State 1 = 'on the stack right now'; state 2 = 'fully explored and safe'.
+    hints:
+      - Is 3 an ancestor of 2?
+  - id: ex-04
+    legacyId: w8d4-4
+    type: code
+    tag: Topological order by DFS
+    q: 'Write `topoOrder(n, edges)` with three-state DFS: return any topological order of the directed graph (edges `[u, v]` mean u before v), or `[]` if there is a cycle.'
+    fn: topoOrder
+    checker: |
+      (got, [n, edges]) => {
+        const adj = Array.from({ length: n }, () => []), indeg = new Array(n).fill(0);
+        edges.forEach(([u, v]) => { adj[u].push(v); indeg[v]++; });
+        const q = []; indeg.forEach((d, i) => { if (!d) q.push(i); }); let k = 0;
+        for (let h = 0; h < q.length; h++) { k++; for (const v of adj[q[h]]) if (--indeg[v] === 0) q.push(v); }
+        if (k < n) return Array.isArray(got) && got.length === 0;
+        if (!Array.isArray(got) || got.length !== n || new Set(got).size !== n) return false;
+        const pos = new Map(got.map((v, i) => [v, i]));
+        return edges.every(([u, v]) => pos.get(u) < pos.get(v));
+      }
+    starter: |
+      function topoOrder(n, edges) {
+
+      }
+    solution: |
+      function topoOrder(n, edges) {
+        const adj = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) adj[u].push(v);
+        const state = new Array(n).fill(0), post = [];
+        function dfs(u) {
+          state[u] = 1;
+          for (const v of adj[u]) {
+            if (state[v] === 1) return false;
+            if (state[v] === 0 && !dfs(v)) return false;
+          }
+          state[u] = 2; post.push(u);
+          return true;
+        }
+        for (let i = 0; i < n; i++) if (state[i] === 0 && !dfs(i)) return [];
+        return post.reverse();
+      }
+    tests:
+      - args:
+          - 4
+          - - - 0
+              - 1
+            - - 0
+              - 2
+            - - 1
+              - 3
+            - - 2
+              - 3
+        expect: any valid order
+      - args:
+          - 3
+          - - - 0
+              - 1
+            - - 1
+              - 2
+            - - 2
+              - 0
+        expect: []
+      - args:
+          - 3
+          - []
+        expect: any valid order
+      - args:
+          - 6
+          - - - 5
+              - 2
+            - - 5
+              - 0
+            - - 4
+              - 0
+            - - 4
+              - 1
+            - - 2
+              - 3
+            - - 3
+              - 1
+        expect: any valid order
+        hidden: true
+    explain: 'A node is pushed to `post` only after all its descendants: reversing postorder puts every node before everything it points to.'
+    hints:
+      - 'Three states: unvisited, on the path, done.'
+      - Push a node to a list when it finishes; reverse the list at the end.
+  - id: ex-05
+    legacyId: w8d4-5
+    type: interview
+    title: Minimum Number of Vertices to Reach All Nodes (LeetCode 1557)
+    q: 'In a DAG with n nodes and directed `edges`, return the smallest set of vertices from which every node is reachable (any order; the answer is unique). Example: n = 6, edges `[[0,1],[0,2],[2,5],[3,4],[4,2]]` → `[0,3]`.'
+    model:
+      clarify: |
+        - The graph is guaranteed acyclic.
+        - The answer is unique; any order.
+      brute: 'Try subsets of starting vertices and check reachability: exponential.'
+      optimize: 'In-degree reasoning, the core of Kahn''s algorithm: a node with in-degree 0 cannot be reached from anywhere, so it must be in the set; and every other node has an incoming edge, so following edges backwards in a DAG always ends at some in-degree-0 node. So the answer is exactly the nodes with in-degree 0.'
+      edges: |
+        - no edges → every node
+        - a single chain → its head
+      complexity: O(V + E) time, O(V) space.
+    fn: findSmallestSetOfVertices
+    compare: sorted
+    starter: |
+      function findSmallestSetOfVertices(n, edges) {
+
+      }
+    solution: |
+      function findSmallestSetOfVertices(n, edges) {
+        const hasIn = new Array(n).fill(false);
+        for (const [, v] of edges) hasIn[v] = true;
+        const res = [];
+        for (let i = 0; i < n; i++) if (!hasIn[i]) res.push(i);
+        return res;
+      }
+    tests:
+      - args:
+          - 6
+          - - - 0
+              - 1
+            - - 0
+              - 2
+            - - 2
+              - 5
+            - - 3
+              - 4
+            - - 4
+              - 2
+        expect:
+          - 0
+          - 3
+      - args:
+          - 5
+          - - - 0
+              - 1
+            - - 2
+              - 1
+            - - 3
+              - 1
+            - - 1
+              - 4
+            - - 2
+              - 4
+        expect:
+          - 0
+          - 2
+          - 3
+      - args:
+          - 3
+          - []
+        expect:
+          - 0
+          - 1
+          - 2
+        hidden: true
+    explain: Sometimes the graph algorithm reduces to one observation about degrees; say the proof in two sentences.
+    hints:
+      - Which nodes can no other node reach?
+annotated: []

@@ -1,0 +1,22 @@
+---
+number: 3
+slug: binary-search-sorting
+title: Binary search and sorting
+legacyId: w3
+objectives: '**A. Learning objectives.** By the end of this module you can: write binary search by reasoning from an invariant rather than a memorised template; find the first/last position satisfying a condition (lower and upper bound); search rotated arrays; binary-search an answer space with a feasibility function; implement merge sort and quicksort; explain stability; write correct JavaScript comparators; choose between sorting, hashing and binary search.'
+shortOnTime: binary search is non-negotiable; sorting theory can shrink. Drop 704 and 35 (do them as 5-minute warm-ups instead), skip 179, and if needed implement only merge sort in lesson 5 (quicksort can wait until the end of Module 4).
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Binary search is the first algorithm where a tiny change (`<` vs `<=`, `mid` vs `mid − 1`) separates a correct solution from an infinite loop. This module replaces memorised templates with one idea, **find the first index where a monotone predicate becomes true**, and applies it to sorted arrays, rotated arrays, matrices, peaks and, in lesson 3, to answers that are not stored anywhere. Lesson 5 covers the sorting algorithms you must be able to explain and the comparators JavaScript requires.
+
+| Lesson | Topic | The idea |
+| --- | --- | --- |
+| 1 | Lower and upper bound | Search for a boundary `F F F T T T`, not for "the target" |
+| 2 | Predicates and rotated arrays | One half around `mid` is always sorted |
+| 3 | Binary search on the answer | Feasibility is monotone in the answer |
+| 4 | Flattened matrices and peaks | Binary search needs a rule, not sorted data |
+| 5 | Sorting | Merge sort, quicksort, stability, comparators |
+
+</Unit>

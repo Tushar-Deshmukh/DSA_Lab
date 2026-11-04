@@ -1,0 +1,239 @@
+# Exceptions to the date check in content:check. Each entry says why it is not a date or a timetable.
+entries:
+  - match: sell day
+    in: lesson:complexity-arrays-hashing/arrays-in-place-read-write-pointers
+    reason: Problem 121 is about buying and selling across days.
+  - match: buy day
+    in: lesson:complexity-arrays-hashing/arrays-in-place-read-write-pointers
+    reason: Problem 121 is about buying and selling across days.
+  - match: day
+    in: exercise:two-pointers-windows-prefix-sums/partitioning-and-kadane/ex-08
+    reason: Problem 121 is about buying and selling across days.
+  - match: daily
+    in: exercise:two-pointers-windows-prefix-sums/partitioning-and-kadane/ex-08
+    reason: Problem 121 is about buying and selling across days.
+  - match: daily differences
+    in: pattern:kadane
+    reason: Problem 121 is about buying and selling across days.
+  - match: sold today
+    in: bank:121#hint
+    reason: Problem 121 is about buying and selling across days.
+  - match: at most k days
+    in: lesson:binary-search-sorting/binary-search-on-the-answer
+    reason: Problem 1011 ships packages within a number of days.
+  - match: within D days
+    in: lesson:binary-search-sorting/binary-search-on-the-answer
+    reason: Problem 1011 ships packages within a number of days.
+  - match: capacities, days
+    in: lesson:binary-search-sorting/binary-search-on-the-answer
+    reason: Problem 1011 ships packages within a number of days.
+  - match: counting hours or days
+    in: lesson:binary-search-sorting/binary-search-on-the-answer
+    reason: Problem 1011 ships packages within a number of days.
+  - match: within D days
+    in: pattern:binary-search-on-the-answer
+    reason: Problem 1011 ships packages within a number of days.
+  - match: day
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-02
+    reason: Problem 1011 ships packages within a number of days.
+  - match: days
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-02
+    reason: Problem 1011 ships packages within a number of days.
+  - match: day
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-03
+    reason: Problem 1011 ships packages within a number of days.
+  - match: days
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-03
+    reason: Problem 1011 ships packages within a number of days.
+  - match: Within D Days
+    in: bank:1011
+    reason: Problem 1011 ships packages within a number of days.
+  - match: count days greedily
+    in: bank:1011
+    reason: Problem 1011 ships packages within a number of days.
+  - match: day
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-04
+    reason: Problem 1482 asks for the day enough flowers have bloomed.
+  - match: days
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-04
+    reason: Problem 1482 asks for the day enough flowers have bloomed.
+  - match: Days
+    in: exercise:binary-search-sorting/binary-search-on-the-answer/ex-04
+    reason: Problem 1482 asks for the day enough flowers have bloomed.
+  - match: how many days until it
+    in: lesson:linked-lists-stacks-queues/monotonic-stack-and-deque
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: days until warmer
+    in: pattern:monotonic-stack
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: Daily Temperatures
+    in: bank:739#title
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: day
+    in: handbook:method-and-recognition/the-method-in-action
+    reason: The worked example in 7.5 is problem 739.
+  - match: days
+    in: handbook:method-and-recognition/the-method-in-action
+    reason: The worked example in 7.5 is problem 739.
+  - match: Daily Temperatures
+    in: handbook:method-and-recognition/the-method-in-action
+    reason: The worked example in 7.5 is problem 739.
+  - match: Each day
+    in: handbook:method-and-recognition/classification-drill
+    reason: Drill item 9 is a statement about prices across days.
+  - match: how many days
+    in: handbook:method-and-recognition/classification-drill
+    reason: Drill item 9 is a statement about prices across days.
+  - match: Each day
+    in: exercise:foundations/problem-solving-method/ex-09
+    reason: Drill item 9 is a statement about prices across days.
+  - match: how many days
+    in: exercise:foundations/problem-solving-method/ex-09
+    reason: Drill item 9 is a statement about prices across days.
+  - match: Each day
+    in: exercise:binary-search-sorting/checkpoint/ex-09
+    reason: Drill item 9 is a statement about prices across days.
+  - match: how many days
+    in: exercise:binary-search-sorting/checkpoint/ex-09
+    reason: Drill item 9 is a statement about prices across days.
+  - match: day
+    in: exercise:linked-lists-stacks-queues/checkpoint/ex-02
+    reason: The stock span statement compares prices across days. This exercise is gated.
+  - match: days
+    in: exercise:linked-lists-stacks-queues/checkpoint/ex-02
+    reason: The stock span statement compares prices across days. This exercise is gated.
+  - match: today
+    in: exercise:linked-lists-stacks-queues/checkpoint/ex-02
+    reason: The stock span statement compares prices across days. This exercise is gated.
+  - match: calendar day
+    in: exercise:dynamic-programming-1/unbounded-knapsack/ex-06
+    reason: Problem 983 buys travel passes for days of the year.
+  - match: day
+    in: exercise:dynamic-programming-1/unbounded-knapsack/ex-06
+    reason: Problem 983 buys travel passes for days of the year.
+  - match: days
+    in: exercise:dynamic-programming-1/unbounded-knapsack/ex-06
+    reason: Problem 983 buys travel passes for days of the year.
+  - match: per day
+    in: theory:dynamic-programming-2-bits/state-machine-dp
+    reason: Problem 309 is a state machine over days.
+  - match: day
+    in: pattern:state-machine-dp
+    reason: Problem 309 is a state machine over days.
+  - match: previous day's values
+    in: bank:309#hint
+    reason: Problem 309 is a state machine over days.
+  - match: previous day's values
+    in: lesson:dynamic-programming-2-bits/state-machines-recognising-dp
+    reason: Problem 309 is a state machine over days.
+  - match: yesterday's values
+    in: lesson:dynamic-programming-2-bits/state-machines-recognising-dp
+    reason: Problem 309 is a state machine over days.
+  - match: day
+    in: exercise:dynamic-programming-2-bits/state-machines-recognising-dp/ex-01
+    reason: Problem 309 is a state machine over days.
+  - match: today's rest
+    in: exercise:dynamic-programming-2-bits/state-machines-recognising-dp/ex-02
+    reason: Problem 309 is a state machine over days.
+  - match: made yesterday
+    in: exercise:dynamic-programming-2-bits/state-machines-recognising-dp/ex-02
+    reason: Problem 309 is a state machine over days.
+  - match: changed today
+    in: exercise:dynamic-programming-2-bits/state-machines-recognising-dp/ex-02
+    reason: Problem 309 is a state machine over days.
+  - match: yesterday's sold
+    in: exercise:dynamic-programming-2-bits/state-machines-recognising-dp/ex-02
+    reason: Problem 309 is a state machine over days.
+  - match: +14 days
+    in: handbook:how-this-course-works/the-strategy-in-five-rules
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +14 days
+    in: handbook:how-lessons-work
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: in 2 days
+    in: handbook:how-lessons-work
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +1 day
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +2 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +3 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +7 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +14 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: +30 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: 7 days apart
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: a week apart
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: in 2 days
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: to 1 day
+    in: handbook:revision-and-mistakes
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: two days later
+    in: handbook:assessments-and-mocks/mock-scoring-rubric
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: in two days
+    in: lesson:heaps-intervals-tries/checkpoint
+    reason: 'A spaced-repetition interval: relative time, the rule itself, not a date.'
+  - match: hours a week
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: hours/week
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: 3–4 weeks
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: hours a day
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: 5 days a week
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: mocks a week
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: weekly contest
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: re-solves a week
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: Every four weeks
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: every two weeks
+    in: handbook:after-the-course
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: 4–6 more weeks
+    in: handbook:progress-and-milestones/if-you-miss-a-milestone
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: 3–4 more weeks
+    in: handbook:readiness-checklist/verdict
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: 6–8 more weeks
+    in: handbook:readiness-checklist/verdict
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: mocks per week
+    in: handbook:readiness-checklist/verdict
+    reason: Advice on practice after the course has ended. It is a suggested load, tied to no course date.
+  - match: Weekly Contest 525
+    in: handbook:problem-bank
+    reason: Names the contest that the problem data was checked against.
+  - match: maps daily
+    in: handbook:starting-point-assessment/what-an-experienced
+    reason: Everyday work experience, not a schedule.

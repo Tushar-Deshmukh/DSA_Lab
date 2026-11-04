@@ -1,0 +1,32 @@
+---
+slug: example-3
+title: Example 3
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Example 3
+  lines:
+    - 493
+    - 510
+---
+
+**Example 3: prefix sums + hash map (Subarray Sum Equals K), and why a window fails.**
+
+```js
+function subarraySum(nums, k) {
+  // empty prefix: lets subarrays start at index 0
+  const countOfPrefix = new Map([[0, 1]]);
+  let cur = 0, count = 0;
+  for (const x of nums) {
+    cur += x;                                // cur = sum of nums[0..i]
+    // each earlier prefix p with cur - p = k ends a valid subarray here
+    count += countOfPrefix.get(cur - k) ?? 0;
+    countOfPrefix.set(cur, (countOfPrefix.get(cur) ?? 0) + 1);
+  }
+  return count;
+}
+```
+
+Dry run `[1, -1, 1]`, k = 1: start \{0:1\}. x=1: cur=1, need 0 → count 1; map \{0:1, 1:1\}. x=−1: cur=0, need −1 → 0; map \{0:2, 1:1\}. x=1: cur=1, need 0 → +2 = 3; map \{0:2, 1:2\}. Answer 3: `[1]`, `[1,-1,1]`, `[1]`. A sliding window cannot find all three because adding −1 shrinks the sum, so "grow until too big, then shrink" has no valid rule.

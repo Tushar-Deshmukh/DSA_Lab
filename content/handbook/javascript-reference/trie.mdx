@@ -1,0 +1,24 @@
+---
+slug: trie
+section: 6
+title: 6.14 Trie
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.14 Trie
+  lines:
+    - 3066
+    - 3077
+---
+
+The `Map`-based version is in the Module 7 theory, Example 4. For lowercase-only words, use fixed arrays:
+
+```js
+class TrieNode {
+  constructor() {
+    this.next = new Array(26).fill(null);
+    this.isEnd = false;
+  }
+}
+// index = ch.charCodeAt(0) - 97
+```

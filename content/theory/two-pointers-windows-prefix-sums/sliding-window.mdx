@@ -1,0 +1,19 @@
+---
+slug: sliding-window
+title: Sliding window
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Sliding window
+  lines:
+    - 419
+    - 423
+---
+
+**Sliding window.** A window `[l, r]` over a contiguous range, extended by `r` and shrunk by `l`. Each index enters and leaves once, so it is O(n) even with an inner `while`.
+
+- *Fixed size k:* add `a[r]`, remove `a[r-k]` once the window exceeds k.
+- *Variable size:* expand `r`; while the window is invalid, shrink `l`; record the answer when valid.
+- *Precondition (monotonicity):* shrinking a valid window must keep it valid (for "at most" constraints), or growing an invalid window must keep it invalid. With negative numbers, adding an element can decrease a sum, so "sum ≥ target" windows break. Then use prefix sums.

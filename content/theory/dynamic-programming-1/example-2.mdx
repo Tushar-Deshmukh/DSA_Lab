@@ -1,0 +1,32 @@
+---
+slug: example-2
+title: Example 2
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Example 2
+  lines:
+    - 1946
+    - 1963
+---
+
+**Example 2: House Robber (198), deriving the state.**
+
+- *Choice at house i:* rob it (then you cannot rob i−1) or skip it.
+- *State:* `dp[i]` = maximum money from houses `0..i`.
+- *Transition:* `dp[i] = max(dp[i-1], dp[i-2] + nums[i])`.
+- *Base:* `dp[0] = nums[0]`, `dp[1] = max(nums[0], nums[1])`. *Answer:* `dp[n-1]`.
+
+Dry run `[2, 7, 9, 3, 1]`:
+
+| i | nums\[i\] | skip = dp\[i−1\] | rob = dp\[i−2\] + nums\[i\] | dp\[i\] |
+| --- | --- | --- | --- | --- |
+| 0 | 2 | — | — | 2 |
+| 1 | 7 | 2 | 7 | 7 |
+| 2 | 9 | 7 | 2 + 9 = 11 | 11 |
+| 3 | 3 | 11 | 7 + 3 = 10 | 11 |
+| 4 | 1 | 11 | 11 + 1 = 12 | 12 |
+
+Answer 12 (houses 0, 2, 4). House Robber II (213): houses form a circle, so run the same function on `nums[0..n-2]` and `nums[1..n-1]` and take the max.

@@ -1,0 +1,19 @@
+---
+slug: 0-1-knapsack-and-subset-sum
+title: 0/1 knapsack and subset sum
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: 0/1 knapsack and subset sum
+  lines:
+    - 2042
+    - 2046
+---
+
+**0/1 knapsack and subset sum.** Each item can be used at most once. State `dp[j]` = whether (or how many ways, or the best value with which) capacity/sum j is achievable using the items processed so far. For each item, update `dp[j]` from `dp[j - w]` **iterating j from high to low**, so the value read for `dp[j - w]` still reflects the previous items and the current item is not reused. Iterating upwards turns it into the unbounded knapsack from Module 10.
+
+- *Subset sum (416):* total must be even; target = total / 2; `dp[0] = true`.
+- *Target sum (494):* assigning + and − splits nums into P and N with P − N = target and P + N = total, so P = (total + target) / 2. Count subsets summing to P. Return 0 if `(total + target)` is odd or `|target| > total`.
+- *Complexity:* O(n × target) time, O(target) space. This is *pseudo-polynomial*: fine for target ≤ \~10⁴–10⁵.

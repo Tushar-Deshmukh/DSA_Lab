@@ -1,0 +1,34 @@
+---
+slug: example-3
+title: Example 3
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Example 3
+  lines:
+    - 1230
+    - 1249
+---
+
+**Example 3: iterative inorder traversal (94).**
+
+```js
+function inorderTraversal(root) {
+  const res = [], stack = [];
+  let cur = root;
+  while (cur || stack.length) {
+    // go as far left as possible
+    while (cur) { stack.push(cur); cur = cur.left; }
+    // leftmost unvisited node
+    cur = stack.pop();
+    res.push(cur.val);                                 // visit
+    // then its right subtree
+    cur = cur.right;
+  }
+  return res;
+}
+```
+
+This is also the engine of 230 (Kth smallest in a BST: stop after k pops).

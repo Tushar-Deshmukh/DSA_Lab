@@ -1,0 +1,185 @@
+exercises:
+  - id: ex-01
+    legacyId: w3d4-1
+    type: trace
+    tag: Index mapping
+    q: A 3 × 4 matrix (m = 3 rows, n = 4 columns). Convert between flat index and (row, column).
+    rows:
+      - prompt: i = 7 → (r, c)
+        answer:
+          - (1,3)
+          - 1,3
+        why: ⌊7 / 4⌋ = 1, 7 % 4 = 3.
+      - prompt: i = 8 → (r, c)
+        answer:
+          - (2,0)
+          - 2,0
+      - prompt: (2, 3) → i
+        answer: '11'
+        why: 2 · 4 + 3 = 11, the last index (m·n − 1).
+      - prompt: (0, 2) → i
+        answer: '2'
+    verify: |
+      const n = 4; const rc = (i) => '(' + Math.floor(i / n) + ',' + (i % n) + ')';
+      console.log(rc(7)); console.log(rc(8)); console.log(2 * n + 3); console.log(0 * n + 2);
+    explain: 'Divide by the number of **columns**, not rows: a common slip on non-square matrices.'
+    hints:
+      - Each row holds n = 4 elements.
+  - id: ex-02
+    legacyId: w3d4-2
+    type: mcq
+    tag: Which dimension?
+    q: In `searchMatrix`, `const v = matrix[Math.floor(mid / n)][mid % n]`. What is `n`?
+    options:
+      - t: The number of columns, `matrix[0].length`
+        ok: true
+        why: In row-major order each row contributes n consecutive indices.
+      - t: The number of rows, `matrix.length`
+        why: Dividing by the number of rows only works for square matrices.
+        kind: impl
+      - t: m · n, the total number of cells
+        why: That would put every index in row 0.
+        kind: impl
+    explain: 'Test on a 2 × 3 matrix: index 3 must be (1, 0).'
+    hints:
+      - How many indices does one row cover?
+  - id: ex-03
+    legacyId: w3d4-3
+    type: bug
+    tag: Neighbours and bounds
+    q: This version can read outside the array. Click the problematic line.
+    code: |
+      function findPeakElement(nums) {
+        let lo = 0, hi = nums.length - 1;
+        while (lo <= hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (nums[mid] < nums[mid + 1]) lo = mid + 1;
+          else hi = mid;
+        }
+        return lo;
+      }
+    bug:
+      - 2
+    kind: impl
+    explain: 'With `lo <= hi`, the loop runs when lo === hi === n − 1, reads `nums[n]` (undefined, so the comparison is false) and sets hi = mid: the range never shrinks, an infinite loop. With `lo < hi`, mid < hi ≤ n − 1, so `mid + 1` is always a valid index.'
+    fix: |
+      while (lo < hi) {
+    fine:
+      '4': Comparing with the right neighbour is the right rule.
+      '5': '`hi = mid` is right: mid may be the peak.'
+    hints:
+      - What is mid when lo === hi, and is mid + 1 a valid index then?
+  - id: ex-04
+    legacyId: w3d4-4
+    type: mcq
+    tag: The argument
+    q: '`nums = [1, 2, 1, 3, 5, 6, 4]`, `lo = 0`, `hi = 6`, `mid = 3`. `nums[3] = 3 < nums[4] = 5`. Why is it safe to discard indices 0..3, even though index 1 is a peak?'
+    options:
+      - t: The problem accepts any peak, and the uphill argument guarantees one exists in [4, 6].
+        ok: true
+        why: Binary search only needs some answer to stay in the range, not every answer.
+      - t: Because the right half always contains the global maximum.
+        why: 'Not necessarily: [9, 1, 2, 3] has its maximum on the left of mid = 1, but walking uphill right still finds the peak 3 at the end.'
+        kind: concept
+      - t: Because the left half is sorted.
+        why: Nothing is sorted here; the slope at mid is what matters.
+        kind: concept
+    explain: '"Return any peak" is what makes discarding a half with a peak in it acceptable.'
+    hints:
+      - Does the problem need a particular peak?
+  - id: ex-05
+    legacyId: w3d4-5
+    type: interview
+    title: Search a 2D Matrix II (LeetCode 240)
+    q: 'Each row of `matrix` is sorted left to right and each column is sorted top to bottom, but a row need not start above the previous row''s end. Return whether `target` is present. Example: `[[1,4,7,11],[2,5,8,12],[3,6,9,16]]`, target 5 → true.'
+    model:
+      clarify: |
+        - Rows and columns sorted ascending; no row-chaining guarantee (unlike 74).
+        - m, n up to 300.
+      brute: 'Scan everything: O(m·n). Or binary-search each row: O(m log n).'
+      optimize: 'Start at the top-right corner. Everything left of it in its row is smaller and everything below it in its column is larger. If the value is too big, the whole column below is too big: move left. If too small, the whole row to the left is too small: move down. Each step discards a row or a column, the same argument as two pointers on a sorted pair (Module 2).'
+      edges: |
+        - target smaller than matrix[0][0] or larger than the last cell
+        - single row or single column
+        - target in the bottom-left corner (the longest path)
+      complexity: O(m + n) time, O(1) space.
+    fn: searchMatrixII
+    starter: |
+      function searchMatrixII(matrix, target) {
+
+      }
+    solution: |
+      function searchMatrixII(matrix, target) {
+        let r = 0, c = matrix[0].length - 1;
+        while (r < matrix.length && c >= 0) {
+          const v = matrix[r][c];
+          if (v === target) return true;
+          if (v > target) c--;
+          else r++;
+        }
+        return false;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 4
+              - 7
+              - 11
+            - - 2
+              - 5
+              - 8
+              - 12
+            - - 3
+              - 6
+              - 9
+              - 16
+          - 5
+        expect: true
+      - args:
+          - - - 1
+              - 4
+              - 7
+              - 11
+            - - 2
+              - 5
+              - 8
+              - 12
+            - - 3
+              - 6
+              - 9
+              - 16
+          - 20
+        expect: false
+      - args:
+          - - - 1
+              - 4
+              - 7
+              - 11
+            - - 2
+              - 5
+              - 8
+              - 12
+            - - 3
+              - 6
+              - 9
+              - 16
+          - 3
+        expect: true
+        hidden: true
+      - args:
+          - - - 5
+          - 5
+        expect: true
+        hidden: true
+      - args:
+          - - - 1
+              - 2
+              - 3
+          - 0
+        expect: false
+        hidden: true
+    explain: This is the pair-grid argument from Module 2 lesson 1, applied to a real grid.
+    hints:
+      - Which corner lets one comparison discard a whole row or column?
+      - 'From the top-right: too big → move left; too small → move down.'
+annotated: []

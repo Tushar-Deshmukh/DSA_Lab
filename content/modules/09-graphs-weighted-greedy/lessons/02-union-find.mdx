@@ -1,0 +1,88 @@
+---
+slug: union-find
+legacyId: w9d2
+title: Union-Find (Disjoint Set Union)
+goal: Implement Union-Find with path halving and union by size, and use it to detect the edge that closes a cycle and to count components as edges arrive.
+why: DSU is a 20-line structure that turns "are these two connected yet?" into a near-constant-time question. It is the cleanest solution to 684, 721 and 547, and it is the engine inside Kruskal's MST in the next lesson.
+prereqs:
+  - Connected components with DFS/BFS (Module 8 lesson 2)
+  - Classes in JavaScript
+outcomes:
+  - Write `DSU` from memory (reference 6.16) with `union` returning a boolean
+  - Explain what path compression and union by size each prevent
+  - Detect a redundant edge in one pass (684)
+  - Map string keys to DSU indices (721)
+  - Say when DSU is better than BFS/DFS, and when it cannot be used
+ready:
+  - 684 solved with `union` returning a boolean
+  - I wrote `DSU` from memory without looking at 6.16
+  - I rewrote 547 with DSU as the warm-up
+summary:
+  - Each set is a tree; `find` walks to the root; the root names the set.
+  - 'Path halving: `parent[x] = parent[parent[x]]` while walking.'
+  - 'Union by size: the smaller tree goes under the larger root.'
+  - 'Both together: O(α(n)) per operation, effectively constant.'
+  - '`union` returns false when already connected: that edge would close a cycle.'
+  - DSU cannot split sets, so it cannot handle edge deletions.
+revision: Write `find` and `union` from memory, then explain what goes wrong (and how slowly) without union by size or compression.
+warmup:
+  problem: 547
+  note: rewritten with DSU
+topic: 'Union-Find: path compression, union by size; DSU vs BFS/DFS'
+implement: Write `DSU` from memory (6.16)
+problemsText: 'C: 684 · S: 721'
+problems:
+  - num: 684
+    tier: C
+  - num: 721
+    tier: S
+doneWhen: 684 solved with `union` returning a boolean
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="sets-as-trees" kind="theory" title="Sets as trees">
+
+<Include id="theory/graphs-weighted-greedy/union-find" />
+
+<Viz id="dsu" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="writing-dsu-from-memory" kind="code" title="Writing DSU from memory">
+
+<Include id="theory/graphs-weighted-greedy/example-2" />
+
+<Include id="handbook/javascript-reference/union-find" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+<Include id="patterns/union-find" />
+
+<Callout kind="tip" title="Stretch: Accounts Merge (721)">
+
+Give each email an index with a `Map` the first time you see it, union every email in an account with the account's first email, then group emails by `find` and sort each group. The name comes from any account in the group. The only new skill is mapping strings to DSU indices.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

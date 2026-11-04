@@ -1,0 +1,308 @@
+exercises:
+  - id: ex-01
+    legacyId: w4d3-1
+    type: mcq
+    tag: Where the bug hides
+    q: Your 143 solution exceeds the time limit on every test, but each step works in isolation. What is the most likely cause?
+    options:
+      - t: The first half was never cut (its last node still points to the middle), so the result contains a cycle and the judge walks it forever.
+        ok: true
+        why: Set `slow.next = null` (or the node before the second half) before reversing.
+      - t: Reversal is O(n²).
+        why: In-place reversal is O(n).
+        kind: concept
+      - t: The middle should be found with a counter instead.
+        why: Fast/slow finds the middle correctly; the problem is a missing null.
+        kind: concept
+    explain: 'Pointer rewiring rule: when a list is cut, set the new tail''s next to null immediately (reference 6.6).'
+    hints:
+      - What does the judge do when it prints a list with a cycle?
+  - id: ex-02
+    legacyId: w4d3-2
+    type: trace
+    tag: On paper
+    q: 'Capacity 2. Operations: `put(1,1)`, `put(2,2)`, `get(1)`, `put(3,3)`, `get(2)`, `get(3)`.'
+    rows:
+      - prompt: Output of get(1)
+        answer: '1'
+      - prompt: Key evicted by put(3,3)
+        answer: '2'
+        why: After get(1), key 1 is the most recent, so key 2 is the least recent.
+      - prompt: Output of get(2)
+        answer: '-1'
+      - prompt: Keys from most to least recent at the end
+        answer:
+          - 3,1
+          - '[3,1]'
+    verify: |
+      const cap = 2, m = new Map(); const out = []; let ev = null;
+      const get = (k) => { if (!m.has(k)) return -1; const v = m.get(k); m.delete(k); m.set(k, v); return v; };
+      const put = (k, v) => { m.delete(k); m.set(k, v); if (m.size > cap) { ev = m.keys().next().value; m.delete(ev); } };
+      put(1, 1); put(2, 2); out.push(get(1)); put(3, 3); const e = ev; out.push(get(2)); out.push(get(3));
+      console.log(out[0]); console.log(e); console.log(out[1]); console.log([...m.keys()].reverse().join(','));
+    explain: Every get and put moves its key to the front. Eviction takes the back.
+    hints:
+      - get(1) makes key 1 the most recent.
+  - id: ex-03
+    legacyId: w4d3-3
+    type: mcq
+    tag: Why both structures?
+    q: Why does the LRU cache need a **doubly** linked list rather than a singly linked one?
+    options:
+      - t: To unlink a node found through the map in O(1), you need its predecessor; `prev` gives it directly.
+        ok: true
+        why: 'With a singly linked list you would walk from the head to find the predecessor: O(n).'
+      - t: So that the list can be traversed backwards when printing it.
+        why: Printing is never needed.
+        kind: concept
+      - t: Because JavaScript Maps cannot store singly linked nodes.
+        why: A Map can store any value.
+        kind: impl
+    explain: 'Map: key → node in O(1). Doubly linked list: unlink, insert at front and remove the last node, all O(1) given the node.'
+    hints:
+      - What do you need in order to unlink a node from a singly linked list?
+  - id: ex-04
+    legacyId: w4d3-4
+    type: code
+    tag: The list half of LRU
+    q: 'Write a class `RecentList` that keeps keys in recency order. `touch(key)` moves an existing key to the front or adds a new one there; `evict()` removes and returns the least recent key (or −1 if empty); `toArray()` returns keys from most to least recent. All operations except `toArray` must be O(1): use a Map from key to node and a doubly linked list with two sentinels.'
+    fn: RecentList
+    starter: |
+      class RecentList {
+        constructor() {
+          this.map = new Map();
+          this.head = { prev: null, next: null };
+          this.tail = { prev: null, next: null };
+          this.head.next = this.tail; this.tail.prev = this.head;
+        }
+        touch(key) {}
+        evict() {}
+        toArray() {}
+      }
+    solution: |
+      class RecentList {
+        constructor() {
+          this.map = new Map();
+          this.head = { prev: null, next: null };
+          this.tail = { prev: null, next: null };
+          this.head.next = this.tail; this.tail.prev = this.head;
+        }
+        #remove(node) { node.prev.next = node.next; node.next.prev = node.prev; }
+        #addFront(node) {
+          node.next = this.head.next; node.prev = this.head;
+          this.head.next.prev = node; this.head.next = node;
+        }
+        touch(key) {
+          let node = this.map.get(key);
+          if (node) this.#remove(node);
+          else { node = { key, prev: null, next: null }; this.map.set(key, node); }
+          this.#addFront(node);
+        }
+        evict() {
+          const lru = this.tail.prev;
+          if (lru === this.head) return -1;
+          this.#remove(lru); this.map.delete(lru.key);
+          return lru.key;
+        }
+        toArray() {
+          const out = [];
+          for (let n = this.head.next; n !== this.tail; n = n.next) out.push(n.key);
+          return out;
+        }
+      }
+    tests:
+      - ops:
+          - - RecentList
+          - - touch
+            - 1
+          - - touch
+            - 2
+          - - touch
+            - 1
+          - - toArray
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - - 1
+            - 2
+      - ops:
+          - - RecentList
+          - - touch
+            - 1
+          - - touch
+            - 2
+          - - evict
+          - - toArray
+        expect:
+          - null
+          - null
+          - null
+          - 1
+          - - 2
+      - ops:
+          - - RecentList
+          - - evict
+        expect:
+          - null
+          - -1
+      - ops:
+          - - RecentList
+          - - touch
+            - 5
+          - - touch
+            - 6
+          - - touch
+            - 7
+          - - touch
+            - 5
+          - - evict
+          - - evict
+          - - toArray
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - null
+          - 6
+          - 7
+          - - 5
+        hidden: true
+    explain: 'With this class, LRU''s get and put are a few lines: look up the value, `touch` the key, and `evict` when the size exceeds capacity.'
+    hints:
+      - 'Write #remove(node) and #addFront(node) first: four pointer assignments each.'
+      - evict takes tail.prev, unless it is the head sentinel.
+  - id: ex-05
+    legacyId: w4d3-5
+    type: bug
+    tag: Pointer order
+    q: This `#addFront` corrupts the list. Click the first wrong line.
+    code: |
+      #addFront(node) {
+        this.head.next = node;
+        node.next = this.head.next;
+        node.prev = this.head;
+        node.next.prev = node;
+      }
+    bug:
+      - 1
+    kind: impl
+    explain: 'Overwriting `head.next` first loses the old first node: `node.next = this.head.next` then makes the node point to itself. Read the old first node before changing `head.next` (pointer-rewiring rule).'
+    fix: |
+      #addFront(node) {
+        node.next = this.head.next;
+        node.prev = this.head;
+        this.head.next.prev = node;
+        this.head.next = node;
+      }
+    fine:
+      '3': '`node.prev = this.head` is correct in any order.'
+    hints:
+      - After line 2 runs, what does `this.head.next` refer to?
+  - id: ex-06
+    legacyId: w4d3-6
+    type: interview
+    title: Design Browser History (LeetCode 1472)
+    q: 'Implement `BrowserHistory(homepage)` with `visit(url)` (clears forward history), `back(steps)` and `forward(steps)`, where back and forward move at most as far as possible and return the current URL. Example: start at "a", visit "b", visit "c", back(1) → "b", visit "d", forward(1) → "d" (forward history was cleared).'
+    model:
+      clarify: |
+        - `visit` discards all forward history.
+        - `back(steps)` stops at the homepage; `forward(steps)` stops at the newest page.
+        - Up to 5,000 calls.
+      brute: 'A doubly linked list of pages with a `cur` pointer: visit links a new node after cur and drops what followed; back/forward walk `steps` nodes: O(steps) each.'
+      optimize: 'An array plus two indices does the same with O(1) visits: `cur` is the current position and `last` is the newest valid page. `visit` writes at `cur + 1` and sets `last = cur + 1` (old forward pages are simply ignored). `back` and `forward` clamp: `cur = Math.max(0, cur − steps)`, `Math.min(last, cur + steps)`. Both designs are good answers; say the trade-off.'
+      edges: |
+        - back more steps than history → homepage
+        - forward after a visit → stays (nothing forward)
+        - visiting the same URL twice
+      complexity: 'Array version: O(1) per operation; O(n) space for visited pages.'
+    fn: BrowserHistory
+    starter: |
+      class BrowserHistory {
+        constructor(homepage) {}
+        visit(url) {}
+        back(steps) {}
+        forward(steps) {}
+      }
+    solution: |
+      class BrowserHistory {
+        constructor(homepage) { this.pages = [homepage]; this.cur = 0; this.last = 0; }
+        visit(url) { this.cur++; this.pages[this.cur] = url; this.last = this.cur; }
+        back(steps) { this.cur = Math.max(0, this.cur - steps); return this.pages[this.cur]; }
+        forward(steps) { this.cur = Math.min(this.last, this.cur + steps); return this.pages[this.cur]; }
+      }
+    tests:
+      - ops:
+          - - BrowserHistory
+            - leetcode.com
+          - - visit
+            - google.com
+          - - visit
+            - facebook.com
+          - - visit
+            - youtube.com
+          - - back
+            - 1
+          - - back
+            - 1
+          - - forward
+            - 1
+          - - visit
+            - linkedin.com
+          - - forward
+            - 2
+          - - back
+            - 2
+          - - back
+            - 7
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - facebook.com
+          - google.com
+          - facebook.com
+          - null
+          - linkedin.com
+          - google.com
+          - leetcode.com
+      - ops:
+          - - BrowserHistory
+            - a
+          - - back
+            - 3
+          - - forward
+            - 3
+        expect:
+          - null
+          - a
+          - a
+      - ops:
+          - - BrowserHistory
+            - a
+          - - visit
+            - b
+          - - back
+            - 1
+          - - visit
+            - c
+          - - forward
+            - 5
+          - - back
+            - 1
+        expect:
+          - null
+          - null
+          - a
+          - null
+          - c
+          - a
+        hidden: true
+    explain: 'Keeping `last` separate from the array length is what makes visit O(1): stale forward pages stay in the array but are unreachable.'
+    hints:
+      - Which pages are still reachable after a visit?
+      - Track the current index and the index of the newest valid page.
+annotated: []

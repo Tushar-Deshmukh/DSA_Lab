@@ -1,0 +1,28 @@
+---
+slug: cost-model-of-built-ins
+section: 6
+title: 6.1 Cost model of built-ins
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.1 Cost model of built-ins
+  lines:
+    - 2683
+    - 2698
+---
+
+| Operation | Cost | Note |
+| --- | --- | --- |
+| `arr[i]`, `arr.length`, `push`, `pop` | O(1) (push amortised) |  |
+| `shift`, `unshift`, `splice` in the middle | O(n) | Never in a loop over large data; use a head pointer (6.5) |
+| `indexOf`, `includes`, `find`, `some`, `every` | O(n) | Inside a loop → O(n²); use a `Set`/`Map` |
+| `slice`, `concat`, spread `[...a]`, `Array.from`, `map`, `filter`, `reduce`, `join`, `reverse` | O(n) or O(k) | Each allocates (except `reverse`, which is in place) |
+| `sort` | O(n log n), stable | Default compares strings |
+| `Math.max(...arr)` | O(n) | Throws RangeError for very large arrays (\~10⁵+); use a loop |
+| `str[i]`, `str.length` | O(1) |  |
+| `slice`, `substring`, `split`, `indexOf`, `includes`, `===` on strings | O(n) | String comparison is O(length); V8 often makes string slices cheap by sharing memory, but analyse them as O(n) |
+| `Map`/`Set` `get`, `set`, `has`, `delete`, `size` | O(1) average |  |
+| `Object.keys/values/entries`, `[...map.keys()]` | O(n) | Do not call in a loop |
+| `JSON.stringify(key)` | O(size of key) | Slow as a hash key; prefer numeric encodings |
+
+**Avoiding unnecessary allocations.** Pass indices instead of slicing (`dfs(i)` not `dfs(arr.slice(i))`); reuse one `path` array in backtracking and copy only on output; pre-size arrays with `new Array(n).fill(0)`; encode grid cells as `r * n + c` instead of the string `` `${r},${c}` ``; build strings in an array and `join('')` once.

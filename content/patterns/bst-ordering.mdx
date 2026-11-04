@@ -1,0 +1,25 @@
+---
+slug: bst-ordering
+number: '6.4'
+title: BST ordering
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Pattern 6.4
+  lines:
+    - 1310
+    - 1319
+---
+
+**Pattern 6.4: BST ordering**
+
+1. *Recognise:* the tree is a BST, or the answer depends on sorted order.
+2. *Clues:* "BST", "kth smallest", "validate", "closest value", "range sum".
+3. *From brute force:* collecting all values and sorting is O(n log n); the BST property allows O(h) searches and O(n) sorted traversal.
+4. *Why it works:* every comparison eliminates one whole subtree.
+5. *Template:* walk with `node = val < node.val ? node.left : node.right`, or iterative inorder.
+6. *Complexity:* O(h) search; O(n) full traversal.
+7. *Variations:* LCA in a BST (235), kth smallest (230), construct from traversals (105).
+8. *Inappropriate when:* the tree is a general binary tree (BST shortcuts give wrong answers).

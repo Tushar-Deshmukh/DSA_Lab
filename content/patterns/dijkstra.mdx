@@ -1,0 +1,25 @@
+---
+slug: dijkstra
+number: '9.1'
+title: Dijkstra (weighted shortest path)
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Pattern 9.1
+  lines:
+    - 1831
+    - 1840
+---
+
+**Pattern 9.1: Dijkstra (weighted shortest path)**
+
+1. *Recognise:* minimum total cost path with non-negative, varying edge costs.
+2. *Clues:* "minimum time/cost", "weighted", "network delay", "cheapest", "effort".
+3. *From brute force:* enumerating paths is exponential; BFS fails with weights; Dijkstra finalises nodes in cost order.
+4. *Why it works:* non-negative weights guarantee the popped node's distance is final.
+5. *Template:* Example 1.
+6. *Complexity:* O((V + E) log V).
+7. *Variations:* grids with cell costs (1631: minimax path), state-expanded nodes `[node, stopsUsed]`.
+8. *Inappropriate when:* negative weights, or a hop limit changes optimality (787).

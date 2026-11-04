@@ -1,0 +1,25 @@
+---
+slug: interval-sort-and-sweep
+number: '7.4'
+title: Interval sort and sweep
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Pattern 7.4
+  lines:
+    - 1480
+    - 1489
+---
+
+**Pattern 7.4: Interval sort and sweep**
+
+1. *Recognise:* ranges with start/end; overlaps, merges, gaps, counts in use.
+2. *Clues:* "intervals", "meetings", "booking", "overlapping", "rooms", "arrows", "trips".
+3. *From brute force:* compare every pair: O(n²). After sorting, overlaps are only between neighbours (merge) or tracked by a sweep.
+4. *Why it works:* in start order, an interval can only overlap the current merged block or start a new one.
+5. *Template:* sort by start (merge/insert) or by end (maximise kept intervals); or sweep events `+1` at start, `-1` at end.
+6. *Complexity:* O(n log n).
+7. *Variations:* 57 insert (no sort), 435/452 (sort by end), 1094 car pooling (difference array over stops or sorted events), 986 interval intersections.
+8. *Inappropriate when:* intervals are dynamic with many queries (interval trees, beyond scope).

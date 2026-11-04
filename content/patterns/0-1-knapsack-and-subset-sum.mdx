@@ -1,0 +1,25 @@
+---
+slug: 0-1-knapsack-and-subset-sum
+number: '11.1'
+title: 0/1 knapsack and subset sum
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Pattern 11.1
+  lines:
+    - 2173
+    - 2182
+---
+
+**Pattern 11.1: 0/1 knapsack and subset sum**
+
+1. *Recognise:* choose a subset of items (each once) to hit or approach a target.
+2. *Clues:* "partition into two subsets", "assign + or −", "each element used once", "target sum", small total (≤ \~2·10⁴).
+3. *From brute force:* 2ⁿ subsets; states (item index, current sum) repeat → O(n × target).
+4. *Why it works:* after processing items 0..i, `dp[j]` is exactly whether those items can make j.
+5. *Template:* Example 1 (`||` for feasibility, `+=` for counts, `max` for values).
+6. *Complexity:* O(n × target) time, O(target) space.
+7. *Variations:* 494 (transform to a count of subsets).
+8. *Inappropriate when:* the target is huge (10⁹) with small n (meet-in-the-middle or search instead).

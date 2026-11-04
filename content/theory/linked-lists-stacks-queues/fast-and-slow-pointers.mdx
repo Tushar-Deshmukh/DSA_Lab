@@ -1,0 +1,20 @@
+---
+slug: fast-and-slow-pointers
+title: Fast and slow pointers (Floyd)
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Fast and slow pointers (Floyd)
+  lines:
+    - 768
+    - 773
+---
+
+**Fast and slow pointers (Floyd).** `slow` moves 1 step, `fast` moves 2.
+
+- *Middle:* when `fast` reaches the end, `slow` is at the middle (for even length, the second middle with `while (fast && fast.next)`).
+- *Cycle detection:* in a cycle, `fast` gains one node per step on `slow`, so it must land on `slow` within one lap. O(n) time, O(1) space versus a `Set` of visited nodes (O(n) space).
+- *Cycle start (142):* after they meet, move one pointer to the head; advance both one step at a time; they meet at the cycle start. Reason: if the head-to-start distance is a and they meet b steps into the cycle of length c, then 2(a + b) = a + b + kc, so a = kc − b: walking a steps from the meeting point lands on the start.
+- *k-th from end (19):* move `fast` k steps ahead, then move both until `fast` reaches the end.

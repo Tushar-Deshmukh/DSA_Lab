@@ -1,0 +1,15 @@
+---
+slug: common-mistakes
+title: Common mistakes
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Common mistakes
+  lines:
+    - 1908
+    - 1908
+---
+
+**Common mistakes.** State that is not fully defined ("dp\[i\] = the best": best what, ending where?); wrong iteration order (reading a cell before it is filled); base case off by one (`dp` of length n vs n + 1); using `0` as "unreachable" in min problems (use `Infinity`); counting permutations when combinations were asked (loop order in coin change II); memo keys built with string concatenation in hot loops (use arrays indexed by number when possible).

@@ -1,0 +1,35 @@
+---
+slug: example-4
+title: Example 4
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Example 4
+  lines:
+    - 1622
+    - 1642
+---
+
+**Example 4: three-state DFS cycle detection (directed).**
+
+```js
+function hasCycle(n, adj) {
+  // 0 unvisited, 1 on current path, 2 done
+  const state = new Array(n).fill(0);
+  function dfs(u) {
+    state[u] = 1;
+    for (const v of adj[u]) {
+      if (state[v] === 1) return true;    // back edge to the current path
+      if (state[v] === 0 && dfs(v)) return true;
+    }
+    state[u] = 2;                         // all descendants processed: safe
+    return false;
+  }
+  for (let i = 0; i < n; i++) if (state[i] === 0 && dfs(i)) return true;
+  return false;
+}
+```
+
+A two-state version (just visited) wrongly reports a cycle for the diamond 0→1, 0→2, 1→3, 2→3, because 3 is visited twice via different paths. 802 Find Eventual Safe States is exactly "which nodes end in state 2 without reaching a cycle".

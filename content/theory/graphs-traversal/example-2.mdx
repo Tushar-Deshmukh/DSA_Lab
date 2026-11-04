@@ -1,0 +1,32 @@
+---
+slug: example-2
+title: Example 2
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Example 2
+  lines:
+    - 1576
+    - 1593
+---
+
+**Example 2: rotting oranges (994), multi-source BFS dry run.** Grid:
+
+```
+2 1 1
+1 1 0
+0 1 1
+```
+
+Enqueue the single rotten orange (0,0) at minute 0; fresh = 6.
+
+| Minute | Cells that rot this minute | Fresh left |
+| --- | --- | --- |
+| 1 | (0,1), (1,0) | 4 |
+| 2 | (0,2), (1,1) | 2 |
+| 3 | (2,1) | 1 |
+| 4 | (2,2) | 0 |
+
+Answer 4. Process one full level (minute) at a time, exactly as in level-order tree BFS. If fresh > 0 when the queue empties, return −1.

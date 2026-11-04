@@ -1,0 +1,235 @@
+exercises:
+  - id: ex-01
+    legacyId: w10d1-1
+    type: trace
+    tag: Count the repetition
+    q: 'Naive `f(n) = n <= 1 ? 1 : f(n − 1) + f(n − 2)` called as `f(5)`.'
+    rows:
+      - prompt: Total number of calls, including f(5) itself
+        answer: '15'
+      - prompt: How many times is f(3) called?
+        answer: '2'
+      - prompt: How many times is f(2) called?
+        answer: '3'
+      - prompt: With Example 1's `climbMemo`, total calls for n = 5
+        answer: '9'
+        why: 5, 4, 3, 2, 1, 0 on the way down, then 1 (inside 3), 2 (inside 4, a cache hit) and 3 (inside 5, a cache hit).
+    verify: |
+      let calls = 0; const cnt = {}; const f = (n) => { calls++; cnt[n] = (cnt[n] || 0) + 1; return n <= 1 ? 1 : f(n - 1) + f(n - 2); }; f(5);
+      console.log(calls); console.log(cnt[3]); console.log(cnt[2]);
+      let mc = 0; const memo = new Map(); const g = (n) => { mc++; if (n <= 1) return 1; if (memo.has(n)) return memo.get(n); const v = g(n - 1) + g(n - 2); memo.set(n, v); return v; }; g(5); console.log(mc);
+    explain: Naive calls grow like 1.6ⁿ; memoised calls grow like 2n. The difference is entirely the repeated states.
+    hints:
+      - Draw the tree; each node is one call.
+      - With the cache, a second call for the same n returns immediately but still counts as a call.
+  - id: ex-02
+    legacyId: w10d1-2
+    type: mcq
+    tag: Write the state sentence
+    q: 'Min Cost Climbing Stairs (746): `cost[i]` is paid when you step **on** stair i; you may start on stair 0 or 1; the top is just past the last stair. Which state definition leads directly to a transition?'
+    options:
+      - t: '`dp[i]` = the minimum cost to stand on stair i (before paying cost[i]); the answer is dp[n].'
+        ok: true
+        why: Then `dp[i] = min(dp[i−1] + cost[i−1], dp[i−2] + cost[i−2])`, with dp[0] = dp[1] = 0.
+      - t: '`dp[i]` = the minimum cost.'
+        why: Minimum cost of what, ending where? Without the restriction you cannot write a transition.
+        kind: concept
+      - t: '`dp[i]` = the cost of stair i.'
+        why: That is the input, not a subproblem.
+        kind: concept
+    explain: A good state sentence names the restriction ("to stand on stair i") and makes the answer location obvious (dp[n], the top).
+    hints:
+      - Can you write dp[i] from dp[i − 1] and dp[i − 2] using your sentence?
+  - id: ex-03
+    legacyId: w10d1-3
+    type: fill
+    tag: From recursion to memo
+    q: Complete the memoised Climbing Stairs.
+    template: |
+      function climbStairs(n, memo = new Map()) {
+        if (n <= 1) return 1;
+        if ([[0]]) return memo.get(n);
+        const v = climbStairs(n - 1, memo) + climbStairs(n - 2, memo);
+        [[1]];
+        return v;
+      }
+    blanks:
+      - accept:
+          - memo.has(n)
+      - accept:
+          - memo.set(n, v)
+    fn: climbStairs
+    tests:
+      - args:
+          - 1
+        expect: 1
+      - args:
+          - 2
+        expect: 2
+      - args:
+          - 5
+        expect: 8
+      - args:
+          - 45
+        expect: 1836311903
+    explain: 'n = 45 is the test that times out without the cache: about 2·10⁹ calls instead of about 90.'
+    hints:
+      - Check the cache before recursing.
+      - Store the result before returning it.
+  - id: ex-04
+    legacyId: w10d1-4
+    type: code
+    tag: Four steps on a new problem
+    q: 'Write `tribonacci(n)` (LeetCode 1137): T0 = 0, T1 = 1, T2 = 1, and Tn = Tn−1 + Tn−2 + Tn−3. Finish with the O(1)-space version (three variables).'
+    fn: tribonacci
+    starter: |
+      function tribonacci(n) {
+
+      }
+    solution: |
+      function tribonacci(n) {
+        if (n === 0) return 0;
+        if (n < 3) return 1;
+        let a = 0, b = 1, c = 1;
+        for (let i = 3; i <= n; i++) [a, b, c] = [b, c, a + b + c];
+        return c;
+      }
+    tests:
+      - args:
+          - 4
+        expect: 4
+      - args:
+          - 25
+        expect: 1389537
+      - args:
+          - 0
+        expect: 0
+      - args:
+          - 1
+        expect: 1
+        hidden: true
+      - args:
+          - 2
+        expect: 1
+        hidden: true
+      - args:
+          - 37
+        expect: 2082876103
+        hidden: true
+    explain: 'Three base cases instead of two, three variables instead of two: the method does not change.'
+    hints:
+      - Which earlier values does Tn read?
+      - Handle n = 0, 1, 2 before the loop.
+      - Shift three variables each step.
+  - id: ex-05
+    legacyId: w10d1-5
+    type: mcq
+    tag: Is this DP?
+    q: Which of these benefit from DP? Select all that apply.
+    options:
+      - t: Count the ways to climb n stairs with steps of 1, 2 or 3
+        ok: true
+        why: ways(n − 1), ways(n − 2), ways(n − 3) overlap heavily.
+      - t: Return every subset of a set
+        why: You must output all 2ⁿ subsets; there is nothing to share between them. Backtracking.
+        kind: concept
+      - t: Can you reach the end of a Jump Game array?
+        why: A greedy (track the farthest reach) is provably correct and O(n); DP would be O(n²).
+        kind: concept
+      - t: Height of a binary tree
+        why: Plain DFS visits each node once; no subproblem repeats, so caching adds nothing.
+        kind: concept
+    explain: DP needs repeated subproblems and an optimum, count or feasibility question. All solutions → backtracking; provable greedy → greedy; no repetition → plain recursion.
+    hints:
+      - Does any subproblem get solved twice?
+  - id: ex-06
+    legacyId: w10d1-6
+    type: mcq
+    tag: Stack limits in JavaScript
+    q: Your memoised solution recurses to depth n and n can be 10⁵. What is the safest final answer in an interview?
+    options:
+      - t: 'Convert to bottom-up: the same states filled in a loop, with no recursion depth.'
+        ok: true
+        why: JavaScript engines typically overflow somewhere around 10⁴–10⁵ frames.
+      - t: Keep the recursion; memoisation removes the depth.
+        why: 'Memoisation removes repeated work, not depth: the first call chain still goes n deep.'
+        kind: concept
+      - t: Use a `Map` instead of an array for the memo.
+        why: The container does not change the recursion depth.
+        kind: impl
+    explain: Write top-down first if it is easier to derive, then mention (or do) the conversion.
+    hints:
+      - What does memoisation not change?
+  - id: ex-07
+    legacyId: w10d1-7
+    type: interview
+    title: Count Ways To Build Good Strings (LeetCode 2466)
+    q: 'Start with an empty string. Each step appends either `''0''` exactly `zero` times or `''1''` exactly `one` times. Count the distinct strings whose length is between `low` and `high` inclusive, modulo 10⁹ + 7. Example: low = 3, high = 3, zero = 1, one = 1 → 8.'
+    model:
+      clarify: |
+        - Different sequences of appends always give different strings, so count sequences.
+        - Lengths up to 10⁵: the answer needs the modulo.
+      brute: 'Recursion `f(len)` = 1 (if len is in range) + f(len + zero) + f(len + one): exponential.'
+      optimize: |
+        This is Climbing Stairs with steps of size `zero` and `one`. State: `dp[L]` = number of strings of length exactly L. Transition: `dp[L] = dp[L − zero] + dp[L − one]` (when those indices are ≥ 0). Base: `dp[0] = 1`. Answer: the sum of dp[low..high]. Take the modulo after every addition.
+      edges: |
+        - zero === one: both choices still count separately ('0'… vs '1'…)
+        - low = high
+        - high large, so the modulo matters
+      complexity: O(high) time and space.
+    fn: countGoodStrings
+    starter: |
+      function countGoodStrings(low, high, zero, one) {
+
+      }
+    solution: |
+      function countGoodStrings(low, high, zero, one) {
+        const MOD = 1000000007, dp = new Array(high + 1).fill(0);
+        dp[0] = 1; let total = 0;
+        for (let L = 1; L <= high; L++) {
+          if (L >= zero) dp[L] = (dp[L] + dp[L - zero]) % MOD;
+          if (L >= one) dp[L] = (dp[L] + dp[L - one]) % MOD;
+          if (L >= low) total = (total + dp[L]) % MOD;
+        }
+        return total;
+      }
+    tests:
+      - args:
+          - 3
+          - 3
+          - 1
+          - 1
+        expect: 8
+      - args:
+          - 2
+          - 3
+          - 1
+          - 2
+        expect: 5
+      - args:
+          - 1
+          - 1
+          - 1
+          - 1
+        expect: 2
+        hidden: true
+      - args:
+          - 10
+          - 20
+          - 3
+          - 4
+        expect: 77
+        hidden: true
+      - args:
+          - 1
+          - 100000
+          - 1
+          - 1
+        expect: 215447031
+        hidden: true
+    explain: Recognising a known problem in disguise (Climbing Stairs with different step sizes) is most of the work.
+    hints:
+      - Which problem from this lesson counts ways to reach a length with two step sizes?
+      - dp[L] = strings of length exactly L.
+      - Apply the modulo after every addition, not just at the end.
+annotated: []

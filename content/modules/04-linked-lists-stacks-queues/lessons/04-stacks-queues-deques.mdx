@@ -1,0 +1,90 @@
+---
+slug: stacks-queues-deques
+legacyId: w4d4
+title: Stacks, queues and deques
+goal: Use stacks for nesting and evaluation, build queues that never call `shift()` in a loop, and implement a min-stack and a circular deque.
+why: 'Stacks and queues are the engines of DFS and BFS (Module 8). Getting their costs right in JavaScript is a real interview signal: `shift()` silently turns an O(n) BFS into O(n²).'
+prereqs:
+  - 'Arrays: `push`/`pop` O(1), `shift` O(n) (Module 1 lesson 2)'
+  - Amortised cost (Module 1 lesson 1)
+outcomes:
+  - Match brackets with a stack and explain why LIFO matches nesting
+  - Store extra state per element (min-stack)
+  - Evaluate Reverse Polish Notation with the right operand order and `Math.trunc`
+  - Build a queue with a head index or two stacks, and a deque with a circular buffer
+  - Explain why 232 is amortised O(1)
+ready:
+  - I can explain why `shift()` breaks BFS complexity
+  - I can explain why 232 is amortised O(1)
+  - I implemented a `Queue` with a head pointer and a `Deque` with a circular buffer
+summary:
+  - Stack = array `push`/`pop`. Use for nesting, matching, evaluation, undo, iterative DFS.
+  - 'Min-stack: push `[val, minSoFar]`.'
+  - 'RPN: `b = pop(), a = pop()`, then `a op b`; division uses `Math.trunc`.'
+  - 'Queue: array + head index (or two stacks, amortised O(1)). Never `shift()` in a loop.'
+  - 'Deque: circular buffer, indices mod capacity, grow by doubling.'
+revision: Explain in two sentences why each element moves between the two stacks of problem 232 at most once, and what that means for the cost of n operations.
+warmup:
+  problem: 21
+topic: Stacks; queues with a head pointer or two stacks; deque; min-stack (6.5)
+implement: Implement `Queue` with a head pointer and a `Deque` (circular buffer)
+problemsText: 'C: 20, 155 · S: 150, 232'
+problems:
+  - num: 20
+    tier: C
+  - num: 155
+    tier: C
+  - num: 150
+    tier: S
+  - num: 232
+    tier: S
+doneWhen: You can explain why `shift()` breaks BFS complexity and why 232 is amortised O(1)
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="stacks" kind="theory" title="Stacks">
+
+<Include id="theory/linked-lists-stacks-queues/stacks" />
+
+<Viz id="stack-match" />
+
+<Exercise id="ex-01" />
+
+Some stacks store more than the element. Min Stack (155) must return the minimum in O(1) even after pops; storing the minimum *as of each push* makes pops restore the previous minimum for free.
+
+<Viz id="min-stack" />
+
+<Include id="patterns/stack-for-matching-and-evaluation" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="queues-and-deques-without-shift" kind="theory" title="Queues and deques without shift()">
+
+<Include id="theory/linked-lists-stacks-queues/queues" />
+
+<Include id="handbook/javascript-reference/stack-queue-and-deque" />
+
+<Exercise id="ex-04" />
+
+The two-stack queue (232) shows amortised cost in action: an element is pushed onto `in`, moved to `out` once (when `out` runs empty), and popped from `out` once. Three O(1) operations per element over its whole life, however the calls are interleaved.
+
+<Viz id="queue-2stacks" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

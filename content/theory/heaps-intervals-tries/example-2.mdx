@@ -1,0 +1,30 @@
+---
+slug: example-2
+title: Example 2
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Example 2
+  lines:
+    - 1377
+    - 1392
+---
+
+**Example 2: Kth largest element (215) with a size-k min-heap.**
+
+```js
+function findKthLargest(nums, k) {
+  const heap = new MinHeap((a, b) => a - b);   // section 6.13
+  for (const x of nums) {
+    heap.push(x);
+    // drop the smallest; the heap keeps the k largest seen
+    if (heap.size() > k) heap.pop();
+  }
+  // smallest of the k largest = k-th largest
+  return heap.peek();
+}
+```
+
+Dry run `[3,2,1,5,6,4]`, k = 2: push 3 → \[3\]; push 2 → \[2,3\]; push 1 → size 3, pop 1 → \[2,3\]; push 5 → pop 2 → \[3,5\]; push 6 → pop 3 → \[5,6\]; push 4 → pop 4 → \[5,6\]. Answer 5. O(n log k) time, O(k) space.

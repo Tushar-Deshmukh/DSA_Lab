@@ -1,0 +1,45 @@
+---
+slug: example-4
+title: Example 4
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Example 4
+  lines:
+    - 1413
+    - 1443
+---
+
+**Example 4: trie insert and prefix search (208).**
+
+```js
+class Trie {
+  constructor() { this.root = { children: new Map(), isEnd: false }; }
+  insert(word) {
+    let node = this.root;
+    for (const ch of word) {
+      if (!node.children.has(ch)) {
+        node.children.set(ch, { children: new Map(), isEnd: false });
+      }
+      node = node.children.get(ch);
+    }
+    // mark the node of the LAST character
+    node.isEnd = true;
+  }
+  // returns the node for prefix s, or null
+  #walk(s) {
+    let node = this.root;
+    for (const ch of s) {
+      node = node.children.get(ch);
+      if (!node) return null;
+    }
+    return node;
+  }
+  search(word) { const n = this.#walk(word); return n !== null && n.isEnd; }
+  startsWith(prefix) { return this.#walk(prefix) !== null; }
+}
+```
+
+For lowercase-only input, an array of 26 children (`new Array(26).fill(null)`, index `ch.charCodeAt(0) - 97`) is faster than a `Map`.

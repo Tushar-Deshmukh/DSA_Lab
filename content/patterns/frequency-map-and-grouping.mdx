@@ -1,0 +1,25 @@
+---
+slug: frequency-map-and-grouping
+number: '1.2'
+title: Frequency map and grouping
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Pattern 1.2
+  lines:
+    - 372
+    - 381
+---
+
+**Pattern 1.2: Frequency map and grouping**
+
+1. *Recognise:* the answer depends on how many times things occur, or on items sharing a property.
+2. *Clues:* "anagram", "most frequent", "group", "majority", "top k".
+3. *From brute force:* instead of comparing every pair of strings, compute a canonical key (sorted letters or a 26-count signature) and group by it.
+4. *Why it works:* two items belong together exactly when their keys are equal.
+5. *Template:* `count.set(k, (count.get(k) ?? 0) + 1)`; for grouping, `map.get(key)?.push(x) ?? map.set(key, [x])` (or the clearer two-line version in section 6.2: create the array if it is missing, then push).
+6. *Complexity:* O(n·k) to build keys of length k (O(n·k log k) if you sort each key).
+7. *Variations:* bucket by frequency (347: buckets indexed by count give O(n) top-k); fixed array of 26 counts.
+8. *Inappropriate when:* you need the relative order of elements, not counts.

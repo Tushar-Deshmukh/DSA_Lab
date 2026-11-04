@@ -1,0 +1,71 @@
+---
+slug: two-sequence-dp
+legacyId: w11d2
+title: Two-sequence DP
+goal: Define `dp[i][j]` over two prefixes, fill LCS and edit-distance tables by hand, name the operation behind each transition, and reduce memory to two rows.
+why: LCS and Edit Distance are the canonical two-string DP problems, and many others (delete operations, uncrossed lines, interleaving) are the same table with different rules. Being able to say "this cell means…" for any cell is what interviewers test.
+prereqs:
+  - Grid DP (Module 10 lesson 4)
+outcomes:
+  - Fill the LCS table for `"abcde"`/`"ace"` and the edit-distance table for `"horse"`/`"ros"`
+  - Name the operation (delete, insert, replace) behind each edit-distance transition
+  - Set the base row and column correctly for each problem
+  - Reduce a problem to LCS (583)
+ready:
+  - I can name the operation behind each of the three edit-distance transitions
+  - I filled both tables by hand before using the visualizer
+  - 1143 and 72 accepted
+summary:
+  - '`dp[i][j]` = answer for `a[0..i)` and `b[0..j)`; table (m + 1) × (n + 1).'
+  - 'LCS: match → diagonal + 1; else max(top, left). Base 0.'
+  - 'Edit: match → diagonal; else 1 + min(top = delete, left = insert, diagonal = replace). Base i and j.'
+  - O(m·n) time; two rows → O(min(m, n)) space.
+revision: Explain what dp[2][1] means in the "horse"/"ros" table and how its value was computed.
+warmup:
+  problem: 416
+topic: 'Two-sequence DP: LCS and edit distance; two-row space optimisation'
+implement: Fill the LCS table for "abcde"/"ace" and the edit-distance table for "horse"/"ros"
+problemsText: 'C: 1143, 72'
+problems:
+  - num: 1143
+    tier: C
+  - num: 72
+    tier: C
+doneWhen: You can name the operation behind each of the three edit-distance transitions
+estimate:
+  T: 25
+  I: 25
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="two-prefixes-one-table" kind="theory" title="Two prefixes, one table">
+
+<Include id="theory/dynamic-programming-2-bits/two-sequence-dp" />
+
+<Include id="theory/dynamic-programming-2-bits/example-2" />
+
+<Viz id="two-seq" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="reducing-to-lcs" kind="code" title="Reducing to LCS">
+
+<Include id="patterns/two-sequence-dp" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

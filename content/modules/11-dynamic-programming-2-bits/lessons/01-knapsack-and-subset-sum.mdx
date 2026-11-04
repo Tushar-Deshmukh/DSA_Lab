@@ -1,0 +1,75 @@
+---
+slug: knapsack-and-subset-sum
+legacyId: w11d1
+title: 0/1 knapsack and subset sum
+goal: Decide which sums a subset of items can make, each item used at most once, with a 1-D table iterated downwards, and transform Target Sum into a subset count.
+why: Partition Equal Subset Sum is a frequent medium, and the direction of one loop is the whole difference between a correct answer and a subtle bug. Interviewers like it because it tests whether you understand what each table cell means after each item.
+prereqs:
+  - Unbounded knapsack (Module 10 lesson 3)
+outcomes:
+  - Fill the 416 table for `[1,5,11,5]` and reproduce the reuse bug with an upward loop
+  - Explain why j must go from high to low
+  - Derive P = (total + target) / 2 for 494 and count subsets with `+=`
+  - Recognise when the target is too large for a pseudo-polynomial table
+ready:
+  - I can derive P = (total + target) / 2 for 494
+  - I reproduced the reuse bug with an upward loop
+  - 416 accepted
+summary:
+  - '`dp[j]` = can (or how many ways can) the items so far make sum j; dp[0] = true / 1.'
+  - 'For each item x: `for (j = target; j >= x; j--) dp[j] ||= dp[j − x]` (or `+=`).'
+  - Downwards keeps each item single-use; upwards is the unbounded knapsack.
+  - '416: odd total → false; target = total / 2.'
+  - '494: count subsets summing to (total + target) / 2; 0 if odd or |target| > total.'
+  - 'O(n × target): pseudo-polynomial.'
+revision: Explain with a two-cell example why an upward loop uses an item twice, then write 416 from memory.
+warmup:
+  problem: 139
+topic: 0/1 knapsack and subset sum; downward iteration; transforming Target Sum
+implement: 416 table for `[1,5,11,5]`; reproduce the reuse bug with an upward loop
+problemsText: 'C: 416 · S: 494'
+problems:
+  - num: 416
+    tier: C
+  - num: 494
+    tier: S
+doneWhen: You can derive P = (total + target) / 2 for 494
+estimate:
+  T: 30
+  I: 25
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="each-item-once" kind="theory" title="Each item once">
+
+<Include id="theory/dynamic-programming-2-bits/0-1-knapsack-and-subset-sum" />
+
+<Include id="theory/dynamic-programming-2-bits/example-1" />
+
+<Viz id="knap01" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="transforming-target-sum-stretch-494" kind="theory" title="Transforming Target Sum (Stretch: 494)">
+
+<Include id="patterns/0-1-knapsack-and-subset-sum" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

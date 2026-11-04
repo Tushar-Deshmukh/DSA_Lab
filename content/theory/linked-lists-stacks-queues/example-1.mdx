@@ -1,0 +1,52 @@
+---
+slug: example-1
+title: Example 1
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Example 1
+  lines:
+    - 787
+    - 824
+---
+
+**Example 1: reverse a linked list, iteratively and recursively.**
+
+```js
+// LeetCode's definition
+function ListNode(val, next = null) { this.val = val; this.next = next; }
+
+function reverseList(head) {
+  let prev = null, cur = head;
+  while (cur) {
+    const next = cur.next;  // 1. save the rest of the list
+    cur.next = prev;        // 2. point this node backwards
+    prev = cur;             // 3. advance prev
+    cur = next;             // 4. advance cur
+  }
+  return prev;              // prev is the old tail = new head
+}
+
+function reverseListRec(head) {
+  // empty or single node is already reversed
+  if (!head || !head.next) return head;
+  // trust: the rest is reversed, its tail is head.next
+  const newHead = reverseListRec(head.next);
+  head.next.next = head;   // attach head after that tail
+  head.next = null;        // head is the new tail
+  return newHead;
+}
+```
+
+Dry run (iterative) `1 → 2 → 3`:
+
+| Step | prev | cur | List state |
+| --- | --- | --- | --- |
+| start | null | 1 | 1→2→3 |
+| 1 | 1 | 2 | null←1, 2→3 |
+| 2 | 2 | 3 | null←1←2, 3 |
+| 3 | 3 | null | null←1←2←3 → return 3 |
+
+The recursive version uses O(n) stack space; the iterative version uses O(1). Prefer iterative in interviews unless asked.

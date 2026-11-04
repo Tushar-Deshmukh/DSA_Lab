@@ -1,0 +1,18 @@
+---
+slug: union-find
+title: Union-Find (Disjoint Set Union)
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Union-Find (Disjoint Set Union)
+  lines:
+    - 1715
+    - 1718
+---
+
+**Union-Find (Disjoint Set Union).** Maintains a partition of elements into sets with two operations: `find(x)` returns the set's representative; `union(a, b)` merges two sets. With *path compression* (point nodes directly at the root during find) and *union by size/rank* (attach the smaller tree under the larger), each operation is O(α(n)), effectively constant.
+
+- *Use for:* dynamic connectivity, counting components as edges arrive, detecting the edge that creates a cycle in an undirected graph (684), grouping by shared attributes (721 accounts by email), Kruskal's MST.
+- *DSU vs BFS/DFS:* for a static graph and a single question, BFS/DFS is equally good. DSU shines when edges arrive incrementally or you need many "are these connected?" queries.

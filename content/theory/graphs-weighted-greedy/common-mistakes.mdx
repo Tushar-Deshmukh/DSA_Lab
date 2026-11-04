@@ -1,0 +1,15 @@
+---
+slug: common-mistakes
+title: Common mistakes
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Common mistakes
+  lines:
+    - 1750
+    - 1750
+---
+
+**Common mistakes.** Dijkstra without the stale-entry check (still correct but slower; with a bad check it can be wrong); marking nodes visited when pushed in Dijkstra (wrong: a shorter path may arrive later); DSU without path compression on large inputs; union returning nothing when you need to know whether a merge happened; assuming greedy works because it passes the sample tests.

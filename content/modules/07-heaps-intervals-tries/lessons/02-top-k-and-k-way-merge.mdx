@@ -1,0 +1,78 @@
+---
+slug: top-k-and-k-way-merge
+legacyId: w7d2
+title: Top-K and k-way merge
+goal: Choose between sorting, a size-k heap, quickselect and buckets for top-K questions, and merge k sorted sequences with a heap.
+why: '"k largest / closest / most frequent" is one of the most common interview patterns, and the follow-up is always "can you do better than sorting?" K-way merge is the same heap idea applied to several sorted streams.'
+prereqs:
+  - Your MinHeap (lesson 1)
+  - Bucket by frequency (Module 1 lesson 4)
+outcomes:
+  - Use a min-heap of size k for the k largest, and explain why size k (not n)
+  - Compare sort, heap, quickselect and buckets by time, space and use case
+  - Merge k sorted lists in O(N log k) with a heap of heads
+ready:
+  - I can justify heap size k (not n) and state O(N log k) for 23
+  - I merged 3 short sorted arrays with a heap of `[value, listIndex, position]`
+  - I rewrote 347 with a heap for this lesson's warm-up
+summary:
+  - k largest → min-heap of size k (its root is the weakest candidate). k smallest → max-heap.
+  - O(n log k) time, O(k) space; better than sorting when k ≪ n or the data streams.
+  - 'Quickselect: O(n) average for one k-th element; bucket: O(n) when keys are bounded counts.'
+  - 'K-way merge: heap of the k current heads; pop the minimum, push its successor. O(N log k).'
+revision: Fill in the top-K decision table from memory (four approaches, time, space, when to choose).
+warmup:
+  problem: 347
+  note: rewritten with a heap
+topic: Top-K decision table (sort / heap / quickselect / bucket); k-way merge
+implement: Merge 3 short sorted arrays with a heap of `[value, listIndex, position]`
+problemsText: 'C: 23 · S: 973'
+problems:
+  - num: 23
+    tier: C
+  - num: 973
+    tier: S
+doneWhen: You can justify heap size k (not n) and state O(N log k) for 23
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="top-k" kind="theory" title="Top-K">
+
+<Include id="theory/heaps-intervals-tries/heap-vs-sorting-vs-quickselect-for-top-k" />
+
+<Include id="theory/heaps-intervals-tries/example-2" />
+
+<Viz id="heap-topk" />
+
+<Include id="patterns/heap-of-size-k" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="k-way-merge" kind="theory" title="K-way merge">
+
+<Include id="theory/heaps-intervals-tries/k-way-merge" />
+
+<Include id="patterns/k-way-merge" />
+
+<Viz id="kway-merge" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

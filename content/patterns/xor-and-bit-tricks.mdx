@@ -1,0 +1,25 @@
+---
+slug: xor-and-bit-tricks
+number: '11.5'
+title: XOR and bit tricks
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Pattern 11.5
+  lines:
+    - 2217
+    - 2226
+---
+
+**Pattern 11.5: XOR and bit tricks**
+
+1. *Recognise:* pairs cancelling, missing/duplicate numbers in a range, powers of two, set-bit counts.
+2. *Clues:* "appears twice except", "missing number", "number of 1 bits", "without using + or −", "O(1) extra space".
+3. *From brute force:* a hash map uses O(n) space; XOR cancels pairs with O(1).
+4. *Why it works:* `x ^ x = 0` and XOR is order-independent.
+5. *Template:* fold XOR over the data (and over indices when a range is involved).
+6. *Complexity:* O(n), O(1).
+7. *Variations:* 268 missing number (also solvable with the sum formula), 338 (bits DP), 371 sum without + (carry = `(a & b) << 1`, sum = `a ^ b`; mind 32-bit wrap in JS).
+8. *Inappropriate when:* a clearer arithmetic or hashing solution exists and readability matters more than O(1) space.

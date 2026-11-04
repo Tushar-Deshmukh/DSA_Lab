@@ -1,0 +1,19 @@
+---
+slug: prefix-sums
+title: Prefix sums
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Prefix sums
+  lines:
+    - 425
+    - 429
+---
+
+**Prefix sums.** `pre[i]` = sum of the first i elements, with `pre[0] = 0`. The sum of `a[l..r]` is `pre[r+1] - pre[l]` in O(1) after O(n) preprocessing.
+
+- *Prefix sum + hash map:* "count subarrays with sum k" becomes "count earlier prefixes equal to `cur - k`". Works with negative numbers.
+- *Prefix/suffix products:* 238 multiplies the product of everything left of i by everything right of i, avoiding division.
+- *Difference array:* to add v to every element in `[l, r]` many times, do `diff[l] += v; diff[r+1] -= v`, then take a prefix sum once at the end. Turns k range updates from O(k·n) into O(k + n).

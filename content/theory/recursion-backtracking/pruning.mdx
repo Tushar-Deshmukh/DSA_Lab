@@ -1,0 +1,15 @@
+---
+slug: pruning
+title: Pruning
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Pruning
+  lines:
+    - 1009
+    - 1009
+---
+
+**Pruning.** Stop exploring a branch as soon as it cannot lead to a valid answer: remaining target \< 0; sorted candidates where `candidates[i] > remaining` (break, not continue); too few elements left to reach size k (`n - i + 1 < k - path.length`). Pruning does not change worst-case big-O in most interview problems, but it matters in practice.

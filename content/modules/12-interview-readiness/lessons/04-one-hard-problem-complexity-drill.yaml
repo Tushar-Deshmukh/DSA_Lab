@@ -1,0 +1,101 @@
+exercises:
+  - id: ex-01
+    legacyId: w12d4-1
+    type: complexity
+    tag: Drill
+    q: 'Subsets by backtracking: `dfs(i)` either skips or takes nums[i], and at each leaf copies the current path into the result. For n elements:'
+    fields:
+      - label: Time
+        answer: O(n · 2ⁿ)
+        options:
+          - O(2ⁿ)
+          - O(n · 2ⁿ)
+          - O(n²)
+          - O(n!)
+        why:
+          O(2ⁿ): 2ⁿ leaves, but copying each path costs up to n.
+      - label: Extra space (not counting the output)
+        answer: O(n)
+        options:
+          - O(1)
+          - O(n)
+          - O(2ⁿ)
+        why:
+          O(1): The recursion stack and the path are both n deep.
+    explain: Count the output size and the recursion stack, not just the loops you can see.
+    hints:
+      - How big is the output, and how deep is the recursion?
+  - id: ex-02
+    legacyId: w12d4-2
+    type: complexity
+    tag: Drill
+    q: 'Group Anagrams: for each of n strings of length up to k, sort its characters to make a key, then group in a Map.'
+    fields:
+      - label: Time
+        answer: O(n · k log k)
+        options:
+          - O(n · k)
+          - O(n · k log k)
+          - O(n log n)
+          - O(n² · k)
+        why:
+          O(n · k): That is the counting-key version; sorting each string costs k log k.
+      - label: Space
+        answer: O(n · k)
+        options:
+          - O(n)
+          - O(n · k)
+          - O(k)
+    explain: The sort is inside the loop, so its cost multiplies.
+    hints:
+      - What does each iteration cost?
+  - id: ex-03
+    legacyId: w12d4-3
+    type: complexity
+    tag: Drill
+    q: Recursive DFS for the height of a binary tree with n nodes that is a single chain (every node has only a left child).
+    fields:
+      - label: Time
+        answer: O(n)
+        options:
+          - O(log n)
+          - O(n)
+          - O(n log n)
+      - label: Space (call stack)
+        answer: O(n)
+        options:
+          - O(1)
+          - O(log n)
+          - O(n)
+        why:
+          O(log n): That is only for a balanced tree. A chain has height n, so the stack is n deep.
+    explain: 'Recursion space is O(height): log n when balanced, n in the worst case.'
+    hints:
+      - How deep does the recursion go on a chain?
+  - id: ex-04
+    legacyId: w12d4-4
+    type: complexity
+    tag: Drill
+    q: Dijkstra with a binary heap and lazy deletion on V vertices and E edges.
+    fields:
+      - label: Time
+        answer: O((V + E) log V)
+        options:
+          - O(V + E)
+          - O((V + E) log V)
+          - O(V · E)
+          - O(V²)
+        why:
+          O(V + E): That is BFS; every heap operation costs a log.
+      - label: Heap size in the worst case
+        answer: O(E)
+        options:
+          - O(V)
+          - O(E)
+          - O(1)
+        why:
+          O(V): With lazy deletion a node can be pushed once per improving edge, so up to E entries.
+    explain: O(log E) = O(log V²) = O(2 log V), which is why the bound is usually written with log V.
+    hints:
+      - How many times can a node be pushed with lazy deletion?
+annotated: []

@@ -1,0 +1,15 @@
+---
+slug: example-4
+title: Example 4
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Example 4
+  lines:
+    - 1986
+    - 1986
+---
+
+**Example 4: why loop order matters (518 Coin Change II).** Counting *combinations* (1+2 and 2+1 are the same): put coins in the **outer** loop so each combination is built in a fixed coin order: `for (const c of coins) for (let a = c; a <= amount; a++) dp[a] += dp[a - c];`. Swapping the loops counts *ordered sequences* (that is a different problem, 377). Dry run coins \[1, 2\], amount 3: after coin 1: dp = \[1,1,1,1\]; after coin 2: dp\[2\] += dp\[0\] → 2, dp\[3\] += dp\[1\] → 2. Answer 2 (\{1,1,1\}, \{1,2\}).

@@ -1,0 +1,44 @@
+# Exceptions to the reserved-problem check in content:check. Each entry says why the text stays.
+entries:
+  - match: divisible by k
+    in: pattern:prefix-sums
+    reason: Clue words for the pattern, not the problem statement. Kept by decision (plan question 5b).
+  - match: divisible by k
+    in: handbook:method-and-recognition/pattern-recognition-table
+    reason: Clue words for the pattern, not the problem statement. Kept by decision (plan question 5b).
+  - match: divisible by k
+    in: lesson:two-pointers-windows-prefix-sums/prefix-sums-difference-arrays#why
+    reason: Clue words for the pattern, not the problem statement. Kept by decision (plan question 5b).
+  - match: stock span
+    in: pattern:monotonic-stack
+    reason: Clue words for the pattern, not the problem statement. Kept by decision (plan question 5b).
+  - match: difference between node and ancestor
+    in: theory:binary-trees-bst/the-three-question-types
+    reason: Clue words for the pattern, not the problem statement. Kept by decision (plan question 5b).
+  - match: triangle
+    in: lesson:two-pointers-windows-prefix-sums/opposite-end-two-pointers
+    reason: The shape, not problem 120 "Triangle".
+  - match: triangle
+    in: lesson:graphs-traversal/bipartite-graphs-reverse-search
+    reason: The shape, not problem 120 "Triangle".
+  - match: triangle
+    in: exercise:graphs-traversal/bipartite-graphs-reverse-search
+    reason: The shape, not problem 120 "Triangle".
+  - match: Triangle
+    in: exercise:graphs-traversal/bipartite-graphs-reverse-search
+    reason: The shape, not problem 120 "Triangle".
+  - match: '120'
+    in: theory:graphs-weighted-greedy/greedy-ideas-that-fail
+    reason: A value in an example, not a reserved problem number.
+  - match: '2101'
+    in: lesson:dynamic-programming-1/string-partition-dp#revision
+    reason: A value in an example, not a reserved problem number.
+  - match: '2101'
+    in: exercise:dynamic-programming-1/string-partition-dp/ex-01
+    reason: A value in an example, not a reserved problem number.
+  - match: '909'
+    in: exercise:recursion-backtracking/combination-sum-letter-combinations/ex-04
+    reason: A value in an example, not a reserved problem number.
+  - match: Weekly Contest 525
+    in: handbook:problem-bank
+    reason: The contest number the problem data was checked against, not problem 525.

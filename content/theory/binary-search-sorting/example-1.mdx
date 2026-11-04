@@ -1,0 +1,35 @@
+---
+slug: example-1
+title: Example 1
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Example 1
+  lines:
+    - 632
+    - 652
+---
+
+**Example 1: lower bound, derived.** Goal: first index i with `nums[i] >= target`; if none, return n. Range `[0, n)` because the answer can be n.
+
+```js
+function lowerBound(nums, target) {
+  // answer is in [lo, hi]; hi itself means "none"
+  let lo = 0, hi = nums.length;
+  while (lo < hi) {
+    const mid = lo + ((hi - lo) >> 1);
+    // mid satisfies the predicate: answer is mid or left of it
+    if (nums[mid] >= target) hi = mid;
+    // mid fails: answer is strictly right
+    else lo = mid + 1;
+  }
+  return lo;                            // lo === hi: the first true index
+}
+// upperBound: same code with `nums[mid] > target`.
+// First/last position of target (34): first = lowerBound(t); last =
+// upperBound(t) - 1; check bounds.
+```
+
+Dry run `nums = [1, 2, 2, 2, 5]`, target 2: lo=0, hi=5 → mid=2 (2 ≥ 2) hi=2 → mid=1 (2 ≥ 2) hi=1 → mid=0 (1 \< 2) lo=1 → stop, return 1. Upper bound with `> 2`: lo=0,hi=5 → mid=2 (2 > 2? no) lo=3 → mid=4 (5 > 2) hi=4 → mid=3 (no) lo=4 → return 4; last = 3.

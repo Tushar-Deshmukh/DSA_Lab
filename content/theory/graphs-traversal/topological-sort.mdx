@@ -1,0 +1,18 @@
+---
+slug: topological-sort
+title: Topological sort
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Topological sort
+  lines:
+    - 1532
+    - 1535
+---
+
+**Topological sort.** A linear order of a DAG where every edge u → v puts u before v.
+
+- *Kahn's algorithm (BFS):* compute in-degrees; queue all nodes with in-degree 0; pop, append to the order, decrement neighbours' in-degrees, enqueue any that reach 0. If the order has fewer than V nodes, there is a cycle.
+- *DFS postorder:* after visiting all descendants of a node, push it; the reversed list is a topological order. Combine with three-state colouring to detect cycles.

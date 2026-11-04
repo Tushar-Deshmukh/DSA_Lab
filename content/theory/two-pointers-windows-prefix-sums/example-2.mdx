@@ -1,0 +1,47 @@
+---
+slug: example-2
+title: Example 2
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Example 2
+  lines:
+    - 459
+    - 491
+---
+
+**Example 2: variable window (Longest Substring Without Repeating Characters).**
+
+```js
+function lengthOfLongestSubstring(s) {
+  const lastSeen = new Map();   // char -> last index where it appeared
+  let l = 0, best = 0;
+  for (let r = 0; r < s.length; r++) {
+    const c = s[r];
+    if (lastSeen.has(c) && lastSeen.get(c) >= l) {
+      // jump past the previous copy; window is valid again
+      l = lastSeen.get(c) + 1;
+    }
+    lastSeen.set(c, r);
+    best = Math.max(best, r - l + 1);
+  }
+  return best;
+}
+```
+
+Dry run `"abcabcbb"`:
+
+| r | c | l before | repeat inside window? | l after | window | best |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | a | 0 | no | 0 | a | 1 |
+| 1 | b | 0 | no | 0 | ab | 2 |
+| 2 | c | 0 | no | 0 | abc | 3 |
+| 3 | a | 0 | yes (index 0) | 1 | bca | 3 |
+| 4 | b | 1 | yes (index 1) | 2 | cab | 3 |
+| 5 | c | 2 | yes (index 2) | 3 | abc | 3 |
+| 6 | b | 3 | yes (index 4) | 5 | cb | 3 |
+| 7 | b | 5 | yes (index 6) | 7 | b | 3 |
+
+The check `lastSeen.get(c) >= l` matters: a character last seen *before* the window must not move `l` backwards.

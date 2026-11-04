@@ -1,0 +1,255 @@
+exercises:
+  - id: ex-01
+    legacyId: w2d3-1
+    type: fill
+    tag: Fixed window
+    q: 'Complete `findMaxAverage` (problem 643): the maximum average of any contiguous subarray of length k.'
+    template: |
+      function findMaxAverage(nums, k) {
+        let sum = 0;
+        for (let i = 0; i < k; i++) sum += nums[i];
+        let best = sum;
+        for (let r = k; r < nums.length; r++) {
+          sum += [[0]];
+          best = Math.max(best, sum);
+        }
+        return [[1]];
+      }
+    blanks:
+      - accept:
+          - nums[r] - nums[r - k]
+          - nums[r]-nums[r-k]
+          - -nums[r - k] + nums[r]
+      - accept:
+          - best / k
+          - best/k
+    fn: findMaxAverage
+    compare: float
+    tests:
+      - args:
+          - - 1
+            - 12
+            - -5
+            - -6
+            - 50
+            - 3
+          - 4
+        expect: 12.75
+      - args:
+          - - 5
+          - 1
+        expect: 5
+      - args:
+          - - -1
+            - -2
+            - -3
+          - 2
+        expect: -1.5
+      - args:
+          - - 0
+            - 4
+            - 0
+            - 3
+            - 2
+          - 1
+        expect: 4
+      - args:
+          - - 4
+            - 2
+            - 1
+            - 3
+            - 3
+          - 5
+        expect: 2.6
+    explain: 'Divide once at the end, not inside the loop: comparing sums is the same as comparing averages when k is fixed.'
+    hints:
+      - When the window moves from [r−k, r−1] to [r−k+1, r], which element leaves?
+  - id: ex-02
+    legacyId: w2d3-2
+    type: trace
+    tag: Lesson 3 trace
+    q: Trace `lengthOfLongestSubstring("pwwkew")`. For each r, write `l` after processing that character, then the final answer.
+    code: |
+      for (let r = 0; r < s.length; r++) {
+        const c = s[r];
+        if (lastSeen.has(c) && lastSeen.get(c) >= l) l = lastSeen.get(c) + 1;
+        lastSeen.set(c, r);
+        best = Math.max(best, r - l + 1);
+      }
+    rows:
+      - prompt: 'r = 1 ("w"): l ='
+        answer: '0'
+        why: 'No repeat yet: window "pw".'
+      - prompt: 'r = 2 ("w"): l ='
+        answer: '2'
+        why: '"w" was last seen at 1, inside the window, so l jumps to 2.'
+      - prompt: 'r = 4 ("e"): l ='
+        answer: '2'
+        why: Window "wke", no repeat.
+      - prompt: 'r = 5 ("w"): l ='
+        answer: '3'
+        why: '"w" last seen at 2 ≥ l = 2, so l = 3: window "kew".'
+      - prompt: Returned value
+        answer: '3'
+        why: '"wke" and "kew" both have length 3.'
+    verify: |
+      const s = "pwwkew"; const lastSeen = new Map(); let l = 0, best = 0; const L = [];
+      for (let r = 0; r < s.length; r++) { const c = s[r]; if (lastSeen.has(c) && lastSeen.get(c) >= l) l = lastSeen.get(c) + 1; lastSeen.set(c, r); best = Math.max(best, r - l + 1); L.push(l); }
+      console.log(L[1]); console.log(L[2]); console.log(L[4]); console.log(L[5]); console.log(best);
+    explain: Note that "pwke" is a subsequence, not a substring, so 4 is not allowed.
+    hints:
+      - 'Keep a small table: r, c, lastSeen.get(c), l before, l after.'
+  - id: ex-03
+    legacyId: w2d3-3
+    type: predict
+    tag: Why ">= l" matters
+    q: This version drops the `>= l` check. What does it print for `"abba"`? (The correct answer is 2.)
+    code: |
+      function lengthNoCheck(s) {
+        const lastSeen = new Map();
+        let l = 0, best = 0;
+        for (let r = 0; r < s.length; r++) {
+          if (lastSeen.has(s[r])) l = lastSeen.get(s[r]) + 1;
+          lastSeen.set(s[r], r);
+          best = Math.max(best, r - l + 1);
+        }
+        return best;
+      }
+      console.log(lengthNoCheck("abba"));
+    answer: '3'
+    traps:
+      '2': 'That is the correct answer, but this version has a bug. Trace r = 3: "a" was last seen at 0, so l jumps *backwards* from 2 to 1.'
+      '4': The window never covers the whole string; the second "b" moves l to 2.
+    explain: At r = 3, `lastSeen.get("a")` is 0 (outside the window [2, 2]). Without the check, l moves back to 1, the window becomes "bba" (length 3), which contains "b" twice. The `>= l` test ignores stale entries from before the window.
+    hints:
+      - 'Write l after each r: r = 0, 1, 2, 3.'
+  - id: ex-04
+    legacyId: w2d3-4
+    type: mcq
+    tag: When is a window allowed?
+    q: Which of these can be solved with a variable sliding window as described? Select all that apply.
+    options:
+      - t: Longest subarray of **positive** integers with sum ≤ S
+        ok: true
+        why: Adding a positive number only increases the sum, so once too big, the left end must move.
+      - t: Number of subarrays of **any** integers (negatives allowed) with sum exactly k
+        why: 'Negatives break monotonicity. This is problem 560: prefix sums + a hash map.'
+        kind: concept
+      - t: Longest substring with at most 2 distinct characters
+        ok: true
+        why: Adding characters can only keep or increase the number of distinct characters.
+      - t: Longest increasing **subsequence**
+        why: A subsequence is not contiguous, so there is no window. That is DP (Module 11).
+        kind: concept
+    explain: The test is always the same question. If the window becomes invalid, can a longer window with the same left end ever be valid again? If not, a window works.
+    hints:
+      - For each, ask whether adding an element can turn an invalid window back into a valid one.
+  - id: ex-05
+    legacyId: w2d3-5
+    type: interview
+    title: Max Consecutive Ones III (LeetCode 1004)
+    q: 'Given a binary array `nums` and an integer `k`, return the maximum number of consecutive 1s in the array if you can flip at most `k` 0s. Example: `nums = [1,1,1,0,0,0,1,1,1,1,0]`, `k = 2` → 6.'
+    model:
+      clarify: |
+        - Can k be 0? (Yes: then it is the longest run of 1s.) Can k exceed the number of zeros? (Yes: the whole array.)
+        - n up to 10⁵, so O(n²) is too slow.
+      brute: 'Try every subarray and count its zeros, valid if zeros ≤ k: O(n²) with a running count.'
+      optimize: |
+        Reword it: the longest window containing **at most k zeros**. Adding an element never decreases the zero count, so validity is monotone and a variable window works. State = number of zeros in the window. Invalid = zeros > k. Shrink while invalid; record `r − l + 1`.
+      edges: |
+        - k = 0 → longest run of ones
+        - all zeros with k = 0 → 0
+        - k ≥ number of zeros → n
+      complexity: O(n) time (each index enters and leaves once), O(1) space.
+    fn: longestOnes
+    starter: |
+      function longestOnes(nums, k) {
+
+      }
+    solution: |
+      function longestOnes(nums, k) {
+        let l = 0, zeros = 0, best = 0;
+        for (let r = 0; r < nums.length; r++) {
+          if (nums[r] === 0) zeros++;
+          while (zeros > k) {
+            if (nums[l] === 0) zeros--;
+            l++;
+          }
+          best = Math.max(best, r - l + 1);
+        }
+        return best;
+      }
+    tests:
+      - args:
+          - - 1
+            - 1
+            - 1
+            - 0
+            - 0
+            - 0
+            - 1
+            - 1
+            - 1
+            - 1
+            - 0
+          - 2
+        expect: 6
+      - args:
+          - - 0
+            - 0
+            - 1
+            - 1
+            - 0
+            - 0
+            - 1
+            - 1
+            - 1
+            - 0
+            - 1
+            - 1
+            - 0
+            - 0
+            - 0
+            - 1
+            - 1
+            - 1
+            - 1
+          - 3
+        expect: 10
+      - args:
+          - - 0
+            - 0
+            - 0
+          - 0
+        expect: 0
+        hidden: true
+      - args:
+          - - 1
+            - 1
+            - 1
+          - 0
+        expect: 3
+        hidden: true
+      - args:
+          - - 0
+            - 1
+            - 0
+          - 5
+        expect: 3
+        hidden: true
+      - args:
+          - - 1
+            - 0
+            - 1
+            - 1
+            - 0
+            - 1
+          - 1
+        expect: 4
+        hidden: true
+    explain: 'Once you say "at most k zeros", it is the template: add, shrink while invalid, record.'
+    hints:
+      - 'Rephrase: what does a valid window contain?'
+      - Keep the number of zeros inside the window.
+      - While zeros > k, move l and update the count.
+annotated: []

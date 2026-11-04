@@ -1,0 +1,15 @@
+---
+slug: strings-in-javascript
+title: Strings in JavaScript
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Strings in JavaScript
+  lines:
+    - 433
+    - 433
+---
+
+**Strings in JavaScript.** Strings are immutable: `s[i] = 'x'` silently does nothing, and `s += c` in a loop may copy. Convert to an array (`[...s]` or `s.split('')`) for in-place edits and `join('')` at the end. Use `s.charCodeAt(i) - 97` to index a 26-slot count array for lowercase letters. Compare characters with `===`. For palindromes, two pointers from both ends; skip non-alphanumerics with a small helper rather than a regex inside the loop.

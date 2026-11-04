@@ -1,0 +1,40 @@
+exercises:
+  - id: ex-01
+    legacyId: w12d3-1
+    type: mcq
+    tag: The trade-off sentence
+    q: Which statement best communicates a trade-off?
+    options:
+      - t: '"Sorting is O(n log n) and O(1) extra space but changes the input; a hash set is O(n) time and O(n) space. n is up to 10⁵ and memory isn''t mentioned, so I''ll use the set unless you''d rather I didn''t allocate."'
+        ok: true
+        why: Both options, their costs, a side effect, the constraint that decides, and an invitation to disagree.
+      - t: '"I''ll use a hash set because it''s faster."'
+        why: No costs, no alternative, no reason tied to the constraints.
+        kind: concept
+      - t: '"There are many ways to do this; any of them would work."'
+        why: It avoids the decision the interviewer wants to hear.
+        kind: concept
+    explain: Name the options, their costs, the deciding constraint, and the choice.
+    hints:
+      - Which answer would let the interviewer disagree with a specific point?
+  - id: ex-02
+    legacyId: w12d3-2
+    type: mcq
+    tag: Assumptions worth saying
+    q: Which assumptions are worth stating out loud before coding? Select all that apply.
+    options:
+      - t: '"I''m assuming I may modify the input array."'
+        ok: true
+        why: It changes whether in-place sorting or marking is allowed.
+      - t: '"I''m assuming values fit in 32-bit integers."'
+        ok: true
+        why: It matters for sums, products and any bitwise operations in JavaScript.
+      - t: '"I''m assuming the input fits in memory."'
+        ok: true
+      - t: '"I''m assuming JavaScript has arrays."'
+        why: Language basics are not assumptions about the problem.
+        kind: concept
+    explain: Say assumptions that would change your algorithm or its correctness if they were false.
+    hints:
+      - Would the algorithm change if the assumption were false?
+annotated: []

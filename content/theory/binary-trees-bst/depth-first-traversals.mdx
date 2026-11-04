@@ -1,0 +1,23 @@
+---
+slug: depth-first-traversals
+title: Depth-first traversals
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Depth-first traversals
+  lines:
+    - 1164
+    - 1172
+---
+
+**Depth-first traversals.**
+
+| Order | Visit sequence | Typical use |
+| --- | --- | --- |
+| Preorder | node, left, right | Copy/serialize a tree; pass information down |
+| Inorder | left, node, right | BST → sorted order |
+| Postorder | left, right, node | Combine children's results (height, diameter, delete) |
+
+Recursive DFS uses O(h) stack space, h = height. Iterative DFS replaces the call stack with an explicit array: preorder is a plain stack (push right then left); inorder pushes all left children, pops, visits, then moves right (Example 3).

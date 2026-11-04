@@ -1,0 +1,15 @@
+---
+slug: lowest-common-ancestor
+title: Lowest common ancestor
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Lowest common ancestor
+  lines:
+    - 1186
+    - 1186
+---
+
+**Lowest common ancestor.** In a general binary tree (236): if the current node is p or q, return it; recurse left and right; if both sides return non-null, the current node is the LCA; otherwise return whichever side is non-null. In a BST (235): walk from the root; if both values are smaller go left, if both larger go right, otherwise the current node is the split point and the LCA.

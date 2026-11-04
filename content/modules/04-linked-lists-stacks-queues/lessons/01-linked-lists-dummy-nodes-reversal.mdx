@@ -1,0 +1,106 @@
+---
+slug: linked-lists-dummy-nodes-reversal
+legacyId: w4d1
+title: Linked lists, dummy nodes and reversal
+goal: Traverse and rewire singly linked lists safely, use a dummy node to remove head special cases, and reverse a list iteratively and recursively.
+why: Linked-list questions test whether you can change pointers without losing data. Reversal is the building block of half the problems this module (reorder, palindrome, reverse a sub-range), and the dummy node removes the most common source of edge-case bugs.
+prereqs:
+  - 'Objects and references in JavaScript: two variables can point at the same object'
+  - 'Recursion basics (Module 1: recursion trees, stack space)'
+outcomes:
+  - Compare array and linked-list costs for access, insertion and deletion
+  - Build and print lists with `fromArray` / `toArray`
+  - 'Apply the rewiring rule: save what you need before changing `next`'
+  - Reverse a list iteratively (O(1) space) and recursively (O(n) stack)
+  - Merge two sorted lists behind a dummy node
+ready:
+  - I wrote 206 both ways and can state the space difference
+  - I reversed `1→2→3→4` on paper both ways, drawing every arrow
+  - I can explain what the dummy node saves me in 21
+summary:
+  - A list is nodes with `next`; you hold only the head. Access is O(i); insertion after a known node is O(1).
+  - 'Dummy node: `new ListNode(0, head)`; return `dummy.next` when the head may change.'
+  - 'Rewiring rule: save `next`, rewire, advance. Set the new tail''s `next = null`.'
+  - 'Iterative reversal: O(n) time, O(1) space. Recursive: O(n) stack.'
+  - 'Merge: attach the smaller head to `tail`, then append whichever list is left.'
+revision: Draw the four pointer updates of iterative reversal for `1→2→3`, then write the recursive version from memory and say which line makes the old head the tail.
+warmup:
+  problem: 912
+topic: Linked-list nodes, dummy nodes, pointer-rewiring rule, reversal (iterative + recursive)
+implement: Write `fromArray`/`toArray` helpers (6.6); reverse `1→2→3→4` on paper both ways
+problemsText: 'C: 206, 21 · S: 203'
+problems:
+  - num: 206
+    tier: C
+  - num: 21
+    tier: C
+  - num: 203
+    tier: S
+doneWhen: 206 written both ways; you can state the space difference
+estimate:
+  T: 25
+  I: 20
+  P: 55
+  R: 15
+  'N': 5
+---
+
+<Unit id="nodes-and-pointers" kind="theory" title="Nodes and pointers">
+
+<Include id="theory/linked-lists-stacks-queues/linked-lists" />
+
+<Exercise id="ex-01" />
+
+The handbook's helpers let you test list code locally. LeetCode defines `ListNode` for you; the exercises on this site do too.
+
+<Include id="handbook/javascript-reference/linked-list-helpers" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="the-dummy-node-and-the-rewiring-rule" kind="theory" title="The dummy node and the rewiring rule">
+
+<Include id="theory/linked-lists-stacks-queues/dummy-node" />
+
+<Include id="theory/linked-lists-stacks-queues/pointer-rewiring-rule" />
+
+</Unit>
+
+<Unit id="reversal-step-by-step" kind="code" title="Reversal, step by step">
+
+<Include id="theory/linked-lists-stacks-queues/example-1" />
+
+<Viz id="ll-reverse" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+The recursive version trusts the call on the rest of the list, then fixes two pointers on the way back:
+
+<Viz id="ll-reverse-rec" />
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="merging-behind-a-dummy-node" kind="code" title="Merging behind a dummy node">
+
+Merge Two Sorted Lists (21) is the merge step of merge sort, on lists. Without a dummy node you need a special case to pick the head; with one, every node is attached the same way.
+
+<Viz id="ll-merge" />
+
+<Exercise id="ex-07" />
+
+<Include id="patterns/pointer-rewiring-with-a-dummy-node" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-08" />
+
+</Unit>

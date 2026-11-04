@@ -1,0 +1,19 @@
+---
+slug: minimum-spanning-tree
+title: Minimum spanning tree (MST)
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Minimum spanning tree (MST)
+  lines:
+    - 1720
+    - 1724
+---
+
+**Minimum spanning tree (MST).** In a connected, weighted, undirected graph, the cheapest set of V − 1 edges connecting all vertices.
+
+- *Kruskal:* sort edges by weight; add each edge if it joins two different DSU sets. O(E log E).
+- *Prim:* grow a tree from any vertex, always adding the cheapest edge leaving it (min-heap). O(E log V). For dense/complete graphs (1584: every pair of points is an edge), the O(V²) array version of Prim (no heap) is fastest.
+- Priority: know one (Kruskal is shorter with DSU) and the idea of the other.

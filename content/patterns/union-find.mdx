@@ -1,0 +1,25 @@
+---
+slug: union-find
+number: '9.2'
+title: Union-Find
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Pattern 9.2
+  lines:
+    - 1842
+    - 1851
+---
+
+**Pattern 9.2: Union-Find**
+
+1. *Recognise:* group items that become connected; ask whether two items share a group.
+2. *Clues:* "redundant connection", "number of connected components", "merge accounts", "operations to connect network", "equivalence".
+3. *From brute force:* re-running BFS after each new edge is O(E·(V + E)); DSU is near O(1) per edge.
+4. *Why it works:* each set is a tree; roots identify sets; compression keeps trees flat.
+5. *Template:* Example 2.
+6. *Complexity:* O(α(n)) per operation.
+7. *Variations:* map non-integer keys (emails) to indices with a `Map`; Kruskal.
+8. *Inappropriate when:* edges are deleted (DSU cannot split sets) or you need paths, not just connectivity.

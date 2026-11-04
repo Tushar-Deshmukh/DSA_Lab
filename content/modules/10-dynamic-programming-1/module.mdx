@@ -1,0 +1,29 @@
+---
+number: 10
+slug: dynamic-programming-1
+title: Dynamic programming I
+legacyId: w10
+objectives: '**A. Learning objectives.** By the end of this module you can: recognise overlapping subproblems and optimal substructure; turn a brute-force recursion into memoisation, then into a bottom-up table, then into O(1) or O(n) space; define a DP state in one sentence, write its transition and base cases, and choose the iteration order; solve 1-D, unbounded-knapsack and grid DP problems; explain when a greedy or direct formula makes DP unnecessary.'
+shortOnTime: keep 70, 198, 322, 62 and 139, one per DP shape. Use 746 and 213 as later warm-ups; leave 518 and 91 for later. If DP feels opaque, spend an extra session redoing lesson 1's four-step exercise on 198 before moving on.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Dynamic programming is recursion that remembers. Every lesson this module follows the same four steps on a new shape of problem: write the brute-force recursion, cache it, turn it into a table, then shrink the table. The hard part is never the code; it is the one-sentence definition of the state.
+
+| Lesson | Shape | State sentence |
+| --- | --- | --- |
+| 1 | The four steps (70, 746) | `dp[i]` = ways / cost to reach step i |
+| 2 | Take or skip (198, 213) | `dp[i]` = best using houses 0..i |
+| 3 | Unbounded knapsack (322, 518) | `dp[a]` = fewest coins / ways to make amount a |
+| 4 | Grid (62, 64, 63) | `dp[r][c]` = paths / cost to reach cell (r, c) |
+| 5 | String partition (139, 91) | `dp[i]` = the first i characters can be split / decoded |
+| Checkpoint | **Assessment 5** | timed, unseen problems |
+
+<Callout kind="tip" title="If DP feels opaque">
+
+That is normal at the start of DP. The handbook's short-on-time rule: keep 70, 198, 322, 62 and 139 (one per shape), and if it still feels opaque, spend an extra session redoing lesson 1's four-step exercise on 198. Writing the brute-force recursion first is never wasted: it is the derivation.
+
+</Callout>
+
+</Unit>

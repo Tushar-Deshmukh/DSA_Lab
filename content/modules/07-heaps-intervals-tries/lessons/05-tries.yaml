@@ -1,0 +1,202 @@
+exercises:
+  - id: ex-01
+    legacyId: w7d5-1
+    type: trace
+    tag: Lesson 5 drawing
+    q: Insert "app", "apple", "bat" into an empty trie.
+    rows:
+      - prompt: Number of nodes, not counting the root
+        answer: '8'
+        why: a-p-p (3) + l-e (2, shared prefix "app") + b-a-t (3).
+      - prompt: Number of nodes with isEnd = true
+        answer: '3'
+      - prompt: search("ap")
+        answer: 'false'
+      - prompt: startsWith("ap")
+        answer: 'true'
+    verify: |
+      const root = { c: new Map(), end: false }; let count = 0;
+      for (const w of ['app', 'apple', 'bat']) { let n = root; for (const ch of w) { if (!n.c.has(ch)) { n.c.set(ch, { c: new Map(), end: false }); count++; } n = n.c.get(ch); } n.end = true; }
+      let ends = 0; const walk = (n) => { if (n.end) ends++; n.c.forEach(walk); }; walk(root);
+      const find = (s) => { let n = root; for (const ch of s) { n = n.c.get(ch); if (!n) return null; } return n; };
+      console.log(count); console.log(ends); console.log(!!(find('ap') && find('ap').end)); console.log(find('ap') !== null);
+    explain: '"app" and "apple" share three nodes; "app"''s last node is a word end even though it has a child.'
+    hints:
+      - Shared prefixes share nodes.
+  - id: ex-02
+    legacyId: w7d5-2
+    type: code
+    tag: Counting prefixes
+    q: 'Write `class PrefixCounter` with `insert(word)` and `countPrefix(p)`: the number of inserted words (duplicates count) that start with `p`. Store a count on every node so `countPrefix` is O(|p|).'
+    fn: PrefixCounter
+    starter: |
+      class PrefixCounter {
+        constructor() { this.root = { children: new Map(), count: 0 }; }
+        insert(word) {}
+        countPrefix(p) {}
+      }
+    solution: |
+      class PrefixCounter {
+        constructor() { this.root = { children: new Map(), count: 0 }; }
+        insert(word) {
+          let node = this.root;
+          node.count++;
+          for (const ch of word) {
+            if (!node.children.has(ch)) node.children.set(ch, { children: new Map(), count: 0 });
+            node = node.children.get(ch);
+            node.count++;
+          }
+        }
+        countPrefix(p) {
+          let node = this.root;
+          for (const ch of p) { node = node.children.get(ch); if (!node) return 0; }
+          return node.count;
+        }
+      }
+    tests:
+      - ops:
+          - - PrefixCounter
+          - - insert
+            - apple
+          - - insert
+            - app
+          - - insert
+            - bat
+          - - countPrefix
+            - ap
+          - - countPrefix
+            - b
+          - - countPrefix
+            - c
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - 2
+          - 1
+          - 0
+      - ops:
+          - - PrefixCounter
+          - - insert
+            - a
+          - - insert
+            - a
+          - - countPrefix
+            - a
+          - - countPrefix
+            - ''
+        expect:
+          - null
+          - null
+          - null
+          - 2
+          - 2
+      - ops:
+          - - PrefixCounter
+          - - countPrefix
+            - x
+        expect:
+          - null
+          - 0
+        hidden: true
+    explain: 'Each node''s count is the number of words passing through it: the answer to countPrefix is read in O(|p|).'
+    hints:
+      - Increment a counter on every node along the word's path.
+  - id: ex-03
+    legacyId: w7d5-3
+    type: bug
+    tag: Where isEnd goes
+    q: With this insert, `search("app")` is true even though only "apple" was inserted. Click the line.
+    code: |
+      insert(word) {
+        let node = this.root;
+        for (const ch of word) {
+          if (!node.children.has(ch)) node.children.set(ch, { children: new Map(), isEnd: false });
+          node = node.children.get(ch);
+          node.isEnd = true;
+        }
+      }
+    bug:
+      - 5
+    kind: impl
+    explain: 'Every node on the path is marked as a word end, so every prefix of an inserted word becomes "present". Mark only the last node, after the loop: `node.isEnd = true;`.'
+    fix: |
+      insert(word) {
+        let node = this.root;
+        for (const ch of word) {
+          if (!node.children.has(ch)) node.children.set(ch, { children: new Map(), isEnd: false });
+          node = node.children.get(ch);
+        }
+        node.isEnd = true;
+      }
+    fine:
+      '3': Creating missing children is correct.
+      '4': Moving down is correct.
+    hints:
+      - Which node represents the end of the whole word?
+  - id: ex-04
+    legacyId: w7d5-4
+    type: interview
+    title: Replace Words (LeetCode 648)
+    q: 'Given a dictionary of roots and a sentence, replace every word that starts with some root by the **shortest** such root. Example: dictionary `["cat","bat","rat"]`, sentence `"the cattle was rattled by the battery"` → `"the cat was rat by the bat"`.'
+    model:
+      clarify: |
+        - Shortest matching root wins.
+        - Words separated by single spaces; lowercase only.
+      brute: 'For each word, check every root with `startsWith`: O(words · roots · L).'
+      optimize: 'Insert all roots into a trie. For each word, walk the trie character by character and stop at the first node with isEnd: that prefix is the shortest root. If the walk falls off the trie first, keep the word. O(total characters).'
+      edges: |
+        - no root matches
+        - a root equal to the whole word
+        - roots that are prefixes of each other (\"a\", \"aa\")
+      complexity: O(D + S) where D is the total length of the roots and S the sentence length.
+    fn: replaceWords
+    starter: |
+      function replaceWords(dictionary, sentence) {
+
+      }
+    solution: |
+      function replaceWords(dictionary, sentence) {
+        const root = { c: new Map(), end: false };
+        for (const w of dictionary) { let n = root; for (const ch of w) { if (!n.c.has(ch)) n.c.set(ch, { c: new Map(), end: false }); n = n.c.get(ch); } n.end = true; }
+        return sentence.split(' ').map((word) => {
+          let n = root;
+          for (let i = 0; i < word.length; i++) {
+            n = n.c.get(word[i]);
+            if (!n) return word;
+            if (n.end) return word.slice(0, i + 1);
+          }
+          return word;
+        }).join(' ');
+      }
+    tests:
+      - args:
+          - - cat
+            - bat
+            - rat
+          - the cattle was rattled by the battery
+        expect: the cat was rat by the bat
+      - args:
+          - - a
+            - b
+            - c
+          - aadsfasf absbs bbab cadsfafs
+        expect: a a b c
+      - args:
+          - - a
+            - aa
+            - aaa
+          - aa aaa aaaa
+        expect: a a a
+        hidden: true
+      - args:
+          - - xyz
+          - hello world
+        expect: hello world
+        hidden: true
+    explain: Stopping at the first isEnd node is what makes the root the shortest.
+    hints:
+      - Which structure finds all roots that are prefixes of a word in one walk?
+      - Stop at the first word-end node you reach.
+annotated: []

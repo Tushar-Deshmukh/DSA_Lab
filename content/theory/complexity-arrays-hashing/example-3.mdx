@@ -1,0 +1,40 @@
+---
+slug: example-3
+title: Example 3
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Example 3
+  lines:
+    - 311
+    - 336
+---
+
+**Example 3: Two Sum, brute force to hash map, with a dry run.**
+
+```js
+function twoSum(nums, target) {
+  // value -> index where we saw it
+  const indexOf = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    // the partner that would complete the pair
+    const need = target - nums[i];
+    if (indexOf.has(need)) return [indexOf.get(need), i];
+    // store AFTER checking so we never pair i with itself
+    indexOf.set(nums[i], i);
+  }
+  return [];
+}
+```
+
+Dry run with `nums = [3, 2, 4]`, `target = 6`:
+
+| i | nums\[i\] | need | map before | action |
+| --- | --- | --- | --- | --- |
+| 0 | 3 | 3 | \{\} | not found; store 3→0 |
+| 1 | 2 | 4 | \{3:0\} | not found; store 2→1 |
+| 2 | 4 | 2 | \{3:0, 2:1\} | found 2 at index 1 → return \[1, 2\] |
+
+If you stored before checking, `[3, 3]` with target 6 would still work, but `[3]` alone would wrongly pair index 0 with itself. Order of operations matters.

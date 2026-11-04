@@ -1,0 +1,37 @@
+---
+slug: backtracking
+section: 6
+title: 6.11 Backtracking
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.11 Backtracking
+  lines:
+    - 2961
+    - 2985
+---
+
+```js
+function backtrack(items) {
+  const res = [], path = [];
+  // sort only if duplicates must be skipped or you prune with break
+  items.sort((a, b) => a - b);
+  function dfs(start /*, remaining, used ... */) {
+    if (/* complete */ true) {
+      res.push([...path]);
+      // add `return;` here if only leaves are answers
+    }
+    for (let i = start; i < items.length; i++) {
+      // skip same-level duplicates
+      if (i > start && items[i] === items[i - 1]) continue;
+      // pruning (sorted input)
+      if (/* cannot lead to a solution */ false) break;
+      path.push(items[i]);                      // choose
+      dfs(i + 1);           // explore (pass i instead to allow reuse)
+      path.pop();                               // unchoose
+    }
+  }
+  dfs(0);
+  return res;
+}
+```

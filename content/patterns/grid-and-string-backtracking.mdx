@@ -1,0 +1,25 @@
+---
+slug: grid-and-string-backtracking
+number: '5.4'
+title: Grid and string backtracking
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Pattern 5.4
+  lines:
+    - 1143
+    - 1152
+---
+
+**Pattern 5.4: Grid and string backtracking**
+
+1. *Recognise:* find a path or partition in a grid/string that satisfies constraints; answer is yes/no or all partitions.
+2. *Clues:* "word exists in the grid", "partition so that every part is a palindrome", "adjacent cells", "each cell used once".
+3. *From brute force:* try every start and every path; prune as soon as a character mismatches.
+4. *Why it works:* DFS explores every valid path; marking a cell visited prevents reuse within one path, and restoring it allows reuse in other paths.
+5. *Template:* `dfs(r, c, k)`: if `k === word.length` return true; bounds/mismatch → false; `const tmp = board[r][c]; board[r][c] = '#'`; try 4 directions; restore `board[r][c] = tmp`.
+6. *Complexity:* 79 is O(m · n · 3^L) (after the first step, at most 3 directions are new); 131 is O(n · 2ⁿ).
+7. *Variations:* palindrome partitioning (131: choose the end of the next palindromic piece), N-Queens, Word Search II with a trie (212).
+8. *Inappropriate when:* you need the shortest path (BFS, Module 8) or overlapping subproblems dominate (DP).

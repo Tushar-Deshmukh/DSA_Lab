@@ -1,0 +1,24 @@
+---
+slug: two-interval-conventions
+title: Two interval conventions. Pick one and keep it
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Two interval conventions. Pick one and keep it
+  lines:
+    - 591
+    - 600
+---
+
+**Two interval conventions. Pick one and keep it.**
+
+| Convention | Loop | Mid | Shrink when predicate true | Shrink when false | Result |
+| --- | --- | --- | --- | --- | --- |
+| Half-open `[lo, hi)`, used in this course for boundaries | `while (lo < hi)` | `lo + ((hi - lo) >> 1)` | `hi = mid` (mid could be the answer) | `lo = mid + 1` | `lo` = first true index, or `hi`'s start value if none |
+| Closed `[lo, hi]`, used for exact-match search | `while (lo <= hi)` | same | return/`hi = mid - 1` | `lo = mid + 1` | not found when loop exits |
+
+*Deriving correctness:* (1) the answer always stays inside the current range (invariant); (2) the range strictly shrinks each iteration (termination). With `[lo, hi)` and `mid < hi`, both `hi = mid` and `lo = mid + 1` shrink the range, so no infinite loop. The classic infinite loop is `lo = mid` with `mid` rounded down.
+
+*Mid in JavaScript:* `(lo + hi) >> 1` is fine for array indices. For answer spaces near 2³¹ or larger, bitwise operators overflow to negative numbers; use `Math.floor((lo + hi) / 2)` (doubles are exact up to 2⁵³).

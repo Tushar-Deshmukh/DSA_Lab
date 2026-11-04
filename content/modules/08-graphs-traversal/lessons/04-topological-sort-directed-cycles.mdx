@@ -1,0 +1,87 @@
+---
+slug: topological-sort-directed-cycles
+legacyId: w8d4
+title: 'Directed graphs: topological sort and cycles'
+goal: Produce a topological order with Kahn's algorithm, detect directed cycles with three-state DFS, and read prerequisite edges the right way round.
+why: Course Schedule and its variants are among the most-asked graph problems. They test whether you know that a dependency graph has an order exactly when it has no cycle, and whether you can find either one.
+prereqs:
+  - Traversals and adjacency lists (lessons 1–3)
+  - Recursion and the call stack (Module 5)
+outcomes:
+  - Build edges `pre → course` from `[course, pre]` pairs
+  - Run Kahn's algorithm and detect a cycle when fewer than V nodes come out
+  - Explain why directed cycle detection needs three states
+  - Get a topological order from DFS postorder
+ready:
+  - I can explain why two states are not enough for directed cycles
+  - My Kahn dry run on the 4-course example matches the visualizer
+  - I ran three-state DFS on a diamond and on a 3-cycle by hand
+summary:
+  - '`[a, b]` = "b before a": edge b → a; indeg[a]++.'
+  - 'Kahn: queue in-degree-0 nodes; pop, append, decrement successors; fewer than V output → cycle.'
+  - 'Three states: 0 unvisited, 1 on the current path, 2 done. Edge to state 1 = back edge = cycle.'
+  - DFS postorder, reversed, is a topological order.
+  - O(V + E).
+revision: Draw the diamond 0→1, 0→2, 1→3, 2→3 and explain why a two-state DFS would wrongly report a cycle, then run Kahn on it.
+warmup:
+  problem: 994
+topic: 'Directed graphs: three-state cycle detection; topological sort (Kahn and DFS)'
+implement: Kahn dry run on the 4-course example; three-state DFS on a diamond and on a 3-cycle
+problemsText: 'C: 207, 210 · O: 802'
+problems:
+  - num: 207
+    tier: C
+  - num: 210
+    tier: C
+  - num: 802
+    tier: O
+doneWhen: You can explain why two states are not enough for directed cycles
+estimate:
+  T: 30
+  I: 25
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="dependencies-and-order" kind="theory" title="Dependencies and order">
+
+<Include id="theory/graphs-traversal/topological-sort" />
+
+<Include id="theory/graphs-traversal/example-3" />
+
+<Viz id="kahn" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Include id="patterns/topological-sort-and-directed-cycle-detection" />
+
+</Unit>
+
+<Unit id="cycles-need-three-states" kind="theory" title="Cycles need three states">
+
+<Include id="theory/graphs-traversal/cycle-detection" />
+
+<Include id="theory/graphs-traversal/example-4" />
+
+<Viz id="dfs-3state" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Callout kind="tip" title="Optional: Find Eventual Safe States (802)">
+
+A node is safe if every path from it ends at a terminal node. With three-state DFS that is exactly "the node finishes in state 2": any node that can reach a cycle gets stuck in state 1 or leads to one.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

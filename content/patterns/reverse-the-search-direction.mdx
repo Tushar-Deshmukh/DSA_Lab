@@ -1,0 +1,25 @@
+---
+slug: reverse-the-search-direction
+number: '8.5'
+title: Reverse the search direction (start from the targets)
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Pattern 8.5
+  lines:
+    - 1690
+    - 1699
+---
+
+**Pattern 8.5: Reverse the search direction (start from the targets)**
+
+1. *Recognise:* "which cells can reach X" for many starting cells.
+2. *Clues:* "can flow to the ocean", "surrounded regions", "connected to the border".
+3. *From brute force:* a DFS from every cell is O((mn)²). Start from the targets (border cells, oceans) and walk backwards once.
+4. *Why it works:* reachability is symmetric with reversed edge conditions (flow downhill ⇔ climb uphill from the ocean).
+5. *Template:* push all target cells; traverse with the reversed condition; the marked cells are the answer (or its complement).
+6. *Complexity:* O(m·n).
+7. *Variations:* 417 Pacific Atlantic (two marked sets, intersect), 130 surrounded regions (mark border-connected `O`s safe, flip the rest).
+8. *Inappropriate when:* there is a single source and single target (just search forward).

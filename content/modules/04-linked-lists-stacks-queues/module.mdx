@@ -1,0 +1,24 @@
+---
+number: 4
+slug: linked-lists-stacks-queues
+title: Linked lists, stacks, queues and monotonic stacks
+legacyId: w4
+objectives: '**A. Learning objectives.** By the end of this module you can: build and traverse singly and doubly linked lists; reverse a list iteratively and recursively; use a dummy node to remove head special cases; find the middle and detect cycles with fast/slow pointers and explain why they work; design an LRU cache with a hash map and a doubly linked list; implement a stack, an O(1) queue and a min-stack; recognise and solve "next greater/smaller element" problems with a monotonic stack.'
+shortOnTime: keep 206, 21, 19, 143, 146, 20, 155, 739. Drop 876 (143 already uses the middle-finding step), 203, 232 and 84. If LRU takes the whole of lesson 3, leave 143 for later.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Arrays give you positions; linked lists give you pointers; stacks and queues give you an order of access. This module is about **discipline with references**: never lose the rest of a list, always know what the top of a stack means, and never pay O(n) for an operation that should be O(1).
+
+| Lesson | Topic | The move you learn |
+| --- | --- | --- |
+| 1 | Linked lists, dummy nodes, reversal | Save `next` before you rewire |
+| 2 | Fast and slow pointers | Two speeds find middles, cycles and k-th from the end |
+| 3 | LRU cache | Map for lookup + doubly linked list for order |
+| 4 | Stacks, queues, deques | LIFO for nesting; a head pointer instead of `shift()` |
+| 5 | Monotonic stack and deque | Pop what can never be an answer again |
+
+The checkpoint is **Assessment 2** and the Module 4 milestone check.
+
+</Unit>

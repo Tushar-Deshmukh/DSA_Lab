@@ -1,0 +1,22 @@
+---
+slug: recognising-when-to-abandon-an-approach
+title: Recognising when to abandon an approach
+module: interview-readiness
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 12
+  key: Recognising when to abandon an approach
+  lines:
+    - 2258
+    - 2265
+---
+
+**Recognising when to abandon an approach.** Set mental time boxes. Switch when:
+
+- You have spent 10 minutes on an approach without being able to state its complexity or why it is correct.
+- You need more and more special cases to make examples pass (a sign the core idea is wrong).
+- A counterexample breaks a greedy idea: do not patch it; move to DP or search.
+- The interviewer asks "are you sure this handles X?" twice about the same idea.
+
+Say it out loud: "This greedy fails on \[3, 1, 3\]. I'll fall back to a DP over prefixes, which is O(n²); then see if we can do better." Interviewers reward the switch more than the struggle.

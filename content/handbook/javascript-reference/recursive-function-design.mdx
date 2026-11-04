@@ -1,0 +1,29 @@
+---
+slug: recursive-function-design
+section: 6
+title: 6.7 Recursive function design
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.7 Recursive function design
+  lines:
+    - 2861
+    - 2877
+---
+
+```js
+function solve(input) {
+  const memo = new Map();             // only if states repeat
+  // contract: dfs(i) returns <answer for the suffix starting at i>
+  function dfs(i) {
+    if (i === input.length) return BASE;        // base case first
+    if (memo.has(i)) return memo.get(i);
+    const result = combine(/* dfs(i + 1), dfs(i + 2), ... */);
+    memo.set(i, result);
+    return result;
+  }
+  return dfs(0);
+}
+```
+
+Rules: write the contract as a comment; define helpers inside the main function so they share inputs without globals; never rely on tail-call optimisation (Node does not do it); if depth can exceed \~10⁴, rewrite with an explicit stack or bottom-up DP.

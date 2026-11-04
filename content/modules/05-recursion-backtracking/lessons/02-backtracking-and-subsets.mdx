@@ -1,0 +1,93 @@
+---
+slug: backtracking-and-subsets
+legacyId: w5d2
+title: Backtracking and subsets
+goal: Generate all subsets two ways with choose / explore / unchoose, and remove duplicate subsets by sorting and skipping at the same level.
+why: 'Backtracking is how you enumerate anything: subsets, permutations, partitions, board placements. Learning it as "derive the state" instead of a memorised template is what lets you handle variants in interviews.'
+prereqs:
+  - Contract-first recursion (lesson 1)
+  - 'Arrays as shared mutable state: `push`, `pop`, copying with `[...path]`'
+outcomes:
+  - Run choose / explore / unchoose with one shared `path` array
+  - Generate subsets by include/exclude (way A) and by choosing from `start` (way B)
+  - Explain why `res.push(path)` without a copy is wrong
+  - Explain the `i > start` duplicate-skipping rule
+ready:
+  - I wrote both subset methods
+  - I can explain `i > start` in the skip rule
+  - I filled the 90 dry-run table for `[1,2,2]` myself
+summary:
+  - 'Backtracking = DFS over partial decisions: choose, explore, unchoose.'
+  - 'Way A: each level decides "take nums[i] or not"; record at the leaves.'
+  - 'Way B: each node is a subset; choose the next element from `start` on.'
+  - 'Always record a copy: `res.push([...path])`.'
+  - 'Duplicates: sort, then `if (i > start && nums[i] === nums[i − 1]) continue`.'
+revision: Draw the way-B tree for `[1, 2, 2]` with the skipped branches crossed out, then explain `i > start` in one sentence.
+warmup:
+  problem: 50
+topic: 'Backtracking: choose/explore/unchoose; subsets two ways; duplicate skipping'
+implement: Draw the subset tree for `[1,2,3]`; fill the 90 dry-run table yourself for `[1,2,2]`
+problemsText: 'C: 78, 90'
+problems:
+  - num: 78
+    tier: C
+  - num: 90
+    tier: C
+doneWhen: Both subset methods written; you can explain `i > start` in the skip rule
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="choose-explore-unchoose" kind="theory" title="Choose, explore, unchoose">
+
+<Include id="theory/recursion-backtracking/backtracking" />
+
+<Include id="theory/recursion-backtracking/deriving-the-state" />
+
+For subsets, the three questions have two good sets of answers, and they give the two methods:
+
+| | Way A: include/exclude | Way B: choose the next element |
+| --- | --- | --- |
+| Decision per level | take `nums[i]` or skip it | which element comes next (from `start` on) |
+| Parameters | `i` | `start` |
+| When complete | `i === n` (record at leaves) | every node is a subset (record on entry) |
+
+<Include id="theory/recursion-backtracking/example-2" />
+
+<Viz id="bt-subsets-a" />
+
+<Viz id="bt-subsets-b" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="duplicates" kind="theory" title="Duplicates">
+
+<Include id="theory/recursion-backtracking/duplicates" />
+
+<Include id="theory/recursion-backtracking/example-3" />
+
+<Viz id="bt-subsets-dup" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Include id="patterns/include-exclude-subset-style-search" />
+
+<Include id="handbook/javascript-reference/backtracking" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

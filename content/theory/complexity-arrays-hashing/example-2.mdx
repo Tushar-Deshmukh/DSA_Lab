@@ -1,0 +1,38 @@
+---
+slug: example-2
+title: Example 2
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Example 2
+  lines:
+    - 286
+    - 309
+---
+
+**Example 2: complexity snippets (do these on paper in lesson 1).**
+
+```js
+// (a)
+// O(n): 100 is a constant
+for (let i = 0; i < n; i++) for (let j = 0; j < 100; j++) work();
+// (b)
+// O(log n)
+for (let i = n; i > 1; i = Math.floor(i / 2)) work();
+// (c)
+// O(n log n)
+for (let i = 0; i < n; i++) for (let j = 1; j < n; j *= 2) work();
+// (d)
+// O(n^2) in the standard cost model: each slice may copy up to n chars.
+// (V8 often shares memory for string slices, so it can run faster, but
+// analyse it as O(n) per slice; array slices always copy.)
+const s = arr.join(""); for (let i = 0; i < n; i++) s.slice(i);
+// (e)
+// O(2^n) time, O(n) stack
+function f(n) { if (n <= 1) return; f(n - 1); f(n - 1); }
+// (f)
+// O(log n) time and stack
+function g(n) { if (n <= 1) return; g(n / 2); }
+```

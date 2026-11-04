@@ -1,0 +1,101 @@
+---
+slug: matrices-boundaries-rotation
+legacyId: w1d5
+title: 'Matrices: boundaries, directions and in-place rotation'
+goal: Traverse a matrix in spiral order with four boundaries, rotate a square matrix in place, and index grids safely.
+why: Grids come back in Module 8 (islands, BFS) and Module 10 (grid DP). This lesson's habits, bounds checks, a directions array and boundaries that shrink, are what keep those solutions bug-free.
+prereqs:
+  - 2-D arrays without the shared-row bug (lesson 2)
+  - Swapping two elements
+outcomes:
+  - Index a matrix as `grid[r][c]` with rows `0..m−1` and columns `0..n−1`
+  - Use a directions array for 4-neighbour moves and bounds-check before indexing
+  - Produce spiral order on any rectangle, including 1 × n and n × 1
+  - Rotate an n × n matrix 90° clockwise in place by transpose + reverse
+ready:
+  - My spiral handles 1 × n, n × 1 and non-square inputs
+  - I rotated a 3 × 3 matrix by hand, writing every swap
+  - I can explain why the two `if` checks in the spiral are needed
+summary:
+  - '`grid[r][c]`; `grid.length` rows, `grid[0].length` columns.'
+  - '`grid[-1]` is `undefined`, so `grid[-1][0]` throws: check bounds first.'
+  - 'Spiral: four boundaries, shrink after each side; re-check before the bottom and left passes.'
+  - Rotate clockwise = transpose (j > i only) + reverse each row.
+  - O(m·n) time, O(1) extra space for both.
+revision: Write the spiral loop from memory and explain which test fails without the `top <= bottom` check. Then rotate `[[1,2],[3,4]]` by hand.
+warmup:
+  problem: 347
+topic: 'Matrix traversal: indices, directions array, boundaries, transpose + reverse'
+implement: Rotate a 3×3 matrix by hand, writing every swap
+problemsText: 'C: 54, 48 · O: 73'
+problems:
+  - num: 54
+    tier: C
+  - num: 48
+    tier: C
+  - num: 73
+    tier: O
+doneWhen: Spiral handles 1×n, n×1 and non-square inputs
+estimate:
+  T: 20
+  I: 20
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="indices-directions-and-bounds" kind="theory" title="Indices, directions and bounds">
+
+<Include id="theory/complexity-arrays-hashing/matrices" />
+
+```js
+const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];   // down, up, right, left
+const inBounds = (r, c) => r >= 0 && r < grid.length && c >= 0 && c < grid[0].length;
+for (const [dr, dc] of DIRS) {
+  const nr = r + dr, nc = c + dc;
+  if (!inBounds(nr, nc)) continue;   // check BEFORE grid[nr][nc]
+  // ... use grid[nr][nc]
+}
+```
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="spiral-order" kind="theory" title="Spiral order">
+
+A visited matrix works but costs O(m·n) space. Four boundaries do it in O(1): output the top row and move `top` down, the right column and move `right` left, the bottom row (if a row is left) and move `bottom` up, the left column (if a column is left) and move `left` right.
+
+<Viz id="spiral" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="rotate-in-place" kind="theory" title="Rotate in place">
+
+<Include id="patterns/matrix-layer-walking" />
+
+Rotating 90° clockwise sends the element at `(r, c)` to `(c, n − 1 − r)`. Doing that directly needs four-way cycles of swaps. Splitting it into two simple moves is easier to get right: **transpose** (`(r, c) → (c, r)`), then **reverse each row** (`(c, r) → (c, n − 1 − r)`).
+
+<Viz id="rotate" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="optional-set-matrix-zeroes" kind="stretch" title="Optional: Set Matrix Zeroes">
+
+Problem 73 wants every row and column that contains a 0 set to 0, in O(1) extra space. Recording the zero rows and columns in two Sets is O(m + n) space and a fine first answer. The O(1) version uses the first row and first column of the matrix itself as the markers, with one extra flag for whether the first column itself must be zeroed, and processes the first row and column last so the markers are not destroyed early.
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

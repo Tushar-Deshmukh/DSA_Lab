@@ -1,0 +1,25 @@
+---
+slug: linear-dp
+number: '10.1'
+title: Linear DP (take or skip / extend the previous)
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Pattern 10.1
+  lines:
+    - 1992
+    - 2001
+---
+
+**Pattern 10.1: Linear DP (take or skip / extend the previous)**
+
+1. *Recognise:* a sequence; decisions at each element depend on a few previous decisions; asks for max/min/count.
+2. *Clues:* "maximum amount", "number of ways", "cannot pick adjacent", "minimum cost to reach the end".
+3. *From brute force:* recursion over each index's choices repeats the same suffixes/prefixes; cache by index.
+4. *Why it works:* the best answer up to i only depends on the best answers up to i−1 and i−2.
+5. *Template:* `dp[i] = combine(dp[i-1], dp[i-2] + value[i])`; compress to two variables.
+6. *Complexity:* O(n) time, O(1) space after compression.
+7. *Variations:* 746 min cost stairs, 213 circular (two runs), 740 delete-and-earn (reduce to house robber over values), 152 max product (keep both `curMax` and `curMin` because a negative swaps them).
+8. *Inappropriate when:* a single greedy pass is provably optimal (121 needs only the running minimum).

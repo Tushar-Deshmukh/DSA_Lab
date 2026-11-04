@@ -1,0 +1,48 @@
+---
+slug: pattern-recognition-table
+section: 7
+title: 7.2 Pattern recognition table
+source:
+  file: source/roadmap.md
+  section: 7
+  key: 7.2 Pattern recognition table
+  lines:
+    - 3226
+    - 3261
+---
+
+Scan the constraints first, then the input shape, then the question type, then keywords.
+
+| Clue in the problem | Likely pattern | Typical complexity | Where taught |
+| --- | --- | --- | --- |
+| n ≤ 20, "all combinations/subsets/permutations" | Backtracking | O(2ⁿ), O(n!) | Module 5 |
+| n ≤ 10³–5·10³, pairs or 2-D state | O(n²) DP or nested loops | O(n²) | Modules 10–11 |
+| n up to 10⁵–10⁶ | Hashing, sorting, two pointers, window, heap, linear DP | O(n) or O(n log n) | Modules 1–3, 7 |
+| Answer range up to 10⁹, "minimum X such that" | Binary search on the answer | O(n log range) | Module 3 |
+| "Pair/complement", "seen before", unsorted | Hash map / set | O(n) | Module 1 |
+| Sorted array, pair or triplet | Two pointers | O(n), O(n²) for 3Sum | Module 2 |
+| Contiguous subarray/substring, "longest/shortest with constraint", non-negative values | Sliding window | O(n) | Module 2 |
+| Subarray sum equals/divisible by k, negatives allowed | Prefix sum + hash map | O(n) | Module 2 |
+| Maximum subarray sum/product | Kadane | O(n) | Modules 2, 10 |
+| Sorted data, "first/last position", O(log n) required | Boundary binary search | O(log n) | Module 3 |
+| Linked list: middle, cycle, k-th from end | Fast/slow pointers | O(n), O(1) | Module 4 |
+| Nesting, matching brackets, evaluate expression | Stack | O(n) | Module 4 |
+| "Next greater/smaller", spans, histogram | Monotonic stack | O(n) | Module 4 |
+| O(1) get/put with eviction or random access | Map + linked list / array | O(1) | Modules 4, 12 |
+| Tree: height, diameter, subtree property | Bottom-up DFS | O(n) | Module 6 |
+| Tree: root-to-node path, range constraint | Top-down DFS | O(n) | Module 6 |
+| Tree: levels, views, minimum depth | BFS by level | O(n) | Module 6 |
+| "k largest/smallest/closest", streaming | Heap of size k | O(n log k) | Module 7 |
+| Merge k sorted sequences | K-way merge with heap | O(N log k) | Module 7 |
+| Running median, repeatedly take min/max | Two heaps / heap simulation | O(log n) per op | Module 7 |
+| Intervals, meetings, overlaps | Sort + sweep/merge | O(n log n) | Module 7 |
+| Prefix queries over many words | Trie | O(L) per op | Module 7 |
+| Grid of cells, islands, regions | DFS/BFS flood fill | O(m·n) | Module 8 |
+| Minimum steps, equal edge costs | BFS (multi-source if many starts) | O(V + E) | Module 8 |
+| Prerequisites, ordering, dependencies | Topological sort | O(V + E) | Module 8 |
+| Weighted shortest path, non-negative | Dijkstra | O((V + E) log V) | Module 9 |
+| Connectivity as edges arrive, redundant edge | Union-Find | \~O(1) per op | Module 9 |
+| Maximise number of compatible choices; sorting makes choice local | Greedy (prove it) | O(n log n) | Module 9 |
+| Count ways / min cost / max value with overlapping choices | Dynamic programming | Depends on states | Modules 10–11 |
+| Two strings: align, convert, common subsequence | Two-sequence DP | O(m·n) | Module 11 |
+| "Appears twice except one", powers of two, bits | XOR / bit tricks | O(n), O(1) | Module 11 |

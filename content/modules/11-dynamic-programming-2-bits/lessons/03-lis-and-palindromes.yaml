@@ -1,0 +1,229 @@
+exercises:
+  - id: ex-01
+    legacyId: w11d3-1
+    type: trace
+    tag: Tails by hand
+    q: The tails method on `[10, 9, 2, 5, 3, 7, 101, 18]` (the implement task). Write tails as a list.
+    rows:
+      - prompt: tails after processing 5
+        answer: '[2,5]'
+      - prompt: tails after processing 3
+        answer: '[2,3]'
+      - prompt: tails at the end
+        answer: '[2,3,7,18]'
+      - prompt: The LIS length
+        answer: '4'
+    verify: |
+      const nums = [10, 9, 2, 5, 3, 7, 101, 18], tails = [], snaps = {};
+      for (const x of nums) { let lo = 0, hi = tails.length; while (lo < hi) { const m = (lo + hi) >> 1; if (tails[m] < x) lo = m + 1; else hi = m; } tails[lo] = x; snaps[x] = JSON.stringify(tails); }
+      console.log(snaps[5]); console.log(snaps[3]); console.log(JSON.stringify(tails)); console.log(tails.length);
+    explain: '[2, 3, 7, 18] happens to be a real increasing subsequence here, but tails need not be one in general.'
+    hints:
+      - For each x, find the first tail ≥ x; replace it, or append if there is none.
+  - id: ex-02
+    legacyId: w11d3-2
+    type: fill
+    tag: The tails method
+    q: Complete the O(n log n) `lengthOfLIS`.
+    template: |
+      function lengthOfLIS(nums) {
+        const tails = [];
+        for (const x of nums) {
+          let lo = 0, hi = tails.length;
+          while (lo < hi) {
+            const mid = (lo + hi) >> 1;
+            if ([[0]]) lo = mid + 1; else hi = mid;
+          }
+          [[1]];
+        }
+        return tails.length;
+      }
+    blanks:
+      - accept:
+          - tails[mid] < x
+          - x > tails[mid]
+      - accept:
+          - tails[lo] = x
+          - tails[hi] = x
+    fn: lengthOfLIS
+    tests:
+      - args:
+          - - 10
+            - 9
+            - 2
+            - 5
+            - 3
+            - 7
+            - 101
+            - 18
+        expect: 4
+      - args:
+          - - 0
+            - 1
+            - 0
+            - 3
+            - 2
+            - 3
+        expect: 4
+      - args:
+          - - 7
+            - 7
+            - 7
+            - 7
+        expect: 1
+      - args:
+          - - 4
+            - 10
+            - 4
+            - 3
+            - 8
+            - 9
+        expect: 3
+      - args:
+          - - 1
+            - 3
+            - 6
+            - 7
+            - 9
+            - 4
+            - 10
+            - 5
+            - 6
+        expect: 6
+    explain: 'Strict `<` finds the first tail ≥ x, so an equal value replaces rather than extends: that is what makes the subsequence strictly increasing ([7,7,7,7] → 1).'
+    hints:
+      - 'Lower bound: move right while tails[mid] is smaller than x.'
+      - When lo === tails.length, the assignment appends.
+  - id: ex-03
+    legacyId: w11d3-3
+    type: code
+    tag: Palindromic Substrings (647, Stretch)
+    q: 'Write `countSubstrings(s)`: the number of palindromic substrings (by position). Example: `"aaa"` → 6.'
+    fn: countSubstrings
+    starter: |
+      function countSubstrings(s) {
+
+      }
+    solution: |
+      function countSubstrings(s) {
+        let count = 0;
+        for (let c = 0; c < 2 * s.length - 1; c++) {
+          let l = c >> 1, r = l + (c & 1);
+          while (l >= 0 && r < s.length && s[l] === s[r]) { count++; l--; r++; }
+        }
+        return count;
+      }
+    tests:
+      - args:
+          - abc
+        expect: 3
+      - args:
+          - aaa
+        expect: 6
+      - args:
+          - abba
+        expect: 6
+      - args:
+          - a
+        expect: 1
+        hidden: true
+      - args:
+          - racecar
+        expect: 10
+        hidden: true
+    explain: Every successful expansion is one palindrome, so count them instead of tracking the longest. "abba" needs the even centre between the two b's.
+    hints:
+      - How many centres does a string of length n have?
+      - Count every step of a successful expansion.
+  - id: ex-04
+    legacyId: w11d3-4
+    type: mcq
+    tag: Expand or interval DP?
+    q: When is the O(n²) interval-DP table `pal[i][j]` worth building instead of expanding around centres?
+    options:
+      - t: When a later step needs fast "is s[i..j] a palindrome?" lookups, as in minimum-cut palindrome partitioning.
+        ok: true
+      - t: 'Always: it is faster.'
+        why: Both are O(n²) time; expansion uses O(1) space instead of O(n²).
+        kind: concept
+      - t: Only for even-length palindromes.
+        why: Expansion handles even lengths with the gap centres.
+        kind: concept
+    explain: Default to expansion in interviews; build the table only when you will query it.
+    hints:
+      - Compare the time and the space of both.
+  - id: ex-05
+    legacyId: w11d3-5
+    type: interview
+    title: Number of Longest Increasing Subsequence (LeetCode 673)
+    q: 'Return the number of longest strictly increasing subsequences. Example: `[1,3,5,4,7]` → 2 (`[1,3,4,7]` and `[1,3,5,7]`).'
+    model:
+      clarify: |
+        - Subsequences are counted by positions; `[2,2,2,2,2]` has five of length 1.
+        - n up to 2000, so O(n²) is fine.
+      brute: 'Enumerate all 2ⁿ subsequences: hopeless.'
+      optimize: |
+        Extend 300's O(n²) DP with a second array. `len[i]` = LIS length ending at i; `cnt[i]` = how many LIS of that length end at i. For each j < i with nums[j] < nums[i]: if `len[j] + 1 > len[i]`, set `len[i] = len[j] + 1, cnt[i] = cnt[j]`; if equal, `cnt[i] += cnt[j]`. Answer: sum of cnt[i] over all i with len[i] = max length.
+      edges: |
+        - all equal → n
+        - strictly decreasing → n (each element alone)
+        - several different longest subsequences ending at the same index
+      complexity: O(n²) time, O(n) space.
+    fn: findNumberOfLIS
+    starter: |
+      function findNumberOfLIS(nums) {
+
+      }
+    solution: |
+      function findNumberOfLIS(nums) {
+        const n = nums.length, len = new Array(n).fill(1), cnt = new Array(n).fill(1);
+        for (let i = 0; i < n; i++) for (let j = 0; j < i; j++) {
+          if (nums[j] >= nums[i]) continue;
+          if (len[j] + 1 > len[i]) { len[i] = len[j] + 1; cnt[i] = cnt[j]; }
+          else if (len[j] + 1 === len[i]) cnt[i] += cnt[j];
+        }
+        const best = Math.max(...len);
+        return len.reduce((s, L, i) => s + (L === best ? cnt[i] : 0), 0);
+      }
+    tests:
+      - args:
+          - - 1
+            - 3
+            - 5
+            - 4
+            - 7
+        expect: 2
+      - args:
+          - - 2
+            - 2
+            - 2
+            - 2
+            - 2
+        expect: 5
+      - args:
+          - - 1
+        expect: 1
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 4
+            - 3
+            - 5
+            - 4
+            - 7
+            - 2
+        expect: 3
+        hidden: true
+      - args:
+          - - 3
+            - 1
+            - 2
+        expect: 1
+        hidden: true
+    explain: 'Carrying a count next to an optimum is a general DP technique: replace on a strictly better value, add on a tie.'
+    hints:
+      - Start from the O(n²) LIS table.
+      - What extra number would each cell need to answer "how many"?
+      - What happens on a tie, and what on a strictly longer option?
+annotated: []

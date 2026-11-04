@@ -1,0 +1,239 @@
+exercises:
+  - id: ex-01
+    legacyId: w10d5-1
+    type: trace
+    tag: Word Break and Decode Ways by hand
+    q: 'The implement task: Word Break on `"leetcode"` with `["leet", "code"]`, then Decode Ways.'
+    rows:
+      - prompt: Indices i (0..8) where dp[i] is true, comma-separated
+        answer: 0,4,8
+      - prompt: Decode Ways for "226"
+        answer: '3'
+        why: 2 2 6, 22 6, 2 26.
+      - prompt: Decode Ways for "06"
+        answer: '0'
+        why: A leading 0 cannot be decoded, and "06" is not a valid two-digit code.
+      - prompt: Decode Ways for "2101"
+        answer: '1'
+        why: 'Only 2 10 1: "21" would leave "01".'
+    verify: |
+      const s = 'leetcode', dict = new Set(['leet', 'code']), dp = new Array(9).fill(false); dp[0] = true;
+      for (let i = 1; i <= 8; i++) for (let j = 0; j < i; j++) if (dp[j] && dict.has(s.slice(j, i))) { dp[i] = true; break; }
+      console.log(dp.map((b, i) => (b ? i : -1)).filter((i) => i >= 0).join(','));
+      const dec = (t) => { const d = new Array(t.length + 1).fill(0); d[0] = 1; for (let i = 1; i <= t.length; i++) { if (t[i - 1] !== '0') d[i] += d[i - 1]; const two = Number(t.slice(i - 2, i)); if (i >= 2 && t[i - 2] !== '0' && two <= 26) d[i] += d[i - 2]; } return d[t.length]; };
+      console.log(dec('226')); console.log(dec('06')); console.log(dec('2101'));
+    explain: 'In both problems the cell for a prefix asks: which last piece could end here, and was the prefix before it valid?'
+    hints:
+      - 'dp[0] is true: the empty prefix.'
+      - For decoding, check the one-digit and the two-digit last piece separately.
+  - id: ex-02
+    legacyId: w10d5-2
+    type: code
+    tag: Count the segmentations
+    q: 'Write `countSegmentations(s, words)`: the number of ways to split `s` into a sequence of dictionary words (words may repeat). Example: `"catsanddog"` with `["cat","cats","and","sand","dog"]` → 2.'
+    fn: countSegmentations
+    starter: |
+      function countSegmentations(s, words) {
+
+      }
+    solution: |
+      function countSegmentations(s, words) {
+        const dict = new Set(words), n = s.length, dp = new Array(n + 1).fill(0);
+        dp[0] = 1;
+        for (let i = 1; i <= n; i++)
+          for (let j = 0; j < i; j++)
+            if (dp[j] && dict.has(s.slice(j, i))) dp[i] += dp[j];
+        return dp[n];
+      }
+    tests:
+      - args:
+          - catsanddog
+          - - cat
+            - cats
+            - and
+            - sand
+            - dog
+        expect: 2
+      - args:
+          - pineapplepenapple
+          - - apple
+            - pen
+            - applepen
+            - pine
+            - pineapple
+        expect: 3
+      - args:
+          - catsandog
+          - - cats
+            - dog
+            - sand
+            - and
+            - cat
+        expect: 0
+      - args:
+          - aaaa
+          - - a
+            - aa
+        expect: 5
+        hidden: true
+      - args:
+          - ab
+          - - a
+            - b
+            - ab
+        expect: 2
+        hidden: true
+    explain: Word Break with `+=` instead of `||` and no `break`. Returning the segmentations themselves (problem 140) would need backtracking.
+    hints:
+      - Start from the Word Break table.
+      - What replaces `true` when you count?
+      - Why must the inner loop not stop at the first match now?
+  - id: ex-03
+    legacyId: w10d5-3
+    type: fill
+    tag: Decode Ways (91)
+    q: Complete `numDecodings(s)`.
+    template: |
+      function numDecodings(s) {
+        const n = s.length, dp = new Array(n + 1).fill(0);
+        dp[0] = 1;
+        for (let i = 1; i <= n; i++) {
+          if ([[0]]) dp[i] += dp[i - 1];
+          const two = Number(s.slice(i - 2, i));
+          if (i >= 2 && [[1]]) dp[i] += dp[i - 2];
+        }
+        return dp[n];
+      }
+    blanks:
+      - accept:
+          - s[i - 1] !== '0'
+          - s[i - 1] != '0'
+          - s[i-1] !== '0'
+          - s[i - 1] !== "0"
+      - accept:
+          - two >= 10 && two <= 26
+          - two <= 26 && two >= 10
+          - 10 <= two && two <= 26
+    fn: numDecodings
+    tests:
+      - args:
+          - '12'
+        expect: 2
+      - args:
+          - '226'
+        expect: 3
+      - args:
+          - '06'
+        expect: 0
+      - args:
+          - '10'
+        expect: 1
+      - args:
+          - '2101'
+        expect: 1
+      - args:
+          - '11106'
+        expect: 2
+      - args:
+          - '100'
+        expect: 0
+    explain: '`two >= 10` also rejects a two-digit piece starting with 0, such as "06".'
+    hints:
+      - When can the last digit stand alone?
+      - Which two-digit numbers are letters?
+  - id: ex-04
+    legacyId: w10d5-4
+    type: mcq
+    tag: Why keep the minimum?
+    q: On `[2, -5, -2]`, what goes wrong if you track only `curMax` (the largest product ending at i)?
+    options:
+      - t: At −5, curMax becomes −5 (max of −5 and 2·−5 = −10), and the −10 that would turn into 20 at −2 is forgotten; it returns 10 instead of 20.
+        ok: true
+      - t: 'Nothing: the answer is 10.'
+        why: 2 · −5 · −2 = 20 is a contiguous subarray.
+        kind: concept
+      - t: It returns −10.
+        why: best starts at 2 and only increases.
+        kind: impl
+    explain: A negative turns the smallest product into the largest, so carry both and swap them when x < 0.
+    hints:
+      - Compute 2 · −5 · −2.
+  - id: ex-05
+    legacyId: w10d5-5
+    type: interview
+    title: Extra Characters in a String (LeetCode 2707)
+    q: 'Split `s` into non-overlapping dictionary words, leaving some characters unused. Return the minimum number of unused (extra) characters. Example: `"leetscode"` with `["leet","code","leetcode"]` → 1 (the "s").'
+    model:
+      clarify: |
+        - Words may be reused; characters not in any chosen word are extra.
+        - s and each word up to 50 characters.
+      brute: 'Recursion over every position: skip the character (cost 1) or match any word starting here: exponential without caching.'
+      optimize: |
+        Word Break with a cost. State: `dp[i]` = the fewest extra characters in the prefix `s[0..i)`. Transition: `dp[i] = dp[i − 1] + 1` (character i − 1 is extra), or `dp[j]` for every j where `s[j..i)` is a word. Base dp[0] = 0; answer dp[n].
+      edges: |
+        - no word matches anywhere → s.length
+        - the whole string is one word → 0
+        - overlapping candidate words (\"leet\" + \"code\" vs \"leetcode\")
+      complexity: O(n² · L) with slicing (n = |s|), or O(n · total word length) with a trie; tiny at n = 50.
+    fn: minExtraChar
+    starter: |
+      function minExtraChar(s, dictionary) {
+
+      }
+    solution: |
+      function minExtraChar(s, dictionary) {
+        const dict = new Set(dictionary), n = s.length, dp = new Array(n + 1).fill(0);
+        for (let i = 1; i <= n; i++) {
+          dp[i] = dp[i - 1] + 1;
+          for (let j = 0; j < i; j++) if (dict.has(s.slice(j, i))) dp[i] = Math.min(dp[i], dp[j]);
+        }
+        return dp[n];
+      }
+    tests:
+      - args:
+          - leetscode
+          - - leet
+            - code
+            - leetcode
+        expect: 1
+      - args:
+          - sayhelloworld
+          - - hello
+            - world
+        expect: 3
+      - args:
+          - abc
+          - - x
+        expect: 3
+        hidden: true
+      - args:
+          - aaa
+          - - a
+        expect: 0
+        hidden: true
+      - args:
+          - dwmodizxvvbosxxw
+          - - ox
+            - lb
+            - diz
+            - gu
+            - v
+            - ksv
+            - o
+            - nuq
+            - r
+            - txhe
+            - e
+            - wmo
+            - cehy
+            - tskz
+            - ds
+            - kzbu
+        expect: 7
+        hidden: true
+    explain: The "skip this character" option is what turns feasibility (139) into an optimisation.
+    hints:
+      - Which problem from this lesson is this, if no characters may be left over?
+      - dp[i] = fewest extra characters in the first i characters.
+      - Either the last character is extra, or the prefix ends with a whole word.
+annotated: []

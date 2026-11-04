@@ -1,0 +1,26 @@
+---
+slug: example-2
+title: Example 2
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Example 2
+  lines:
+    - 2113
+    - 2124
+---
+
+**Example 2: LCS table dry run (1143), a = "abcde", b = "ace".**
+
+|  | "" | a | c | e |
+| --- | --- | --- | --- | --- |
+| "" | 0 | 0 | 0 | 0 |
+| a | 0 | 1 | 1 | 1 |
+| b | 0 | 1 | 1 | 1 |
+| c | 0 | 1 | 2 | 2 |
+| d | 0 | 1 | 2 | 2 |
+| e | 0 | 1 | 2 | 3 |
+
+Each diagonal +1 is a matching character (a, c, e). Answer 3. Edit distance uses the same table shape with different base cases and transitions.

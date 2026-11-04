@@ -1,0 +1,39 @@
+---
+slug: example-4
+title: Example 4
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Example 4
+  lines:
+    - 2145
+    - 2169
+---
+
+**Example 4: bit tricks and the unsigned pitfall.**
+
+```js
+// pairs cancel
+const singleNumber = (nums) => nums.reduce((acc, x) => acc ^ x, 0);
+
+function hammingWeight(n) {          // 191: count set bits
+  let count = 0;
+  // each step clears the lowest set bit
+  while (n !== 0) { n &= n - 1; count++; }
+  return count;
+}
+
+function reverseBits(n) {            // 190
+  let res = 0;
+  for (let i = 0; i < 32; i++) {
+    res = (res << 1) | (n & 1);
+    n >>>= 1;                        // logical shift: no sign extension
+  }
+  // >>> 0 reinterprets the bits as unsigned. The current LeetCode 190 gives
+  // even n <= 2^31 - 2, so bit 31 of the result is never set there; the
+  // general unsigned version (e.g. n = 4294967293) needs this line.
+  return res >>> 0;
+}
+```

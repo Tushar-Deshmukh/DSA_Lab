@@ -1,0 +1,244 @@
+exercises:
+  - id: ex-01
+    legacyId: w6d1-1
+    type: mcq
+    tag: Depth and height
+    q: In `[3,9,20,null,null,15,7]`, which statements are true? (Depth and height counted in edges.)
+    options:
+      - t: The depth of 15 is 2.
+        ok: true
+        why: '3 → 20 → 15: two edges from the root.'
+      - t: The height of the tree is 2.
+        ok: true
+        why: The longest root-to-leaf path has two edges (3 → 20 → 15).
+      - t: 9 is an ancestor of 15.
+        why: '9 is 15''s uncle: both are children of different nodes (9 of 3, 15 of 20).'
+        kind: concept
+      - t: LeetCode's "maximum depth" of this tree is 2.
+        why: 'Problem 104 counts **nodes**, not edges: its answer is 3. Always read the definition.'
+        kind: concept
+    explain: Depth looks up from a node to the root; height looks down to the deepest leaf.
+    hints:
+      - Count edges along the path, and check whether a problem counts nodes or edges.
+  - id: ex-02
+    legacyId: w6d1-2
+    type: trace
+    tag: Three orders
+    q: For the tree `[1,2,3,4,5,null,6]` (1 has children 2 and 3; 2 has 4 and 5; 3 has a right child 6), write each traversal as a list.
+    rows:
+      - prompt: Preorder
+        answer:
+          - '[1,2,4,5,3,6]'
+          - 1,2,4,5,3,6
+      - prompt: Inorder
+        answer:
+          - '[4,2,5,1,3,6]'
+          - 4,2,5,1,3,6
+      - prompt: Postorder
+        answer:
+          - '[4,5,2,6,3,1]'
+          - 4,5,2,6,3,1
+    verify: |
+      const T = (v, l = null, r = null) => ({ v, l, r });
+      const t = T(1, T(2, T(4), T(5)), T(3, null, T(6)));
+      const go = (n, o, out) => { if (!n) return out; if (o === 0) out.push(n.v); go(n.l, o, out); if (o === 1) out.push(n.v); go(n.r, o, out); if (o === 2) out.push(n.v); return out; };
+      console.log(JSON.stringify(go(t, 0, []))); console.log(JSON.stringify(go(t, 1, []))); console.log(JSON.stringify(go(t, 2, [])));
+    explain: 3 has no left child, so in inorder it comes straight after the left subtree of the root and before 6.
+    hints:
+      - Draw the tree first.
+  - id: ex-03
+    legacyId: w6d1-3
+    type: code
+    tag: Iterative preorder
+    q: 'Write `preorderIter(root)` without recursion: return the preorder values using an explicit stack.'
+    fn: preorderIter
+    adapt:
+      args:
+        - tree
+    starter: |
+      function preorderIter(root) {
+
+      }
+    solution: |
+      function preorderIter(root) {
+        const out = [], stack = root ? [root] : [];
+        while (stack.length) {
+          const node = stack.pop();
+          out.push(node.val);
+          if (node.right) stack.push(node.right);
+          if (node.left) stack.push(node.left);
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - 3
+            - 9
+            - 20
+            - null
+            - null
+            - 15
+            - 7
+        expect:
+          - 3
+          - 9
+          - 20
+          - 15
+          - 7
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - null
+            - 6
+        expect:
+          - 1
+          - 2
+          - 4
+          - 5
+          - 3
+          - 6
+      - args:
+          - []
+        expect: []
+      - args:
+          - - 1
+            - null
+            - 2
+            - null
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - null
+            - 3
+            - null
+            - 4
+        expect:
+          - 1
+          - 2
+          - 3
+          - 4
+        hidden: true
+    explain: 'Push right before left: the stack is LIFO, so the left child is popped (visited) first.'
+    hints:
+      - Start with the root on the stack.
+      - Pop, visit, then push the children so that the left one comes out first.
+  - id: ex-04
+    legacyId: w6d1-4
+    type: pattern
+    tag: Classify
+    q: '"Count the nodes whose value is greater than or equal to every value on the path from the root to them." Which question type is it?'
+    options:
+      - t: 'Information from ancestors: pass the maximum so far down as a parameter'
+        ok: true
+        why: Whether a node counts depends only on the path above it (problem 1448).
+      - t: 'Information from children: return counts from subtrees'
+        why: Subtree counts can be combined, but deciding whether a node is "good" needs its ancestors.
+        kind: concept
+      - t: 'Level-based: BFS'
+        why: Levels say nothing about the values on a node's root path.
+        kind: concept
+    explain: Children → return. Ancestors → pass down. Levels → BFS.
+    hints:
+      - What do you need to know to decide about one node?
+  - id: ex-05
+    legacyId: w6d1-5
+    type: pattern
+    tag: Classify
+    q: '"Invert a binary tree (mirror it left to right)." (problem 226)'
+    options:
+      - t: 'Structural recursion: invert both subtrees and swap them; no information needs to flow'
+        ok: true
+        why: Each node's work (swap its children) is local; either preorder or postorder works.
+      - t: Level-based BFS is the only correct approach
+        why: BFS also works (swap children of every dequeued node), but it is not required.
+        kind: concept
+      - t: Information from ancestors
+        why: No node needs anything from above.
+        kind: concept
+    explain: Some problems are just "do something at every node"; any traversal will do.
+    hints:
+      - Does any node need information from elsewhere?
+  - id: ex-06
+    legacyId: w6d1-6
+    type: interview
+    title: Symmetric Tree (LeetCode 101)
+    q: 'Given the root of a binary tree, check whether it is a mirror of itself (symmetric around its centre). Example: `[1,2,2,3,4,4,3]` → true; `[1,2,2,null,3,null,3]` → false.'
+    model:
+      clarify: |
+        - Values matter as well as shape.
+        - Empty tree? (LeetCode guarantees at least one node; return true for it anyway.)
+      brute: 'Produce the tree''s mirror and compare it with the original: O(n) time but O(n) extra space for the copy.'
+      optimize: 'Paired recursion, like Same Tree (100): `mirror(a, b)` is true when both are null, false when one is null or values differ, and otherwise `mirror(a.left, b.right) && mirror(a.right, b.left)`. Call `mirror(root.left, root.right)`.'
+      edges: |
+        - single node → true
+        - same values, different shapes
+        - two-level tree with unequal children
+      complexity: O(n) time, O(h) stack.
+    fn: isSymmetric
+    adapt:
+      args:
+        - tree
+    starter: |
+      function isSymmetric(root) {
+
+      }
+    solution: |
+      function isSymmetric(root) {
+        function mirror(a, b) {
+          if (!a && !b) return true;
+          if (!a || !b || a.val !== b.val) return false;
+          return mirror(a.left, b.right) && mirror(a.right, b.left);
+        }
+        return !root || mirror(root.left, root.right);
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 3
+            - 4
+            - 4
+            - 3
+        expect: true
+      - args:
+          - - 1
+            - 2
+            - 2
+            - null
+            - 3
+            - null
+            - 3
+        expect: false
+      - args:
+          - - 1
+        expect: true
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect: false
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 2
+            - null
+            - 2
+        expect: false
+        hidden: true
+    explain: Outer pairs (left.left with right.right) and inner pairs (left.right with right.left) must both match.
+    hints:
+      - Compare two subtrees at once, as in Same Tree.
+      - Which child of the left subtree must match which child of the right?
+annotated: []

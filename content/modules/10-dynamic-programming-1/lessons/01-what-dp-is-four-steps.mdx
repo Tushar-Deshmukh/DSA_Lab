@@ -1,0 +1,101 @@
+---
+slug: what-dp-is-four-steps
+legacyId: w10d1
+title: What DP is, in four steps
+goal: Turn a brute-force recursion into memoisation, then a bottom-up table, then O(1) space, and describe any DP by its state, transition, base cases and answer location.
+why: 'Interviewers rarely expect a DP solution to appear fully formed. They expect you to derive it: recursion first, notice the repeated subproblems, then cache. This four-step progression is the method for the whole module and most of the next module.'
+prereqs:
+  - Recursion and recursion trees (Module 5 lesson 1)
+  - '`Map` for caching'
+outcomes:
+  - Explain overlapping subproblems and optimal substructure with an example
+  - Draw two levels of a recursion tree and circle the repeated states
+  - Write all four versions of Climbing Stairs (70)
+  - 'State a DP in four parts: state sentence, transition, base cases, answer location'
+  - Choose top-down or bottom-up, and say when DP is unnecessary
+ready:
+  - 746 written in all four steps, ending in O(1) space
+  - I drew `f(5)`'s recursion tree and circled the repeated states
+  - I rewrote 509 as memo, then table, as the warm-up
+summary:
+  - DP = overlapping subproblems + optimal substructure.
+  - 'Steps: brute recursion → memo (cache by state) → table (dependency order) → keep only what is read.'
+  - Time = number of distinct states × work per state.
+  - Top-down is easiest to derive; bottom-up avoids stack limits and allows space optimisation.
+  - No repeated subproblems, a provable greedy, or "list all solutions" → not DP.
+revision: Write the four versions of 70 from memory, and state its DP in four parts (state, transition, base, answer).
+warmup:
+  problem: 509
+  note: rewritten as memo, then table
+topic: What DP is; the four-step progression; state, transition, base case, answer location; top-down vs bottom-up
+implement: Write all four versions of 70; draw `f(5)`'s recursion tree and circle repeated states
+problemsText: 'C: 70, 746'
+problems:
+  - num: 70
+    tier: C
+  - num: 746
+    tier: C
+doneWhen: 746 written in all four steps, ending in O(1) space
+estimate:
+  T: 35
+  I: 20
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="recursion-that-remembers" kind="theory" title="Recursion that remembers">
+
+<Include id="theory/dynamic-programming-1/what-dp-is" />
+
+<Include id="theory/dynamic-programming-1/four-step-progression" />
+
+Climbing Stairs has exactly the recursion tree of Fibonacci (the base case returns 1 instead of n), so Module 5's visualizer shows the repetition. Step through it without and then with the cache, and count the calls.
+
+<Viz id="rec-fib" title="The repeated subproblems that memoisation removes (same tree as Climbing Stairs)" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="state-transition-base-answer" kind="theory" title="State, transition, base, answer">
+
+<Include id="theory/dynamic-programming-1/defining-the-state" />
+
+<Include id="theory/dynamic-programming-1/transition" />
+
+<Include id="theory/dynamic-programming-1/base-cases-and-answer-location" />
+
+<Exercise id="ex-02" />
+
+<Viz id="dp-stairs" />
+
+</Unit>
+
+<Unit id="the-four-versions-in-code" kind="code" title="The four versions in code">
+
+<Include id="theory/dynamic-programming-1/example-1" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="top-down-or-bottom-up" kind="theory" title="Top-down or bottom-up?">
+
+<Include id="theory/dynamic-programming-1/top-down-vs-bottom-up" />
+
+<Include id="theory/dynamic-programming-1/when-dp-is-unnecessary" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

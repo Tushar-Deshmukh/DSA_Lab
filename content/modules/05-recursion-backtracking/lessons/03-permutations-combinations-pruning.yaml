@@ -1,0 +1,214 @@
+exercises:
+  - id: ex-01
+    legacyId: w5d3-1
+    type: complexity
+    tag: Count the work
+    q: 'permute(nums) for n distinct numbers:'
+    fields:
+      - label: Number of complete permutations (leaves)
+        answer: O(n!)
+      - label: Total time including copying each result
+        answer: O(n · n!)
+        options:
+          - O(n!)
+          - O(n · n!)
+          - O(2ⁿ)
+          - O(n²)
+        why:
+          O(n!): Each of the n! results is copied with [...path], which is O(n).
+    explain: 'n = 10 gives 3.6 million permutations: the limit in the constraints table.'
+    hints:
+      - How many leaves, and what does recording one cost?
+  - id: ex-02
+    legacyId: w5d3-2
+    type: bug
+    tag: Unchoose
+    q: This permutation generator returns only `[[1,2,3]]` for `[1,2,3]`. Click the line where the undo is incomplete.
+    code: |
+      function permute(nums) {
+        const res = [], path = [], used = new Array(nums.length).fill(false);
+        function dfs() {
+          if (path.length === nums.length) { res.push([...path]); return; }
+          for (let i = 0; i < nums.length; i++) {
+            if (used[i]) continue;
+            used[i] = true; path.push(nums[i]);
+            dfs();
+            path.pop();
+          }
+        }
+        dfs();
+        return res;
+      }
+    bug:
+      - 8
+    kind: impl
+    explain: 'The choice set two things (`used[i] = true` and the push) but the undo reverses only one. Element i stays marked as used, so no later branch can place it. Undo everything the choose step changed: `path.pop(); used[i] = false;`.'
+    fix: |
+      path.pop(); used[i] = false;
+    fine:
+      '5': Skipping used elements is correct.
+      '6': Choosing sets both pieces of state, which is right.
+    hints:
+      - List every piece of state the choose line changes.
+  - id: ex-03
+    legacyId: w5d3-3
+    type: fill
+    tag: The bound
+    q: Complete `combine(n, k)` (problem 77), including the pruning bound.
+    template: |
+      function combine(n, k) {
+        const res = [], path = [];
+        function dfs(start) {
+          if ([[0]]) { res.push([...path]); return; }
+          for (let i = start; i <= n; i++) {
+            if (n - i + 1 < [[1]]) break;
+            path.push(i); dfs([[2]]); path.pop();
+          }
+        }
+        dfs(1);
+        return res;
+      }
+    blanks:
+      - accept:
+          - path.length === k
+          - path.length == k
+          - k === path.length
+      - accept:
+          - k - path.length
+      - accept:
+          - i + 1
+          - 1 + i
+    fn: combine
+    compare: unordered
+    tests:
+      - args:
+          - 4
+          - 2
+        expect:
+          - - 1
+            - 2
+          - - 1
+            - 3
+          - - 1
+            - 4
+          - - 2
+            - 3
+          - - 2
+            - 4
+          - - 3
+            - 4
+      - args:
+          - 1
+          - 1
+        expect:
+          - - 1
+      - args:
+          - 3
+          - 3
+        expect:
+          - - 1
+            - 2
+            - 3
+      - args:
+          - 5
+          - 4
+        expect:
+          - - 1
+            - 2
+            - 3
+            - 4
+          - - 1
+            - 2
+            - 3
+            - 5
+          - - 1
+            - 2
+            - 4
+            - 5
+          - - 1
+            - 3
+            - 4
+            - 5
+          - - 2
+            - 3
+            - 4
+            - 5
+    explain: '`n − i + 1` numbers remain from i to n; `k − path.length` are still needed. If there are too few, no later i can help either: break.'
+    hints:
+      - How many numbers are available from i to n?
+      - 'No reuse: the next call starts after i.'
+  - id: ex-04
+    legacyId: w5d3-4
+    type: mcq
+    tag: Order matters?
+    q: '"Return all ways to pick 3 of 5 runners for a podium (gold, silver, bronze)." Which structure fits?'
+    options:
+      - t: A used array and a loop over all runners at each level (permutations of length 3)
+        ok: true
+        why: 'Gold–silver–bronze order matters: (A, B, C) and (B, A, C) are different podiums.'
+      - t: A start index (combinations of size 3)
+        why: That would treat (A, B, C) and (B, A, C) as the same selection.
+        kind: concept
+      - t: Include/exclude on each runner
+        why: That lists subsets, ignoring the order of the medals.
+        kind: concept
+    explain: 'Count check: 5 · 4 · 3 = 60 podiums, but only C(5, 3) = 10 selections.'
+    hints:
+      - Is (A, B, C) the same podium as (B, A, C)?
+  - id: ex-05
+    legacyId: w5d3-5
+    type: interview
+    title: Beautiful Arrangement (LeetCode 526)
+    q: 'A permutation `perm` of 1..n (1-indexed) is beautiful if for every position i, `perm[i]` is divisible by i or i is divisible by `perm[i]`. Return how many beautiful arrangements exist. Example: n = 2 → 2. Constraint: 1 ≤ n ≤ 15.'
+    model:
+      clarify: |
+        - Count only (not list them).
+        - n ≤ 15: 15! ≈ 1.3·10¹² permutations, so plain enumeration is too slow.
+      brute: 'Generate all n! permutations and test each: far too slow at n = 15.'
+      optimize: 'Backtrack position by position with a `used` array, and **prune immediately**: at position i only try values v with `v % i === 0 || i % v === 0`. Most branches die early. (A bitmask DP also works.)'
+      edges: |
+        - n = 1 → 1
+        - n = 3 → 3
+      complexity: Worst case exponential, but pruning keeps n = 15 fast (a few hundred thousand nodes).
+    fn: countArrangement
+    starter: |
+      function countArrangement(n) {
+
+      }
+    solution: |
+      function countArrangement(n) {
+        const used = new Array(n + 1).fill(false);
+        let count = 0;
+        function dfs(i) {
+          if (i > n) { count++; return; }
+          for (let v = 1; v <= n; v++) {
+            if (used[v] || (v % i !== 0 && i % v !== 0)) continue;
+            used[v] = true; dfs(i + 1); used[v] = false;
+          }
+        }
+        dfs(1);
+        return count;
+      }
+    tests:
+      - args:
+          - 1
+        expect: 1
+      - args:
+          - 2
+        expect: 2
+      - args:
+          - 3
+        expect: 3
+      - args:
+          - 6
+        expect: 36
+        hidden: true
+      - args:
+          - 15
+        expect: 24679
+        hidden: true
+    explain: Checking the condition when placing (not after building the whole permutation) is the pruning.
+    hints:
+      - Fill positions 1, 2, … in order.
+      - Only try values that satisfy the rule at this position.
+annotated: []

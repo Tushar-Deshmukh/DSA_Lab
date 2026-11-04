@@ -1,0 +1,42 @@
+exercises:
+  - id: ex-01
+    legacyId: w5sat-1
+    gatedBy: mock-1
+    type: pattern
+    tag: Mixed review
+    q: '"Return all possible ways to split a string of digits into valid IPv4 addresses."'
+    options:
+      - t: 'Backtracking: choose where each of the 4 parts ends (1–3 digits), prune invalid parts'
+        ok: true
+        why: Four levels, at most 3 branches each, with pruning on leading zeros and values > 255.
+      - t: Sliding window
+        why: You need every partition, not one optimal window.
+        kind: concept
+      - t: Dynamic programming
+        why: The output is the list of all partitions, so you must enumerate them.
+        kind: concept
+    explain: Problem 93, string backtracking like Palindrome Partitioning.
+    hints:
+      - '"All possible ways" + small branching.'
+  - id: ex-02
+    legacyId: w5sat-2
+    gatedBy: mock-1
+    type: complexity
+    tag: Mixed review
+    q: 'Generating all subsets of n elements and copying each into the result:'
+    fields:
+      - label: Time
+        answer: O(n · 2ⁿ)
+        options:
+          - O(2ⁿ)
+          - O(n · 2ⁿ)
+          - O(n!)
+          - O(n²)
+        why:
+          O(2ⁿ): There are 2ⁿ subsets, but each copy costs up to n.
+      - label: Recursion depth
+        answer: O(n)
+    explain: 'Output size dominates: you cannot do better than the size of what you return.'
+    hints:
+      - How many results, and how big is each?
+annotated: []

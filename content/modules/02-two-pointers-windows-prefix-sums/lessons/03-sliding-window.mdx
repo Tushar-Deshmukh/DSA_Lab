@@ -1,0 +1,146 @@
+---
+slug: sliding-window
+legacyId: w2d3
+title: Sliding window
+goal: Turn "check every contiguous window" into one pass, with fixed and variable windows, and know exactly when a window is not allowed.
+why: Sliding window is the single most common Medium pattern in coding rounds. The skill interviewers look for is not the template; it is stating the validity condition and the monotonicity that makes the shrink step correct.
+prereqs:
+  - Subarray vs substring (lesson 1)
+  - '`Map` operations and `r − l + 1` as a window length'
+outcomes:
+  - Write a fixed-size window that adds `a[r]` and removes `a[r − k]`
+  - Write a variable window with a correct `while` shrink condition
+  - State the validity condition for problems 3 and 424 before coding
+  - Explain the monotonicity precondition and why negative numbers break "sum ≥ target" windows
+ready:
+  - I can state the window-valid condition for 3 ("no character appears twice") and 424 ("length − maxCount ≤ k") before coding
+  - My trace table for 3 on `"pwwkew"` matches the visualizer
+  - I can explain why `lastSeen.get(c) >= l` is needed, using the input `"abba"`
+summary:
+  - A window `[l, r]` grows with `r` and shrinks with `l`; each index enters and leaves once, so O(n) even with an inner `while`.
+  - 'Fixed size k: `sum += a[r] − a[r − k]`.'
+  - 'Variable: expand `r`; `while` invalid, shrink `l`; record the answer when valid.'
+  - 'It only works if validity is monotone: shrinking a valid window keeps it valid (or growing an invalid one keeps it invalid).'
+  - 'Negative numbers break sum-based windows: use prefix sums (lesson 5).'
+revision: Write the variable-window skeleton from memory with the three numbered comments (add, shrink while invalid, record). Then explain what goes wrong on `"abba"` without the `>= l` check.
+warmup:
+  problem: 11
+topic: 'Sliding window: fixed and variable, monotonicity precondition'
+implement: Fixed window max-sum of size k; trace table for 3 on `"pwwkew"`
+problemsText: 'C: 643, 3 · S: 424'
+problems:
+  - num: 643
+    tier: C
+  - num: 3
+    tier: C
+  - num: 424
+    tier: S
+doneWhen: You can state the window-valid condition for 3 and 424 before coding
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-idea" kind="theory" title="The idea">
+
+<Include id="theory/two-pointers-windows-prefix-sums/sliding-window" />
+
+Brute force over contiguous ranges looks at all O(n²) windows and recomputes each one. A sliding window keeps a **running state** (a sum, a count map, a set) for the current window `[l, r]` and updates it in O(1) when an edge moves. The total work is O(n) because `r` moves n times and `l` moves at most n times, *in total*, not per step.
+
+<Callout kind="key" title="The amortised argument">
+
+An inner `while` inside a `for` loop does **not** automatically mean O(n²). Count how many times `l++` can run over the whole algorithm: `l` only increases and never passes n, so at most n times. The two loops together do at most 2n pointer moves.
+
+</Callout>
+
+</Unit>
+
+<Unit id="fixed-size-windows" kind="code" title="Fixed-size windows">
+
+When the window length is fixed at k, sliding it by one adds one element on the right and removes one on the left. Nothing else changes.
+
+<Viz id="win-fixed" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="variable-size-windows" kind="theory" title="Variable-size windows">
+
+Most window problems ask for the longest or shortest window that satisfies a condition. The window grows until it becomes invalid, then shrinks from the left until it is valid again. The handbook's general template (reference 6.10):
+
+```js
+function longestWindow(arr) {
+  let l = 0, best = 0;
+  const state = new Map();              // whatever describes the window
+  for (let r = 0; r < arr.length; r++) {
+    // 1. add arr[r] to state
+    while (/* window [l, r] is invalid */ false) {
+      // 2. remove arr[l] from state
+      l++;
+    }
+    best = Math.max(best, r - l + 1);   // 3. window is valid here
+  }
+  return best;
+}
+```
+
+Filling it in is a matter of answering three questions before you code: **What state describes the window? When is the window invalid? What do I record?** For problem 3: state = last index of each character; invalid = the new character already appears inside `[l, r − 1]`; record = `r − l + 1`.
+
+<Include id="theory/two-pointers-windows-prefix-sums/example-2" />
+
+<Viz id="win-longest" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="the-precondition-monotonicity" kind="theory" title="The precondition: monotonicity">
+
+A window is allowed to throw away its left end forever only if validity behaves *monotonically*:
+
+- for "longest window with at most …" problems: if `[l, r]` is invalid, then every longer window `[l, r']` with `r' > r` is also invalid, so `l` must move and never needs to come back;
+- for "shortest window with at least …" problems: if `[l, r]` is valid, growing it keeps it valid, so once it is valid you shrink to find the minimum.
+
+With non-negative numbers, adding elements never decreases a sum, so sum conditions are monotone. With **negative numbers**, adding an element can decrease the sum, and the rule "grow until too big, then shrink" has no meaning. That is the moment to switch to prefix sums (lesson 5).
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="validity-as-an-inequality-problem-424-stretch" kind="stretch" title="Validity as an inequality: problem 424 (Stretch)">
+
+Longest Repeating Character Replacement asks for the longest window you can make all-one-letter by changing at most k letters. The cheapest way to make a window uniform is to keep its most frequent letter and change everything else. So the window is **valid while `length − maxCount ≤ k`**.
+
+<Viz id="win-replace" />
+
+<Callout kind="tip" title="Why the stale `maxCount` is fine">
+
+The code never decreases `maxCount` when the window shrinks. That makes `maxCount` possibly too large, which can only make an invalid window look valid at the *same length* as the best found so far, never longer. Since we only care about the maximum length, the answer is still right. If that argument feels slippery, recomputing `maxCount` from the 26 counts each step is also O(26n) = O(n).
+
+</Callout>
+
+<Include id="patterns/sliding-window" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+<Callout kind="mistake" title="Mistakes to watch for in this lesson">
+
+- Shrinking with `if` instead of `while`: the window may still be invalid after one step.
+- Recording the answer before the window is valid again.
+- Writing the length as `r − l` instead of `r − l + 1`.
+- Forgetting the `>= l` check when jumping `l` with a last-seen map (`"abba"`).
+- Using a window on input with negative numbers and a sum condition.
+
+</Callout>
+
+</Unit>

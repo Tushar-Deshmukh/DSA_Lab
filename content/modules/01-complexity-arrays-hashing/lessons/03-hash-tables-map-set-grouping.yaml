@@ -1,0 +1,233 @@
+exercises:
+  - id: ex-01
+    legacyId: w1d3-1
+    type: mcq
+    tag: Average vs worst
+    q: Why is `Map.get` described as O(1) **average** rather than O(1)?
+    options:
+      - t: Because each bucket holds O(1) keys on average with a good hash and resizing, but many colliding keys can put O(n) keys in one bucket.
+        ok: true
+        why: The bound depends on how keys spread across buckets.
+      - t: Because computing the hash of any key is O(n).
+        why: Hashing a key costs O(length of the key), not O(number of keys). For short keys that is O(1).
+        kind: concept
+      - t: Because resizing happens on every insert.
+        why: 'Resizing is rare: the table doubles, so it happens O(log n) times over n inserts.'
+        kind: concept
+    explain: 'In interviews, say "O(1) average". If asked about the worst case: "O(n), if many keys collide."'
+    hints:
+      - Try the 1-bucket preset in the visualizer.
+  - id: ex-02
+    legacyId: w1d3-2
+    type: predict
+    tag: Object keys
+    q: What does this print?
+    code: |
+      const obj = {};
+      obj[1] = "number";
+      obj["1"] = "string";
+      const map = new Map();
+      map.set(1, "number");
+      map.set("1", "string");
+      console.log(Object.keys(obj).length, map.size, "constructor" in obj);
+    answer: 1 2 true
+    traps:
+      2 2 false: Object keys are converted to strings, so `obj[1]` and `obj["1"]` are the same key, and `in` finds inherited keys like `constructor`.
+      1 2 false: '`"constructor" in obj` is true because plain objects inherit `constructor` from `Object.prototype`.'
+    explain: A Map keeps `1` and `"1"` apart and has no inherited keys. That is why the handbook says to prefer Map for algorithmic work.
+    hints:
+      - What type does an object property key always have?
+  - id: ex-03
+    legacyId: w1d3-3
+    type: predict
+    tag: Arrays as keys
+    q: What does this print?
+    code: |
+      const seen = new Map();
+      seen.set([1, 2], "pair");
+      console.log(seen.get([1, 2]), seen.has("1,2"));
+      const fixed = new Map();
+      fixed.set([1, 2].join(","), "pair");
+      console.log(fixed.get([1, 2].join(",")));
+    answer: |-
+      undefined false
+      pair
+    normalize: exact
+    traps:
+      ? "pair false\npair"
+      : Map compares object keys by reference. The `[1, 2]` in `get` is a different array from the one passed to `set`.
+    explain: Encode composite keys as strings (`"1,2"`) or numbers (`r * cols + c`) so equal values give equal keys.
+    hints:
+      - Are two separately written `[1, 2]` literals the same object?
+  - id: ex-04
+    legacyId: w1d3-4
+    type: code
+    tag: Frequency counter, twice
+    q: Write `isAnagram(s, t)` (problem 242) using a `Map` this time, so it also works for any Unicode characters. Return true if `t` is a rearrangement of `s`.
+    fn: isAnagram
+    starter: |
+      function isAnagram(s, t) {
+
+      }
+    solution: |
+      function isAnagram(s, t) {
+        if (s.length !== t.length) return false;
+        const count = new Map();
+        for (const c of s) count.set(c, (count.get(c) ?? 0) + 1);
+        for (const c of t) {
+          if (!count.get(c)) return false;
+          count.set(c, count.get(c) - 1);
+        }
+        return true;
+      }
+    tests:
+      - args:
+          - anagram
+          - nagaram
+        expect: true
+      - args:
+          - rat
+          - car
+        expect: false
+      - args:
+          - a
+          - ab
+        expect: false
+      - args:
+          - ''
+          - ''
+        expect: true
+        hidden: true
+      - args:
+          - aab
+          - abb
+        expect: false
+        hidden: true
+      - args:
+          - Ab
+          - bA
+        expect: true
+        hidden: true
+    explain: With equal lengths, if every character of t finds a positive count, every count must end at exactly zero, so no final scan is needed.
+    hints:
+      - Count s with `count.set(c, (count.get(c) ?? 0) + 1)`.
+      - Then decrement for each character of t, failing if a count would go below zero.
+  - id: ex-05
+    legacyId: w1d3-5
+    type: fill
+    tag: The count signature
+    q: 'Complete the count-signature key: 26 counts joined with `#`, so "eat" and "tea" both map to the same string. Your version is tested.'
+    template: |
+      function countKey(word) {
+        const c = new Array(26).fill(0);
+        for (const ch of word) c[[[0]]]++;
+        return c.[[1]];
+      }
+    blanks:
+      - accept:
+          - ch.charCodeAt(0) - 97
+          - ch.charCodeAt(0)-97
+          - ch.charCodeAt() - 97
+      - accept:
+          - join("#")
+          - join('#')
+    fn: countKey
+    tests:
+      - args:
+          - eat
+        expect: 1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0
+      - args:
+          - tea
+        expect: 1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0
+      - args:
+          - ''
+        expect: 0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0
+      - args:
+          - zz
+        expect: 0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#2
+    explain: Why the separator? Without it, counts like [1, 12] and [11, 2] would both become "112".
+    hints:
+      - Index = character code minus the code of "a" (97).
+  - id: ex-06
+    legacyId: w1d3-6
+    type: complexity
+    tag: Two keys, two costs
+    q: n words of length at most k. What does building all the keys cost?
+    fields:
+      - label: Sorted-letters key
+        answer: O(n k log k)
+        options:
+          - O(n k)
+          - O(n k log k)
+          - O(n² k)
+          - O(n log n)
+        why:
+          O(n k): Sorting each word of length k costs O(k log k), not O(k).
+      - label: Count-signature key
+        answer: O(n k)
+        options:
+          - O(n k)
+          - O(n k log k)
+          - O(n² k)
+          - O(n log n)
+        why:
+          O(n k log k): 'Counting is one pass over the word plus 26 for the join: O(k + 26) = O(k) per word.'
+    explain: For short words both are fast; the count key wins when words are long.
+    hints:
+      - What does it cost to sort one word of length k?
+  - id: ex-07
+    legacyId: w1d3-7
+    type: interview
+    title: First Unique Character in a String (LeetCode 387)
+    q: 'Given a string `s` of lowercase letters, return the index of the first character that appears exactly once, or −1 if there is none. Example: `"leetcode"` → 0, `"loveleetcode"` → 2.'
+    model:
+      clarify: |
+        - Lowercase letters only? (Yes, so 26 counts suffice.)
+        - Return the index, not the character.
+        - Empty string? (Length ≥ 1 on LeetCode; returning −1 is safe.)
+      brute: 'For each index, scan the whole string to count that character: O(n²).'
+      optimize: 'Two passes: count every character (a 26-slot array or a Map), then scan again and return the first index whose count is 1. The first pass answers "how many times does this appear?" for every character at once.'
+      edges: |
+        - All characters repeated `\"aabb\"` → −1
+        - Single character → 0
+        - Unique character at the end `\"aab\"` → 2
+      complexity: O(n) time (two passes), O(1) space (26 counts).
+    fn: firstUniqChar
+    starter: |
+      function firstUniqChar(s) {
+
+      }
+    solution: |
+      function firstUniqChar(s) {
+        const count = new Array(26).fill(0);
+        for (let i = 0; i < s.length; i++) count[s.charCodeAt(i) - 97]++;
+        for (let i = 0; i < s.length; i++) if (count[s.charCodeAt(i) - 97] === 1) return i;
+        return -1;
+      }
+    tests:
+      - args:
+          - leetcode
+        expect: 0
+      - args:
+          - loveleetcode
+        expect: 2
+      - args:
+          - aabb
+        expect: -1
+      - args:
+          - z
+        expect: 0
+        hidden: true
+      - args:
+          - aab
+        expect: 2
+        hidden: true
+      - args:
+          - abcabd
+        expect: 2
+        hidden: true
+    explain: The second pass is over the string, not over the 26 counts, because the answer is the first *position*.
+    hints:
+      - You need each character's total count before you can decide about any index.
+      - Two passes over the string.
+annotated: []

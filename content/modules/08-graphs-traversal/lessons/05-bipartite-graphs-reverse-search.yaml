@@ -1,0 +1,254 @@
+exercises:
+  - id: ex-01
+    legacyId: w8d5-1
+    type: trace
+    tag: By hand
+    q: Two-colour by BFS starting at node 0 with colour 0.
+    rows:
+      - prompt: '4-cycle 0–1–2–3–0: colours of nodes 0,1,2,3'
+        answer: 0,1,0,1
+      - prompt: 'Triangle 0–1–2–0: which edge produces the conflict, as u-v?'
+        answer:
+          - 1-2
+          - 2-1
+        why: 0 gets 0; 1 and 2 both get 1 as neighbours of 0; then the edge 1–2 joins two nodes coloured 1.
+      - prompt: Is the triangle bipartite?
+        answer:
+          - 'no'
+          - 'false'
+    verify: |
+      const color = [0, 1, 0, 1]; console.log(color.join(','));
+      const adj = [[1, 2], [0, 2], [0, 1]], c = [0, -1, -1], q = [0]; let clash = null;
+      for (let h = 0; h < q.length && !clash; h++) { const u = q[h]; for (const v of adj[u]) { if (c[v] === -1) { c[v] = 1 - c[u]; q.push(v); } else if (c[v] === c[u]) { clash = [u, v].sort().join('-'); break; } } }
+      console.log(clash); console.log('no');
+    explain: Odd cycles are exactly what makes two colours impossible.
+    hints:
+      - Neighbours always get the opposite colour.
+  - id: ex-02
+    legacyId: w8d5-2
+    type: code
+    tag: Is Graph Bipartite?
+    q: 'Write `isBipartite(graph)` (problem 785): `graph[i]` lists the neighbours of node i (undirected). The graph may be disconnected.'
+    fn: isBipartite
+    starter: |
+      function isBipartite(graph) {
+
+      }
+    solution: |
+      function isBipartite(graph) {
+        const n = graph.length, color = new Array(n).fill(-1);
+        for (let s = 0; s < n; s++) {
+          if (color[s] !== -1) continue;
+          color[s] = 0; const q = [s];
+          for (let h = 0; h < q.length; h++) {
+            const u = q[h];
+            for (const v of graph[u]) {
+              if (color[v] === -1) { color[v] = 1 - color[u]; q.push(v); }
+              else if (color[v] === color[u]) return false;
+            }
+          }
+        }
+        return true;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 2
+              - 3
+            - - 0
+              - 2
+            - - 0
+              - 1
+              - 3
+            - - 0
+              - 2
+        expect: false
+      - args:
+          - - - 1
+              - 3
+            - - 0
+              - 2
+            - - 1
+              - 3
+            - - 0
+              - 2
+        expect: true
+      - args:
+          - - []
+            - - 2
+            - - 1
+        expect: true
+      - args:
+          - - - 1
+            - - 0
+            - - 3
+              - 4
+            - - 2
+              - 4
+            - - 2
+              - 3
+        expect: false
+        hidden: true
+    explain: 'The hidden test hides a triangle in the second component: without the outer loop over all nodes it would be missed.'
+    hints:
+      - Start a BFS from every node that is still uncoloured.
+  - id: ex-03
+    legacyId: w8d5-3
+    type: code
+    tag: Reverse search
+    q: 'Write `numEnclaves(grid)` (problem 1020): count land cells (1) from which you **cannot** walk off the grid (moving through land, 4 directions). Search inward from the border once rather than from every cell.'
+    fn: numEnclaves
+    starter: |
+      function numEnclaves(grid) {
+
+      }
+    solution: |
+      function numEnclaves(grid) {
+        const m = grid.length, n = grid[0].length, dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const g = grid.map((r) => [...r]); const st = [];
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) if ((r === 0 || c === 0 || r === m - 1 || c === n - 1) && g[r][c] === 1) { g[r][c] = 0; st.push([r, c]); }
+        while (st.length) {
+          const [r, c] = st.pop();
+          for (const [dr, dc] of dirs) { const nr = r + dr, nc = c + dc; if (nr < 0 || nr >= m || nc < 0 || nc >= n || g[nr][nc] !== 1) continue; g[nr][nc] = 0; st.push([nr, nc]); }
+        }
+        let count = 0; for (const row of g) for (const v of row) count += v;
+        return count;
+      }
+    tests:
+      - args:
+          - - - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 0
+              - 1
+              - 0
+            - - 0
+              - 1
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+        expect: 3
+      - args:
+          - - - 0
+              - 1
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+        expect: 0
+      - args:
+          - - - 1
+        expect: 0
+        hidden: true
+      - args:
+          - - - 0
+              - 0
+              - 0
+            - - 0
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 0
+        expect: 1
+        hidden: true
+    explain: Every land cell connected to the border can escape; erase those, and whatever land is left is the answer. Surrounded Regions (130) is the same idea with O's.
+    hints:
+      - Which cells can definitely escape?
+      - Start a single search from all border land cells and remove what it reaches.
+  - id: ex-04
+    legacyId: w8d5-4
+    type: interview
+    title: Possible Bipartition (LeetCode 886)
+    q: 'Split n people (labelled 1..n) into two groups so that no pair in `dislikes` is in the same group. Return whether it is possible. Example: n = 4, dislikes `[[1,2],[1,3],[2,4]]` → true; n = 3, dislikes `[[1,2],[1,3],[2,3]]` → false.'
+    model:
+      clarify: |
+        - People are labelled from 1, not 0.
+        - Dislike is symmetric (undirected edges); people with no dislikes can go anywhere.
+      brute: 'Try all 2ⁿ splits: impossible beyond n ≈ 20.'
+      optimize: Build an undirected graph of dislikes and two-colour it with BFS from every uncoloured person (Pattern 8.4). A conflict means an odd cycle of dislikes, so no split exists.
+      edges: |
+        - no dislikes → true
+        - a triangle of dislikes → false
+        - several components
+      complexity: O(n + d) time and space.
+    fn: possibleBipartition
+    starter: |
+      function possibleBipartition(n, dislikes) {
+
+      }
+    solution: |
+      function possibleBipartition(n, dislikes) {
+        const adj = Array.from({ length: n + 1 }, () => []);
+        for (const [a, b] of dislikes) { adj[a].push(b); adj[b].push(a); }
+        const color = new Array(n + 1).fill(-1);
+        for (let s = 1; s <= n; s++) {
+          if (color[s] !== -1) continue;
+          color[s] = 0; const q = [s];
+          for (let h = 0; h < q.length; h++) {
+            const u = q[h];
+            for (const v of adj[u]) {
+              if (color[v] === -1) { color[v] = 1 - color[u]; q.push(v); }
+              else if (color[v] === color[u]) return false;
+            }
+          }
+        }
+        return true;
+      }
+    tests:
+      - args:
+          - 4
+          - - - 1
+              - 2
+            - - 1
+              - 3
+            - - 2
+              - 4
+        expect: true
+      - args:
+          - 3
+          - - - 1
+              - 2
+            - - 1
+              - 3
+            - - 2
+              - 3
+        expect: false
+      - args:
+          - 5
+          - - - 1
+              - 2
+            - - 2
+              - 3
+            - - 3
+              - 4
+            - - 4
+              - 5
+            - - 1
+              - 5
+        expect: false
+        hidden: true
+      - args:
+          - 1
+          - []
+        expect: true
+        hidden: true
+    explain: Recognising "two groups, connected things apart" as bipartiteness is the whole problem; 1-based labels are the trap.
+    hints:
+      - What graph property means "split into two groups with every edge crossing"?
+annotated: []

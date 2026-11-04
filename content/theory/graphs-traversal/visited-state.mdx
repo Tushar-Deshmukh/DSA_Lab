@@ -1,0 +1,15 @@
+---
+slug: visited-state
+title: Visited state
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Visited state
+  lines:
+    - 1526
+    - 1526
+---
+
+**Visited state.** For undirected traversal, a boolean `visited` array (or mutating the grid, e.g. setting `'1'` to `'0'`, if allowed) suffices. For directed cycle detection you need **three states**: 0 = unvisited, 1 = on the current DFS path, 2 = fully processed. Meeting a state-1 node means a back edge, which means a cycle.

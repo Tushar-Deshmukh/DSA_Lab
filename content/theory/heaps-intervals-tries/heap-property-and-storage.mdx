@@ -1,0 +1,25 @@
+---
+slug: heap-property-and-storage
+title: Heap property and storage
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Heap property and storage
+  lines:
+    - 1327
+    - 1337
+---
+
+**Heap property and storage.** A binary heap is a *complete* binary tree in which every parent is ≤ its children (min-heap) or ≥ (max-heap). The minimum is always at the root. Because the tree is complete it is stored in an array with no pointers: for index i, parent = `(i - 1) >> 1`, left = `2i + 1`, right = `2i + 2`.
+
+| Operation | How | Time |
+| --- | --- | --- |
+| peek | `heap[0]` | O(1) |
+| push | append at the end, *sift up* (swap with parent while smaller) | O(log n) |
+| pop | move last element to the root, *sift down* (swap with the smaller child while larger) | O(log n) |
+| heapify an array | sift down every non-leaf from `(n >> 1) - 1` down to 0 | O(n) |
+| search for an arbitrary value | scan | O(n) |
+
+*Why heapify is O(n), not O(n log n):* half the nodes are leaves (no work), a quarter sift down at most 1 level, an eighth at most 2, … The sum n/4·1 + n/8·2 + … is bounded by n.

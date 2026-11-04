@@ -1,0 +1,83 @@
+---
+slug: minimum-spanning-trees
+legacyId: w9d3
+title: Minimum spanning trees
+goal: Build a minimum spanning tree with Kruskal (sort + DSU) and with Prim's O(V²) array version, and recognise when a hop limit breaks Dijkstra (787).
+why: MST questions are less common than Dijkstra but appear as "connect all points / cities at minimum cost". Kruskal is a direct reuse of the previous lesson's DSU, and knowing why Prim's array version suits complete graphs is a good complexity discussion.
+prereqs:
+  - DSU (lesson 2)
+  - Heaps and sorting with comparators
+outcomes:
+  - 'Run Kruskal by hand: sort, take an edge if it joins two trees, stop at V − 1 edges'
+  - State the cut property that makes the greedy choice safe
+  - Implement Prim's O(V²) version for a complete graph (1584)
+  - Explain why "at most k stops" needs Bellman-Ford-style rounds instead of Dijkstra
+ready:
+  - I can say why Prim's array version suits 1584's complete graph
+  - I ran Kruskal by hand on 5 weighted edges
+  - 1584 accepted
+summary:
+  - 'MST: V − 1 edges connecting all vertices at minimum total weight (connected, undirected, weighted).'
+  - 'Kruskal: sort edges, add if `union` succeeds. O(E log E).'
+  - 'Prim: grow from one vertex, add the cheapest edge leaving the tree. Heap O(E log V); array O(V²).'
+  - 'Complete graph (E ≈ V²/2): array Prim wins.'
+  - 'Hop limits (787): k + 1 rounds of relaxation reading from a copy of `dist`.'
+revision: Explain in two sentences why Kruskal's greedy choice is safe, and write the three lines that turn the previous lesson's DSU into Kruskal.
+warmup:
+  problem: 743
+topic: 'MST: Kruskal with DSU, Prim with heap or O(V²) array'
+implement: Kruskal by hand on 5 weighted edges
+problemsText: 'C: 1584 · O: 787'
+problems:
+  - num: 1584
+    tier: C
+  - num: 787
+    tier: O
+doneWhen: You can say why Prim's array version suits 1584's complete graph
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="kruskal-cheapest-safe-edge-first" kind="theory" title="Kruskal: cheapest safe edge first">
+
+<Include id="theory/graphs-weighted-greedy/minimum-spanning-tree" />
+
+Why is taking the cheapest edge between two different trees always safe? Split the vertices into any two groups (a *cut*). Every spanning tree needs at least one edge crossing the cut. If an MST used a more expensive crossing edge, swapping it for the cheapest crossing edge keeps the tree connected and does not raise the total. This *cut property* is an exchange argument, the same reasoning you will use for greedy proofs in the next lesson.
+
+<Viz id="kruskal" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="prim-for-complete-graphs-1584" kind="theory" title="Prim for complete graphs (1584)">
+
+In 1584 every pair of points is an edge, so E ≈ n²/2. Kruskal would sort all of them (O(n² log n)), and a heap-based Prim pushes O(n²) entries (also O(n² log n)). Prim's array version keeps `best[v]`, the cheapest known connection from each outside point to the tree, and each round scans that array once: O(n²) total, with no heap and no edge list.
+
+<Viz id="prim-array" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="when-dijkstras-assumption-breaks-optional-787" kind="theory" title="When Dijkstra's assumption breaks (Optional: 787)">
+
+Problem 787 asks for the cheapest flight route using **at most k stops**. Dijkstra finalises each city at its cheapest cost, but the cheapest way to reach an intermediate city might use too many stops, while a pricier route with fewer stops is the one that can still reach the destination in time. The fix is to count flights explicitly: run k + 1 rounds of relaxation, each reading only the previous round's distances.
+
+<Viz id="bellman-k" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

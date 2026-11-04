@@ -1,0 +1,25 @@
+---
+slug: binary-and-twos-complement
+title: Binary and two's complement
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Binary and two's complement
+  lines:
+    - 2067
+    - 2077
+---
+
+**Binary and two's complement.** Integers are stored in binary; negative numbers use two's complement (`-x` = `~x + 1`). In JavaScript, numbers are 64-bit floats, but **every bitwise operator converts its operands to signed 32-bit integers** and returns a signed 32-bit result. Values above 2³¹ − 1 wrap around; `1 << 31` is −2147483648.
+
+| Operator | Meaning | Use |
+| --- | --- | --- |
+| `a & b` | AND | test/clear bits, `n & 1` = odd? |
+| `a \| b` | OR | set bits |
+| `a ^ b` | XOR | toggle bits; `x ^ x = 0`, `x ^ 0 = x` |
+| `~a` | NOT | flips all 32 bits (`~x = -x - 1`) |
+| `a << k` | left shift | multiply by 2ᵏ (until bit 31) |
+| `a >> k` | arithmetic right shift | divide by 2ᵏ, keeps sign |
+| `a >>> k` | logical right shift | unsigned; `x >>> 0` converts to an unsigned 32-bit value |

@@ -1,0 +1,29 @@
+---
+slug: example-2
+title: Example 2
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Example 2
+  lines:
+    - 1214
+    - 1228
+---
+
+**Example 2: validate a BST (98), information from ancestors.**
+
+```js
+function isValidBST(root) {
+  // every value in this subtree must be in (low, high)
+  function ok(node, low, high) {
+    if (!node) return true;
+    if (node.val <= low || node.val >= high) return false;
+    return ok(node.left, low, node.val) && ok(node.right, node.val, high);
+  }
+  return ok(root, -Infinity, Infinity);
+}
+```
+
+Dry run on `[5,4,6,null,null,3,7]`: ok(5, −∞, ∞) ✓ → ok(4, −∞, 5) ✓ (leaf) → ok(6, 5, ∞) ✓ → ok(3, 5, 6): 3 ≤ 5 → **false**. The bounds carry the ancestors' constraints down; a children-only check would have accepted this tree. Alternative: inorder traversal must be strictly increasing; track the previous value.

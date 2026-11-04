@@ -1,0 +1,23 @@
+---
+slug: top-down-vs-bottom-up
+title: Top-down vs bottom-up
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Top-down vs bottom-up
+  lines:
+    - 1896
+    - 1904
+---
+
+**Top-down vs bottom-up.**
+
+|  | Top-down (memo) | Bottom-up (table) |
+| --- | --- | --- |
+| Derivation | Direct from the recursion; easiest to get right first | Requires choosing an iteration order |
+| States computed | Only reachable ones | All of them |
+| Stack risk in JS | Depth up to n; can overflow near 10⁴–10⁵ | None |
+| Space optimisation | Hard | Natural |
+| Interview advice | Write this first if unsure, then convert | Final answer when time permits |

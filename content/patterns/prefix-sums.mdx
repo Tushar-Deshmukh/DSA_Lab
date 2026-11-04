@@ -1,0 +1,25 @@
+---
+slug: prefix-sums
+number: '2.4'
+title: Prefix sums (with or without a hash map)
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Pattern 2.4
+  lines:
+    - 561
+    - 570
+---
+
+**Pattern 2.4: Prefix sums (with or without a hash map)**
+
+1. *Recognise:* many range-sum queries, or counting subarrays whose sum meets an exact condition.
+2. *Clues:* "sum of range", "subarray sum equals k", "divisible by k", negative numbers allowed.
+3. *From brute force:* each subarray sum computed from scratch is O(n) → O(n³) or O(n²). Prefix differences make each O(1); a map finds matching prefixes in O(1).
+4. *Why it works:* `sum(l..r) = pre[r+1] - pre[l]`, so "sum = k" ⇔ "earlier prefix = current − k".
+5. *Template:* map seeded with `{0: 1}`; for each element: update cur, add `map[cur − k]`, then record cur.
+6. *Complexity:* O(n) time and space.
+7. *Variations:* key by `cur % k` (normalise negatives with `((cur % k) + k) % k`), transforming each value first so the condition becomes a plain sum condition, 2-D prefix sums, difference arrays for range updates.
+8. *Inappropriate when:* you need the maximum-length window under a non-negative constraint (a sliding window is simpler and O(1) space).

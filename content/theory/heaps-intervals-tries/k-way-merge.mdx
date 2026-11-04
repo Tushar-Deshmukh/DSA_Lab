@@ -1,0 +1,15 @@
+---
+slug: k-way-merge
+title: K-way merge
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: K-way merge
+  lines:
+    - 1350
+    - 1350
+---
+
+**K-way merge.** To merge k sorted lists, push each list's head into a min-heap; repeatedly pop the smallest, append it, and push its successor. O(N log k) for N total elements. The alternative of merging lists pairwise in rounds (divide and conquer) has the same complexity and no heap.

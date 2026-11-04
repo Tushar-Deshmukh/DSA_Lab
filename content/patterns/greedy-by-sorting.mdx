@@ -1,0 +1,25 @@
+---
+slug: greedy-by-sorting
+number: '9.3'
+title: Greedy by sorting (exchange argument)
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Pattern 9.3
+  lines:
+    - 1853
+    - 1862
+---
+
+**Pattern 9.3: Greedy by sorting (exchange argument)**
+
+1. *Recognise:* choose a maximum/minimum number of items under a compatibility rule; ordering items makes decisions local.
+2. *Clues:* "maximum number of", "minimum number of arrows/rooms/boats", "assign", "schedule".
+3. *From brute force:* try all subsets (2ⁿ) or DP; check whether sorting by one key makes the first choice always safe.
+4. *Why it works:* the exchange argument shows the greedy choice can be part of an optimal solution.
+5. *Template:* sort by the key the proof needs (end time, size); scan once, taking items that fit.
+6. *Complexity:* O(n log n).
+7. *Variations:* 455 assign cookies (two sorted pointers), 435/452 intervals, 846 hand of straights (always start a group at the smallest remaining card).
+8. *Inappropriate when:* a counterexample exists; items have two competing weights (knapsack → DP).

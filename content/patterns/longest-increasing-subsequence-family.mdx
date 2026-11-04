@@ -1,0 +1,25 @@
+---
+slug: longest-increasing-subsequence-family
+number: '11.3'
+title: Longest increasing subsequence family
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Pattern 11.3
+  lines:
+    - 2195
+    - 2204
+---
+
+**Pattern 11.3: Longest increasing subsequence family**
+
+1. *Recognise:* longest chain where each element must exceed (or relate to) the previous one, keeping order.
+2. *Clues:* "increasing subsequence", "longest chain", "stack boxes/envelopes".
+3. *From brute force:* 2ⁿ subsequences → `dp[i]` = best chain ending at i.
+4. *Why it works:* an optimal chain ending at i extends an optimal chain ending at some earlier j.
+5. *Template:* Example 3.
+6. *Complexity:* O(n²); O(n log n) with tails.
+7. *Variations:* Russian doll envelopes (Hard, deferred).
+8. *Inappropriate when:* the chain must be contiguous (a simple scan).

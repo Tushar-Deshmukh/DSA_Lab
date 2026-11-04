@@ -1,0 +1,15 @@
+---
+slug: comparators
+title: Comparators
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Comparators
+  lines:
+    - 620
+    - 620
+---
+
+**Comparators.** `arr.sort((a, b) => a - b)` ascending; `b - a` descending; tie-breaks: `(a, b) => a[0] - b[0] || a[1] - b[1]`. A comparator must return a negative, zero or positive number, not a boolean. For strings, `a.localeCompare(b)` or `a < b ? -1 : a > b ? 1 : 0`. For 179 Largest Number, compare concatenations: `(a, b) => (b + a).localeCompare(a + b)`, carefully explained in lesson 5.

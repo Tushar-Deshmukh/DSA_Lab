@@ -1,0 +1,258 @@
+exercises:
+  - id: ex-01
+    legacyId: w3sat-1
+    type: pattern
+    tag: 1 / 15
+    q: Given a sorted array of distinct integers rotated at an unknown pivot, find a target in O(log n).
+    options:
+      - t: Boundary binary search on a rotated array
+        ok: true
+      - t: Two pointers
+        kind: concept
+        why: O(log n) rules out anything linear.
+      - t: Hash set
+        kind: concept
+        why: A set ignores the order the problem gives you, and building it is O(n).
+    explain: 'Clues: sorted, rotated, O(log n). This is Module 3 lesson 2''s Stretch (33).'
+    hints:
+      - Which complexity is required?
+  - id: ex-02
+    legacyId: w3sat-2
+    type: pattern
+    tag: 2 / 15
+    q: Find the length of the longest substring containing at most two distinct characters.
+    options:
+      - t: Variable sliding window with a count map
+        ok: true
+      - t: Prefix sums with a hash map
+        kind: concept
+        why: There is no sum condition.
+      - t: Dynamic programming
+        kind: concept
+        why: A contiguous range with a monotone constraint is a window problem.
+    explain: Longest + contiguous + "at most" = variable window (Module 2).
+    hints:
+      - Is the constraint monotone as the window grows?
+  - id: ex-03
+    legacyId: w3sat-3
+    type: pattern
+    tag: 3 / 15
+    q: Given meeting times, find the minimum number of rooms required.
+    options:
+      - t: 'Intervals: sort by start, then a min-heap of end times (or a sweep)'
+        ok: true
+      - t: Binary search
+        kind: concept
+        why: Nothing here is a monotone predicate over sorted data.
+      - t: Backtracking
+        kind: concept
+        why: 'No need to try all assignments: a greedy sweep is exact.'
+    explain: 'Module 7: intervals and heaps.'
+    hints:
+      - What do you need to know at the moment a meeting starts?
+  - id: ex-04
+    legacyId: w3sat-4
+    type: pattern
+    tag: 4 / 15
+    q: Return all ways to place n non-attacking queens on an n × n board.
+    options:
+      - t: Backtracking with pruning sets
+        ok: true
+      - t: Dynamic programming
+        kind: concept
+        why: The output is every arrangement, so you must enumerate them.
+      - t: BFS
+        kind: concept
+        why: BFS finds shortest paths; here you list all valid placements.
+    explain: '"Return all ways" with small n is the backtracking clue (Module 5).'
+    hints:
+      - '"All ways": count or list?'
+  - id: ex-05
+    legacyId: w3sat-5
+    type: pattern
+    tag: 5 / 15
+    q: Given a list of words, find all words sharing a given prefix as the user types.
+    options:
+      - t: Trie
+        ok: true
+      - t: Sorting each word
+        kind: concept
+        why: Sorting letters destroys the prefix.
+      - t: Sliding window
+        kind: concept
+        why: No contiguous range of an array is involved.
+    explain: Prefix queries over many words = trie (Module 7).
+    hints:
+      - Which structure is organised by prefix?
+  - id: ex-06
+    legacyId: w3sat-6
+    gatedBy: assessment-1
+    type: pattern
+    tag: 6 / 15
+    q: Count the number of contiguous subarrays whose sum is divisible by k (values may be negative).
+    options:
+      - t: Prefix sums with remainders in a hash map
+        ok: true
+      - t: Sliding window
+        kind: concept
+        why: Negative values break monotonicity.
+      - t: Two pointers
+        kind: concept
+        why: There is no sorted order to exploit.
+    explain: 'Module 2 lesson 5: key the map by `((cur % k) + k) % k`.'
+    hints:
+      - When do two prefix sums enclose a sum divisible by k?
+  - id: ex-07
+    legacyId: w3sat-7
+    type: pattern
+    tag: 7 / 15
+    q: Given tasks and their prerequisites, return a valid order or report impossibility.
+    options:
+      - t: Topological sort (Kahn's algorithm)
+        ok: true
+      - t: Sorting with a comparator
+        kind: concept
+        why: Prerequisites form a graph, not a total order; a comparator cannot express "no order between these two".
+      - t: Union-Find
+        kind: concept
+        why: Union-Find tracks connectivity, not direction or order.
+    explain: Prerequisites, ordering, dependencies → topological sort (Module 8).
+    hints:
+      - What structure do prerequisites form?
+  - id: ex-08
+    legacyId: w3sat-8
+    type: pattern
+    tag: 8 / 15
+    q: Find the minimum number of coins to make an amount with given denominations.
+    options:
+      - t: Dynamic programming (unbounded knapsack)
+        ok: true
+      - t: 'Greedy: always take the largest coin'
+        kind: concept
+        why: 'Fails for coins [1, 3, 4], amount 6: greedy gives 4+1+1, optimal is 3+3.'
+      - t: Binary search on the answer
+        kind: concept
+        why: Feasibility of "k coins" is not checkable greedily.
+    explain: Min cost with overlapping choices → DP (Module 10).
+    hints:
+      - Does greedy always work? Try coins [1, 3, 4], amount 6.
+  - id: ex-09
+    legacyId: w3sat-9
+    type: pattern
+    tag: 9 / 15
+    q: Each day, find how many days until a strictly higher price.
+    options:
+      - t: Monotonic stack
+        ok: true
+      - t: Binary search
+        kind: concept
+        why: The prices are not sorted.
+      - t: Two nested loops
+        kind: concept
+        why: Correct but O(n²).
+    explain: '"Next greater" → monotonic stack (Module 4).'
+    hints:
+      - This is the "next greater element" question.
+  - id: ex-10
+    legacyId: w3sat-10
+    type: pattern
+    tag: 10 / 15
+    q: A grid has walls and open cells; find the fewest steps from the top-left to the bottom-right.
+    options:
+      - t: BFS on the grid
+        ok: true
+      - t: DFS on the grid
+        kind: concept
+        why: DFS finds *a* path, not the shortest one.
+      - t: Dijkstra
+        kind: concept
+        why: Works, but every step costs 1, so plain BFS is simpler and faster.
+    explain: Minimum steps with equal costs → BFS (Module 8).
+    hints:
+      - Are all moves equally expensive?
+  - id: ex-11
+    legacyId: w3sat-11
+    type: pattern
+    tag: 11 / 15
+    q: Given flight costs between cities (all positive), find the cheapest route from A to B.
+    options:
+      - t: Dijkstra
+        ok: true
+      - t: BFS
+        kind: concept
+        why: BFS minimises the number of edges, not their total cost.
+      - t: Topological sort
+        kind: concept
+        why: Flights can form cycles.
+    explain: Weighted shortest path with non-negative weights → Dijkstra (Module 9).
+    hints:
+      - Weighted or unweighted?
+  - id: ex-12
+    legacyId: w3sat-12
+    type: pattern
+    tag: 12 / 15
+    q: Given a list of points on a plane, return the k points closest to the origin.
+    options:
+      - t: Max-heap of size k keyed by squared distance (or quickselect)
+        ok: true
+      - t: Sort all points by distance
+        why: Correct and simple at O(n log n); the heap is O(n log k). Acceptable, but name the better option.
+        kind: concept
+      - t: Binary search
+        kind: concept
+        why: There is no sorted structure to search.
+    explain: '"k closest/largest/smallest" → heap of size k (Module 7).'
+    hints:
+      - You need only k of n items.
+  - id: ex-13
+    legacyId: w3sat-13
+    type: pattern
+    tag: 13 / 15
+    q: Determine if a linked list has a cycle using O(1) memory.
+    options:
+      - t: Fast and slow pointers
+        ok: true
+      - t: A Set of visited nodes
+        kind: concept
+        why: Works but uses O(n) memory, which the problem forbids.
+      - t: Recursion
+        kind: concept
+        why: Recursion uses O(n) stack and would not terminate on a cycle without a visited set.
+    explain: 'Module 4: Floyd''s cycle detection.'
+    hints:
+      - O(1) memory rules out remembering nodes.
+  - id: ex-14
+    legacyId: w3sat-14
+    type: pattern
+    tag: 14 / 15
+    q: Given a binary tree, return the values visible from the right side.
+    options:
+      - t: Level-order BFS (last node per level)
+        ok: true
+      - t: Inorder traversal
+        kind: concept
+        why: Inorder does not group nodes by level.
+      - t: Always follow right children
+        kind: concept
+        why: A left subtree can be deeper and visible from the right.
+    explain: Views and levels → BFS by level (Module 6).
+    hints:
+      - What do the visible nodes have in common?
+  - id: ex-15
+    legacyId: w3sat-15
+    type: pattern
+    tag: 15 / 15
+    q: Given a stream of numbers, report the median after each insertion.
+    options:
+      - t: Two heaps (max-heap of the lower half, min-heap of the upper half)
+        ok: true
+      - t: Sort after every insertion
+        kind: concept
+        why: O(n log n) per insertion.
+      - t: A hash map
+        kind: concept
+        why: Hash maps keep no order.
+    explain: Running median → two heaps (Module 7).
+    hints:
+      - You need fast access to the middle, not to everything.
+annotated: []

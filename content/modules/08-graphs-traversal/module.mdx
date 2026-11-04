@@ -1,0 +1,23 @@
+---
+number: 8
+slug: graphs-traversal
+title: 'Graphs I: traversal, components, BFS shortest paths, topological sort'
+legacyId: w8
+objectives: '**A. Learning objectives.** By the end of this module you can: turn an edge list or grid into an adjacency structure; write BFS and DFS (recursive and iterative) with correct visited handling; count connected components; run multi-source BFS for shortest distances in unweighted graphs; detect cycles in undirected and directed graphs; produce a topological order with Kahn''s algorithm and with DFS; check bipartiteness by 2-colouring.'
+shortOnTime: keep 200, 547, 994, 207, 210 and 785. Drop 733, 1971, 1091 and 130. Graphs are a high-frequency topic; protect at least 90 minutes for each of lessons 1–4.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+A graph is any set of things with connections between them: cells in a grid, courses with prerequisites, people who know each other. Every problem this module is a traversal (DFS or BFS) plus one extra idea: count the components, measure distance in layers, respect edge direction, or colour as you go.
+
+| Lesson | Topic | The extra idea |
+| --- | --- | --- |
+| 1 | Representations, grids, DFS/BFS | mark visited when you push |
+| 2 | Components, matrix input, cloning | loop over every node, not just node 0 |
+| 3 | BFS shortest paths, multi-source | all sources at distance 0 at once |
+| 4 | Directed graphs, topological sort | three states; in-degree 0 goes next |
+| 5 | Bipartite, reverse search | two colours; search from the targets |
+| Checkpoint | **Assessment 4** | Module 8 milestone check |
+
+</Unit>

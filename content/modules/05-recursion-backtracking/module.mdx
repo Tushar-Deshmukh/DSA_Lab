@@ -1,0 +1,24 @@
+---
+number: 5
+slug: recursion-backtracking
+title: Recursion and backtracking
+legacyId: w5
+objectives: '**A. Learning objectives.** By the end of this module you can: define a recursive function by its contract ("what does f(state) return?"), base case and transition; draw a recursion tree and derive time and space complexity from it; generate subsets, permutations and combinations without memorised templates; handle duplicates by sorting and skipping; prune impossible branches; backtrack on a grid by marking and restoring cells.'
+shortOnTime: the four patterns live in 78, 46, 39 and 79; keep those. Drop 509, 24, 131 and 17, and do 77 as a later warm-up. Do not skip Mock 1; it is the first realistic signal of interview readiness.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Recursion is the first technique where you are not supposed to trace everything in your head. You write down what a call *returns*, trust the recursive calls to keep that promise, and check only the base case and one step. Backtracking applies the same trust to search: make a choice, explore, undo it.
+
+| Lesson | Topic | The question you answer before coding |
+| --- | --- | --- |
+| 1 | Recursion, call stack, recursion trees | What does `f(state)` return? |
+| 2 | Subsets and duplicates | What decision does each level make? |
+| 3 | Permutations, combinations, pruning | What do I need to know to make the rest? |
+| 4 | Combination Sum, letter combinations | Can an element be reused? |
+| 5 | Grids and strings | What do I mark, and when do I restore it? |
+
+The checkpoint is **Mock 1**, the first timed interview with a rubric.
+
+</Unit>

@@ -1,0 +1,88 @@
+---
+slug: bfs-shortest-paths-multi-source
+legacyId: w8d3
+title: BFS shortest paths and multi-source BFS
+goal: Find shortest paths in unweighted graphs and grids with BFS, process BFS level by level as time steps, and start from many sources at once.
+why: '"Minimum number of steps" is one of the most common interview phrasings, and BFS is the answer whenever every step costs the same. Multi-source BFS turns "distance to the nearest X" from many searches into one.'
+prereqs:
+  - Level-order BFS with a size snapshot (Module 6 lesson 2)
+outcomes:
+  - Explain why BFS's first arrival at a node is along a shortest path
+  - Compute BFS distances with a `dist` array set on enqueue
+  - Run multi-source BFS with all sources at distance 0
+  - Handle 8 directions and blocked endpoints (1091)
+ready:
+  - 994 processes one minute per BFS level and returns −1 correctly
+  - I rebuilt the rotting-oranges table myself
+  - I can say why DFS cannot find shortest paths in general
+summary:
+  - 'BFS visits nodes in non-decreasing distance: first arrival = shortest path (unweighted).'
+  - '`dist[v] = dist[u] + 1` when enqueuing; −1 means unreached.'
+  - 'Multi-source: enqueue every source at distance 0, then one BFS.'
+  - 'Levels = time steps: snapshot the size, process the level, minute++.'
+  - Weighted edges → Dijkstra (Module 9).
+revision: Explain in two sentences why multi-source BFS gives each cell its distance to the *nearest* source, and what 994 returns when a fresh orange is unreachable.
+warmup:
+  problem: 547
+topic: BFS shortest paths; multi-source BFS; 8-direction moves
+implement: Rebuild the rotting-oranges table from the module theory yourself
+problemsText: 'C: 994, 1091 · S: 542 · O: 127'
+problems:
+  - num: 994
+    tier: C
+  - num: 1091
+    tier: C
+  - num: 542
+    tier: S
+  - num: 127
+    tier: O
+doneWhen: 994 processes one minute per BFS level and returns −1 correctly
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="shortest-paths-in-unweighted-graphs" kind="theory" title="Shortest paths in unweighted graphs">
+
+<Include id="patterns/bfs-shortest-path" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="multi-source-bfs" kind="theory" title="Multi-source BFS">
+
+<Include id="theory/graphs-traversal/multi-source-bfs" />
+
+<Include id="theory/graphs-traversal/example-2" />
+
+<Viz id="rotting" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="8-directions-and-blocked-ends" kind="theory" title="8 directions and blocked ends">
+
+Shortest Path in Binary Matrix (1091) adds two details: moves go in 8 directions, and the path length counts **cells** (so the start alone is length 1). If the start or the end cell is blocked, the answer is −1 before any search.
+
+<Viz id="grid-bfs" />
+
+<Callout kind="tip" title="Optional: Word Ladder (127)">
+
+An implicit graph: words are nodes and two words are adjacent if they differ by one letter. Comparing every pair of words is O(N² · L). Instead bucket words by patterns with one wildcard (`h*t` → hot, hit); words in the same bucket are neighbours. Then it is plain BFS.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

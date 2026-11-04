@@ -1,0 +1,19 @@
+---
+slug: recursive-thinking-the-contract
+title: 'Recursive thinking: the contract'
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: 'Recursive thinking: the contract'
+  lines:
+    - 977
+    - 981
+---
+
+**Recursive thinking: the contract.** Write one sentence before coding: "`f(i, remaining)` returns / produces …". Then:
+
+1. *Base case(s):* the smallest inputs you can answer directly (empty list, index past the end, target reached or exceeded).
+2. *Transition:* express f in terms of f on smaller inputs, assuming those calls are correct ("leap of faith").
+3. *Progress:* every call must move strictly toward a base case, or recursion never stops.

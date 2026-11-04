@@ -1,0 +1,25 @@
+---
+slug: stack-for-matching-and-evaluation
+number: '4.3'
+title: Stack for matching and evaluation
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Pattern 4.3
+  lines:
+    - 949
+    - 958
+---
+
+**Pattern 4.3: Stack for matching and evaluation**
+
+1. *Recognise:* nested structure, "most recent unmatched", postfix evaluation, undo.
+2. *Clues:* "valid parentheses", "decode", "evaluate", "simplify path", "backspace".
+3. *From brute force:* repeatedly removing matched pairs is O(n²); a stack resolves each item once.
+4. *Why it works:* the most recently opened item must close first (LIFO matches nesting).
+5. *Template:* push openers; on a closer, check the top matches and pop; valid if the stack ends empty.
+6. *Complexity:* O(n), O(n).
+7. *Variations:* min-stack (155: store `[val, minSoFar]` pairs), RPN (150: pop two operands, mind operand order and `Math.trunc` for division).
+8. *Inappropriate when:* only counts matter (a single counter suffices for one bracket type).

@@ -1,0 +1,250 @@
+exercises:
+  - id: ex-01
+    legacyId: w1d2-1
+    type: complexity
+    tag: Hidden cost
+    q: What is the time complexity of draining an array of n elements like this?
+    code: |
+      while (queue.length) {
+        const x = queue.shift();
+        process(x);
+      }
+    fields:
+      - label: Time
+        answer: O(n²)
+        why:
+          O(n): 'Each `shift` moves all the remaining elements: (n − 1) + (n − 2) + … = O(n²).'
+    explain: 'Use a head pointer instead: `for (let head = 0; head < queue.length; head++) process(queue[head]);` is O(n).'
+    hints:
+      - What does one `shift` cost on an array of length k?
+  - id: ex-02
+    legacyId: w1d2-2
+    type: predict
+    tag: The shared-row bug
+    q: What does this print?
+    code: |
+      const bad = new Array(3).fill([]);
+      bad[0].push(7);
+      const good = Array.from({ length: 3 }, () => []);
+      good[0].push(7);
+      console.log(JSON.stringify(bad), JSON.stringify(good));
+    answer: '[[7],[7],[7]] [[7],[],[]]'
+    traps:
+      '[[7],[],[]] [[7],[],[]]': '`fill([])` evaluates `[]` once and puts the *same* array in every slot, so pushing to one row shows up in all three.'
+    explain: '`fill` copies one reference three times. `Array.from` with a function calls it once per row, creating three separate arrays.'
+    hints:
+      - How many times is `[]` evaluated in `fill([])`?
+  - id: ex-03
+    legacyId: w1d2-3
+    type: trace
+    tag: Lesson 2 dry run
+    q: Run `removeDuplicates` on `[0,0,1,1,1,2,2,3,3,4]`. Fill in `write` after the given `read` steps, then the return value.
+    rows:
+      - prompt: write after read = 1
+        answer: '1'
+        why: 'nums[1] = 0 equals the last kept 0: skip.'
+      - prompt: write after read = 2
+        answer: '2'
+        why: '1 ≠ 0: copy to index 1, write = 2.'
+      - prompt: write after read = 5
+        answer: '3'
+        why: 'nums[5] = 2 ≠ 1: copy to index 2, write = 3.'
+      - prompt: Returned length
+        answer: '5'
+        why: Kept values 0, 1, 2, 3, 4.
+    verify: |
+      const nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]; let write = 1; const W = {};
+      for (let read = 1; read < nums.length; read++) { if (nums[read] !== nums[write - 1]) { nums[write] = nums[read]; write++; } W[read] = write; }
+      console.log(W[1]); console.log(W[2]); console.log(W[5]); console.log(write);
+    explain: 'The invariant: nums[0..write−1] holds the distinct values seen so far, in order.'
+    hints:
+      - Compare nums[read] with nums[write − 1], the last value you kept.
+  - id: ex-04
+    legacyId: w1d2-4
+    type: fill
+    tag: From memory
+    q: Complete `removeDuplicates` (problem 26).
+    template: |
+      function removeDuplicates(nums) {
+        if (nums.length === 0) return 0;
+        let write = 1;
+        for (let read = 1; read < nums.length; read++) {
+          if (nums[read] !== [[0]]) {
+            nums[write] = nums[read];
+            [[1]];
+          }
+        }
+        return [[2]];
+      }
+    blanks:
+      - accept:
+          - nums[write - 1]
+          - nums[write-1]
+      - accept:
+          - write++
+          - write += 1
+          - ++write
+          - write = write + 1
+      - accept:
+          - write
+    fn: removeDuplicates
+    adapt:
+      ret: arg0prefix
+    tests:
+      - args:
+          - - 1
+            - 1
+            - 2
+        expect:
+          - 1
+          - 2
+      - args:
+          - - 0
+            - 0
+            - 1
+            - 1
+            - 1
+            - 2
+            - 2
+            - 3
+            - 3
+            - 4
+        expect:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      - args:
+          - - 5
+        expect:
+          - 5
+      - args:
+          - - 2
+            - 2
+            - 2
+        expect:
+          - 2
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+    explain: The tests check the first `k` elements of the array, where `k` is your return value, just as LeetCode does.
+    hints:
+      - Which value should a new element be compared with?
+  - id: ex-05
+    legacyId: w1d2-5
+    type: bug
+    tag: Invariant check
+    q: This version gives `[1, 0, 3, 12, 0]` for `[0, 1, 0, 3, 12]` — a zero is left in the middle. Click the buggy line.
+    code: |
+      function moveZeroes(nums) {
+        let write = 0;
+        for (let read = 0; read < nums.length; read++) {
+          if (nums[read] !== 0) {
+            [nums[write], nums[read]] = [nums[read], nums[write]];
+          }
+          write++;
+        }
+      }
+    bug:
+      - 6
+    kind: impl
+    explain: '`write` must advance only when a non-zero is placed. Here it advances on every element, so it keeps pace with `read` and swaps become no-ops or misplace zeros. Move `write++` inside the `if`.'
+    fix: |
+      if (nums[read] !== 0) {
+        [nums[write], nums[read]] = [nums[read], nums[write]];
+        write++;
+      }
+    fine:
+      '3': Testing for non-zero is correct.
+      '4': 'The swap itself is right: it moves the non-zero forward and the zero back.'
+    hints:
+      - What should `write` count?
+  - id: ex-06
+    legacyId: w1d2-6
+    type: interview
+    title: Remove Element (LeetCode 27)
+    q: 'Given `nums` and a value `val`, remove all occurrences of `val` in place and return the number `k` of remaining elements. The first `k` elements of `nums` must hold the remaining values (in any order); the rest do not matter. Example: `nums = [3,2,2,3]`, `val = 3` → 2, with `nums` starting `[2,2]`.'
+    model:
+      clarify: |
+        - In place, O(1) extra space.
+        - Order of the kept elements does not matter (but keeping it is fine).
+        - Can the array be empty? (Yes → 0.)
+      brute: 'Build a filtered copy and write it back: O(n) time but O(n) extra space, which breaks the in-place requirement. Or `splice` each match out: O(n²).'
+      optimize: 'Read/write pointers: `write` marks the end of the kept prefix; for each `read`, if `nums[read] !== val`, copy it to `nums[write++]`. Invariant: `nums[0..write−1]` holds exactly the non-`val` elements seen so far.'
+      edges: |
+        - Empty array → 0
+        - Every element equals val → 0
+        - No element equals val → n
+      complexity: O(n) time, O(1) extra space.
+    fn: removeElement
+    adapt:
+      ret: arg0prefix
+    compare: sorted
+    starter: |
+      function removeElement(nums, val) {
+
+      }
+    solution: |
+      function removeElement(nums, val) {
+        let write = 0;
+        for (let read = 0; read < nums.length; read++) {
+          if (nums[read] !== val) nums[write++] = nums[read];
+        }
+        return write;
+      }
+    tests:
+      - args:
+          - - 3
+            - 2
+            - 2
+            - 3
+          - 3
+        expect:
+          - 2
+          - 2
+      - args:
+          - - 0
+            - 1
+            - 2
+            - 2
+            - 3
+            - 0
+            - 4
+            - 2
+          - 2
+        expect:
+          - 0
+          - 0
+          - 1
+          - 3
+          - 4
+      - args:
+          - []
+          - 1
+        expect: []
+        hidden: true
+      - args:
+          - - 4
+            - 4
+          - 4
+        expect: []
+        hidden: true
+      - args:
+          - - 1
+            - 2
+          - 9
+        expect:
+          - 1
+          - 2
+        hidden: true
+    explain: The tests look at the first k elements (in sorted order, since any order is allowed).
+    hints:
+      - Keep a write index for the next kept element.
+      - Copy only when nums[read] is not val.
+annotated: []

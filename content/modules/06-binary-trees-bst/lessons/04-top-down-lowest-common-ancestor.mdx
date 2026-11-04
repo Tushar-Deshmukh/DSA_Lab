@@ -1,0 +1,77 @@
+---
+slug: top-down-lowest-common-ancestor
+legacyId: w6d4
+title: Top-down recursion and the lowest common ancestor
+goal: Pass information from ancestors down as parameters, collect root-to-leaf paths with backtracking, and find the LCA with a three-case contract.
+why: Path questions and LCA appear constantly. LCA is the clearest example of a recursion whose return value means different things in different cases, which is exactly why interviewers ask you to state its contract.
+prereqs:
+  - Preorder and bottom-up recursion (lessons 1 and 3)
+  - Backtracking with push/pop (Module 5)
+outcomes:
+  - Pass running state (remaining sum, max so far, bounds) to children
+  - Check path sums at leaves only
+  - Collect paths with push / recurse / pop and copy at leaves
+  - 'State 236''s contract: what the function returns in each of the three cases'
+ready:
+  - 'I can state 236''s contract: what the function returns in each of the 3 cases'
+  - I traced 236's return values on `[3,5,1,6,2,0,8]` for p = 6, q = 2
+  - I know why 112 checks only at leaves
+summary:
+  - 'Top-down: `f(node, state)`; each call gets exactly the summary of its ancestors it needs.'
+  - 'Path Sum: subtract on the way down; check `rest === 0` only at leaves.'
+  - 'Path Sum II: push, recurse, pop; copy the path at leaves.'
+  - 'LCA (236): return node if it is p or q; if both sides are non-null, return node; else return the non-null side.'
+  - O(n) time, O(h) space.
+revision: Write the LCA contract as three bullet points from memory, then trace it on `[3,5,1,6,2,0,8]` for p = 6, q = 2.
+warmup:
+  problem: 543
+topic: Top-down parameters; path collection with backtracking; LCA in a binary tree
+implement: Trace 236's return values on `[3,5,1,6,2,0,8]` for p = 6, q = 2
+problemsText: 'C: 112, 236 · S: 113, 1448'
+problems:
+  - num: 112
+    tier: C
+  - num: 236
+    tier: C
+  - num: 113
+    tier: S
+  - num: 1448
+    tier: S
+doneWhen: 'You can state 236''s contract: what the function returns in each of the 3 cases'
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="passing-information-down" kind="theory" title="Passing information down">
+
+<Include id="patterns/top-down-recursion" />
+
+<Viz id="tree-pathsum" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="lowest-common-ancestor" kind="theory" title="Lowest common ancestor">
+
+<Include id="theory/binary-trees-bst/lowest-common-ancestor" />
+
+<Viz id="tree-lca" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

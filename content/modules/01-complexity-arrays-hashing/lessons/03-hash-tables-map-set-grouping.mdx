@@ -1,0 +1,117 @@
+---
+slug: hash-tables-map-set-grouping
+legacyId: w1d3
+title: Hash tables, Map, Set and grouping
+goal: Explain how a hash table achieves O(1) average lookups and when it degrades, use `Map` and `Set` correctly in JavaScript, and group items by a canonical key.
+why: Hash maps are the most used data structure in interviews. Knowing *why* they are fast lets you say "O(1) average" with confidence, and knowing JavaScript's object pitfalls stops subtle bugs with numeric and inherited keys.
+prereqs:
+  - Two Sum with a Map (lesson 1)
+  - '`charCodeAt` and string iteration'
+outcomes:
+  - Describe hashing, collisions, chaining and the load factor, and why lookup is O(1) average and O(n) worst case
+  - Choose between `Map`, `Set`, a plain object and a 26-slot array
+  - Count characters with a Map and with an array
+  - 'Give two grouping keys for Group Anagrams: sorted string and count signature'
+ready:
+  - I can explain why lookup is O(1) average and when it becomes O(n)
+  - I can give the grouping key for 49 two ways (sorted string, count signature) and their costs
+  - I wrote a frequency counter with a `Map` and with a 26-slot array
+summary:
+  - Hash → bucket index; collisions share a bucket (chaining); resize when the load factor passes a threshold.
+  - O(1) average assumes a good hash and resizing; adversarial collisions give O(n).
+  - 'Prefer `Map`: keys keep their type, no inherited keys, O(1) `size`.'
+  - 'Arrays as Map keys compare by reference: encode them as strings or numbers.'
+  - Grouping = canonical key + `Map<key, list>`. Sorted key O(k log k); count key O(k).
+revision: Explain in three sentences how a lookup finds a key in a hash table and why resizing keeps it fast. Then write both grouping keys for "eat".
+warmup:
+  problem: 26
+topic: 'Hash tables: hashing, collisions, load factor, average vs worst case; Map vs object; Set (6.2)'
+implement: 'Frequency counter twice: with `Map` and with a 26-slot array'
+problemsText: 'C: 242, 49 · S: 128'
+problems:
+  - num: 242
+    tier: C
+  - num: 49
+    tier: C
+  - num: 128
+    tier: S
+doneWhen: You can explain why lookup is O(1) average and give the grouping key for 49 two ways (sorted string, count signature)
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="how-a-hash-table-works" kind="theory" title="How a hash table works">
+
+<Include id="theory/complexity-arrays-hashing/hash-tables" />
+
+The visualizer uses a deliberately simple hash (`h = h·31 + charCode`) and a small table so you can see collisions and a resize happen. Real engines use better hash functions and different thresholds, but the mechanism is the same.
+
+<Viz id="hash-buckets" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="map-set-and-plain-objects-in-javascript" kind="reference" title="Map, Set and plain objects in JavaScript">
+
+<Include id="theory/complexity-arrays-hashing/map-set-and-plain-objects" />
+
+<Include id="handbook/javascript-reference/map-set-and-objects" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="counting-map-or-a-26-slot-array" kind="code" title="Counting: Map or a 26-slot array">
+
+When keys are lowercase letters, a plain array of 26 counts is faster and clearer than a Map. Valid Anagram (242) shows it: count up for `s`, down for `t`, and check that everything returns to zero.
+
+<Viz id="anagram-count" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="grouping-by-a-canonical-key" kind="theory" title="Grouping by a canonical key">
+
+Group Anagrams (49) compares many words at once. Comparing every pair of words would be O(n²) comparisons. Instead compute a **key** that is identical for anagrams and different otherwise, then put each word in the list for its key.
+
+<Viz id="group-anagrams" />
+
+<Include id="patterns/frequency-map-and-grouping" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="stretch-longest-consecutive-sequence" kind="stretch" title="Stretch: Longest Consecutive Sequence">
+
+Problem 128 asks for O(n). Sorting would be O(n log n). The trick is to put everything in a Set and **only start counting at the beginning of a run**: a value x where x − 1 is absent. Every value is then visited a constant number of times.
+
+<Viz id="longest-consec" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+<Callout kind="mistake" title="Mistakes to watch for in this lesson">
+
+- Using a plain object as a counter with numeric keys, then being surprised that keys come back as strings.
+- `map[key] = value` on a `Map`: it sets an object property, not a Map entry. Use `set` and `get`.
+- Using arrays as Map keys.
+- Joining counts without a separator in a count signature.
+- Saying "O(1)" for a hash lookup without "average".
+
+</Callout>
+
+</Unit>

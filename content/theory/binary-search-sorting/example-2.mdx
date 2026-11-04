@@ -1,0 +1,31 @@
+---
+slug: example-2
+title: Example 2
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Example 2
+  lines:
+    - 654
+    - 670
+---
+
+**Example 2: minimum in a rotated sorted array (153).**
+
+```js
+function findMin(nums) {
+  let lo = 0, hi = nums.length - 1;     // the minimum is always in [lo, hi]
+  while (lo < hi) {
+    const mid = lo + ((hi - lo) >> 1);
+    // the drop is to the right of mid
+    if (nums[mid] > nums[hi]) lo = mid + 1;
+    // mid..hi is sorted; min is mid or left
+    else hi = mid;
+  }
+  return nums[lo];
+}
+```
+
+Dry run `[4,5,6,7,0,1,2]`: (0,6) mid=3: 7 > 2 → lo=4; (4,6) mid=5: 1 ≤ 2 → hi=5; (4,5) mid=4: 0 ≤ 1 → hi=4; return 0. Comparing with `nums[hi]` (not `nums[lo]`) avoids the special case of an unrotated array.

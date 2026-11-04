@@ -1,0 +1,420 @@
+exercises:
+  - id: ex-01
+    legacyId: w9d1-1
+    type: trace
+    tag: Dijkstra by hand
+    q: 'Run Dijkstra from node 1 on the visualizer''s default graph: directed edges 1→2 (4), 1→3 (1), 3→2 (2), 2→4 (1), 3→4 (5), 4→5 (3). Fill in the table before stepping through it.'
+    rows:
+      - prompt: Order in which nodes are finalised, comma-separated
+        answer: 1,3,2,4,5
+      - prompt: dist[2] right after node 3 is processed
+        answer: '3'
+        why: 1 + 2 = 3 beats the direct edge's 4.
+      - prompt: Final distances for nodes 1..5, as a list
+        answer: '[0,3,1,4,7]'
+      - prompt: How many stale heap entries are popped and skipped?
+        answer: '2'
+        why: '[4, 2] (node 2 improved to 3) and [6, 4] (node 4 improved to 4).'
+    verify: |
+      const edges = [[1, 2, 4], [1, 3, 1], [3, 2, 2], [2, 4, 1], [3, 4, 5], [4, 5, 3]];
+      const adj = Array.from({ length: 6 }, () => []); for (const [u, v, w] of edges) adj[u].push([v, w]);
+      const dist = new Array(6).fill(Infinity); dist[1] = 0; let heap = [[0, 1]]; const order = []; let stale = 0, after3 = null;
+      while (heap.length) { heap.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const [d, u] = heap.shift(); if (d > dist[u]) { stale++; continue; } order.push(u); for (const [v, w] of adj[u]) if (d + w < dist[v]) { dist[v] = d + w; heap.push([dist[v], v]); } if (u === 3) after3 = dist[2]; }
+      console.log(order.join(',')); console.log(after3); console.log(JSON.stringify(dist.slice(1))); console.log(stale);
+    explain: Each node can be pushed several times, once per improvement; only the entry carrying its final distance does any work.
+    hints:
+      - Write the heap contents after every pop.
+      - An entry [d, v] is stale when dist[v] is already smaller than d.
+  - id: ex-02
+    legacyId: w9d1-2
+    type: mcq
+    tag: Visited on push?
+    q: In BFS you mark a node visited when you push it. Why is the same rule **wrong** in Dijkstra?
+    options:
+      - t: 'A node''s first tentative distance may not be its shortest: a cheaper path through a node popped later can still improve it, and a visited-on-push rule would refuse that update.'
+        ok: true
+        why: In the default graph, node 2 is first reached at 4 and later improved to 3 via node 3.
+      - t: It is not wrong, only slower.
+        why: 'It gives wrong answers, not just slow ones: the improvement is never recorded.'
+        kind: concept
+      - t: Because Dijkstra uses a stack.
+        why: Dijkstra uses a min-heap, which is exactly what makes popping in distance order possible.
+        kind: concept
+    explain: In Dijkstra a node is final when it is **popped** (with a non-stale entry), not when it is first seen.
+    hints:
+      - When node 2 is first discovered, is its distance already final?
+  - id: ex-03
+    legacyId: w9d1-3
+    type: bug
+    tag: The wrong visited rule
+    q: This Network Delay Time returns too large an answer on some graphs. Click the line that causes it. (`MinHeap` is the class from Module 7.)
+    code: |
+      function networkDelayTime(times, n, k) {
+        const adj = Array.from({ length: n + 1 }, () => []);
+        for (const [u, v, w] of times) adj[u].push([v, w]);
+        const dist = new Array(n + 1).fill(Infinity); dist[k] = 0;
+        const seen = new Set([k]), heap = new MinHeap((a, b) => a[0] - b[0]); heap.push([0, k]);
+        while (heap.size()) {
+          const [d, u] = heap.pop();
+          for (const [v, w] of adj[u]) {
+            if (seen.has(v)) continue;
+            seen.add(v); dist[v] = d + w; heap.push([dist[v], v]);
+          }
+        }
+        let ans = 0;
+        for (let i = 1; i <= n; i++) ans = Math.max(ans, dist[i]);
+        return ans === Infinity ? -1 : ans;
+      }
+    bug:
+      - 8
+      - 9
+    kind: concept
+    explain: 'The `seen` check freezes the **first** distance found for each node. On edges 1→2 (4), 1→3 (1), 3→2 (2) it keeps dist[2] = 4 instead of 3. Drop `seen` and relax normally: `if (d > dist[u]) continue;` after the pop, and `if (d + w < dist[v])` before updating.'
+    fix: |
+      // after the pop:
+      if (d > dist[u]) continue;
+      // for each edge:
+      if (d + w < dist[v]) { dist[v] = d + w; heap.push([dist[v], v]); }
+    fine:
+      '4': A heap ordered by distance is correct.
+      '13': Taking the maximum distance is the right answer for 743.
+      '14': Returning −1 for an unreachable node is correct.
+    hints:
+      - Can a node's distance improve after it is first discovered?
+  - id: ex-04
+    legacyId: w9d1-4
+    type: code
+    tag: Network Delay Time (743)
+    q: 'Write `networkDelayTime(times, n, k)`: nodes are 1..n, `times[i] = [u, v, w]` is a directed edge, and the answer is the time for a signal from `k` to reach every node, or −1 if some node is unreachable. A `MinHeap` is provided.'
+    fn: networkDelayTime
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function networkDelayTime(times, n, k) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function networkDelayTime(times, n, k) {
+        const adj = Array.from({ length: n + 1 }, () => []);
+        for (const [u, v, w] of times) adj[u].push([v, w]);
+        const dist = new Array(n + 1).fill(Infinity); dist[k] = 0;
+        const heap = new MinHeap((a, b) => a[0] - b[0]); heap.push([0, k]);
+        while (heap.size()) {
+          const [d, u] = heap.pop();
+          if (d > dist[u]) continue;
+          for (const [v, w] of adj[u]) if (d + w < dist[v]) { dist[v] = d + w; heap.push([dist[v], v]); }
+        }
+        let ans = 0;
+        for (let i = 1; i <= n; i++) ans = Math.max(ans, dist[i]);
+        return ans === Infinity ? -1 : ans;
+      }
+    tests:
+      - args:
+          - - - 2
+              - 1
+              - 1
+            - - 2
+              - 3
+              - 1
+            - - 3
+              - 4
+              - 1
+          - 4
+          - 2
+        expect: 2
+      - args:
+          - - - 1
+              - 2
+              - 1
+          - 2
+          - 1
+        expect: 1
+      - args:
+          - - - 1
+              - 2
+              - 1
+          - 2
+          - 2
+        expect: -1
+      - args:
+          - - - 1
+              - 2
+              - 4
+            - - 1
+              - 3
+              - 1
+            - - 3
+              - 2
+              - 2
+            - - 2
+              - 4
+              - 1
+            - - 3
+              - 4
+              - 5
+            - - 4
+              - 5
+              - 3
+          - 5
+          - 1
+        expect: 7
+        hidden: true
+      - args:
+          - - - 1
+              - 2
+              - 1
+            - - 2
+              - 3
+              - 2
+            - - 1
+              - 3
+              - 4
+          - 3
+          - 1
+        expect: 3
+        hidden: true
+    explain: The hidden tests include a node that is improved after it is first reached; a visited-on-push version fails them.
+    hints:
+      - Build `adj` for nodes 1..n (size n + 1).
+      - Pop, skip if stale, relax each outgoing edge.
+      - The answer is the largest finite distance, or −1 if any is ∞.
+  - id: ex-05
+    legacyId: w9d1-5
+    type: mcq
+    tag: Pick the algorithm
+    q: Which pairing is right? Select all that apply.
+    options:
+      - t: Unweighted grid, fewest steps → plain BFS
+        ok: true
+        why: 'Every edge costs 1, so BFS layers are distances: O(V + E), no heap.'
+      - t: Weights are only 0 or 1 → 0-1 BFS with a deque (0-edges to the front, 1-edges to the back)
+        ok: true
+        why: It keeps the deque in distance order without a heap.
+      - t: Some edges have negative weights → Dijkstra with a stale check
+        why: A negative edge can lower a distance after its node was popped as final. Use Bellman-Ford, O(V·E).
+        kind: concept
+      - t: Non-negative weights that differ → Dijkstra
+        ok: true
+        why: The standard case.
+    explain: 'Choose by the weights: none → BFS, 0/1 → 0-1 BFS, non-negative → Dijkstra, negative → Bellman-Ford.'
+    hints:
+      - What property of the weights does Dijkstra's correctness argument need?
+  - id: ex-06
+    legacyId: w9d1-6
+    type: fill
+    tag: Minimax relaxation (1631)
+    q: 'Complete the relaxation in `minimumEffortPath(heights)`: the effort of a route is its largest absolute height difference between adjacent cells.'
+    template: |
+      class MinHeap {
+        constructor(compare) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function minimumEffortPath(heights) {
+        const m = heights.length, n = heights[0].length;
+        const best = Array.from({ length: m }, () => new Array(n).fill(Infinity));
+        best[0][0] = 0;
+        const heap = new MinHeap((a, b) => a[0] - b[0]); heap.push([0, 0, 0]);
+        while (heap.size()) {
+          const [d, r, c] = heap.pop();
+          if (d > best[r][c]) continue;
+          if (r === m - 1 && c === n - 1) return d;
+          for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+            const nr = r + dr, nc = c + dc;
+            if (nr < 0 || nr >= m || nc < 0 || nc >= n) continue;
+            const nd = [[0]];
+            if (nd < best[nr][nc]) { best[nr][nc] = nd; heap.push([nd, nr, nc]); }
+          }
+        }
+        return 0;
+      }
+    blanks:
+      - accept:
+          - Math.max(d, Math.abs(heights[nr][nc] - heights[r][c]))
+          - Math.max(d, Math.abs(heights[r][c] - heights[nr][nc]))
+          - Math.max(Math.abs(heights[nr][nc] - heights[r][c]), d)
+          - Math.max(Math.abs(heights[r][c] - heights[nr][nc]), d)
+    fn: minimumEffortPath
+    tests:
+      - args:
+          - - - 1
+              - 2
+              - 2
+            - - 3
+              - 8
+              - 2
+            - - 5
+              - 3
+              - 5
+        expect: 2
+      - args:
+          - - - 1
+              - 2
+              - 3
+            - - 3
+              - 8
+              - 4
+            - - 5
+              - 3
+              - 5
+        expect: 1
+      - args:
+          - - - 1
+              - 2
+              - 1
+              - 1
+              - 1
+            - - 1
+              - 2
+              - 1
+              - 2
+              - 1
+            - - 1
+              - 2
+              - 1
+              - 2
+              - 1
+            - - 1
+              - 2
+              - 1
+              - 2
+              - 1
+            - - 1
+              - 1
+              - 1
+              - 2
+              - 1
+        expect: 0
+      - args:
+          - - - 5
+        expect: 0
+    explain: Everything else is unchanged Dijkstra. Returning when the target is popped is safe because popped means final.
+    hints:
+      - The new path's cost is the worse of the old cost and this step.
+  - id: ex-07
+    legacyId: w9d1-7
+    type: interview
+    title: Path with Maximum Probability (LeetCode 1514)
+    q: 'An undirected graph of n nodes; edge `edges[i] = [a, b]` succeeds with probability `succProb[i]`. Return the maximum probability of a path from `start` to `end`, or 0 if there is none. Example: n = 3, edges `[[0,1],[1,2],[0,2]]`, succProb `[0.5,0.5,0.2]`, start 0, end 2 → 0.25.'
+    model:
+      clarify: |
+        - Probabilities are in [0, 1]; a path's probability is the product along it.
+        - Undirected: add both directions.
+        - Up to 10⁴ nodes and 2·10⁴ edges, so O(E log V) is needed.
+      brute: 'Enumerate simple paths with DFS and keep the best product: exponential.'
+      optimize: Dijkstra with a **max**-heap on probability. Multiplying by a number ≤ 1 never increases a path's value, which is the mirror image of 'adding a non-negative weight never decreases it', so the popped node's probability is final. Relax with `p * prob > best[v]`.
+      edges: |
+        - start not connected to end → 0
+        - an edge with probability 0
+        - a longer path with a higher product than the direct edge (the example)
+      complexity: O((V + E) log V) time, O(V + E) space.
+    fn: maxProbability
+    compare: float
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function maxProbability(n, edges, succProb, start, end) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function maxProbability(n, edges, succProb, start, end) {
+        const adj = Array.from({ length: n }, () => []);
+        edges.forEach(([a, b], i) => { adj[a].push([b, succProb[i]]); adj[b].push([a, succProb[i]]); });
+        const best = new Array(n).fill(0); best[start] = 1;
+        const heap = new MinHeap((a, b) => b[0] - a[0]); heap.push([1, start]);
+        while (heap.size()) {
+          const [p, u] = heap.pop();
+          if (p < best[u]) continue;
+          if (u === end) return p;
+          for (const [v, q] of adj[u]) if (p * q > best[v]) { best[v] = p * q; heap.push([best[v], v]); }
+        }
+        return 0;
+      }
+    tests:
+      - args:
+          - 3
+          - - - 0
+              - 1
+            - - 1
+              - 2
+            - - 0
+              - 2
+          - - 0.5
+            - 0.5
+            - 0.2
+          - 0
+          - 2
+        expect: 0.25
+      - args:
+          - 3
+          - - - 0
+              - 1
+            - - 1
+              - 2
+            - - 0
+              - 2
+          - - 0.5
+            - 0.5
+            - 0.3
+          - 0
+          - 2
+        expect: 0.3
+      - args:
+          - 3
+          - - - 0
+              - 1
+          - - 0.5
+          - 0
+          - 2
+        expect: 0
+      - args:
+          - 5
+          - - - 1
+              - 4
+            - - 2
+              - 4
+            - - 0
+              - 4
+            - - 0
+              - 3
+            - - 0
+              - 2
+            - - 2
+              - 3
+          - - 0.37
+            - 0.17
+            - 0.93
+            - 0.23
+            - 0.39
+            - 0.04
+          - 3
+          - 4
+        expect: 0.2139
+        hidden: true
+    explain: 'The stale check flips direction with the heap: skip an entry when its probability is **smaller** than the best already recorded.'
+    hints:
+      - What plays the role of 'distance', and is bigger or smaller better?
+      - Does multiplying by a probability ever make a path better? What does that guarantee?
+      - Use the MinHeap with a reversed comparator.
+annotated: []

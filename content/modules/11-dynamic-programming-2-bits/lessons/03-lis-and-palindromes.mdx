@@ -1,0 +1,78 @@
+---
+slug: lis-and-palindromes
+legacyId: w11d3
+title: LIS and palindromes
+goal: Solve Longest Increasing Subsequence in O(n²) with "ending at i", explain the O(n log n) tails method, and find or count palindromic substrings by expanding around all 2n − 1 centres.
+why: LIS is a top-10 DP interview problem, and the tails method is a common follow-up ("can you do better than O(n²)?"). Longest Palindromic Substring is one of the most asked string problems overall; expand-around-centre is the answer interviewers expect.
+prereqs:
+  - Lower-bound binary search (Module 3)
+  - Two pointers on palindromes (Module 2)
+outcomes:
+  - Solve 300 in O(n²) and say why the answer is max(dp), not dp[n − 1]
+  - Trace the tails method on `[10,9,2,5,3,7,101,18]` and explain why tails stays sorted
+  - Expand all centres of `"babad"`, odd and even
+  - Choose between expand-around-centre and interval DP
+ready:
+  - 300 solved in O(n²); tails method explained aloud
+  - I traced tails for `[10,9,2,5,3,7,101,18]`
+  - 5 returns the substring, not just its length
+summary:
+  - '`dp[i]` = LIS ending at i = 1 + max dp[j] for j < i with nums[j] < nums[i]; answer max(dp).'
+  - 'Tails: lower-bound position of x in tails, then set it; length = answer. O(n log n).'
+  - 'Palindromes: 2n − 1 centres (letters and gaps); expand while ends match. O(n²), O(1).'
+  - 'Interval DP: `pal[i][j] = s[i] === s[j] && (j − i < 2 || pal[i+1][j−1])`, by increasing length.'
+revision: Trace tails on `[0,1,0,3,2,3]` from memory and explain one replacement.
+warmup:
+  problem: 1143
+topic: 'LIS: O(n²) DP and the tails method; palindromes: expand-around-centre vs interval DP'
+implement: Tails trace for `[10,9,2,5,3,7,101,18]`; expand all centres of `"babad"`
+problemsText: 'C: 300, 5 · S: 647'
+problems:
+  - num: 300
+    tier: C
+  - num: 5
+    tier: C
+  - num: 647
+    tier: S
+doneWhen: 300 solved in O(n²); tails method explained aloud
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="longest-increasing-subsequence" kind="theory" title="Longest increasing subsequence">
+
+<Include id="theory/dynamic-programming-2-bits/longest-increasing-subsequence" />
+
+<Include id="theory/dynamic-programming-2-bits/example-3" />
+
+<Viz id="lis" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Include id="patterns/longest-increasing-subsequence-family" />
+
+</Unit>
+
+<Unit id="palindromic-substrings" kind="theory" title="Palindromic substrings">
+
+<Include id="theory/dynamic-programming-2-bits/palindromic-substrings" />
+
+<Viz id="pal-expand" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

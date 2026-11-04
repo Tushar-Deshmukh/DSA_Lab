@@ -1,0 +1,25 @@
+---
+slug: greedy-reachability-and-running-balance
+number: '9.4'
+title: Greedy reachability and running balance
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Pattern 9.4
+  lines:
+    - 1864
+    - 1873
+---
+
+**Pattern 9.4: Greedy reachability and running balance**
+
+1. *Recognise:* single pass where a running quantity (reach, fuel, last occurrence) decides feasibility.
+2. *Clues:* "can you reach the end", "minimum jumps", "gas station", "partition into as many parts as possible".
+3. *From brute force:* simulate from every start (O(n²)); one variable summarises everything needed.
+4. *Why it works:* problem-specific invariant: e.g. in 134, if the tank goes negative between start s and i, no station in \[s, i\] can be a valid start, so jump to i + 1.
+5. *Template:* one loop updating the running quantity; reset or fail when it crosses a threshold.
+6. *Complexity:* O(n), O(1).
+7. *Variations:* 763 partition labels (extend the current part to the last occurrence of every letter in it), 45 (levels of reach).
+8. *Inappropriate when:* choices interact non-locally (DP).

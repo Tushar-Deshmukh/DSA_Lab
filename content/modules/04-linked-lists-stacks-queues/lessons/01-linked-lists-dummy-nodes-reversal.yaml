@@ -1,0 +1,330 @@
+exercises:
+  - id: ex-01
+    legacyId: w4d1-1
+    type: mcq
+    tag: Costs
+    q: Which operations are O(1) on a singly linked list, given only the head (and, where stated, a reference to a node)? Select all that apply.
+    options:
+      - t: Insert a new node at the head
+        ok: true
+        why: '`head = new ListNode(x, head)`.'
+      - t: Read the 1,000th element
+        why: 'You must walk 999 next pointers: O(i).'
+        kind: concept
+      - t: Insert after a node you already hold
+        ok: true
+        why: '`node.next = new ListNode(x, node.next)`.'
+      - t: Delete a node you hold, in a singly linked list
+        why: 'You need its predecessor, and finding it means walking from the head: O(n). (Doubly linked lists make this O(1), which is why LRU uses one.)'
+        kind: concept
+    explain: Lists trade random access for cheap local edits.
+    hints:
+      - Which of these need you to find something first?
+  - id: ex-02
+    legacyId: w4d1-2
+    type: predict
+    tag: References
+    q: What does this print?
+    code: |
+      function ListNode(val = 0, next = null) { this.val = val; this.next = next; }
+      const c = new ListNode(3), b = new ListNode(2, c), a = new ListNode(1, b);
+      const alias = b;
+      alias.next = null;
+      const out = [];
+      for (let n = a; n; n = n.next) out.push(n.val);
+      console.log(out.join("->"));
+    answer: 1->2
+    traps:
+      1->2->3: '`alias` and `b` are the same node object. Setting `alias.next = null` cuts the list after 2.'
+    explain: Variables hold references. Changing a node through any reference changes the list everyone sees. This is why you must save `cur.next` before overwriting it.
+    hints:
+      - Is `alias` a copy of b or the same object?
+  - id: ex-03
+    legacyId: w4d1-3
+    type: trace
+    tag: On paper first
+    q: Reverse `1 → 2 → 3 → 4` iteratively. After each full loop iteration, write `prev,cur` as node values (use `null`).
+    rows:
+      - prompt: After iteration 1
+        answer: 1,2
+      - prompt: After iteration 2
+        answer: 2,3
+      - prompt: After iteration 4
+        answer:
+          - 4,null
+      - prompt: Returned head
+        answer: '4'
+    verify: |
+      function ListNode(v, n = null) { this.val = v; this.next = n; }
+      let head = null; for (const v of [4, 3, 2, 1]) head = new ListNode(v, head);
+      let prev = null, cur = head; const out = [];
+      while (cur) { const next = cur.next; cur.next = prev; prev = cur; cur = next; out.push((prev ? prev.val : 'null') + ',' + (cur ? cur.val : 'null')); }
+      console.log(out[0]); console.log(out[1]); console.log(out[3]); console.log(prev.val);
+    explain: Four nodes, four iterations, four arrows reversed. prev always points at the head of the already-reversed part.
+    hints:
+      - Each iteration moves both prev and cur one node to the right.
+  - id: ex-04
+    legacyId: w4d1-4
+    type: bug
+    tag: The lost reference
+    q: This reversal returns a one-node list. Click the line that must come first.
+    code: |
+      function reverseList(head) {
+        let prev = null, cur = head;
+        while (cur) {
+          cur.next = prev;
+          const next = cur.next;
+          prev = cur;
+          cur = next;
+        }
+        return prev;
+      }
+    bug:
+      - 3
+    kind: impl
+    explain: '`cur.next = prev` overwrites the only reference to the rest of the list before it is saved; `next` then equals `prev` (null on the first iteration) and the loop stops after one node. Save first: `const next = cur.next;` then rewire.'
+    fix: |
+      const next = cur.next;
+      cur.next = prev;
+    fine:
+      '1': 'Starting with prev = null is right: the old head becomes the tail.'
+      '8': 'Returning prev is right: it ends on the old tail, the new head.'
+    hints:
+      - On the first iteration, what does `cur.next` hold when line 5 reads it?
+  - id: ex-05
+    legacyId: w4d1-5
+    type: code
+    tag: Write it
+    q: Write `reverseList(head)` (problem 206) iteratively. `ListNode` is defined for you; the tests build the list from an array and read your returned list back.
+    fn: reverseList
+    adapt:
+      args:
+        - list
+      ret: list
+    starter: |
+      function reverseList(head) {
+
+      }
+    solution: |
+      function reverseList(head) {
+        let prev = null, cur = head;
+        while (cur) {
+          const next = cur.next;
+          cur.next = prev;
+          prev = cur;
+          cur = next;
+        }
+        return prev;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+        expect:
+          - 5
+          - 4
+          - 3
+          - 2
+          - 1
+      - args:
+          - - 1
+            - 2
+        expect:
+          - 2
+          - 1
+      - args:
+          - []
+        expect: []
+      - args:
+          - - 7
+        expect:
+          - 7
+        hidden: true
+      - args:
+          - - 1
+            - 1
+            - 2
+        expect:
+          - 2
+          - 1
+          - 1
+        hidden: true
+    explain: 'If your list printed forever, a node''s next was never set to null: the reader stops after 100,000 nodes.'
+    hints:
+      - 'Two pointers: prev (starts null) and cur (starts at head).'
+      - Save next, point back, advance both.
+  - id: ex-06
+    legacyId: w4d1-6
+    type: complexity
+    tag: Two versions
+    q: 'Reversing a list of n nodes:'
+    fields:
+      - label: Iterative, extra space
+        answer: O(1)
+      - label: Recursive, extra space
+        answer: O(n)
+        why:
+          O(1): 'Each call waits on the stack for the call on the rest of the list: n frames at the deepest point. JavaScript does not optimise tail calls, and this is not a tail call anyway.'
+    explain: Both are O(n) time. For n around 10⁴–10⁵ the recursive version can overflow the stack, which is why interviews prefer the iterative one.
+    hints:
+      - How many calls are waiting at the deepest point?
+  - id: ex-07
+    legacyId: w4d1-7
+    type: fill
+    tag: Dummy-node merge
+    q: Complete `mergeTwoLists`.
+    template: |
+      function mergeTwoLists(l1, l2) {
+        const dummy = new ListNode(0);
+        let tail = dummy;
+        while (l1 && l2) {
+          if (l1.val <= l2.val) { tail.next = l1; l1 = l1.next; }
+          else { tail.next = l2; l2 = l2.next; }
+          [[0]];
+        }
+        tail.next = [[1]];
+        return [[2]];
+      }
+    blanks:
+      - accept:
+          - tail = tail.next
+      - accept:
+          - l1 ?? l2
+          - l1 || l2
+          - 'l1 ? l1 : l2'
+          - l2 ?? l1
+          - l2 || l1
+      - accept:
+          - dummy.next
+    fn: mergeTwoLists
+    adapt:
+      args:
+        - list
+        - list
+      ret: list
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 4
+          - - 1
+            - 3
+            - 4
+        expect:
+          - 1
+          - 1
+          - 2
+          - 3
+          - 4
+          - 4
+      - args:
+          - []
+          - []
+        expect: []
+      - args:
+          - []
+          - - 0
+        expect:
+          - 0
+      - args:
+          - - 5
+          - - 1
+            - 2
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+          - 5
+      - args:
+          - - 1
+            - 9
+          - - 2
+        expect:
+          - 1
+          - 2
+          - 9
+    explain: At most one list is non-empty after the loop, and it is already sorted, so it is attached in one step.
+    hints:
+      - After attaching a node, which pointer must move?
+      - What does the dummy node point to at the end?
+  - id: ex-08
+    legacyId: w4d1-8
+    type: interview
+    title: Remove Duplicates from Sorted List (LeetCode 83)
+    q: 'Given the head of a sorted linked list, delete all duplicates so that each value appears only once, and return the list. Example: `1 → 1 → 2 → 3 → 3` → `1 → 2 → 3`.'
+    model:
+      clarify: |
+        - Sorted, so duplicates are adjacent.
+        - Keep the first node of each run (the head never changes, so no dummy is needed).
+        - Empty list → empty list.
+      brute: 'Copy values into an array, deduplicate, rebuild the list: O(n) time, O(n) extra space.'
+      optimize: 'Walk with one pointer `cur`. While `cur.next` has the same value, skip it: `cur.next = cur.next.next` (do not advance `cur`, because the new `cur.next` might also be a duplicate). Otherwise advance. Same "compare with the last kept" idea as problem 26 in Module 1.'
+      edges: |
+        - empty list
+        - all equal `1 → 1 → 1` → `1`
+        - no duplicates
+      complexity: O(n) time, O(1) extra space.
+    fn: deleteDuplicates
+    adapt:
+      args:
+        - list
+      ret: list
+    starter: |
+      function deleteDuplicates(head) {
+
+      }
+    solution: |
+      function deleteDuplicates(head) {
+        let cur = head;
+        while (cur && cur.next) {
+          if (cur.next.val === cur.val) cur.next = cur.next.next;
+          else cur = cur.next;
+        }
+        return head;
+      }
+    tests:
+      - args:
+          - - 1
+            - 1
+            - 2
+        expect:
+          - 1
+          - 2
+      - args:
+          - - 1
+            - 1
+            - 2
+            - 3
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+      - args:
+          - []
+        expect: []
+      - args:
+          - - 1
+            - 1
+            - 1
+        expect:
+          - 1
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect:
+          - 1
+          - 2
+          - 3
+        hidden: true
+    explain: Not advancing after a deletion is the same rule as in 203 (this lesson's Stretch).
+    hints:
+      - Duplicates are adjacent.
+      - After skipping a duplicate, should cur move?
+annotated: []

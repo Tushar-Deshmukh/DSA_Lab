@@ -1,0 +1,74 @@
+---
+slug: combination-sum-letter-combinations
+legacyId: w5d4
+title: Combination Sum and letter combinations
+goal: Handle reuse versus no reuse with the recursion's start index, combine sorting with `break` pruning, and generate strings with one level per position.
+why: Combination Sum and its variants are among the most asked backtracking problems. The difference between recursing with `i` and `i + 1` is exactly the kind of detail interviewers probe.
+prereqs:
+  - Combinations with a start index (lesson 3)
+  - Duplicate skipping (lesson 2)
+outcomes:
+  - Explain why 39 recurses with `i` and 40 with `i + 1` plus duplicate skipping
+  - Fill a state table for 39 with `[2,3,6,7]`, target 7
+  - Generate letter combinations with a variable branching factor
+ready:
+  - I can explain why 39 recurses with `i` and 40 with `i + 1` plus duplicate skipping
+  - My state table for 39 matches the visualizer
+  - I can say why `letterCombinations("")` returns `[]`
+summary:
+  - Reuse allowed → recurse with `i`; no reuse → `i + 1`.
+  - Never going back below the start index keeps each combination in canonical order.
+  - Sorted candidates + `candidates[i] > remaining` → `break`.
+  - 40 = no reuse + same-level duplicate skipping.
+  - 'Letter combinations: one level per digit, branch over that digit''s letters.'
+revision: Without notes, write the recursive call line for 39 and for 40 and explain the difference in one sentence each.
+warmup:
+  problem: 77
+topic: 'Combination Sum: reuse vs no reuse, sort + break pruning; letter combinations'
+implement: State table for 39 with `[2,3,6,7]`, target 7
+problemsText: 'C: 39, 17 · S: 40'
+problems:
+  - num: 39
+    tier: C
+  - num: 17
+    tier: C
+  - num: 40
+    tier: S
+doneWhen: You can explain why 39 recurses with `i` and 40 with `i + 1` plus duplicate skipping
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="reuse-allowed" kind="theory" title="Reuse allowed">
+
+Combination Sum (39) lets you use a candidate any number of times. The state is (start index, remaining target). Recursing with the **same** `i` lets the next level pick the same candidate again; never going *below* `i` stops `[3, 2, 2]` from appearing after `[2, 2, 3]`.
+
+<Viz id="bt-combsum" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Include id="patterns/choose-from-remaining" />
+
+</Unit>
+
+<Unit id="one-level-per-position" kind="theory" title="One level per position">
+
+Letter Combinations of a Phone Number (17) makes one decision per digit: which of its 3 or 4 letters comes next. The branching factor changes from level to level, but the shape (recurse once per position, record at depth n) is the same as subsets way A.
+
+<Viz id="bt-phone" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

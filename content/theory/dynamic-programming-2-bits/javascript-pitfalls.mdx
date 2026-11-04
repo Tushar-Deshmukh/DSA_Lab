@@ -1,0 +1,15 @@
+---
+slug: javascript-pitfalls
+title: JavaScript pitfalls
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: JavaScript pitfalls
+  lines:
+    - 2087
+    - 2087
+---
+
+**JavaScript pitfalls.** Results of `<<`, `|`, `&`, `^` are signed: use `>>> 0` when the problem expects an unsigned 32-bit answer (for example the classic unsigned form of 190 Reverse Bits). Do not use bitwise operators on values outside the 32-bit range (e.g. 64-bit IDs, sums near 10¹⁰); use arithmetic or `BigInt`. `Math.floor(x / 2)` and `x >> 1` agree for every 32-bit integer, negatives included (both round toward −∞), but differ for values ≥ 2³¹; it is Math.trunc(x / 2) that differs from x >> 1 for negative odd numbers.

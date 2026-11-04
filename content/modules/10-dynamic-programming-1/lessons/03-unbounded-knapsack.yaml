@@ -1,0 +1,267 @@
+exercises:
+  - id: ex-01
+    legacyId: w10d3-1
+    type: bug
+    tag: Zero is not "unreachable"
+    q: This Coin Change uses 0 to mean "not reachable yet". It returns 1 for coins `[2]`, amount 3, instead of −1. Click the line where the idea goes wrong.
+    code: |
+      function coinChange(coins, amount) {
+        const dp = new Array(amount + 1).fill(0);
+        for (let a = 1; a <= amount; a++) {
+          for (const c of coins) {
+            if (c <= a && (dp[a] === 0 || dp[a - c] + 1 < dp[a])) dp[a] = dp[a - c] + 1;
+          }
+        }
+        return amount > 0 && dp[amount] === 0 ? -1 : dp[amount];
+      }
+    bug:
+      - 1
+      - 4
+    kind: concept
+    explain: 'dp[1] stays 0 because no coin fits, meaning "unreachable". But dp[3] then reads dp[1] + 1 = 1, treating that 0 as "zero coins". One value cannot mean both. Use `Infinity` for unreachable: `fill(Infinity)` with `dp[0] = 0`, and the plain transition `dp[a] = Math.min(dp[a], dp[a - c] + 1)`; ∞ + 1 stays ∞.'
+    fix: |
+      const dp = new Array(amount + 1).fill(Infinity);
+      dp[0] = 0;
+      // ...
+      if (c <= a) dp[a] = Math.min(dp[a], dp[a - c] + 1);
+      // ...
+      return dp[amount] === Infinity ? -1 : dp[amount];
+    fine:
+      '2': Amounts in increasing order is the right iteration order.
+      '3': Trying every coin as the last coin is right.
+    hints:
+      - What does dp[1] = 0 mean here, and what does dp[3] assume it means?
+  - id: ex-02
+    legacyId: w10d3-2
+    type: trace
+    tag: Coin Change by hand
+    q: Coins `[1, 3, 4]`, amount 6 (the implement task).
+    rows:
+      - prompt: dp[2]
+        answer: '2'
+      - prompt: dp[5]
+        answer: '2'
+        why: 4 + 1 or 1 + 4.
+      - prompt: dp[6]
+        answer: '2'
+      - prompt: Coins used by largest-coin-first greedy for 6
+        answer: '3'
+    verify: |
+      const coins = [1, 3, 4], dp = new Array(7).fill(Infinity); dp[0] = 0;
+      for (let a = 1; a <= 6; a++) for (const c of coins) if (c <= a) dp[a] = Math.min(dp[a], dp[a - c] + 1);
+      console.log(dp[2]); console.log(dp[5]); console.log(dp[6]);
+      let r = 6, k = 0; for (const c of [4, 3, 1]) while (r >= c) { r -= c; k++; } console.log(k);
+    explain: dp[6] = 1 + min(dp[5], dp[3], dp[2]) = 1 + min(2, 1, 2) = 2, using 3 + 3.
+    hints:
+      - For each a, try each coin as the last coin.
+  - id: ex-03
+    legacyId: w10d3-3
+    type: fill
+    tag: Perfect Squares (279, Optional)
+    q: 'Complete `numSquares(n)`: the fewest perfect squares that sum to n. The items are the squares ≤ n.'
+    template: |
+      function numSquares(n) {
+        const dp = new Array(n + 1).fill(Infinity);
+        dp[0] = 0;
+        for (let a = 1; a <= n; a++)
+          for (let k = 1; [[0]]; k++)
+            dp[a] = Math.min(dp[a], [[1]]);
+        return dp[n];
+      }
+    blanks:
+      - accept:
+          - k * k <= a
+          - k*k <= a
+          - k ** 2 <= a
+          - k * k < a + 1
+      - accept:
+          - dp[a - k * k] + 1
+          - 1 + dp[a - k * k]
+          - dp[a - k*k] + 1
+          - 1 + dp[a - k*k]
+    fn: numSquares
+    tests:
+      - args:
+          - 12
+        expect: 3
+      - args:
+          - 13
+        expect: 2
+      - args:
+          - 1
+        expect: 1
+      - args:
+          - 43
+        expect: 3
+      - args:
+          - 7
+        expect: 4
+    explain: 'Coin Change where the coins are generated from n: 1, 4, 9, …'
+    hints:
+      - Which squares can be the last one used for amount a?
+  - id: ex-04
+    legacyId: w10d3-4
+    type: mcq
+    tag: Why coins outer?
+    q: In 518, why does putting coins in the **outer** loop count each combination exactly once?
+    options:
+      - t: 'While coin c is being processed, only coins up to c have been added, so every combination is built in one fixed coin order: {1, 2} can be formed as "1s then 2s" but never as "2 then 1".'
+        ok: true
+      - t: Because the outer loop runs fewer times.
+        why: 'Running time is the same either way: amount × coins.'
+        kind: concept
+      - t: Because dp[0] = 1.
+        why: Both orders use dp[0] = 1; it is not what distinguishes them.
+        kind: concept
+    explain: 'Amounts outer lets any coin be the last one at any amount, which distinguishes 1 + 2 from 2 + 1: ordered sequences (377).'
+    hints:
+      - When coin 2 is being added, can a coin 1 still be placed after it?
+  - id: ex-05
+    legacyId: w10d3-5
+    type: code
+    tag: Ordered sequences (LeetCode 377)
+    q: 'Write `combinationSum4(nums, target)`: the number of **ordered** sequences of numbers from `nums` (reuse allowed) that sum to `target`. Example: `[1,2,3]`, 4 → 7.'
+    fn: combinationSum4
+    starter: |
+      function combinationSum4(nums, target) {
+
+      }
+    solution: |
+      function combinationSum4(nums, target) {
+        const dp = new Array(target + 1).fill(0); dp[0] = 1;
+        for (let a = 1; a <= target; a++) for (const x of nums) if (x <= a) dp[a] += dp[a - x];
+        return dp[target];
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+          - 4
+        expect: 7
+      - args:
+          - - 9
+          - 3
+        expect: 0
+      - args:
+          - - 1
+            - 2
+          - 3
+        expect: 3
+      - args:
+          - - 3
+            - 4
+            - 5
+          - 12
+        expect: 8
+        hidden: true
+      - args:
+          - - 2
+            - 1
+            - 3
+          - 35
+        expect: 1132436852
+        hidden: true
+    explain: Same table as 518, loops swapped. In an interview, say which one the question asks for before coding.
+    hints:
+      - Is (1, 3) different from (3, 1) here?
+      - Which loop must be outer so that every number can be last at every amount?
+  - id: ex-06
+    legacyId: w10d3-6
+    type: interview
+    title: Minimum Cost For Tickets (LeetCode 983)
+    q: 'You travel on the days in `days` (increasing, 1–365). Passes cost `costs = [1-day, 7-day, 30-day]`; a pass bought on day d covers days d through d + duration − 1. Return the minimum total cost. Example: days `[1,4,6,7,8,20]`, costs `[2,7,15]` → 11.'
+    model:
+      clarify: |
+        - A pass may cover non-travel days; only travel days need cover.
+        - The 7-day pass may be cheaper than the 1-day pass (do not assume order).
+      brute: 'At each travel day, try all three passes: exponential.'
+      optimize: |
+        State: `dp[d]` = the cheapest way to cover all travel days up to day d. Transition: if d is not a travel day, `dp[d] = dp[d − 1]`; otherwise `dp[d] = min(dp[d − 1] + c1, dp[max(0, d − 7)] + c7, dp[max(0, d − 30)] + c30)`: the last pass bought covers d. Base dp[0] = 0; answer dp[lastDay]. It is coin change over time, where each "coin" also covers the days behind it.
+      edges: |
+        - one travel day → min of the three costs
+        - a 7-day pass cheaper than a 1-day pass
+        - days spread far apart (each needs its own pass)
+      complexity: O(D) for D = the last travel day (≤ 365); O(D) space.
+    fn: mincostTickets
+    starter: |
+      function mincostTickets(days, costs) {
+
+      }
+    solution: |
+      function mincostTickets(days, costs) {
+        const last = days[days.length - 1], travel = new Set(days), dp = new Array(last + 1).fill(0);
+        for (let d = 1; d <= last; d++) {
+          if (!travel.has(d)) { dp[d] = dp[d - 1]; continue; }
+          dp[d] = Math.min(dp[d - 1] + costs[0], dp[Math.max(0, d - 7)] + costs[1], dp[Math.max(0, d - 30)] + costs[2]);
+        }
+        return dp[last];
+      }
+    tests:
+      - args:
+          - - 1
+            - 4
+            - 6
+            - 7
+            - 8
+            - 20
+          - - 2
+            - 7
+            - 15
+        expect: 11
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            - 30
+            - 31
+          - - 2
+            - 7
+            - 15
+        expect: 17
+      - args:
+          - - 1
+          - - 2
+            - 7
+            - 15
+        expect: 2
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+          - - 7
+            - 2
+            - 15
+        expect: 2
+        hidden: true
+      - args:
+          - - 1
+            - 5
+            - 9
+            - 15
+            - 22
+            - 29
+            - 30
+          - - 3
+            - 10
+            - 12
+        expect: 12
+        hidden: true
+    explain: Indexing by calendar day (not by position in `days`) makes "the pass covers the last 7 days" a simple index lookup.
+    hints:
+      - What is the cheapest way to cover everything up to day d?
+      - 'The last pass you buy covers day d: which day did it start after?'
+      - Non-travel days cost nothing extra.
+annotated: []

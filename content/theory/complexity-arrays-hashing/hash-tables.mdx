@@ -1,0 +1,20 @@
+---
+slug: hash-tables
+title: Hash tables
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Hash tables
+  lines:
+    - 235
+    - 240
+---
+
+**Hash tables.** A hash function maps a key to a bucket index. Lookup computes the hash and checks that bucket.
+
+- *Collisions* happen when two keys map to the same bucket. Chaining stores a small list per bucket; open addressing probes for the next free slot. The table resizes when the load factor (entries ÷ buckets) passes a threshold, which keeps buckets short.
+- *Why O(1) is an average:* with a good hash function and resizing, each bucket holds O(1) keys on average. Adversarial keys or a poor hash can put many keys in one bucket, giving O(n). In interviews say "O(1) average".
+- *When not to use one:* when you need order (use sorting or a balanced tree), range queries, or when the key space is small and dense (a plain array of size 26 for lowercase letters is faster and clearer).
+- *Alternatives and trade-offs:* sorting then scanning gives O(n log n) time and little extra space (O(1) with an in-place sort such as heapsort; JavaScript's built-in sort may allocate up to O(n) temporary memory) versus hashing's O(n) time and O(n) space. Choose based on whether memory or time matters and whether the input may be modified.

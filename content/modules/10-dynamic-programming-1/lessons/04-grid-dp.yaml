@@ -1,0 +1,237 @@
+exercises:
+  - id: ex-01
+    legacyId: w10d4-1
+    type: trace
+    tag: Unique Paths by hand
+    q: Unique Paths on a 3 × 3 grid (the implement task).
+    rows:
+      - prompt: The middle row of the table, as a list
+        answer: '[1,2,3]'
+      - prompt: dp[2][2], the answer
+        answer: '6'
+      - prompt: 'With one row: the row''s contents after processing the second row (r = 1)'
+        answer: '[1,2,3]'
+        why: The single row ends each pass equal to that row of the full table.
+      - prompt: 'With an obstacle at (1, 1): the answer'
+        answer: '2'
+    verify: |
+      const t = [[1, 1, 1], [1, 0, 0], [1, 0, 0]]; for (let r = 1; r < 3; r++) for (let c = 1; c < 3; c++) t[r][c] = t[r - 1][c] + t[r][c - 1];
+      console.log(JSON.stringify(t[1])); console.log(t[2][2]);
+      const row = [1, 1, 1]; for (let c = 1; c < 3; c++) row[c] += row[c - 1]; console.log(JSON.stringify(row));
+      const g = [[0, 0, 0], [0, 1, 0], [0, 0, 0]], d = g.map((x) => x.map(() => 0));
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) d[r][c] = g[r][c] ? 0 : !r && !c ? 1 : (r ? d[r - 1][c] : 0) + (c ? d[r][c - 1] : 0);
+      console.log(d[2][2]);
+    explain: 'C(4, 2) = 6 paths in general: 4 moves, choose which 2 are down.'
+    hints:
+      - The first row and first column are all 1.
+  - id: ex-02
+    legacyId: w10d4-2
+    type: bug
+    tag: Obstacles on the edge
+    q: This Unique Paths II returns 1 for `[[0, 1, 0]]` instead of 0. Click the line.
+    code: |
+      function uniquePathsWithObstacles(grid) {
+        const m = grid.length, n = grid[0].length;
+        const dp = Array.from({ length: m }, () => new Array(n).fill(0));
+        for (let r = 0; r < m; r++) dp[r][0] = grid[r][0] === 1 ? 0 : 1;
+        for (let c = 0; c < n; c++) dp[0][c] = grid[0][c] === 1 ? 0 : 1;
+        for (let r = 1; r < m; r++)
+          for (let c = 1; c < n; c++)
+            dp[r][c] = grid[r][c] === 1 ? 0 : dp[r - 1][c] + dp[r][c - 1];
+        return dp[m - 1][n - 1];
+      }
+    bug:
+      - 3
+      - 4
+    kind: concept
+    explain: 'On the first row a cell is reachable only if the cell to its **left** is, so everything after an obstacle is 0, not 1. The same holds for the first column. Write `dp[0][c] = grid[0][c] === 1 ? 0 : dp[0][c − 1]` (and similarly for rows), or treat the edges with the general rule and a 0 for the missing neighbour.'
+    fix: |
+      dp[0][0] = grid[0][0] === 1 ? 0 : 1;
+      for (let r = 1; r < m; r++) dp[r][0] = grid[r][0] === 1 ? 0 : dp[r - 1][0];
+      for (let c = 1; c < n; c++) dp[0][c] = grid[0][c] === 1 ? 0 : dp[0][c - 1];
+    fine:
+      '7': The inner transition is right.
+    hints:
+      - Is the cell to the right of an obstacle on the first row reachable?
+  - id: ex-03
+    legacyId: w10d4-3
+    type: fill
+    tag: Minimum Path Sum in one row (64)
+    q: Complete the O(n)-space `minPathSum(grid)`.
+    template: |
+      function minPathSum(grid) {
+        const m = grid.length, n = grid[0].length;
+        const row = new Array(n).fill(Infinity);
+        row[0] = 0;
+        for (let r = 0; r < m; r++) {
+          row[0] += grid[r][0];
+          for (let c = 1; c < n; c++) row[c] = [[0]] + grid[r][c];
+        }
+        return row[n - 1];
+      }
+    blanks:
+      - accept:
+          - Math.min(row[c], row[c - 1])
+          - Math.min(row[c - 1], row[c])
+          - Math.min(row[c],row[c-1])
+          - Math.min(row[c-1],row[c])
+    fn: minPathSum
+    tests:
+      - args:
+          - - - 1
+              - 3
+              - 1
+            - - 1
+              - 5
+              - 1
+            - - 4
+              - 2
+              - 1
+        expect: 7
+      - args:
+          - - - 1
+              - 2
+              - 3
+            - - 4
+              - 5
+              - 6
+        expect: 12
+      - args:
+          - - - 5
+        expect: 5
+      - args:
+          - - - 1
+              - 2
+            - - 1
+              - 1
+        expect: 3
+      - args:
+          - - - 3
+              - 8
+              - 6
+              - 0
+              - 5
+            - - 9
+              - 9
+              - 0
+              - 1
+              - 2
+            - - 4
+              - 1
+              - 8
+              - 3
+              - 2
+        expect: 22
+    explain: Before it is overwritten, `row[c]` is the value from the row above (top); `row[c − 1]` has already been updated for this row (left). Starting the row at ∞ makes the first row's "top" impossible.
+    hints:
+      - Which two values can reach cell (r, c)?
+      - Which of them is still the previous row's value?
+  - id: ex-04
+    legacyId: w10d4-4
+    type: mcq
+    tag: When grid DP breaks
+    q: '"Move up, down, left or right; find the cheapest path from top-left to bottom-right." Why does `dp[r][c] = min(top, left) + cell` fail?'
+    options:
+      - t: With four directions the best path can come from below or the right, and cells depend on each other in cycles, so there is no fill order where every dependency is ready.
+        ok: true
+        why: Use Dijkstra (non-negative costs) or BFS (unit costs), as in Module 9.
+      - t: It works if you fill the table twice.
+        why: 'Two passes are not enough in general: a path may wind back and forth many times.'
+        kind: concept
+      - t: It only fails for negative costs.
+        why: It fails for ordinary positive costs too, whenever the best path goes up or left.
+        kind: concept
+    explain: 'Grid DP needs an acyclic dependency order: right/down moves provide one.'
+    hints:
+      - Is there an order in which every cell's dependencies come first?
+  - id: ex-05
+    legacyId: w10d4-5
+    type: interview
+    title: Maximal Square (LeetCode 221)
+    q: '`matrix` is a grid of `"0"` and `"1"` strings. Return the area of the largest square containing only 1s. Example: `[["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]` → 4.'
+    model:
+      clarify: |
+        - Cells are strings, not numbers.
+        - Return the area (side²), not the side.
+      brute: 'For every cell and every size, check the whole square: O((m·n) · min(m,n)²).'
+      optimize: |
+        State: `dp[r][c]` = the side of the largest all-1 square whose **bottom-right corner** is (r, c). Transition: if the cell is "1", `dp[r][c] = 1 + min(top, left, top-left)`, because the square can only extend as far as the weakest of its three neighbours allows; otherwise 0. Track the maximum side; answer = side². One row plus a saved diagonal value gives O(n) space.
+      edges: |
+        - all zeros → 0
+        - a single "1" → 1
+        - the whole matrix is 1s
+      complexity: O(m·n) time, O(m·n) or O(n) space.
+    fn: maximalSquare
+    starter: |
+      function maximalSquare(matrix) {
+
+      }
+    solution: |
+      function maximalSquare(matrix) {
+        const m = matrix.length, n = matrix[0].length;
+        const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+        let best = 0;
+        for (let r = 1; r <= m; r++) for (let c = 1; c <= n; c++) {
+          if (matrix[r - 1][c - 1] !== '1') continue;
+          dp[r][c] = 1 + Math.min(dp[r - 1][c], dp[r][c - 1], dp[r - 1][c - 1]);
+          best = Math.max(best, dp[r][c]);
+        }
+        return best * best;
+      }
+    tests:
+      - args:
+          - - - '1'
+              - '0'
+              - '1'
+              - '0'
+              - '0'
+            - - '1'
+              - '0'
+              - '1'
+              - '1'
+              - '1'
+            - - '1'
+              - '1'
+              - '1'
+              - '1'
+              - '1'
+            - - '1'
+              - '0'
+              - '0'
+              - '1'
+              - '0'
+        expect: 4
+      - args:
+          - - - '0'
+              - '1'
+            - - '1'
+              - '0'
+        expect: 1
+      - args:
+          - - - '0'
+        expect: 0
+      - args:
+          - - - '1'
+              - '1'
+            - - '1'
+              - '1'
+        expect: 4
+        hidden: true
+      - args:
+          - - - '1'
+              - '1'
+              - '1'
+            - - '1'
+              - '1'
+              - '1'
+            - - '1'
+              - '1'
+              - '0'
+        expect: 4
+        hidden: true
+    explain: '"Ending exactly at (r, c)" is the restriction that makes the transition possible: the same idea as "ending at i" in Kadane.'
+    hints:
+      - Define the state by the square's bottom-right corner.
+      - How far can the square grow if its top neighbour only supports a side of 1?
+      - Take the minimum of three neighbours.
+annotated: []

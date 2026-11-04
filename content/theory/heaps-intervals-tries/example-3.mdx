@@ -1,0 +1,32 @@
+---
+slug: example-3
+title: Example 3
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Example 3
+  lines:
+    - 1394
+    - 1411
+---
+
+**Example 3: merge intervals (56).**
+
+```js
+function merge(intervals) {
+  intervals.sort((a, b) => a[0] - b[0]);       // sort by start
+  // copy so we do not mutate the input
+  const res = [intervals[0].slice()];
+  for (let i = 1; i < intervals.length; i++) {
+    const last = res[res.length - 1], [s, e] = intervals[i];
+    // overlap: extend (max handles containment)
+    if (s <= last[1]) last[1] = Math.max(last[1], e);
+    else res.push([s, e]);
+  }
+  return res;
+}
+```
+
+Dry run `[[1,3],[8,10],[2,6],[15,18]]` → sorted `[[1,3],[2,6],[8,10],[15,18]]`: \[1,3\]; \[2,6\] overlaps → \[1,6\]; \[8,10\] new; \[15,18\] new. Without `Math.max`, `[[1,10],[2,3]]` would wrongly shrink to \[1,3\].

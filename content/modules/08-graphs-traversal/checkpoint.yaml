@@ -1,0 +1,39 @@
+exercises:
+  - id: ex-01
+    legacyId: w8sat-1
+    gatedBy: assessment-4
+    type: pattern
+    tag: Mixed review
+    q: '"A grid of 0s and 1s; for every cell, return the distance to the nearest 0."'
+    options:
+      - t: Multi-source BFS from every 0 at once
+        ok: true
+        why: 'Problem 542: one BFS gives every cell its distance to the nearest source.'
+      - t: A BFS from every 1 separately
+        why: Correct but O((m·n)²).
+        kind: concept
+      - t: DFS from each 0
+        why: DFS does not produce shortest distances.
+        kind: concept
+    explain: Nearest-of-many → put all the sources in the queue first.
+    hints:
+      - How many BFS runs do you need?
+  - id: ex-02
+    legacyId: w8sat-2
+    gatedBy: assessment-4
+    type: pattern
+    tag: Mixed review
+    q: '"Given tickets [from, to] and prerequisite-like constraints, is there an order in which all tasks can be done?"'
+    options:
+      - t: Topological sort; impossible iff there is a cycle
+        ok: true
+      - t: Union-Find
+        why: Union-Find ignores direction; ordering needs a directed analysis.
+        kind: concept
+      - t: Dijkstra
+        why: There are no weights or distances in the question.
+        kind: concept
+    explain: Ordering under dependencies → Kahn or three-state DFS.
+    hints:
+      - Is the relationship directed?
+annotated: []

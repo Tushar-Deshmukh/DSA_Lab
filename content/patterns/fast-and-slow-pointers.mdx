@@ -1,0 +1,25 @@
+---
+slug: fast-and-slow-pointers
+number: '4.2'
+title: Fast and slow pointers
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Pattern 4.2
+  lines:
+    - 938
+    - 947
+---
+
+**Pattern 4.2: Fast and slow pointers**
+
+1. *Recognise:* find the middle, detect a cycle, find k-th from end, without knowing the length.
+2. *Clues:* "cycle", "middle", "n-th from the end", "O(1) memory".
+3. *From brute force:* a visited `Set` or counting the length first; fast/slow does it in one pass with O(1) space.
+4. *Why it works:* relative speed of 1 node/step guarantees a meeting inside a cycle; a 2:1 speed ratio puts slow at the middle.
+5. *Template:* `while (fast && fast.next) { slow = slow.next; fast = fast.next.next; if (slow === fast) ... }`.
+6. *Complexity:* O(n), O(1).
+7. *Variations:* gap of k (19), cycle start (142), palindrome list (middle + reverse).
+8. *Inappropriate when:* you need more than position information (e.g. counts per value).

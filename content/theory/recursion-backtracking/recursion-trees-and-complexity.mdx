@@ -1,0 +1,25 @@
+---
+slug: recursion-trees-and-complexity
+title: Recursion trees and complexity
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Recursion trees and complexity
+  lines:
+    - 985
+    - 995
+---
+
+**Recursion trees and complexity.** Time = (number of nodes in the recursion tree) × (work per node). Common shapes:
+
+| Shape | Calls | Example |
+| --- | --- | --- |
+| One branch, size − 1 | n | Factorial, linked-list recursion |
+| One branch, size ÷ 2 | log n | Binary search, fast power |
+| Two branches, size ÷ 2 + O(n) merge | n log n total work | Merge sort |
+| Two branches, size − 1 | 2ⁿ | Subsets, naive Fibonacci |
+| n, n−1, n−2 … branches | n! | Permutations |
+
+For generation problems also multiply by the cost of copying each output (`[...path]` is O(n)): subsets are O(n · 2ⁿ), permutations O(n · n!).

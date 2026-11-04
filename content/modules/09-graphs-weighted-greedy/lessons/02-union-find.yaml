@@ -1,0 +1,366 @@
+exercises:
+  - id: ex-01
+    legacyId: w9d2-1
+    type: trace
+    tag: Why the two optimisations matter
+    q: Five elements 0..4. Apply `union(0,1)`, `union(1,2)`, `union(2,3)`, `union(3,4)`. Write `parent[]` as a list.
+    rows:
+      - prompt: 'Naive union (`parent[find(a)] = find(b)`, no size rule): parent[] after the four unions'
+        answer: '[1,2,3,4,4]'
+        why: 'Each union hangs the old root under the new element: a chain 0 → 1 → 2 → 3 → 4.'
+      - prompt: 'Then `find(0)` with path halving: what does it return?'
+        answer: '4'
+      - prompt: parent[] after that find
+        answer: '[2,2,4,4,4]'
+        why: Halving points 0 at its grandparent 2, then 2 at its grandparent 4.
+      - prompt: 'With union by size (Example 2''s `union`) instead: parent[] after the same four unions'
+        answer: '[0,0,0,0,0]'
+        why: Each new element is a tree of size 1 and goes under the bigger root, so the tree never gets deeper than 1.
+    verify: |
+      const p = [0, 1, 2, 3, 4]; const find = (x) => { while (p[x] !== x) { p[x] = p[p[x]]; x = p[x]; } return x; };
+      const naiveFind = (x) => { while (p[x] !== x) x = p[x]; return x; };
+      for (const [a, b] of [[0, 1], [1, 2], [2, 3], [3, 4]]) p[naiveFind(a)] = naiveFind(b);
+      console.log(JSON.stringify(p)); console.log(find(0)); console.log(JSON.stringify(p));
+      const q = [0, 1, 2, 3, 4], sz = [1, 1, 1, 1, 1]; const f2 = (x) => { while (q[x] !== x) { q[x] = q[q[x]]; x = q[x]; } return x; };
+      for (const [a, b] of [[0, 1], [1, 2], [2, 3], [3, 4]]) { let ra = f2(a), rb = f2(b); if (ra === rb) continue; if (sz[ra] < sz[rb]) [ra, rb] = [rb, ra]; q[rb] = ra; sz[ra] += sz[rb]; }
+      console.log(JSON.stringify(q));
+    explain: Without either rule, n unions can build a chain and each find costs O(n). Either rule alone gives O(log n); both together give O(α(n)).
+    hints:
+      - Draw the tree after each union.
+      - Path halving changes parent pointers only on the path it walks.
+  - id: ex-02
+    legacyId: w9d2-2
+    type: predict
+    tag: Union's return value
+    q: Using Example 2's `DSU`, what does this print?
+    code: |
+      class DSU {
+        constructor(n) { this.parent = Array.from({ length: n }, (_, i) => i); this.size = new Array(n).fill(1); this.components = n; }
+        find(x) { while (this.parent[x] !== x) { this.parent[x] = this.parent[this.parent[x]]; x = this.parent[x]; } return x; }
+        union(a, b) {
+          let ra = this.find(a), rb = this.find(b);
+          if (ra === rb) return false;
+          if (this.size[ra] < this.size[rb]) [ra, rb] = [rb, ra];
+          this.parent[rb] = ra; this.size[ra] += this.size[rb]; this.components--;
+          return true;
+        }
+      }
+      const d = new DSU(5);
+      console.log(d.union(0, 1));
+      console.log(d.union(3, 4));
+      console.log(d.union(1, 0));
+      console.log(d.union(4, 1));
+      console.log(d.components);
+    answer: |-
+      true
+      true
+      false
+      true
+      2
+    normalize: exact
+    traps:
+      ? "true\ntrue\nfalse\ntrue\n3"
+      : 'The failed union(1, 0) does not change the count, but union(4, 1) does: 5 → 4 → 3 → 3 → 2.'
+    explain: '{0, 1, 3, 4} and {2} remain. The `false` is the signal 684 uses: that edge closes a cycle.'
+    hints:
+      - Track the sets after each line.
+  - id: ex-03
+    legacyId: w9d2-3
+    type: bug
+    tag: Link the roots
+    q: After `union(0, 1)` then `union(0, 2)`, this DSU reports that 0 and 1 are **not** connected. Click the line.
+    code: |
+      class DSU {
+        constructor(n) { this.parent = Array.from({ length: n }, (_, i) => i); }
+        find(x) { while (this.parent[x] !== x) x = this.parent[x]; return x; }
+        union(a, b) {
+          if (this.find(a) === this.find(b)) return false;
+          this.parent[a] = b;
+          return true;
+        }
+        connected(a, b) { return this.find(a) === this.find(b); }
+      }
+    bug:
+      - 5
+    kind: impl
+    explain: 'It re-points `a` itself, not `a`''s root. After union(0, 1), parent[0] = 1; union(0, 2) then sets parent[0] = 2, detaching 0 from 1. Always link roots: `this.parent[this.find(a)] = this.find(b)`.'
+    fix: |
+      this.parent[this.find(a)] = this.find(b);
+    fine:
+      '2': 'No compression here: slower on long chains, but still correct.'
+      '4': Returning false when already connected is right.
+    hints:
+      - Is `a` always a root when union is called?
+  - id: ex-04
+    legacyId: w9d2-4
+    type: code
+    tag: DSU from memory
+    q: Write `class DSU` with `constructor(n)`, `find(x)`, `union(a, b)` (returns `true` if two sets were merged, `false` if already connected), `connected(a, b)` and `count()` (the number of sets). Use path halving and union by size. The tests call it like a LeetCode design problem.
+    fn: DSU
+    starter: |
+      class DSU {
+        constructor(n) {
+
+        }
+        find(x) {
+
+        }
+        union(a, b) {
+
+        }
+        connected(a, b) {
+
+        }
+        count() {
+
+        }
+      }
+    solution: |
+      class DSU {
+        constructor(n) { this.parent = Array.from({ length: n }, (_, i) => i); this.size = new Array(n).fill(1); this.sets = n; }
+        find(x) { while (this.parent[x] !== x) { this.parent[x] = this.parent[this.parent[x]]; x = this.parent[x]; } return x; }
+        union(a, b) {
+          let ra = this.find(a), rb = this.find(b);
+          if (ra === rb) return false;
+          if (this.size[ra] < this.size[rb]) [ra, rb] = [rb, ra];
+          this.parent[rb] = ra; this.size[ra] += this.size[rb]; this.sets--;
+          return true;
+        }
+        connected(a, b) { return this.find(a) === this.find(b); }
+        count() { return this.sets; }
+      }
+    tests:
+      - ops:
+          - - DSU
+            - 5
+          - - union
+            - 0
+            - 1
+          - - union
+            - 1
+            - 2
+          - - union
+            - 0
+            - 2
+          - - connected
+            - 0
+            - 2
+          - - connected
+            - 0
+            - 3
+          - - count
+        expect:
+          - null
+          - true
+          - true
+          - false
+          - true
+          - false
+          - 3
+      - ops:
+          - - DSU
+            - 1
+          - - count
+          - - connected
+            - 0
+            - 0
+        expect:
+          - null
+          - 1
+          - true
+      - ops:
+          - - DSU
+            - 6
+          - - union
+            - 0
+            - 1
+          - - union
+            - 2
+            - 3
+          - - union
+            - 4
+            - 5
+          - - union
+            - 1
+            - 3
+          - - union
+            - 3
+            - 5
+          - - union
+            - 0
+            - 4
+          - - count
+          - - connected
+            - 1
+            - 4
+        expect:
+          - null
+          - true
+          - true
+          - true
+          - true
+          - true
+          - false
+          - 1
+          - true
+        hidden: true
+    explain: If `union` returned nothing you would need a separate `connected` call before every union to know whether a merge happened.
+    hints:
+      - parent[i] = i and size[i] = 1 to start.
+      - find walks up until parent[x] === x; halve the path as you go.
+      - union finds both roots first, then links the smaller under the larger.
+  - id: ex-05
+    legacyId: w9d2-5
+    type: fill
+    tag: Redundant Connection (684)
+    q: 'Complete `findRedundantConnection(edges)`: nodes are 1..n, the graph is a tree plus one extra edge; return the edge that closes the cycle (the first one found while scanning).'
+    template: |
+      function findRedundantConnection(edges) {
+        const parent = Array.from({ length: edges.length + 1 }, (_, i) => i);
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+        for (const [u, v] of edges) {
+          const ru = find(u), rv = find(v);
+          if ([[0]]) return [u, v];
+          [[1]];
+        }
+        return [];
+      }
+    blanks:
+      - accept:
+          - ru === rv
+          - rv === ru
+          - ru == rv
+          - rv == ru
+      - accept:
+          - parent[ru] = rv
+          - parent[rv] = ru
+    fn: findRedundantConnection
+    tests:
+      - args:
+          - - - 1
+              - 2
+            - - 1
+              - 3
+            - - 2
+              - 3
+        expect:
+          - 2
+          - 3
+      - args:
+          - - - 1
+              - 2
+            - - 2
+              - 3
+            - - 3
+              - 4
+            - - 1
+              - 4
+            - - 1
+              - 5
+        expect:
+          - 1
+          - 4
+      - args:
+          - - - 3
+              - 4
+            - - 1
+              - 2
+            - - 2
+              - 4
+            - - 3
+              - 5
+            - - 2
+              - 5
+        expect:
+          - 2
+          - 5
+    explain: 'An edge whose ends already share a root would create a second path between them: that is the cycle. Problem 684 asks for the **last** such edge in the input, which, since there is exactly one extra edge, is also the first one found.'
+    hints:
+      - When does an edge close a cycle?
+      - Otherwise, merge the two roots.
+  - id: ex-06
+    legacyId: w9d2-6
+    type: mcq
+    tag: DSU or BFS?
+    q: When is Union-Find clearly the better tool than BFS/DFS? Select all that apply.
+    options:
+      - t: Edges arrive one at a time and after each one you must report the number of components
+        ok: true
+        why: Re-running BFS after every edge is O(E·(V + E)); DSU is near O(1) per edge.
+      - t: Many 'are a and b connected?' queries interleaved with new edges
+        ok: true
+      - t: Edges are deleted over time
+        why: DSU cannot split a set. Deletions need another approach (often processing in reverse, adding edges back).
+        kind: concept
+      - t: You must return the actual path between two nodes
+        why: DSU only knows whether they are connected, not how. Use BFS/DFS with parent pointers.
+        kind: concept
+    explain: For one static question on a fixed graph, BFS/DFS is equally good. DSU shines with incremental edges and repeated connectivity queries.
+    hints:
+      - What can DSU never undo?
+  - id: ex-07
+    legacyId: w9d2-7
+    type: interview
+    title: Satisfiability of Equality Equations (LeetCode 990)
+    q: '`equations` are strings like `"a==b"` or `"b!=c"` over lower-case variables. Return true if values can be assigned to make all of them true. Example: `["a==b","b!=a"]` → false; `["b==a","a==b"]` → true.'
+    model:
+      clarify: |
+        - Exactly four characters per equation; 26 possible variables.
+        - `\"a!=a\"` is possible and is always false.
+      brute: 'Try assignments: hopeless. Or build the equality graph and BFS for every inequality: correct, O(n · 26).'
+      optimize: 'Equality is an equivalence relation, which is exactly what DSU represents. Pass 1: union the two sides of every `==`. Pass 2: for every `!=`, if both sides have the same root, return false. Doing the passes in this order matters: an inequality checked before all equalities are merged could miss a conflict.'
+      edges: |
+        - `a!=a` → false
+        - only inequalities between different letters → true
+        - a chain a==b, b==c with c!=a → false
+      complexity: O(n · α(26)) ≈ O(n) time, O(1) extra space (26 parents).
+    fn: equationsPossible
+    starter: |
+      function equationsPossible(equations) {
+
+      }
+    solution: |
+      function equationsPossible(equations) {
+        const parent = Array.from({ length: 26 }, (_, i) => i);
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+        const id = (ch) => ch.charCodeAt(0) - 97;
+        for (const e of equations) if (e[1] === '=') parent[find(id(e[0]))] = find(id(e[3]));
+        for (const e of equations) if (e[1] === '!' && find(id(e[0])) === find(id(e[3]))) return false;
+        return true;
+      }
+    tests:
+      - args:
+          - - a==b
+            - b!=a
+        expect: false
+      - args:
+          - - b==a
+            - a==b
+        expect: true
+      - args:
+          - - a==b
+            - b==c
+            - c!=a
+        expect: false
+      - args:
+          - - c!=a
+            - a==b
+            - b==c
+        expect: false
+        hidden: true
+      - args:
+          - - a!=a
+        expect: false
+        hidden: true
+      - args:
+          - - a!=b
+            - b!=c
+            - c!=a
+        expect: true
+        hidden: true
+    explain: The hidden test with the inequality first is the one that catches a single-pass solution.
+    hints:
+      - 'Which relation is transitive: == or !=?'
+      - Merge all the equalities before checking any inequality.
+      - 26 letters → a parent array of size 26.
+annotated: []

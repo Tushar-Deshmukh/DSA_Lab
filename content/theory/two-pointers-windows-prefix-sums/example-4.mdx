@@ -1,0 +1,27 @@
+---
+slug: example-4
+title: Example 4
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Example 4
+  lines:
+    - 512
+    - 524
+---
+
+**Example 4: Kadane from brute force.** Brute force tries every `(i, j)`: O(n²) with a running sum. Observation: the best subarray ending at j is either `a[j]` alone or the best ending at j−1 plus `a[j]`. Keeping only that one number gives:
+
+```js
+function maxSubArray(nums) {
+  // not 0: all-negative input must return the largest element
+  let cur = nums[0], best = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    cur = Math.max(nums[i], cur + nums[i]);  // extend or restart
+    best = Math.max(best, cur);
+  }
+  return best;
+}
+```

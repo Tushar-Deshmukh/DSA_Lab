@@ -1,0 +1,225 @@
+exercises:
+  - id: ex-01
+    legacyId: w7d3-1
+    type: trace
+    tag: Lesson 3 trace
+    q: Stream 5, 15, 1, 3 with two heaps (lo = max-heap, hi = min-heap, lo may hold one extra). Give the median after each number.
+    rows:
+      - prompt: after 5
+        answer: '5'
+      - prompt: after 15
+        answer: '10'
+      - prompt: after 1
+        answer: '5'
+      - prompt: after 3
+        answer: '4'
+        why: 'lo = {1, 3}, hi = {5, 15}: (3 + 5) / 2 = 4.'
+    verify: |
+      const lo = [], hi = []; const out = [];
+      for (const x of [5, 15, 1, 3]) { lo.push(x); lo.sort((a, b) => b - a); hi.push(lo.shift()); hi.sort((a, b) => a - b); if (hi.length > lo.length) { lo.push(hi.shift()); lo.sort((a, b) => b - a); } out.push(lo.length > hi.length ? lo[0] : (lo[0] + hi[0]) / 2); }
+      out.forEach((m) => console.log(m));
+    explain: Pushing everything through lo first guarantees every element of lo is ≤ every element of hi.
+    hints:
+      - 'After 15: lo = {5}, hi = {15}.'
+  - id: ex-02
+    legacyId: w7d3-2
+    type: mcq
+    tag: The invariant
+    q: Why does `addNum` push into lo and then immediately move lo's top into hi, instead of comparing x with the medians?
+    options:
+      - t: It guarantees the ordering invariant (max of lo ≤ min of hi) without case analysis; the rebalance step then fixes the sizes.
+        ok: true
+        why: x ends up in the correct half automatically, at the cost of a couple of extra O(log n) operations.
+      - t: Because comparing numbers with a heap top is not allowed.
+        why: It is allowed and also works; the push-move-rebalance version simply has fewer cases.
+        kind: concept
+      - t: To keep lo larger than hi by two.
+        why: The size difference is kept at 0 or 1.
+        kind: concept
+    explain: 'Three heap operations per insert: still O(log n).'
+    hints:
+      - What would you have to compare if you inserted x directly into the right half?
+  - id: ex-03
+    legacyId: w7d3-3
+    type: fill
+    tag: The formula
+    q: Complete the counting formula for 621.
+    template: |
+      function leastInterval(tasks, n) {
+        const count = new Array(26).fill(0);
+        for (const t of tasks) count[t.charCodeAt(0) - 65]++;
+        const maxFreq = Math.max(...count);
+        const countOfMax = count.filter((c) => c === maxFreq).length;
+        return Math.max([[0]], (maxFreq - 1) * [[1]] + countOfMax);
+      }
+    blanks:
+      - accept:
+          - tasks.length
+      - accept:
+          - (n + 1)
+          - (1 + n)
+    fn: leastInterval
+    tests:
+      - args:
+          - - A
+            - A
+            - A
+            - B
+            - B
+            - B
+          - 2
+        expect: 8
+      - args:
+          - - A
+            - C
+            - A
+            - B
+            - D
+            - B
+          - 1
+        expect: 6
+      - args:
+          - - A
+            - A
+            - A
+            - B
+            - B
+            - B
+          - 3
+        expect: 10
+      - args:
+          - - A
+            - A
+            - A
+            - A
+            - B
+            - C
+          - 2
+        expect: 10
+      - args:
+          - - A
+          - 5
+        expect: 1
+    explain: '`(maxFreq − 1) · (n + 1)` fills all rows but the last; `countOfMax` is the last row; `tasks.length` covers the case with no idle slots.'
+    hints:
+      - The answer can never be smaller than the number of tasks.
+      - How wide is each row of the picture?
+  - id: ex-04
+    legacyId: w7d3-4
+    type: interview
+    title: Process Tasks Using Servers (LeetCode 1882)
+    q: '`servers[i]` is server i''s weight; task j arrives at second j and takes `tasks[j]` seconds. When tasks are waiting and servers are free, the first waiting task goes to the free server with the smallest weight (ties → smallest index). If no server is free, tasks wait until one frees up. Return `ans[j]`, the server that runs task j. Example: servers `[3,3,2]`, tasks `[1,2,3,2,1,2]` → `[2,2,0,2,1,2]`.'
+    model:
+      clarify: |
+        - Tasks are assigned in arrival order; a server freed at time t can take a task at time t.
+        - Up to 2·10⁵ servers and tasks; times up to about 4·10¹⁰ in total, so do not simulate second by second.
+      brute: 'For each task, scan all servers for the best free one, advancing time one second at a time: O(n · m) per step and possibly huge time ranges.'
+      optimize: |
+        Two min-heaps. `free` holds `[weight, index]`; `busy` holds `[freeTime, weight, index]`. For task j, set `time = max(time, j)`; if `free` is empty, jump `time` to `busy.peek()[0]`. Then move every busy server with `freeTime ≤ time` back to `free`, pop the best free server, assign it, and push it into `busy` with `freeTime = time + tasks[j]`.
+      edges: |
+        - one server: every task queues behind the previous one
+        - all servers equal weight (index tie-break)
+        - a server freed exactly when a task arrives
+      complexity: O((n + m) log n) time, O(n) space for n servers and m tasks.
+    fn: assignTasks
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function assignTasks(servers, tasks) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function assignTasks(servers, tasks) {
+        const free = new MinHeap((a, b) => a[0] - b[0] || a[1] - b[1]);
+        const busy = new MinHeap((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]);
+        servers.forEach((w, i) => free.push([w, i]));
+        const ans = []; let time = 0;
+        for (let j = 0; j < tasks.length; j++) {
+          time = Math.max(time, j);
+          if (!free.size()) time = Math.max(time, busy.peek()[0]);
+          while (busy.size() && busy.peek()[0] <= time) { const [, w, i] = busy.pop(); free.push([w, i]); }
+          const [w, i] = free.pop();
+          ans.push(i); busy.push([time + tasks[j], w, i]);
+        }
+        return ans;
+      }
+    tests:
+      - args:
+          - - 3
+            - 3
+            - 2
+          - - 1
+            - 2
+            - 3
+            - 2
+            - 1
+            - 2
+        expect:
+          - 2
+          - 2
+          - 0
+          - 2
+          - 1
+          - 2
+      - args:
+          - - 5
+            - 1
+            - 4
+            - 3
+            - 2
+          - - 2
+            - 1
+            - 2
+            - 4
+            - 5
+            - 2
+            - 1
+        expect:
+          - 1
+          - 4
+          - 1
+          - 4
+          - 1
+          - 3
+          - 2
+      - args:
+          - - 1
+          - - 3
+            - 1
+            - 2
+        expect:
+          - 0
+          - 0
+          - 0
+        hidden: true
+      - args:
+          - - 2
+            - 1
+          - - 5
+            - 5
+            - 5
+            - 5
+        expect:
+          - 1
+          - 0
+          - 1
+          - 0
+        hidden: true
+    explain: 'Same shape as the task-scheduler simulation earlier in this lesson: one heap answers "who is free and best?", the other "who frees up next?", and time jumps instead of ticking.'
+    hints:
+      - What two questions does the simulation keep asking?
+      - Keep free servers keyed by (weight, index) and busy ones by the time they become free.
+      - When nothing is free, jump the clock to the next free time.
+annotated: []

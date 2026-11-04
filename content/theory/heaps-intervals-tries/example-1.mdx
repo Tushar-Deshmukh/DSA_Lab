@@ -1,0 +1,23 @@
+---
+slug: example-1
+title: Example 1
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Example 1
+  lines:
+    - 1367
+    - 1375
+---
+
+**Example 1: heap operations dry run.** Push 5, 3, 8, 1 into an empty min-heap:
+
+| Action | Array after | Notes |
+| --- | --- | --- |
+| push 5 | \[5\] | root |
+| push 3 | \[3, 5\] | 3 \< parent 5 → swap |
+| push 8 | \[3, 5, 8\] | 8 > parent 3, stays |
+| push 1 | \[1, 3, 8, 5\] | 1 at index 3; parent idx 1 (5) → swap; parent idx 0 (3) → swap |
+| pop → 1 | \[3, 5, 8\] | move 5 to root: \[5, 3, 8\]; smaller child 3 → swap |

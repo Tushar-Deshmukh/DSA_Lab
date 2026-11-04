@@ -1,0 +1,15 @@
+---
+slug: backtracking
+title: Backtracking
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Backtracking
+  lines:
+    - 999
+    - 999
+---
+
+**Backtracking.** A depth-first search over a tree of partial decisions. At each node: if the partial solution is complete, record it; otherwise, for each valid choice: *choose* (mutate state), *explore* (recurse), *unchoose* (undo the mutation). Undoing is what lets one shared `path` array serve the whole search.

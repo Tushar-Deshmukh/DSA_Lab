@@ -1,0 +1,15 @@
+---
+slug: common-mistakes
+title: Common mistakes
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Common mistakes
+  lines:
+    - 1363
+    - 1363
+---
+
+**Common mistakes.** Forgetting to sift down after replacing the root; off-by-one in child indices; using a max-heap of all n elements for "k largest" (O(n log n), no better than sorting); comparator subtraction overflow is not an issue in JS but comparing strings with `-` is (`"a" - "b"` is `NaN`); sorting intervals without a comparator; mutating input intervals that the caller reuses; marking `isEnd` on the wrong node in a trie.

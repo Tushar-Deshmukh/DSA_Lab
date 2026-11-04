@@ -1,0 +1,33 @@
+---
+slug: example-4
+title: Example 4
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Example 4
+  lines:
+    - 691
+    - 709
+---
+
+**Example 4: merge sort with the merge step explained.**
+
+```js
+function mergeSort(a) {
+  if (a.length <= 1) return a;
+  const mid = a.length >> 1;
+  const left = mergeSort(a.slice(0, mid)), right = mergeSort(a.slice(mid));
+  const out = [];
+  let i = 0, j = 0;
+  while (i < left.length && j < right.length)
+    // <= keeps it stable
+    out.push(left[i] <= right[j] ? left[i++] : right[j++]);
+  while (i < left.length) out.push(left[i++]);
+  while (j < right.length) out.push(right[j++]);
+  return out;
+}
+```
+
+Recursion tree: log₂ n levels; each level merges n elements in total → O(n log n). Quicksort (random pivot, Lomuto partition) is in section 6.8 with a dry run you will do in lesson 5.

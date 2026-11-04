@@ -1,0 +1,46 @@
+---
+slug: example-2
+title: Example 2
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Example 2
+  lines:
+    - 1780
+    - 1811
+---
+
+**Example 2: Union-Find with path compression and union by size.**
+
+```js
+class DSU {
+  constructor(n) {
+    this.parent = Array.from({ length: n }, (_, i) => i);
+    this.size = new Array(n).fill(1);
+    this.components = n;
+  }
+  find(x) {
+    while (this.parent[x] !== x) {
+      // path halving: a simple, iterative compression
+      this.parent[x] = this.parent[this.parent[x]];
+      x = this.parent[x];
+    }
+    return x;
+  }
+  // returns false if already connected
+  union(a, b) {
+    let ra = this.find(a), rb = this.find(b);
+    if (ra === rb) return false;
+    if (this.size[ra] < this.size[rb]) [ra, rb] = [rb, ra];
+    // attach smaller under larger
+    this.parent[rb] = ra;
+    this.size[ra] += this.size[rb];
+    this.components--;
+    return true;
+  }
+}
+// 684 Redundant Connection: the first edge for which union(u, v)
+// returns false.
+```

@@ -1,0 +1,36 @@
+---
+slug: arrays-copying-2-d-arrays-sorting-and-comparators
+section: 6
+title: '6.3 Arrays: copying, 2-D arrays, sorting and comparators'
+source:
+  file: source/roadmap.md
+  section: 6
+  key: '6.3 Arrays: copying, 2-D arrays, sorting and comparators'
+  lines:
+    - 2731
+    - 2754
+---
+
+```js
+const copy = arr.slice();                  // shallow copy (also [...arr])
+const deep = structuredClone(nested);      // deep copy (Node 17+)
+
+// 2-D arrays: the classic bug
+const bad = new Array(3).fill([]);         // all 3 rows are the SAME array
+// correct
+const grid = Array.from({ length: m }, () => new Array(n).fill(0));
+
+// Sorting
+nums.sort((a, b) => a - b);                // ascending numbers
+nums.sort((a, b) => b - a);                // descending
+pairs.sort((a, b) => a[0] - b[0] || a[1] - b[1]);  // by first, then second
+// strings: default is fine (UTF-16 order)
+words.sort();
+people.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+
+// 179 Largest Number: put a before b when a + b is the larger concatenation
+const strs = nums.map(String)
+  .sort((a, b) => (a + b > b + a ? -1 : a + b < b + a ? 1 : 0));
+```
+
+A comparator must return a negative number, zero or a positive number; returning `a > b` (a boolean) gives inconsistent results. `sort` mutates in place and returns the same array; copy first if the caller needs the original.

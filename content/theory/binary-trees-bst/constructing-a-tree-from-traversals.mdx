@@ -1,0 +1,15 @@
+---
+slug: constructing-a-tree-from-traversals
+title: Constructing a tree from traversals (105)
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Constructing a tree from traversals (105)
+  lines:
+    - 1188
+    - 1188
+---
+
+**Constructing a tree from traversals (105).** The first preorder element is the root. Its index in inorder splits the inorder array into left and right subtrees; their sizes tell you how many preorder elements belong to each side. Store inorder positions in a `Map` for O(1) lookups and pass index bounds rather than slicing arrays: O(n) overall instead of O(n²).

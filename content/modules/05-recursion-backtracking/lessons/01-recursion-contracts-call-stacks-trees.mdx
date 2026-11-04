@@ -1,0 +1,116 @@
+---
+slug: recursion-contracts-call-stacks-trees
+legacyId: w5d1
+title: 'Recursion: contracts, call stacks and recursion trees'
+goal: Define a recursive function by its contract, base case and transition, and read its time and space complexity from a recursion tree.
+why: Trees, divide and conquer, backtracking and dynamic programming are all recursion. Interviewers watch whether you can state what a call returns before you write it, and whether you know that each pending call costs stack space.
+prereqs:
+  - Recursion trees and stack space (Module 1 lesson 1)
+  - Recursive list reversal (Module 4 lesson 1)
+outcomes:
+  - Write a one-sentence contract for a recursive function, then its base cases and transition
+  - Explain the call stack and Node's practical depth limit
+  - Count the calls of naive Fibonacci and see the repeated subproblems
+  - Derive O(log n) for fast power and say what calling `myPow` twice would cost
+  - Convert a recursion to iteration with an explicit stack
+ready:
+  - I can derive the complexity of 50 from its recursion tree
+  - I drew the recursion tree of `fib(5)` and counted 15 calls
+  - I rewrote `flatten` (diagnostic B5) recursively and with an explicit stack
+summary:
+  - 'Contract first: "f(i, …) returns …". Then base case, transition, progress toward the base case.'
+  - 'Each pending call holds a stack frame: depth = auxiliary space. Node manages roughly 7,000–12,000 frames.'
+  - Time = nodes in the recursion tree × work per node.
+  - 'Shapes: chain (n), halving chain (log n), binary tree (2ⁿ), shrinking fan-out (n!).'
+  - 'Node does not optimise tail calls: deep recursion → explicit stack.'
+revision: Write the contract, base case and transition of `myPow` in three sentences, then explain why storing `half` makes it O(log n).
+warmup:
+  problem: 739
+topic: Recursive contract, base cases, call stack and depth limits, recursion trees, recursion vs iteration
+implement: Draw the recursion tree of `fib(5)` and count calls; rewrite `flatten` (diagnostic B5)
+problemsText: 'C: 509, 50 · S: 24'
+problems:
+  - num: 509
+    tier: C
+  - num: 50
+    tier: C
+  - num: 24
+    tier: S
+doneWhen: You can derive the complexity of 50 from its recursion tree
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-contract" kind="theory" title="The contract">
+
+<Include id="theory/recursion-backtracking/recursive-thinking-the-contract" />
+
+Here is the contract at work on something familiar. The task: the sum of an array.
+
+```js
+// contract: sum(a, i) returns a[i] + a[i+1] + … + a[a.length - 1]
+function sum(a, i = 0) {
+  if (i === a.length) return 0;      // base case: the empty suffix sums to 0
+  return a[i] + sum(a, i + 1);       // transition: trust sum(a, i + 1)
+}
+```
+
+You do not trace `sum(a, 1)` in your head. Its contract says what it returns, so `a[i] + sum(a, i + 1)` is correct by definition, provided the base case is right and `i` moves towards `a.length` (progress).
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="the-call-stack" kind="theory" title="The call stack">
+
+<Include id="theory/recursion-backtracking/call-stack" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="recursion-trees" kind="theory" title="Recursion trees">
+
+<Include id="theory/recursion-backtracking/recursion-trees-and-complexity" />
+
+This lesson's first problem, Fibonacci (509), is the example every later module refers back to. Step through the plain version and count how many times `f(2)` appears; then switch the input to "yes (cache results)".
+
+<Viz id="rec-fib" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="halving-recursion-fast-power" kind="code" title="Halving recursion: fast power">
+
+<Include id="theory/recursion-backtracking/example-1" />
+
+<Viz id="rec-pow" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="recursion-vs-iteration" kind="theory" title="Recursion vs iteration">
+
+<Include id="theory/recursion-backtracking/recursion-vs-iteration" />
+
+The diagnostic's B5 task asked you to flatten a nested array. It is the cleanest example of both styles.
+
+<Exercise id="ex-06" />
+
+<Exercise id="ex-07" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-08" />
+
+</Unit>

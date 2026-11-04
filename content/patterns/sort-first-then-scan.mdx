@@ -1,0 +1,25 @@
+---
+slug: sort-first-then-scan
+number: '3.3'
+title: Sort first, then scan
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Pattern 3.3
+  lines:
+    - 735
+    - 744
+---
+
+**Pattern 3.3: Sort first, then scan**
+
+1. *Recognise:* order or adjacency would make the problem trivial.
+2. *Clues:* "merge", "closest pair", "group equal", "intervals", "largest number formed".
+3. *From brute force:* comparing all pairs is O(n²); after sorting, only neighbours need comparing.
+4. *Why it works:* sorting brings related items together; the scan then makes local decisions.
+5. *Template:* `arr.sort(comparator); for (...) compare with previous/next`.
+6. *Complexity:* O(n log n) dominated by the sort.
+7. *Variations:* custom comparators (179), merge sorted arrays from the back (88), intervals (Module 7), greedy (Module 9).
+8. *Inappropriate when:* original indices are required and cannot be carried along, or O(n) is required.

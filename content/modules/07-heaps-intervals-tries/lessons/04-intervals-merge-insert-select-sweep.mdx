@@ -1,0 +1,93 @@
+---
+slug: intervals-merge-insert-select-sweep
+legacyId: w7d4
+title: 'Intervals: merge, insert, select and sweep'
+goal: Merge and insert intervals, keep the maximum number of non-overlapping intervals by sorting by end, and count simultaneous overlaps with a sweep.
+why: 'Interval problems are common at product companies (calendars, bookings, rides), and they reward one decision: sort by start or by end. Explaining *why* 435 sorts by end is a frequent follow-up.'
+prereqs:
+  - Sorting with comparators (Module 3 lesson 5)
+  - Difference arrays (Module 2 lesson 5)
+outcomes:
+  - Read endpoint rules (do `[1,2]` and `[2,3]` overlap?) before coding
+  - Merge overlapping intervals and insert one into a sorted list
+  - Explain why maximising kept intervals sorts by end (activity selection)
+  - Count the maximum overlap with a sweep of +1/−1 events
+ready:
+  - I can explain why 435 sorts by end, using the activity-selection argument
+  - My merge dry run and my sweep on `[[0,30],[5,10],[15,20]]` (2 rooms) match the visualizers
+  - My merge uses `Math.max` for contained intervals
+summary:
+  - 'Merge: sort by start; overlap if `start ≤ last end`; end = max(ends).'
+  - 'Insert into a sorted list: before / overlapping / after, O(n), no sort.'
+  - 'Max non-overlapping: sort by end; keep an interval if it starts at or after the last kept end.'
+  - 'Max simultaneous: events (+1 at start, −1 at end), ends first on ties.'
+  - Always check whether touching endpoints overlap.
+revision: Explain in two sentences why keeping the interval that ends first is never worse, then write the sweep loop from memory.
+warmup:
+  problem: 23
+topic: 'Intervals: endpoint rules, merge, insert, sort by end, sweep for maximum overlap'
+implement: Merge dry run; sweep on `[[0,30],[5,10],[15,20]]` to get 2 rooms
+problemsText: 'C: 56, 435 · S: 57 · O: 452, 1094'
+problems:
+  - num: 56
+    tier: C
+  - num: 435
+    tier: C
+  - num: 57
+    tier: S
+  - num: 452
+    tier: O
+  - num: 1094
+    tier: O
+doneWhen: You can explain why 435 sorts by end, using the activity-selection proof
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="intervals-and-endpoints" kind="theory" title="Intervals and endpoints">
+
+<Include id="theory/heaps-intervals-tries/intervals" />
+
+</Unit>
+
+<Unit id="merge-and-insert" kind="code" title="Merge and insert">
+
+<Include id="theory/heaps-intervals-tries/example-3" />
+
+<Viz id="iv-merge" />
+
+<Exercise id="ex-01" />
+
+<Viz id="iv-insert" />
+
+</Unit>
+
+<Unit id="keeping-the-most-intervals-sort-by-end" kind="theory" title="Keeping the most intervals: sort by end">
+
+Non-overlapping Intervals (435) asks for the minimum number of removals, which is the same as keeping as many compatible intervals as possible. Sort by **end** and keep every interval that starts at or after the end of the last one kept. Why end and not start: the interval that ends first leaves the most room for everything after it, so replacing any optimal solution's first interval with it never makes things worse (the activity-selection exchange argument, proven in Module 9).
+
+<Viz id="iv-select" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="sweeps-for-maximum-overlap" kind="theory" title="Sweeps for maximum overlap">
+
+<Include id="patterns/interval-sort-and-sweep" />
+
+<Viz id="sweep" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

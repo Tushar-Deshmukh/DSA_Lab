@@ -1,0 +1,25 @@
+---
+slug: permutation-search-with-a-used-set
+number: '5.3'
+title: Permutation search with a used set
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Pattern 5.3
+  lines:
+    - 1132
+    - 1141
+---
+
+**Pattern 5.3: Permutation search with a used set**
+
+1. *Recognise:* order matters; arrange all elements.
+2. *Clues:* "all permutations", "arrangements", "orderings", n ≤ 8–10.
+3. *From brute force:* this *is* the brute force; the skill is generating each arrangement once and pruning invalid prefixes early.
+4. *Why it works:* each level fills one position with one unused element.
+5. *Template:* Example 4.
+6. *Complexity:* O(n · n!).
+7. *Variations:* duplicates (47), N-Queens (51: one row per level; prune with column and diagonal sets `r - c`, `r + c`).
+8. *Inappropriate when:* n > 10 or only a count is needed.

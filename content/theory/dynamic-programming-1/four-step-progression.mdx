@@ -1,0 +1,20 @@
+---
+slug: four-step-progression
+title: The four-step progression used throughout this module
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: The four-step progression used all week
+  lines:
+    - 1883
+    - 1888
+---
+
+**The four-step progression used throughout this module.**
+
+1. *Brute-force recursion:* write `f(state)` in plain words and code it, ignoring efficiency. Draw two levels of its recursion tree and circle repeated states. Repetition = DP opportunity.
+2. *Memoisation (top-down):* store each `f(state)` result in a `Map` or array the first time it is computed. Time = (number of distinct states) × (work per state).
+3. *Tabulation (bottom-up):* fill a table in an order where every state's dependencies are already filled. No recursion, no stack limits.
+4. *Space optimisation:* if row i only depends on rows i−1 (and i−2), keep only those rows or a few variables.

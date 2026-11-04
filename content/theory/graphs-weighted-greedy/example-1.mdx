@@ -1,0 +1,39 @@
+---
+slug: example-1
+title: Example 1
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Example 1
+  lines:
+    - 1754
+    - 1778
+---
+
+**Example 1: Dijkstra (743 Network Delay Time).**
+
+```js
+function networkDelayTime(times, n, k) {
+  const adj = Array.from({ length: n + 1 }, () => []);   // nodes are 1..n
+  for (const [u, v, w] of times) adj[u].push([v, w]);
+  const dist = new Array(n + 1).fill(Infinity);
+  dist[k] = 0;
+  const heap = new MinHeap((a, b) => a[0] - b[0]);      // [distance, node]
+  heap.push([0, k]);
+  while (heap.size()) {
+    const [d, u] = heap.pop();
+    // stale entry: a shorter path was already found
+    if (d > dist[u]) continue;
+    for (const [v, w] of adj[u]) {
+      if (d + w < dist[v]) { dist[v] = d + w; heap.push([dist[v], v]); }
+    }
+  }
+  let ans = 0;
+  for (let i = 1; i <= n; i++) ans = Math.max(ans, dist[i]);
+  return ans === Infinity ? -1 : ans;
+}
+```
+
+Dry run: n = 4, k = 2, edges 2→1 (1), 2→3 (1), 3→4 (1). Pop \[0,2\]: dist1 = 1, dist3 = 1. Pop \[1,1\]: no edges. Pop \[1,3\]: dist4 = 2. Pop \[2,4\]. Max = 2.

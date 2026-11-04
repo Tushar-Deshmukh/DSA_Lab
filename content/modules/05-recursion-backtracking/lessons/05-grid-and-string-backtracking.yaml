@@ -1,0 +1,249 @@
+exercises:
+  - id: ex-01
+    legacyId: w5d5-1
+    type: fill
+    tag: The two rules
+    q: Complete `generateParenthesis` (problem 22).
+    template: |
+      function generateParenthesis(n) {
+        const res = [];
+        function dfs(s, open, close) {
+          if (s.length === 2 * n) { res.push(s); return; }
+          if ([[0]]) dfs(s + '(', open + 1, close);
+          if ([[1]]) dfs(s + ')', open, close + 1);
+        }
+        dfs('', 0, 0);
+        return res;
+      }
+    blanks:
+      - accept:
+          - open < n
+          - n > open
+      - accept:
+          - close < open
+          - open > close
+    fn: generateParenthesis
+    compare: unordered
+    tests:
+      - args:
+          - 1
+        expect:
+          - ()
+      - args:
+          - 2
+        expect:
+          - (())
+          - ()()
+      - args:
+          - 3
+        expect:
+          - ((()))
+          - (()())
+          - (())()
+          - ()(())
+          - ()()()
+    explain: Strings are immutable, so `s + '('` creates a new string per call and there is nothing to undo.
+    hints:
+      - When may you open another bracket?
+      - When may you close one?
+  - id: ex-02
+    legacyId: w5d5-2
+    type: bug
+    tag: Mark and restore
+    q: 'This Word Search sometimes reports that a word is missing when it is on the board: after one failed path, some cells can never be used again. Click the line that is missing its partner.'
+    code: |
+      function exist(board, word) {
+        const m = board.length, n = board[0].length;
+        function dfs(r, c, k) {
+          if (k === word.length) return true;
+          if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] !== word[k]) return false;
+          board[r][c] = '#';
+          return dfs(r + 1, c, k + 1) || dfs(r - 1, c, k + 1) ||
+                 dfs(r, c + 1, k + 1) || dfs(r, c - 1, k + 1);
+        }
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) if (dfs(r, c, 0)) return true;
+        return false;
+      }
+    bug:
+      - 5
+    kind: impl
+    explain: 'The cell is marked but never restored. After a failed path, its letter is gone for good, so every later search (from other starts or other directions) treats it as unusable. Save the letter, then restore it before returning: `const tmp = board[r][c]; board[r][c] = ''#''; const ok = …; board[r][c] = tmp; return ok;`.'
+    fix: |
+      const tmp = board[r][c];
+      board[r][c] = '#';
+      const ok = dfs(r + 1, c, k + 1) || dfs(r - 1, c, k + 1) ||
+                 dfs(r, c + 1, k + 1) || dfs(r, c - 1, k + 1);
+      board[r][c] = tmp;
+      return ok;
+    fine:
+      '3': 'Checking completion first is right: the word may end at the previous cell.'
+      '4': Bounds and mismatch are checked before indexing further, which is right.
+    hints:
+      - Every mutation in backtracking needs an undo.
+  - id: ex-03
+    legacyId: w5d5-3
+    type: trace
+    tag: Lesson 5 run
+    q: Word Search for `"ABC"` on `[["A","B","C"],["D","B","E"],["A","C","B"]]` (directions tried in the order down, up, right, left).
+    rows:
+      - prompt: Start cell of the first search, as r,c
+        answer: 0,0
+      - prompt: After matching A at (0,0), which neighbour matches B first, as r,c?
+        answer: 0,1
+        why: 'Down is (1,0) = D: mismatch. Up is off the board. Right is (0,1) = B: match.'
+      - prompt: Is the word found? (true/false)
+        answer: 'true'
+    verify: |
+      const b = [['A', 'B', 'C'], ['D', 'B', 'E'], ['A', 'C', 'B']], w = 'ABC'; const hits = [];
+      function dfs(r, c, k) { if (k === w.length) return true; if (r < 0 || r >= 3 || c < 0 || c >= 3 || b[r][c] !== w[k]) return false; hits.push(k + ':' + r + ',' + c); const t = b[r][c]; b[r][c] = '#'; const ok = dfs(r + 1, c, k + 1) || dfs(r - 1, c, k + 1) || dfs(r, c + 1, k + 1) || dfs(r, c - 1, k + 1); b[r][c] = t; return ok; }
+      let found = false; outer: for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) if (dfs(r, c, 0)) { found = true; break outer; }
+      console.log(hits.find((h) => h.startsWith('0:')).slice(2)); console.log(hits.find((h) => h.startsWith('1:')).slice(2)); console.log(found);
+    explain: Writing down the direction order and every mark/restore is exactly what an interviewer wants to see you do on a whiteboard.
+    hints:
+      - List the four neighbours of (0, 0) in the given order and check each letter.
+  - id: ex-04
+    legacyId: w5d5-4
+    type: code
+    tag: Palindrome Partitioning
+    q: 'Write `partition(s)` (problem 131): all ways to split s into palindromic substrings, in any order.'
+    fn: partition
+    compare: unordered
+    starter: |
+      function partition(s) {
+
+      }
+    solution: |
+      function partition(s) {
+        const res = [], path = [];
+        const isPal = (l, r) => { while (l < r) if (s[l++] !== s[r--]) return false; return true; };
+        function dfs(start) {
+          if (start === s.length) { res.push([...path]); return; }
+          for (let end = start; end < s.length; end++) {
+            if (!isPal(start, end)) continue;
+            path.push(s.slice(start, end + 1)); dfs(end + 1); path.pop();
+          }
+        }
+        dfs(0);
+        return res;
+      }
+    tests:
+      - args:
+          - aab
+        expect:
+          - - a
+            - a
+            - b
+          - - aa
+            - b
+      - args:
+          - a
+        expect:
+          - - a
+      - args:
+          - aba
+        expect:
+          - - a
+            - b
+            - a
+          - - aba
+      - args:
+          - aaa
+        expect:
+          - - a
+            - a
+            - a
+          - - a
+            - aa
+          - - aa
+            - a
+          - - aaa
+        hidden: true
+    explain: O(n · 2ⁿ) in the worst case ("aaaa…" has 2ⁿ⁻¹ partitions). Module 11's palindrome DP can precompute isPal in O(n²).
+    hints:
+      - 'Decision per level: where does the next piece end?'
+      - Only recurse when the piece is a palindrome (Module 2's two-pointer check).
+  - id: ex-05
+    legacyId: w5d5-5
+    type: interview
+    title: Path with Maximum Gold (LeetCode 1219)
+    q: '`grid[r][c]` is the gold in a cell (0 = empty). Starting anywhere with gold, you collect the cell''s gold and move up, down, left or right; you may not visit a cell twice in one path or step on a 0. Return the maximum gold you can collect. Example: `[[0,6,0],[5,8,7],[0,9,0]]` → 24 (9 → 8 → 7).'
+    model:
+      clarify: |
+        - Any start cell with gold; stop whenever you like.
+        - At most 25 cells contain gold, grid up to 15 × 15.
+      brute: 'This *is* a backtracking search: from every gold cell, DFS every simple path. The small gold count is what makes it feasible.'
+      optimize: 'Word Search''s skeleton: `dfs(r, c)` returns the best gold from here. Bounds or 0 → 0. Take the gold, mark the cell 0, best = gold + max of the four directions, restore, return best. Try every non-zero start.'
+      edges: |
+        - a single gold cell
+        - all zeros → 0
+        - a cycle of gold cells (marking prevents revisiting)
+      complexity: 'Exponential in the number of gold cells (≤ 25, each with ≤ 3 onward choices): roughly O(g · 3^g) in the worst case, fine for these limits.'
+    fn: getMaximumGold
+    starter: |
+      function getMaximumGold(grid) {
+
+      }
+    solution: |
+      function getMaximumGold(grid) {
+        const m = grid.length, n = grid[0].length;
+        function dfs(r, c) {
+          if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] === 0) return 0;
+          const gold = grid[r][c];
+          grid[r][c] = 0;
+          const best = gold + Math.max(dfs(r + 1, c), dfs(r - 1, c), dfs(r, c + 1), dfs(r, c - 1));
+          grid[r][c] = gold;
+          return best;
+        }
+        let ans = 0;
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) if (grid[r][c]) ans = Math.max(ans, dfs(r, c));
+        return ans;
+      }
+    tests:
+      - args:
+          - - - 0
+              - 6
+              - 0
+            - - 5
+              - 8
+              - 7
+            - - 0
+              - 9
+              - 0
+        expect: 24
+      - args:
+          - - - 1
+              - 0
+              - 7
+            - - 2
+              - 0
+              - 6
+            - - 3
+              - 4
+              - 5
+            - - 0
+              - 3
+              - 0
+            - - 9
+              - 0
+              - 20
+        expect: 28
+      - args:
+          - - - 0
+        expect: 0
+        hidden: true
+      - args:
+          - - - 5
+        expect: 5
+        hidden: true
+      - args:
+          - - - 1
+              - 1
+            - - 1
+              - 1
+        expect: 4
+        hidden: true
+    explain: Marking by setting the cell to 0 reuses the "0 means blocked" rule; restoring puts the gold back for other paths.
+    hints:
+      - Which earlier problem has the same mark / explore / restore shape?
+      - dfs(r, c) returns the best total starting at (r, c).
+annotated: []

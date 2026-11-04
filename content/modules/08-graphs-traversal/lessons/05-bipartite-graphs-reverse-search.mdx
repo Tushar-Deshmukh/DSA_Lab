@@ -1,0 +1,75 @@
+---
+slug: bipartite-graphs-reverse-search
+legacyId: w8d5
+title: Bipartite graphs and searching from the targets
+goal: Check bipartiteness by two-colouring every component, and answer "which cells can reach X?" by searching backwards from X once.
+why: Two-colouring is a clean example of forced choices propagating through a graph. Reverse search is the trick that turns 417 and 130 from O((m·n)²) into O(m·n), and it is easy to miss under pressure.
+prereqs:
+  - BFS and components (lessons 1–3)
+outcomes:
+  - Two-colour a graph with BFS, starting from every uncoloured node
+  - Explain why a colouring conflict means an odd cycle
+  - Search from the targets with the reversed condition (uphill from oceans, inward from borders)
+ready:
+  - 785 handles disconnected graphs
+  - 417 runs two searches from the oceans
+  - I two-coloured a 4-cycle and a triangle by hand
+summary:
+  - Bipartite ⇔ no odd cycle ⇔ a 2-colouring exists.
+  - BFS from each uncoloured node; neighbour gets `1 − colour[u]`; same colour = conflict.
+  - Many sources asking "can I reach the target?" → search from the target with the reversed rule.
+  - '417: two uphill searches from each ocean; intersect. 130: mark border-connected O''s; flip the rest.'
+  - O(V + E), O(m·n) on grids.
+revision: Explain why a triangle cannot be two-coloured, and describe 130's solution in two sentences without code.
+warmup:
+  problem: 210
+topic: Bipartite check by 2-colouring; reverse search from targets (borders, oceans)
+implement: 2-colour a 4-cycle and a triangle by hand
+problemsText: 'C: 785, 417 · S: 130'
+problems:
+  - num: 785
+    tier: C
+  - num: 417
+    tier: C
+  - num: 130
+    tier: S
+doneWhen: 785 handles disconnected graphs; 417 runs two searches from the oceans
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="two-colouring" kind="theory" title="Two-colouring">
+
+<Include id="theory/graphs-traversal/bipartite-graphs" />
+
+<Include id="patterns/two-colouring" />
+
+<Viz id="bipartite" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="search-from-the-targets" kind="theory" title="Search from the targets">
+
+<Include id="patterns/reverse-the-search-direction" />
+
+<Viz id="pacific" />
+
+<Exercise id="ex-03" />
+
+<Include id="theory/graphs-traversal/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

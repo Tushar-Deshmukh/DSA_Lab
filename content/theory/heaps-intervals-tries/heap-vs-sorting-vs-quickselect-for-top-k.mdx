@@ -1,0 +1,22 @@
+---
+slug: heap-vs-sorting-vs-quickselect-for-top-k
+title: Heap vs sorting vs quickselect for top-K
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Heap vs sorting vs quickselect for top-K
+  lines:
+    - 1341
+    - 1348
+---
+
+**Heap vs sorting vs quickselect for top-K.**
+
+| Approach | Time | Space | When to choose |
+| --- | --- | --- | --- |
+| Sort everything | O(n log n) | O(1)–O(n) | Simple, n small, or you need all elements ordered |
+| Min-heap of size k (for k largest) | O(n log k) | O(k) | k ≪ n, streaming data (703), memory-bound |
+| Quickselect | O(n) average, O(n²) worst | O(1) | One-off k-th element, can modify the array (215) |
+| Bucket by frequency | O(n) | O(n) | Frequencies bounded by n (347) |

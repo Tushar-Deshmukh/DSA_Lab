@@ -1,0 +1,87 @@
+---
+slug: dijkstras-algorithm
+legacyId: w9d1
+title: Dijkstra's algorithm
+goal: Find shortest paths from one source in a graph with non-negative weights, using a min-heap with lazy deletion, and know when BFS or Bellman-Ford is the right tool instead.
+why: '"Minimum time / cost / effort" over a weighted network is a standard medium interview question, and Dijkstra is the answer far more often than anything else. Interviewers listen for two things: the stale-entry check and why negative weights break it.'
+prereqs:
+  - BFS shortest paths in unweighted graphs (Module 8 lesson 3)
+  - Your `MinHeap` (Module 7 lesson 1)
+  - Adjacency lists from an edge list (Module 8 lesson 1)
+outcomes:
+  - 'Run Dijkstra by hand: a table of `dist` and heap contents per step'
+  - Implement it with lazy deletion (`if (d > dist[u]) continue`)
+  - Explain why marking visited on push is wrong here, though it is right for BFS
+  - Change the path cost function for minimax problems (1631)
+  - Say when to use BFS, 0-1 BFS or Bellman-Ford instead
+ready:
+  - I can explain the stale-entry check and why visited-on-push is wrong here
+  - 743 accepted, returning −1 when a node is unreachable
+  - I traced the 5-node example by hand before running the visualizer
+summary:
+  - '`dist` = ∞ except source = 0; heap of `[distance, node]`.'
+  - 'Pop the smallest; skip it if stale (`d > dist[u]`); relax each edge: `d + w < dist[v]` → update and push.'
+  - 'Correct only for non-negative weights: the popped node''s distance is final.'
+  - O((V + E) log V). Unweighted → BFS. Negative → Bellman-Ford. 0/1 weights → 0-1 BFS.
+  - 'Minimax variant (1631): use `max(d, w)` in place of `d + w`.'
+revision: From memory, write Dijkstra's main loop with the stale check, then say in one sentence why a negative edge breaks "popped means final".
+warmup:
+  problem: 207
+topic: 'Dijkstra: relaxation, non-negative weights, lazy deletion; when to use BFS or Bellman-Ford instead'
+implement: 'Dijkstra by hand on a 5-node weighted graph: table of `dist` and heap contents per step'
+problemsText: 'C: 743 · S: 1631'
+problems:
+  - num: 743
+    tier: C
+  - num: 1631
+    tier: S
+doneWhen: You can explain the stale-entry check and why visited-on-push is wrong here
+estimate:
+  T: 30
+  I: 25
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="from-bfs-to-weighted-shortest-paths" kind="theory" title="From BFS to weighted shortest paths">
+
+BFS works on unweighted graphs because nodes leave the queue in order of distance. With weights, the order in which nodes are discovered no longer matches their distance: a path of three cheap edges can beat one expensive edge. Dijkstra restores the "process in order of distance" idea by replacing the queue with a min-heap keyed by tentative distance.
+
+<Include id="theory/graphs-weighted-greedy/dijkstras-algorithm" />
+
+<Viz id="dijkstra" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="implementing-network-delay-time" kind="code" title="Implementing Network Delay Time">
+
+<Include id="theory/graphs-weighted-greedy/example-1" />
+
+<Include id="patterns/dijkstra" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="changing-the-cost-function-stretch-1631" kind="theory" title="Changing the cost function (Stretch: 1631)">
+
+Dijkstra only needs one thing from the path cost: extending a path never makes it cheaper. Sums of non-negative weights satisfy that, and so does "the largest single step so far". Problem 1631 (Path With Minimum Effort) asks for the route whose **largest** height difference is smallest, so the relaxation becomes `max(d, |h[next] − h[cur]|)`.
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

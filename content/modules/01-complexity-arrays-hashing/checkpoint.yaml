@@ -1,0 +1,188 @@
+exercises:
+  - id: ex-01
+    legacyId: w1sat-1
+    type: complexity
+    tag: Drill 1
+    code: |
+      for (let i = 0; i < n; i++) {}
+      for (let j = 0; j < m; j++) {}
+    fields:
+      - label: Time
+        answer: O(n + m)
+        options:
+          - O(n + m)
+          - O(n · m)
+          - O(n)
+          - O(max(n, m)²)
+        why:
+          O(n · m): 'The loops are sequential, not nested: add, don''t multiply.'
+    explain: Sequential loops add. If you know m ≤ n, you may simplify to O(n).
+    hints:
+      - Is one loop inside the other?
+  - id: ex-02
+    legacyId: w1sat-2
+    type: complexity
+    tag: Drill 2
+    code: |
+      for (let i = 1; i < n; i *= 3) work();
+    fields:
+      - label: Time
+        answer: O(log n)
+        why:
+          O(n): 'i triples each time: 1, 3, 9, … reaches n after log₃ n steps, which is O(log n).'
+    explain: 'The base of the logarithm is a constant factor: log₃ n = log₂ n / log₂ 3.'
+    hints:
+      - How fast does i grow?
+  - id: ex-03
+    legacyId: w1sat-3
+    type: complexity
+    tag: Drill 3
+    code: |
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < i; j++)
+          for (let k = 0; k < 5; k++) work();
+    fields:
+      - label: Time
+        answer: O(n²)
+        why:
+          O(n³): 'The innermost loop runs 5 times: a constant.'
+    explain: 5 · (0 + 1 + … + (n−1)) = 5 · n(n−1)/2 = O(n²).
+    hints:
+      - Which loops depend on n?
+  - id: ex-04
+    legacyId: w1sat-4
+    type: complexity
+    tag: Drill 4
+    code: |
+      const sorted = [...nums].sort((a, b) => a - b);
+      for (const x of sorted) if (set.has(x)) count++;
+    fields:
+      - label: Time
+        answer: O(n log n)
+        why:
+          O(n): 'The sort dominates: O(n log n) + O(n) = O(n log n).'
+      - label: Extra space
+        answer: O(n)
+        why:
+          O(1): '`[...nums]` copies the array: O(n).'
+    explain: Count the copy and the sort, not just the loop.
+    hints:
+      - What is the most expensive line?
+  - id: ex-05
+    legacyId: w1sat-5
+    type: complexity
+    tag: Drill 5
+    code: |
+      function sum(arr, i = 0) {
+        if (i === arr.length) return 0;
+        return arr[i] + sum(arr, i + 1);
+      }
+    fields:
+      - label: Time
+        answer: O(n)
+      - label: Stack space
+        answer: O(n)
+        why:
+          O(1): 'Each call waits for the next: n frames on the stack at the deepest point. JavaScript engines do not reliably optimise tail calls.'
+    explain: n calls of O(1) work; n frames deep. Around 10⁴–10⁵ frames, recursion like this can overflow the stack.
+    hints:
+      - How deep does the recursion go?
+  - id: ex-06
+    legacyId: w1sat-6
+    type: complexity
+    tag: Drill 6
+    code: |
+      function sum(arr) {
+        if (arr.length === 0) return 0;
+        return arr[0] + sum(arr.slice(1));
+      }
+    fields:
+      - label: Time
+        answer: O(n²)
+        why:
+          O(n): '`slice(1)` copies n − 1, then n − 2, … elements: O(n²) copying in total.'
+      - label: Extra space
+        answer: O(n²)
+        why:
+          O(n): 'Each frame holds its own slice. At the deepest point, slices of length n−1, n−2, … 1 are all alive: O(n²).'
+    explain: 'Pass an index instead of slicing (reference 6.1: avoiding unnecessary allocations).'
+    hints:
+      - What does `slice(1)` cost, and how many slices are alive at once?
+  - id: ex-07
+    legacyId: w1sat-7
+    type: complexity
+    tag: Drill 7
+    code: |
+      const seen = new Set();
+      for (const x of nums) {
+        if (seen.has(target - x)) return true;
+        seen.add(x);
+      }
+    fields:
+      - label: Time (average)
+        answer: O(n)
+      - label: Extra space
+        answer: O(n)
+    explain: One pass with O(1) average set operations.
+    hints:
+      - What do `has` and `add` cost on average?
+  - id: ex-08
+    legacyId: w1sat-8
+    type: complexity
+    tag: Drill 8
+    code: |
+      let i = 0, j = n - 1;
+      while (i < j) {
+        if (ok(i, j)) i++;
+        else j--;
+      }
+    fields:
+      - label: Time
+        answer: O(n)
+        why:
+          O(log n): The gap j − i shrinks by 1 per iteration, not by half.
+          O(n²): There is one loop; each iteration moves one pointer.
+    explain: 'This is the next module''s two-pointer loop: at most n − 1 iterations.'
+    hints:
+      - How much does j − i shrink per iteration?
+  - id: ex-09
+    legacyId: w1sat-9
+    type: complexity
+    tag: Drill 9
+    code: |
+      for (let i = 0; i < n; i++) {
+        const row = new Array(n).fill(0);
+        grid.push(row);
+      }
+    fields:
+      - label: Time
+        answer: O(n²)
+      - label: Extra space
+        answer: O(n²)
+    explain: 'n rows of n cells: building an n × n grid is O(n²) in both time and space.'
+    hints:
+      - How many cells are created?
+  - id: ex-10
+    legacyId: w1sat-10
+    type: complexity
+    tag: Drill 10
+    code: |
+      for (const w of words) {
+        const key = [...w].sort().join('');
+        groups.set(key, (groups.get(key) ?? 0) + 1);
+      }
+    fields:
+      - label: Time (n words, length ≤ k)
+        answer: O(n k log k)
+        options:
+          - O(n)
+          - O(n k)
+          - O(n k log k)
+          - O(n log n)
+        why:
+          O(n): 'Each key is built by sorting a word: O(k log k), not O(1).'
+          O(n log n): The sort is per word (length k), not over the n words.
+    explain: Name both input sizes when there are two.
+    hints:
+      - What does building one key cost?
+annotated: []

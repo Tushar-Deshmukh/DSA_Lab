@@ -1,0 +1,25 @@
+---
+slug: topological-sort-and-directed-cycle-detection
+number: '8.3'
+title: Topological sort and directed cycle detection
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Pattern 8.3
+  lines:
+    - 1668
+    - 1677
+---
+
+**Pattern 8.3: Topological sort and directed cycle detection**
+
+1. *Recognise:* dependencies, prerequisites, ordering constraints.
+2. *Clues:* "prerequisites", "must be done before", "order of tasks", "build order", "is it possible to finish".
+3. *From brute force:* trying permutations of tasks is O(n!); a topological order exists iff there is no cycle.
+4. *Why it works:* a node with in-degree 0 has no unmet dependencies, so it can always go next.
+5. *Template:* Kahn (Example 3) or three-state DFS (Example 4).
+6. *Complexity:* O(V + E).
+7. *Variations:* return any valid order (210), detect cycle only (207), safe states (802), alien dictionary (Premium; know the idea).
+8. *Inappropriate when:* the graph is undirected (use components or DSU).
