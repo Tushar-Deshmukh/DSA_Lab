@@ -49,6 +49,7 @@ Branch `phase-1-foundation`.
 | JavaScript per page | Chromium resource timing on the production build | 165–167 KB gzip on the shell pages (budget 200 KB, tested) |
 | Development server | throwaway script: `next dev` with an in-memory MongoDB, driven by Chromium | pages load; the development policy allows eval as intended; no policy violations or page errors; sign-in and saving to the account work. Once, on the first start after code changes, the page reloaded in a loop; two later runs did not repeat it |
 | Compose file | `docker compose config` | valid |
+| CI on GitHub (Linux, Ubuntu 24.04) | GitHub Actions, the push run and the pull-request run of PR #1 | all three jobs passed in both runs: checks (9 test files), legacy suite (same numbers as on Windows), end-to-end (41 Chromium tests). About 5½ minutes per run |
 
 The unit and integration tests cover:
 - Settings merging: commutative, associative and idempotent, checked on 500 random cases.
@@ -100,8 +101,8 @@ The end-to-end tests cover:
 
 - `docker compose up`: not run, because the Docker daemon is not running on this machine (the file validates). Mailpit is not exercised; the SMTP path is tested against an in-process server instead.
 - GitHub sign-in: needs an OAuth app under the `Tushar-Deshmukh` account; untested.
-- CI: the workflow is written and parses, but has never run, because there is no GitHub repository yet.
-- Vercel: not deployed. The per-page hash policy (D-006 risk) and the `Secure` cookie flag (HTTPS only) are unverified there.
+- CI: runs on GitHub (above). Firefox and WebKit run only in the nightly job, which has not run yet.
+- Vercel: not deployed. The per-page hash policy (D-006 risk) and the `Secure` cookie flag (HTTPS only) are unverified there. `vercel.json` and `docs/deployment.md` are ready for the first deployment.
 - Production email provider: not chosen. Production builds have email sign-in switched off until one is set.
 - Guest data meeting account data: "add to my account" or "not now" only. Settings merge safely by design; the full three-way choice comes with richer data in Phase 7.
 - Multiple tabs: a change in one tab reaches other open tabs only after they reload.
