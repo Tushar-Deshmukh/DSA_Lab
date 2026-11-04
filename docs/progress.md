@@ -26,7 +26,7 @@ One entry per phase: what was built, what was tested and how, and what is not do
 | Proposed dependencies resolve | `npm install --package-lock-only` | TypeScript 6.0.3 with ESLint 9.39.5: no peer conflicts, one `mongodb`; the newer majors conflict (D-003) |
 | MDX on legacy prose | `docs/phase-0/spikes/mdx` | 471 of 471 chunks compile after escaping; text matches the legacy renderer in 470 (D-008) |
 | Script policy | `docs/phase-0/spikes/web/run-csp.mjs`; Next 16.4.5 production build; Chromium, Firefox, WebKit | per-page hashes work and stay static; experimental SRI and plain nonces fail (D-006) |
-| Runner isolation | same spike, all three browsers | eval allowed only in the Worker; network blocked; storage removed; infinite loop terminated (D-007) |
+| Runner isolation | same spike, all three browsers | eval allowed only in the Worker; network blocked; IndexedDB removed; page stays responsive during an infinite loop and can terminate the Worker (D-007) |
 | Better Auth with Mongoose on one driver | `docs/phase-0/spikes/web/auth-spike.mjs` against MongoDB 8.2.6 (replica set, mongodb-memory-server) | magic-link round trip, single-use token, cookie flags, collection names, GitHub authorize URL, cross-collection transaction (D-002) |
 
 ### Defects found in the legacy course

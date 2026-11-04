@@ -42,7 +42,7 @@
   - TypeScript 7 and ESLint 10 break the lint toolchain.
   - The Auth.js MongoDB adapter pulls in a second MongoDB driver.
 - **Next's documented static-friendly option for a strict policy doesn't work for App Router pages.** Experimental SRI leaves inline scripts blocked and pages unhydrated. Nonces force every page to render dynamically. Per-page hashes work.
-- **"Unseen stays unseen" is broken today**, in ways the legacy test cannot see. The exact statements of three reserved problems sit on Saturday pages that learners see before the assessment, and four Module 12 problems are named next to their patterns in the theory ([inventory §13](inventory.md#13-unseen-leaks-missed-by-the-legacy-test)).
+- **"Unseen stays unseen" is broken today**, in ways the legacy test cannot see. The exact statements of three reserved problems sit on Saturday pages that learners see before the assessment, and five Module 12 problems are named next to their patterns in the theory or the overview ([inventory §13](inventory.md#13-unseen-leaks-missed-by-the-legacy-test)).
 - **Removing dates is a real job:** 1,256 occurrences in the text plus 104 strings in visualizers, with domain phrases such as "days until warmer" that a word ban would break.
 - **Some things the brief asks for have no legacy data:**
   - a mapping from problems to patterns (the bank's pattern column is free text with 164 distinct values)
@@ -87,7 +87,7 @@ learner code ─► /runner/worker.js  (own policy: eval yes, network no, storag
 - All writes go through Route Handlers. Each one validates its input with Zod, scopes every query to the session user (repository functions take `userId` first), is rate-limited (D-023), and is idempotent by operation id.
 - No secrets in client code. Environment variables are validated with Zod at start-up, and server-only modules import `server-only`.
 - Content Security Policy: a header plus per-page hash policies (D-006). The runner has its own policy (D-007). Also `frame-ancestors 'none'`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Content-Type-Options: nosniff`, and a `Permissions-Policy` that turns off camera, microphone and geolocation.
-- Session cookies are `HttpOnly`, `SameSite=Lax`, and `Secure` in production. Better Auth checks the origin on state-changing auth requests.
+- Session cookies are `HttpOnly` and `SameSite=Lax` (seen in the spike). `Secure` in production and the rejection of auth requests from other origins are configured and tested in Phase 1; neither was tested in Phase 0.
 - Learner text (notes, journal entries) is rendered as Markdown with HTML disabled and links sanitised.
 - Progress is self-reported by design (D-014). The server protects other learners' data, not the honesty of one learner's own record.
 

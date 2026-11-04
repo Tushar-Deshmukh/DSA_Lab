@@ -17,7 +17,7 @@ npx playwright install chromium
 node tools/build.mjs            # creates dist/, which every test reads
 node tests/content.mjs
 node tests/templates.mjs
-node tests/ui-exercises.mjs     # no arguments = every page with exercises
+node tests/ui-exercises.mjs all # every page with exercises (the legacy README's form)
 node tests/behaviour.mjs
 node tests/smoke.mjs <page ids> # no arguments = only "home"; Phase 0 passed all 100 page ids
 ```

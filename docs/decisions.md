@@ -24,7 +24,7 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 ## D-002 Authentication library — **needs your choice**
 
 **Context.** The brief says "Auth.js with the MongoDB adapter". The current state, checked on 2026-11-04:
-- `next-auth` v5 is still beta (`5.0.0-beta.32`). The July 2026 security post says "`next-auth` v5 is still in beta and ships on the `beta` tag". One of that post's four advisories, an auth check that fails open in v5 middleware, is fixed only in that beta.
+- `next-auth` v5 is still beta (`5.0.0-beta.32`). The July 2026 security post says "`next-auth` v5 is still in beta and ships on the `beta` tag". That post fixed four advisories, in `5.0.0-beta.32`, `4.24.15` and `@auth/core` 0.41.3.
 - `next-auth` v4 (`4.24.15`) is in "maintenance mode" per the Auth.js integrations page.
 - Auth.js is now part of Better Auth. Its migration page says: "if you're starting a new project or facing challenges with your current setup, we strongly recommend using Better Auth."
 - `@auth/mongodb-adapter` 3.11.3 requires `mongodb` ^6, but Mongoose 9.11.4 depends on `mongodb` ~7.7. A test resolve installed two drivers (6.22.0 and 7.7.0), so the app would run two connection pools with two incompatible `ObjectId` classes.
@@ -59,7 +59,7 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 
 | Combination | Peer-dependency overrides |
 | --- | --- |
-| TypeScript 7.0.2 | 11 |
+| TypeScript 7.0.2 (first resolve, newest version of everything) | 11 |
 | TypeScript 6.0.3 + ESLint 10.14.0 | 3 |
 | TypeScript 6.0.3 + ESLint 9.39.5 | none (717 packages) |
 
@@ -91,7 +91,7 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 - Guests and accounts share one code path.
 - Pages can be cached by a CDN.
 - The strict script policy in D-006 becomes possible.
-- Progress widgets show a placeholder until local state loads. That takes tens of milliseconds, because the data is on the device.
+- Progress widgets show a placeholder until local state loads. It is read from the device, not the network; the delay will be measured in Phase 1.
 
 **Rejected.** Server-rendering user data into pages: no static caching, and separate guest and account paths. A client-only single-page app: it gives up server components, which render prose with zero JavaScript.
 
@@ -143,8 +143,8 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 - `new Function` ran inside the worker, while a page script was refused eval.
 - `fetch` from the worker was blocked, so the worker's own `connect-src 'none'` applied rather than the page's policy.
 - Cross-origin `importScripts` and `blob:` workers were blocked.
-- `indexedDB` and `caches` are reachable from learner code by default. After the lockdown they were `undefined`, including through `new Function('return this')()`.
-- A `while (true) {}` run was terminated.
+- `indexedDB` and `caches` are reachable from learner code by default. After the lockdown, `indexedDB` was `undefined`, including through `new Function('return this')()`. The other removed globals use the same code but were not checked one by one; Phase 4 tests each of them.
+- During a `while (true) {}` run the page stayed responsive and could call `terminate()`. Phase 4 adds a test that the worker really stops.
 
 **Honest limit.** Hidden tests have to reach the browser to run there. A determined learner can read them in developer tools. Withholding them is a deterrent, not a secret.
 
@@ -309,7 +309,7 @@ Full table in [plan.md §10](plan.md#10-data-model).
 - **LeetCode re-solves keep the legacy interval rule exactly** ([plan.md §9](plan.md#9-learning-logic)).
 - **A problem is mastered** after at least three clean re-solves, each at least 7 days after the previous counted one. They are chosen greedily from the learner's actual re-solve dates. This fixes legacy defect 1, and the two counter-examples become tests.
 
-**Rejected.** SM-2: simpler, but its fixed ease factors adapt poorly to individual items. FSRS fits each item to its review history and has a maintained TypeScript implementation.
+**Rejected.** SM-2: simpler, but its intervals come from a fixed formula and a per-item ease factor rather than a model of forgetting. FSRS fits each item's memory state from its review history and has a maintained TypeScript implementation.
 
 ---
 

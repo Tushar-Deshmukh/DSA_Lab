@@ -280,7 +280,7 @@ No factual error was found in the theory while reading it. The tests prove answe
 7. **7 weak visualizer references** (section 8). Strengthen in Phase 3.
 8. **Random inputs are skipped silently** when an error message matches `/Keep|Use|must|Need|at most|fits/`. Nothing is skipped today, but a broken generator would go unnoticed. The port skips only on a `validate` error and requires at least 250 of 300 accepted.
 9. **The PDF companion's default time split** (`src/print.js`: T25 · I20 · P50 · R20 · N5) differs from the roadmap and the app (T25 · I15 · P60 · R15 · N5).
-10. **README inaccuracies**: the companion PDF is missing; "85 pages" counts week overviews.
+10. **README inaccuracies**: the companion PDF is missing; "85 pages" counts week overviews; it calls `marked` and `js-yaml` "pinned in package.json", but `package.json` uses `^` ranges (only the lockfile pins them).
 
 ## 16. This machine
 
