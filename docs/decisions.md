@@ -47,6 +47,12 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 
 **Reversal cost.** High once real users exist, because the session and account schemas differ. Decide before Phase 1.
 
+**Phase 1 notes.**
+- Better Auth turns its origin and callback-URL checks off when `NODE_ENV=test`. The config sets `advanced.disableOriginCheck: false`, and integration tests prove the 403s.
+- Magic-link tokens are stored hashed (`storeToken: 'hashed'`).
+- Per-IP limits are stored in MongoDB (`auth_rate_limits`); the 429 is tested. `AUTH_RATE_LIMIT=off` is allowed only outside production, for the end-to-end server.
+- The browser does not load Better Auth's client library. It calls the four endpoints it needs (D-026).
+
 ---
 
 ## D-003 TypeScript 6.0.3 and ESLint 9.39.5, not the newest majors
@@ -64,6 +70,8 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 | TypeScript 6.0.3 + ESLint 9.39.5 | none (717 packages) |
 
 **Decision.** Pin TypeScript 6.0.3 and ESLint 9.39.5. Revisit when `typescript-eslint` and `eslint-config-next` support the new majors.
+
+**Phase 1 note.** npm now marks ESLint 9.39.5 as "no longer supported". It runs only on developer machines and in CI, never in the app. Accepted until Next's lint plugins support ESLint 10.
 
 **Rejected.** TypeScript 7, because type-aware linting breaks. ESLint 10, because Next's lint plugins don't support it yet. Dropping type-aware linting.
 
@@ -127,6 +135,17 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 **Risk.** Variant F depends on Next writing prerendered pages to `.next/server/app` and serving those files. That is true for `next start` in 16.4.5 but has not been tested on Vercel. If it fails on the chosen host, fall back to variant E, which is verified and documented by Next. Making that switch only changes configuration, because D-005 keeps user data out of the HTML either way.
 
 **Rejected.** A and B: they don't cover inline scripts. C: no protection from injected scripts. D: broken.
+
+**Phase 1 notes.**
+- `npm run build` runs `scripts/csp-hashes.mjs` after `next build`. It covers 17 prerendered pages, Next's own 404 and 500 pages included, with at most 4 hashes per page.
+- Every page route is static; only `/api/*` renders per request.
+- Zod's eval probe had to be switched off for zero violations (D-026).
+- End-to-end tests in three browsers check:
+  - no violations;
+  - injected scripts and inline handlers blocked;
+  - page eval blocked;
+  - `blob:` workers blocked;
+  - the runner's own policy.
 
 ---
 
@@ -272,6 +291,15 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 
 **Rejected.** Server Actions for queued writes: action ids change with every deploy, so writes queued before a deploy would fail on replay. Writing straight to the server: data loss on flaky connections. A CRDT library: too much for single-user data.
 
+**Phase 1 notes.**
+- **Raw IndexedDB, not idb-keyval.** Each owner's database has three object stores (`docs`, `outbox`, `meta`). idb-keyval keeps one store per database, so it cannot change a document and the outbox in one transaction.
+- **Status rules** live in `lib/client/save-status.ts`, with unit tests:
+  - "Saving…" until the device has stored a change and, when signed in, until it is queued;
+  - "waiting" only after a failed send;
+  - "saved" only when nothing is queued.
+- **Offline start.** A signed-in learner who opens the app offline keeps their own account's copy; the last confirmed session is remembered.
+- **Sign-out** waits for the server's confirmation before removing the account's copy from the device.
+
 ---
 
 ## D-015 Data model changes against the brief
@@ -379,6 +407,11 @@ Full table in [plan.md §10](plan.md#10-data-model).
 
 **Rejected.** Requiring Docker for unit tests: Docker isn't always running on this machine.
 
+**Phase 1 notes.**
+- **Pinned versions.** MongoDB 8.0.34, both in Docker and in the tests (`package.json` → `config.mongodbMemoryServer`); Mailpit v1.33.0.
+- **CI** uses `mongodb-memory-server` too, because GitHub's service containers cannot run the command that starts a replica set.
+- **Email tests.** The SMTP path is tested against a small SMTP server inside the test. The end-to-end server writes emails to files (`EMAIL_TRANSPORT=file`, allowed only when `APP_ENV` is not `production`).
+
 ---
 
 ## D-023 Rate limiting without a third party
@@ -407,13 +440,20 @@ Checked with `npm view` on 2026-11-04. They will be checked again at install tim
 | better-auth | 1.7.16 | | @codemirror/lang-javascript | 6.2.5 |
 | @better-auth/mongo-adapter | 1.7.16 | | cmdk | 1.1.1 |
 | mongoose | 9.11.4 | | minisearch | 7.2.0 |
-| mongodb | 7.7.0 (D-004) | | idb-keyval | 6.3.0 |
+| mongodb | 7.7.0 (D-004) | | server-only | 0.0.1 |
 | zod | 4.6.7 | | lucide-react | 1.68.0 |
 | nodemailer | 10.3.1 | | tailwindcss, @tailwindcss/postcss | 4.3.4 |
 | vitest, @vitest/coverage-v8 | 5.1.0 | | @playwright/test | 1.64.1 |
 | mongodb-memory-server | 11.3.0 | | @axe-core/playwright | 4.14.0 |
 
 All are open source: MIT, ISC, MIT-0 or Apache-2.0, except `@axe-core/playwright`, which is MPL-2.0 (a test-only dependency). Nothing on this list is a paid service.
+
+Installed in Phase 1:
+- Everything in the first column, plus `cmdk`, `lucide-react`, Tailwind, `@playwright/test` and `@axe-core/playwright`.
+- `@types/react` and `@types/react-dom` 19.3.0, `@types/node` 24.19.2.
+- `playwright` 1.64.1, which the legacy browser tests require.
+
+idb-keyval was dropped (D-014). The rest of the second column is added in the phase that first needs it, after checking its version again.
 
 ---
 
@@ -428,3 +468,23 @@ All are open source: MIT, ISC, MIT-0 or Apache-2.0, except `@axe-core/playwright
 - **Network access:** Vercel functions have no fixed IP addresses, so Atlas network access must allow them. Either open access with a strong database password, or the Vercel–Atlas integration.
 - **Script policy:** D-006's per-page script hashes have to be verified on a Vercel deployment. That needs the repository on GitHub and connected to Vercel, which only you can do.
 - **Email:** magic links in production need an email provider. That is **still open**, because it receives learners' email addresses.
+
+---
+
+## D-026 A lean browser bundle: no heavy client libraries on every page (Phase 1)
+
+**Context.** The first Phase 1 build sent 263 KB of compressed JavaScript to every page. About 100 KB of that was Better Auth's browser client together with full Zod; another 20 KB was the command palette. The brief asks for small initial JavaScript per route and an interactive lesson in under 3 s on a mid-range phone.
+
+**Decision.**
+- **Auth in the browser.** The browser calls the four Better Auth endpoints it needs through `lib/client/auth.ts`: get the session, request a magic link, start GitHub sign-in, sign out. Better Auth itself still runs on the server.
+- **Shared schemas.** Schemas used in the browser are written with `zod/mini`, imported directly in the module that defines them so unused parts can be dropped. Full Zod stays on the server (`lib/env.ts`).
+- **Zod setting.** `lib/domain/zod.ts` sets `jitless` before any schema is built, so Zod does not probe for eval (D-006).
+- **Rarely used UI loads on demand.** The command palette loads on first use, or while the browser is idle.
+- **Budget.** `tests/e2e/budget.spec.ts` fails if a shell page loads more than 200 KB (gzip). Today they load 165–167 KB, of which React DOM and the Next.js runtime are about 155 KB.
+
+**Rejected.**
+- Better Auth's React client: about 100 KB on every page for four requests.
+- Full Zod in the browser: about 90 KB.
+- Hand-written validators instead of `zod/mini`: they would drift from the schemas the server uses.
+
+**Reversal cost.** Low. These are imports, and the budget test shows the effect of any change.

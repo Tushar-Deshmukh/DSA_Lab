@@ -1,6 +1,6 @@
 # Legacy inventory (Phase 0)
 
-Exact counts for the legacy course as received, measured on 2026-11-04. Every number below was produced by running code, not estimated. Scripts that reproduce them are in [phase-0/](phase-0/README.md).
+Exact counts for the legacy course as received, measured on 2026-11-04. File paths are as received; since Phase 1 the same files live under `legacy/`. Every number below was produced by running code, not estimated. Scripts that reproduce them are in [phase-0/](phase-0/README.md).
 
 ## 1. How the numbers were produced
 
