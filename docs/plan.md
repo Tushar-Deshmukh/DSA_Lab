@@ -1,6 +1,6 @@
 # DSA Pattern Lab: build plan
 
-**Status: approved 2026-11-04.** Answers: question 1 Better Auth; question 4 a free Vercel account and the free MongoDB Atlas tier, with the production email provider still open; question 17 the `Tushar-Deshmukh` git identity and GitHub account. All other questions take their defaults. Phase 1 is in progress; see [progress.md](progress.md) for what is built. Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
+**Status: approved 2026-11-04.** Answers: question 1 Better Auth; question 4 a free Vercel account and the free MongoDB Atlas tier, with the production email provider still open; question 17 the `Tushar-Deshmukh` git identity and GitHub account. All other questions take their defaults. Phase 1 (foundation) is built and tested and waiting for review; see [progress.md](progress.md). Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
 
 ## Contents
 
@@ -103,7 +103,7 @@ learner code ─► /runner/worker.js  (own policy: eval yes, network no, storag
 | --- | --- |
 | LCP < 2.5 s on a mid-range phone | Static HTML from a CDN. Prose renders on the server. Fonts are self-hosted through `next/font` with real fallback stacks |
 | Lesson interactive < 3 s | Visualizers: one lazy chunk each. The editor and runner load only on code exercises. No user data is needed for first paint |
-| Small initial JavaScript per route | Measured in CI from the build's route sizes, with a budget per route type (set in Phase 1 from the empty shell, then held) |
+| Small initial JavaScript per route | Budget per route type, checked by `tests/e2e/budget.spec.ts`: shell pages 200 KB gzip (Phase 1 baseline 165–167 KB; D-026). Lesson pages get their own budget in Phase 5 |
 
 ## 4. Repository layout
 

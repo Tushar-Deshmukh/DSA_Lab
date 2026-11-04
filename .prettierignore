@@ -1,0 +1,11 @@
+legacy/
+docs/
+.next/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+.generated/
+package-lock.json
+next-env.d.ts
+**/*.md

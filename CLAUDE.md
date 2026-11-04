@@ -4,8 +4,8 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 
 ## Where things stand
 
-- Phase 0 (read and plan) was approved on 2026-11-04. Phase 1 (foundation) is in progress on branch `phase-1-foundation`.
-- The legacy course is at the repository root, as received: `source/`, `content/`, `src/`, `tests/`, `tools/`, `dsa-pattern-lab.html`. The first commit of Phase 1 moves it into `legacy/` with `git mv`. From then on, `legacy/` is never edited.
+- Phase 0 (read and plan) was approved on 2026-11-04. Phase 1 (foundation) is built and tested on branch `phase-1-foundation`, waiting for review.
+- The legacy course lives in `legacy/` and is never edited. `npm run legacy:test` runs its tests on a temporary copy.
 - Where to look:
   - `docs/progress.md`: what each phase built and tested.
   - `docs/decisions.md`: choices, with the alternatives rejected.
@@ -32,6 +32,9 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 
 - **Types.** TypeScript strict, ESM. No `any`: take `unknown` and parse it with Zod.
 - **Validation.** Zod checks every boundary: route handlers, content files, environment variables, IndexedDB reads, imported files.
+  - Schemas that reach the browser use `zod/mini`. Write `import './zod'; import * as z from 'zod/mini';` in the module that defines them (`lib/domain/zod.ts` turns off Zod's eval probe). Never re-export the `z` namespace: it defeats tree-shaking.
+  - Full Zod only in server-only code.
+- **Browser weight (D-026).** No library that weighs tens of KB on every page without a reason. Rarely used UI loads on demand. `tests/e2e/budget.spec.ts` holds shell pages to 200 KB gzip.
 - **Domain logic.** `lib/domain/` holds pure rules shared by client and server: scheduling, mastery, journal, checkers, planner, merge reducers.
   - No I/O.
   - No `Date.now()` inside a rule: pass `now` in.
@@ -70,12 +73,23 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 ## Working on this machine (Windows)
 
 - **Paths.** Use `fileURLToPath(import.meta.url)`, never `new URL(import.meta.url).pathname`. The second one gives `C:\C:\…`, which is why the legacy build fails on Windows.
-- **Legacy tests** do not run on Windows as shipped. Until Phase 1 adds `npm run legacy:test`, follow `docs/phase-0/README.md`, which runs them on a patched copy.
-- **Docker Desktop** must be running for `docker compose up`.
+- **Legacy tests** do not run on Windows as shipped. Use `npm run legacy:test`, which patches a temporary copy.
+- **Docker Desktop** must be running for `docker compose up`. The unit, integration and end-to-end tests do not need Docker: they start an in-memory MongoDB.
+- **npm scripts on Windows** run in `cmd.exe`, where `VAR=x command` does not work. Set variables in a small Node script instead, as `scripts/build-for-e2e.mjs` does.
 
 ## Commands
 
-None yet. Phase 1 adds and documents `npm run dev`, `build`, `lint`, `typecheck`, `test`, `test:e2e`, `content:check`, `content:sync` and `legacy:test`.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | development server; needs `.env.local` (copy `.env.example`) and MongoDB (`docker compose up -d`) |
+| `npm run build` / `npm start` | production build (with the script-hash step) and server |
+| `npm run lint` · `typecheck` · `format:check` · `format` | static checks; `format` rewrites files |
+| `npm test` | Vitest unit and integration tests (in-memory MongoDB 8.0.34; the first run downloads it) |
+| `npm run build:e2e` then `npm run test:e2e` | Playwright against a production build made with test settings; `npx playwright install` once |
+| `npm run legacy:test` | the legacy suite on a patched copy (`-- --only=content,templates` for a quick run) |
+| `npm run check:deps` | fails if the production dependency tree holds two MongoDB drivers |
+
+Sign-in methods are fixed at build time, because `/sign-in` is static. Set `EMAIL_TRANSPORT` and `GITHUB_*` before `npm run build`.
 
 ## End of every phase
 

@@ -1,6 +1,111 @@
 # Progress
 
-One entry per phase: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
+One entry per phase, newest first: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
+
+## Phase 1: Foundation (2026-11-04) — waiting for your review
+
+Branch `phase-1-foundation`.
+
+### Built
+
+- **Legacy course.** Moved into `legacy/` (a pure rename: 50 files, no content change). `npm run legacy:test` runs the legacy suite unchanged on a temporary copy, with the Windows path fixes applied only to that copy.
+- **App foundation.**
+  - Next.js 16.4.5 App Router, React 19.3.1, TypeScript 6.0.3 strict, ESLint 9 with Next's rules plus type-aware checks, Prettier.
+  - Design tokens from the legacy stylesheet, with light and dark themes (system preference or manual choice) and fonts self-hosted through `next/font`.
+  - Reduced-motion handling and focus mode.
+- **App shell.**
+  - Header with navigation, save status, focus-mode button and account menu; a menu button below 1024 px.
+  - Command palette (Ctrl/Cmd + K, loaded on first use), shortcuts dialog (`?`), skip link.
+  - Placeholder pages for later sections, each naming its phase.
+- **Settings page.** Theme, motion, focus mode, default session length, editor font size, depth profile.
+- **Database.** MongoDB through Mongoose on one shared driver. Indexes are created on start-up, for the auth collections too. The environment is validated with Zod (`lib/env.ts`).
+- **Accounts.**
+  - Better Auth magic links: single use, 5 minutes, tokens stored hashed.
+  - GitHub sign-in, shown only when it is configured.
+  - Origin and callback checks forced on; per-IP sign-in limits stored in MongoDB.
+  - The browser talks to four auth endpoints through a small client (`lib/client/auth.ts`).
+- **Guest mode and sync.**
+  - One IndexedDB store per owner (guest or account), with a memory fallback that says "Not saved".
+  - An operations outbox, sent to `/api/sync`: validated, scoped to the user, rate-limited, idempotent per operation, one transaction per operation.
+  - Guest settings merge into the account on first sign-in.
+  - Offline start uses the last confirmed account.
+  - Sign-out removes the account's copy from the device only after the server confirms.
+  - The save status follows the rules in `lib/client/save-status.ts`.
+- **Security.**
+  - Policy header plus a per-page script-hash policy (17 prerendered pages).
+  - Runner Worker with its own policy and the network, storage and messaging lockdown.
+  - Security headers, and a same-origin and JSON check on writes.
+- **Tooling.** Docker Compose (MongoDB 8.0.34 as a replica set, Mailpit v1.33.0), `.env.example`, `README.md`, and a GitHub Actions workflow with actions pinned to commit SHAs.
+
+### Tested, and how
+
+| Gate | How | Result |
+| --- | --- | --- |
+| Static checks | `npm run lint`, `npm run typecheck`, `npm run format:check` | clean |
+| Unit and integration tests | `npm test` (Vitest 5.1.0); integration tests run against MongoDB 8.0.34 as an in-memory replica set, plus an in-process SMTP server | 61 passed in 9 files; details below |
+| End-to-end | `npm run build:e2e` then `npm run test:e2e` (Playwright 1.64.1) against the production build; Chromium, Firefox and WebKit on Windows | 111 passed in all three browsers. A full run repeated twice: 222 passed. JavaScript budget: 4 passed (Chromium only) |
+| Legacy suite | `npm run legacy:test` (Chromium) | identical to Phase 0: content 119,205, templates 62,397, UI 3,644, behaviour 13 passed; 100 pages without overflow. Run twice |
+| Single driver | `npm run check:deps` | mongodb 7.7.0, bson 7.3.3 |
+| JavaScript per page | Chromium resource timing on the production build | 165–167 KB gzip on the shell pages (budget 200 KB, tested) |
+| Development server | throwaway script: `next dev` with an in-memory MongoDB, driven by Chromium | pages load; the development policy allows eval as intended; no policy violations or page errors; sign-in and saving to the account work. Once, on the first start after code changes, the page reloaded in a loop; two later runs did not repeat it |
+| Compose file | `docker compose config` | valid |
+
+The unit and integration tests cover:
+- Settings merging: commutative, associative and idempotent, checked on 500 random cases.
+- Operation validation and rebase.
+- Environment rules.
+- Policy builders and the script-hash step.
+- The legacy patches, against the real legacy files.
+- Device store and sync engine, with a fake server (offline retry, 401, rejected operations).
+- Save-status rules.
+- Against the database:
+  - shared driver and indexes;
+  - sync service: applied, duplicate and rejected operations, out-of-order changes, clock skew, isolation between learners;
+  - rate limiter;
+  - magic link: hashed token, single use, cookie flags;
+  - cross-site cookie request refused (403); foreign callback URL refused (403);
+  - Better Auth's limiter returns 429;
+  - `/api/sync` returns 200, 400 and 401 where it should.
+- SMTP delivery of the sign-in email.
+
+The end-to-end tests cover:
+- Shell, palette, shortcuts, focus mode surviving a reload.
+- Script policy on five route types: no violations; injected script and inline handler blocked; page eval blocked; blob workers blocked.
+- Runner: eval works inside it; network, storage and messaging globals are gone; logs and errors come back; a runaway run is stopped.
+- Sign-in and sign-out; a used link is refused.
+- Guest persistence, merge on sign-in, offline queue and resend, a second device.
+- axe with WCAG 2.2 AA tags: five routes in both themes, plus the open dialogs.
+- No horizontal scrolling at 360 px; the small-screen menu.
+
+### Found and fixed in this phase (each now has a test)
+
+1. **Better Auth 1.7.16 switches its origin and callback checks off when `NODE_ENV=test`** (`create-context.mjs`, line 211). Set on explicitly; integration tests prove the 403s.
+2. **Better Auth stores magic-link tokens in plain text by default.** Now `storeToken: 'hashed'`; a test checks the raw token is not in the database.
+3. **Zod 4 probes for eval.** Under the strict policy, browsers reported this as a violation on every page. Shared schemas now set `jitless` before any schema is built; end-to-end tests assert zero violations.
+4. **Sign-out could delete the device copy** even when the server refused the sign-out, for example when rate-limited. It now checks the response, and an end-to-end test checks the session really ended.
+5. **The save status was not always true.** It could say "Saved" while a write was still in flight, or "waiting, account unreachable" during the normal pause before sending. The rules now live in a pure function with unit tests, and "Saving…" renders before the change handler returns.
+6. **Every page shipped about 100 KB of extra JavaScript**: the Better Auth browser client and full Zod. Replaced by the thin auth client and `zod/mini` (D-026): 263 → 165 KB gzip.
+7. **A CI expression mixed `&&` and `||`** without parentheses. Fixed before it ever ran.
+8. **Design: the `ink-3` token** (#7b8792) reached only 3.4:1 on the page background. Darkened to #64707b (4.7:1); axe passes in both themes.
+
+### Changes against the plan
+
+- **D-014.** Raw IndexedDB instead of idb-keyval: the document and the outbox must change in one transaction, which needs two object stores.
+- **D-022.** CI uses `mongodb-memory-server`, because GitHub's service containers cannot start a replica set.
+- **D-002.** Better Auth's browser client is not used (D-026). New setting `AUTH_RATE_LIMIT`: off only on the end-to-end server, where all test browsers share one IP. Production refuses it.
+- **Sign-in options.** The sign-in methods are fixed at build time, because the sign-in page is static. Tests use `npm run build:e2e`; production must set `EMAIL_TRANSPORT` and `GITHUB_*` before building.
+- **Runner client.** The client helper for the runner moves to Phase 4. Phase 1 has the isolated Worker and its tests.
+
+### Not done or not tested
+
+- `docker compose up`: not run, because the Docker daemon is not running on this machine (the file validates). Mailpit is not exercised; the SMTP path is tested against an in-process server instead.
+- GitHub sign-in: needs an OAuth app under the `Tushar-Deshmukh` account; untested.
+- CI: the workflow is written and parses, but has never run, because there is no GitHub repository yet.
+- Vercel: not deployed. The per-page hash policy (D-006 risk) and the `Secure` cookie flag (HTTPS only) are unverified there.
+- Production email provider: not chosen. Production builds have email sign-in switched off until one is set.
+- Guest data meeting account data: "add to my account" or "not now" only. Settings merge safely by design; the full three-way choice comes with richer data in Phase 7.
+- Multiple tabs: a change in one tab reaches other open tabs only after they reload.
+- Real-device performance (LCP, time to interactive on a mid-range phone): not measured; only the JavaScript weight is.
 
 ## Phase 0: Read and plan (2026-11-04) — approved
 

@@ -1,0 +1,259 @@
+@import 'tailwindcss';
+
+/* Design tokens (plan §12): the legacy values from legacy/src/styles.css, defined once. Components use them
+   through the Tailwind theme below (bg-paper, text-ink-2, border-rule, ...), never as raw colours. */
+:root {
+  color-scheme: light;
+  --paper: #f5f6f2;
+  --sheet: #ffffff;
+  --ink: #18222b;
+  --ink-2: #4a5763;
+  /* Legacy #7b8792 reached only 3.4:1 on paper; darkened to 4.7:1 for WCAG AA body text. */
+  --ink-3: #64707b;
+  --rule: #d9ded8;
+  --rule-2: #e8ebe6;
+  --accent: #0d6670;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcefee;
+
+  --st-current: #2f5bd3;
+  --st-current-soft: #dde6ff;
+  --st-compare: #c97a00;
+  --st-compare-soft: #fdeccc;
+  --st-done: #2e8a4e;
+  --st-done-soft: #d9f1e0;
+  --st-frontier: #8a4fc7;
+  --st-frontier-soft: #ece0fa;
+  --st-error: #c2362f;
+  --st-error-soft: #fbe0de;
+  --st-dim: #a7b0b8;
+  --st-dim-soft: #eef0f2;
+  --st-window: #e7b416;
+  --st-window-soft: #fff4cc;
+
+  --tip: #0d6670;
+  --tip-soft: #e2f2f1;
+  --warn: #b25b00;
+  --warn-soft: #fcefdd;
+  --key: #4b46b8;
+  --key-soft: #ebeafb;
+  --mistake: #b8322b;
+  --mistake-soft: #fbe6e4;
+  --interview: #2f6f3e;
+  --interview-soft: #e4f2e7;
+
+  --code-bg: #f0f2ee;
+  --code-ink: #1d2730;
+
+  --f-body: var(--nf-reading), 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --f-ui: var(--nf-ui), 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --f-code: var(--nf-code), 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --r-1: 6px;
+  --r-2: 10px;
+  --shadow: 0 1px 2px rgba(24, 34, 43, 0.06), 0 4px 14px rgba(24, 34, 43, 0.06);
+  --read: 72ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #12171c;
+    --sheet: #1a2128;
+    --ink: #e5e9ec;
+    --ink-2: #b3bcc4;
+    --ink-3: #8592a0;
+    --rule: #2d3740;
+    --rule-2: #242c34;
+    --accent: #4fc0c9;
+    --accent-ink: #0b1a1d;
+    --accent-soft: #163a3e;
+    --st-current: #7b9bff;
+    --st-current-soft: #24305a;
+    --st-compare: #f0a93b;
+    --st-compare-soft: #4a3511;
+    --st-done: #5cc97f;
+    --st-done-soft: #183a25;
+    --st-frontier: #b991f0;
+    --st-frontier-soft: #352650;
+    --st-error: #ff7a70;
+    --st-error-soft: #4a1f1c;
+    --st-dim: #5d6873;
+    --st-dim-soft: #222a31;
+    --st-window: #f3cb48;
+    --st-window-soft: #3f3714;
+    --tip: #5fc6cd;
+    --tip-soft: #15353a;
+    --warn: #f0a64a;
+    --warn-soft: #3d2b14;
+    --key: #a8a4ff;
+    --key-soft: #2a2851;
+    --mistake: #ff8a80;
+    --mistake-soft: #45201e;
+    --interview: #7fd194;
+    --interview-soft: #1c3824;
+    --code-bg: #161c22;
+    --code-ink: #dbe2e8;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #12171c;
+  --sheet: #1a2128;
+  --ink: #e5e9ec;
+  --ink-2: #b3bcc4;
+  --ink-3: #8592a0;
+  --rule: #2d3740;
+  --rule-2: #242c34;
+  --accent: #4fc0c9;
+  --accent-ink: #0b1a1d;
+  --accent-soft: #163a3e;
+  --st-current: #7b9bff;
+  --st-current-soft: #24305a;
+  --st-compare: #f0a93b;
+  --st-compare-soft: #4a3511;
+  --st-done: #5cc97f;
+  --st-done-soft: #183a25;
+  --st-frontier: #b991f0;
+  --st-frontier-soft: #352650;
+  --st-error: #ff7a70;
+  --st-error-soft: #4a1f1c;
+  --st-dim: #5d6873;
+  --st-dim-soft: #222a31;
+  --st-window: #f3cb48;
+  --st-window-soft: #3f3714;
+  --tip: #5fc6cd;
+  --tip-soft: #15353a;
+  --warn: #f0a64a;
+  --warn-soft: #3d2b14;
+  --key: #a8a4ff;
+  --key-soft: #2a2851;
+  --mistake: #ff8a80;
+  --mistake-soft: #45201e;
+  --interview: #7fd194;
+  --interview-soft: #1c3824;
+  --code-bg: #161c22;
+  --code-ink: #dbe2e8;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* Only the tokens exist as Tailwind colours: the default palette is removed so raw colours cannot creep in. */
+@theme {
+  --color-*: initial;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-rule-2: var(--rule-2);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-st-current: var(--st-current);
+  --color-st-current-soft: var(--st-current-soft);
+  --color-st-compare: var(--st-compare);
+  --color-st-compare-soft: var(--st-compare-soft);
+  --color-st-done: var(--st-done);
+  --color-st-done-soft: var(--st-done-soft);
+  --color-st-frontier: var(--st-frontier);
+  --color-st-frontier-soft: var(--st-frontier-soft);
+  --color-st-error: var(--st-error);
+  --color-st-error-soft: var(--st-error-soft);
+  --color-st-dim: var(--st-dim);
+  --color-st-dim-soft: var(--st-dim-soft);
+  --color-st-window: var(--st-window);
+  --color-st-window-soft: var(--st-window-soft);
+  --color-tip: var(--tip);
+  --color-tip-soft: var(--tip-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-key: var(--key);
+  --color-key-soft: var(--key-soft);
+  --color-mistake: var(--mistake);
+  --color-mistake-soft: var(--mistake-soft);
+  --color-interview: var(--interview);
+  --color-interview-soft: var(--interview-soft);
+  --color-code-bg: var(--code-bg);
+  --color-code-ink: var(--code-ink);
+  --font-body: var(--f-body);
+  --font-ui: var(--f-ui);
+  --font-code: var(--f-code);
+  --radius-control: var(--r-1);
+  --radius-card: var(--r-2);
+  --shadow-card: var(--shadow);
+}
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-ui);
+  }
+  body {
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+  a {
+    color: var(--accent);
+  }
+}
+
+.reading {
+  font-family: var(--f-body);
+  max-width: var(--read);
+  line-height: 1.7;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 50;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Focus mode: navigation and secondary controls leave the screen. */
+:root[data-focus='on'] .focus-hide {
+  display: none;
+}
+:root:not([data-focus='on']) .focus-only {
+  display: none;
+}
+
+/* Reduced motion: the system setting, unless the learner chose otherwise in Settings. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) *,
+  :root:not([data-motion='full']) *::before,
+  :root:not([data-motion='full']) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
