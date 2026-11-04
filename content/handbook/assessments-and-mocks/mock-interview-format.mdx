@@ -1,0 +1,29 @@
+---
+slug: mock-interview-format
+section: 9
+title: 9.3 Mock interview format
+source:
+  file: source/roadmap.md
+  section: 9
+  key: 9.3 Mock interview format
+  lines:
+    - 3428
+    - 3444
+---
+
+- **Who interviews:** ideally a peer or colleague preparing for the same interviews (trade roles). If no one is available, an AI assistant can act as the interviewer using the prompt below, in a new chat.
+- **Length:** 45 minutes of interview + 15 minutes of feedback, following the structure in the Module 12 theory.
+- **Rules:** shared editor or plain text pad without autocomplete; you speak continuously; the interviewer answers clarifying questions, gives at most two hints, and asks one follow-up (complexity improvement, a variant, or a new edge case).
+- **Problem choice:** the interviewer picks one problem from the pool for that mock. If you recognise the problem, say so and take another.
+
+**Interviewer prompt for an AI assistant (copy into a new chat):**
+
+```text
+Act as a senior software engineer interviewing me for a product-company coding round.
+Pick ONE problem from these LeetCode numbers and present it in your own words without naming it: <paste the pool numbers>.
+Run a 45-minute interview: let me ask clarifying questions; ask me for a brute-force approach and its complexity;
+push me to optimise; let me code in JavaScript in the chat; ask me to dry-run and test edge cases.
+Give at most two hints, only when I am stuck for several minutes. Ask one follow-up question at the end.
+Then score me 1–4 on: problem understanding, approach and optimisation, coding, verification, communication.
+Give a hiring signal (strong no / no / lean yes / yes / strong yes) and three concrete improvements.
+```

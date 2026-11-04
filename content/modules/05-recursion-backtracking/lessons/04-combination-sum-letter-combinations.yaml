@@ -1,0 +1,221 @@
+exercises:
+  - id: ex-01
+    legacyId: w5d4-1
+    type: trace
+    tag: Lesson 4 state table
+    q: combinationSum([2, 3, 6, 7], 7). Answer about the run (candidates sorted).
+    rows:
+      - prompt: First combination recorded
+        answer:
+          - '[2,2,3]'
+      - prompt: Remaining target when the path is [2, 2, 2]
+        answer: '1'
+        why: 7 − 6 = 1, and every candidate is > 1, so the loop breaks at once.
+      - prompt: Second combination recorded
+        answer:
+          - '[7]'
+      - prompt: Number of combinations
+        answer: '2'
+    verify: |
+      const c = [2, 3, 6, 7], res = [], path = []; let rem222 = null;
+      function dfs(start, rem) { if (JSON.stringify(path) === '[2,2,2]') rem222 = rem; if (rem === 0) { res.push([...path]); return; } for (let i = start; i < c.length; i++) { if (c[i] > rem) break; path.push(c[i]); dfs(i, rem - c[i]); path.pop(); } }
+      dfs(0, 7); console.log(JSON.stringify(res[0])); console.log(rem222); console.log(JSON.stringify(res[1])); console.log(res.length);
+    explain: 'Sorting makes `break` valid: once one candidate is too big, every later one is too.'
+    hints:
+      - 'Follow the leftmost branch first: 2, 2, 2, …'
+  - id: ex-02
+    legacyId: w5d4-2
+    type: mcq
+    tag: i or i + 1?
+    q: In Combination Sum II (40), each candidate may be used once and the input may contain duplicates. Which recursive call and loop guard are correct?
+    options:
+      - t: dfs(i + 1, remaining − c[i]), with `if (i > start && c[i] === c[i − 1]) continue;` on sorted input
+        ok: true
+        why: i + 1 forbids reusing the same element; the guard stops equal values producing the same combination twice.
+      - t: dfs(i, remaining − c[i]) with the same guard
+        why: Recursing with i allows reusing the same element, which 40 forbids.
+        kind: concept
+      - t: dfs(i + 1, …) with a Set of joined strings to remove duplicates at the end
+        why: It works but explores every duplicate branch and signals you missed the sort-and-skip idea.
+        kind: concept
+    explain: 'Two independent rules: the start index controls reuse; the skip guard controls duplicates.'
+    hints:
+      - Which part controls reuse, and which part controls duplicates?
+  - id: ex-03
+    legacyId: w5d4-3
+    type: fill
+    tag: Combination Sum II
+    q: Complete `combinationSum2` (problem 40).
+    template: |
+      function combinationSum2(candidates, target) {
+        candidates.sort((a, b) => a - b);
+        const res = [], path = [];
+        function dfs(start, rem) {
+          if (rem === 0) { res.push([...path]); return; }
+          for (let i = start; i < candidates.length; i++) {
+            if ([[0]]) continue;
+            if (candidates[i] > rem) break;
+            path.push(candidates[i]);
+            dfs([[1]], rem - candidates[i]);
+            path.pop();
+          }
+        }
+        dfs(0, target);
+        return res;
+      }
+    blanks:
+      - accept:
+          - i > start && candidates[i] === candidates[i - 1]
+          - i > start && candidates[i] == candidates[i - 1]
+          - i > start && candidates[i - 1] === candidates[i]
+      - accept:
+          - i + 1
+          - 1 + i
+    fn: combinationSum2
+    compare: unordered
+    tests:
+      - args:
+          - - 10
+            - 1
+            - 2
+            - 7
+            - 6
+            - 1
+            - 5
+          - 8
+        expect:
+          - - 1
+            - 1
+            - 6
+          - - 1
+            - 2
+            - 5
+          - - 1
+            - 7
+          - - 2
+            - 6
+      - args:
+          - - 2
+            - 5
+            - 2
+            - 1
+            - 2
+          - 5
+        expect:
+          - - 1
+            - 2
+            - 2
+          - - 5
+      - args:
+          - - 2
+          - 1
+        expect: []
+      - args:
+          - - 1
+            - 1
+            - 1
+          - 2
+        expect:
+          - - 1
+            - 1
+    explain: Both rules from this module in one loop.
+    hints:
+      - Same-level duplicates are skipped exactly as in Subsets II.
+      - 'Each element at most once: where does the next call start?'
+  - id: ex-04
+    legacyId: w5d4-4
+    type: interview
+    title: Numbers With Same Consecutive Differences (LeetCode 967)
+    q: 'Return all non-negative integers of length `n` (no leading zeros) in which every two consecutive digits differ by exactly `k`, in any order. Example: n = 3, k = 7 → `[181, 292, 707, 818, 929]`.'
+    model:
+      clarify: |
+        - 2 ≤ n ≤ 9, 0 ≤ k ≤ 9.
+        - Leading zeros are not allowed, so the first digit is 1–9.
+        - k = 0 means both "next digit" choices are the same digit: avoid adding it twice.
+      brute: 'Enumerate all 9·10ⁿ⁻¹ numbers of length n and check each: up to 9·10⁸ for n = 9, too slow.'
+      optimize: 'Backtrack digit by digit, as in Letter Combinations: the choices for the next position are `last + k` and `last − k`, kept only if they are digits. Each partial number has at most two children, so there are at most 9 · 2ⁿ⁻¹ leaves. Use a Set of choices (or check k > 0) so k = 0 does not produce duplicates.'
+      edges: |
+        - k = 0 → 11, 22, …, 99 for n = 2 (no duplicates)
+        - k = 9 → only 9 and 0 alternate (909 for n = 3)
+        - a branch dies when both next digits are out of range
+      complexity: O(9 · 2ⁿ⁻¹ · n) time including building each number; O(n) recursion depth.
+    fn: numsSameConsecDiff
+    compare: unordered
+    starter: |
+      function numsSameConsecDiff(n, k) {
+
+      }
+    solution: |
+      function numsSameConsecDiff(n, k) {
+        const res = [];
+        function dfs(num, len) {
+          if (len === n) { res.push(num); return; }
+          const last = num % 10;
+          for (const d of new Set([last + k, last - k])) if (d >= 0 && d <= 9) dfs(num * 10 + d, len + 1);
+        }
+        for (let first = 1; first <= 9; first++) dfs(first, 1);
+        return res;
+      }
+    tests:
+      - args:
+          - 3
+          - 7
+        expect:
+          - 181
+          - 292
+          - 707
+          - 818
+          - 929
+      - args:
+          - 2
+          - 1
+        expect:
+          - 10
+          - 12
+          - 21
+          - 23
+          - 32
+          - 34
+          - 43
+          - 45
+          - 54
+          - 56
+          - 65
+          - 67
+          - 76
+          - 78
+          - 87
+          - 89
+          - 98
+      - args:
+          - 2
+          - 0
+        expect:
+          - 11
+          - 22
+          - 33
+          - 44
+          - 55
+          - 66
+          - 77
+          - 88
+          - 99
+        hidden: true
+      - args:
+          - 3
+          - 9
+        expect:
+          - 909
+        hidden: true
+      - args:
+          - 2
+          - 9
+        expect:
+          - 90
+        hidden: true
+    explain: 'The k = 0 test catches the duplicate branch: `last + 0` and `last − 0` are the same choice.'
+    hints:
+      - Which earlier problem builds a string one position at a time from a small set of choices?
+      - From the last digit, what can the next digit be?
+      - What happens when k = 0?
+annotated: []

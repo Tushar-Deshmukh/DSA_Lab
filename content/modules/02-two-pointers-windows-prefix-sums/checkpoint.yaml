@@ -1,0 +1,79 @@
+exercises:
+  - id: ex-01
+    legacyId: w2sat-1
+    gatedBy: assessment-1
+    type: pattern
+    tag: Mixed review
+    q: '"Return the number of contiguous subarrays whose sum is divisible by k. Values may be negative." Which pattern fits?'
+    options:
+      - t: Prefix sums with a map keyed by `((cur % k) + k) % k`
+        ok: true
+        why: Two prefixes with the same remainder enclose a subarray whose sum is divisible by k. The normalisation handles negative remainders.
+      - t: Variable sliding window
+        why: Negative values break monotonicity, and divisibility is not monotone anyway.
+        kind: concept
+      - t: Opposite-end two pointers
+        why: There is no sorted order to exploit and the subarrays are not pairs of ends.
+        kind: concept
+    explain: 'Pattern 2.4 lists this variation: key the map by remainder instead of by the sum itself.'
+    clues: contiguous · count · divisible · negative values
+    hints:
+      - When does the difference of two prefix sums divide by k?
+  - id: ex-02
+    legacyId: w2sat-2
+    gatedBy: assessment-1
+    type: pattern
+    tag: Mixed review
+    q: '"Given a string, find the length of the longest substring that contains at most k distinct characters."'
+    options:
+      - t: Variable sliding window with a count map; shrink while `map.size > k`
+        ok: true
+        why: Adding characters never reduces the distinct count, so validity is monotone.
+      - t: Prefix sums with a hash map
+        why: There is no sum condition; the state is a set of characters.
+        kind: concept
+      - t: Kadane
+        why: Kadane finds a best sum, not a constraint on the window's contents.
+        kind: concept
+    explain: Same skeleton as Fruit Into Baskets (k = 2).
+    hints:
+      - Is the condition monotone as the window grows?
+  - id: ex-03
+    legacyId: w2sat-3
+    gatedBy: assessment-1
+    type: pattern
+    tag: Mixed review
+    q: '"Given an array sorted in non-decreasing order, remove duplicates in place so each value appears once, and return the new length."'
+    options:
+      - t: Same-direction read/write pointers
+        ok: true
+        why: A write pointer marks the end of the deduplicated prefix; the read pointer scans. This is problem 26 from Module 1.
+      - t: Opposite-end two pointers
+        why: The ends of the array do not interact in this problem.
+        kind: concept
+      - t: A Set, then copy back
+        why: Correct but uses O(n) extra space; the problem asks for in place.
+        kind: concept
+    explain: 'Same-direction pointers: compaction, partitioning, merging.'
+    hints:
+      - In place, sorted input, keep the first of each run.
+  - id: ex-04
+    legacyId: w2sat-4
+    gatedBy: assessment-1
+    type: mcq
+    tag: Complexity review
+    q: A loop has `for (let r = 0; r < n; r++)` with a `while` inside that only ever increments `l`, and `l` never exceeds `r + 1`. What is the total time?
+    options:
+      - t: O(n)
+        ok: true
+        why: '`l` increases at most n times over the whole run, so the inner loop does at most n iterations in total.'
+      - t: O(n²)
+        why: Nested loops do not multiply when the inner loop's work is shared across all outer iterations (amortised).
+        kind: concept
+      - t: O(n log n)
+        why: Nothing here halves or sorts.
+        kind: concept
+    explain: This amortised argument is what you say out loud when an interviewer asks about the inner while.
+    hints:
+      - Count the total number of `l++` operations, not the per-iteration maximum.
+annotated: []

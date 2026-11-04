@@ -1,0 +1,80 @@
+---
+slug: stack-queue-and-deque
+section: 6
+title: 6.5 Stack, queue and deque
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.5 Stack, queue and deque
+  lines:
+    - 2767
+    - 2834
+---
+
+```js
+// Stack: a plain array
+const stack = [];
+stack.push(x); const top = stack[stack.length - 1]; stack.pop();
+
+// Queue: array + head pointer, O(1) amortised dequeue
+class Queue {
+  constructor() { this.items = []; this.head = 0; }
+  push(x) { this.items.push(x); }
+  shift() {
+    const x = this.items[this.head++];
+    // occasionally drop the consumed prefix
+    if (this.head > 1024 && this.head * 2 > this.items.length) {
+      this.items = this.items.slice(this.head); this.head = 0;
+    }
+    return x;
+  }
+  peek() { return this.items[this.head]; }
+  get size() { return this.items.length - this.head; }
+}
+// For a one-off BFS, the simplest form is enough:
+//   for (let h = 0; h < q.length; h++) { const u = q[h]; ...; q.push(v); }
+
+// Deque: circular buffer, O(1) amortised at both ends
+class Deque {
+  constructor(cap = 16) {
+    this.buf = new Array(cap);
+    this.head = 0;   // index of the front element
+    this.len = 0;    // number of stored elements
+  }
+  #idx(i) { return (this.head + i) % this.buf.length; }   // i-th from front
+  #grow() {
+    const nb = new Array(this.buf.length * 2);
+    for (let i = 0; i < this.len; i++) nb[i] = this.buf[this.#idx(i)];
+    this.buf = nb;
+    this.head = 0;
+  }
+  pushBack(x) {
+    if (this.len === this.buf.length) this.#grow();
+    this.buf[this.#idx(this.len)] = x;
+    this.len++;
+  }
+  pushFront(x) {
+    if (this.len === this.buf.length) this.#grow();
+    this.head = (this.head - 1 + this.buf.length) % this.buf.length;
+    this.buf[this.head] = x;
+    this.len++;
+  }
+  popFront() {
+    if (this.len === 0) return undefined;
+    const x = this.buf[this.head];
+    this.head = this.#idx(1);
+    this.len--;
+    return x;
+  }
+  popBack() {
+    if (this.len === 0) return undefined;
+    this.len--;
+    return this.buf[this.#idx(this.len)];
+  }
+  front() { return this.len ? this.buf[this.head] : undefined; }
+  back() { return this.len ? this.buf[this.#idx(this.len - 1)] : undefined; }
+  get size() { return this.len; }
+}
+```
+
+For a monotonic deque (239) you only push at the back and pop at both ends, so an array with a head index plus `pop()` at the back is enough.

@@ -1,0 +1,328 @@
+exercises:
+  - id: ex-01
+    legacyId: w8d1-1
+    type: mcq
+    tag: Choose a representation
+    q: Which representation fits best? Select all that are good choices.
+    options:
+      - t: 10⁵ nodes, 2·10⁵ edges given as a list → adjacency list
+        ok: true
+        why: 'Sparse graph: O(V + E) memory.'
+      - t: 10⁵ nodes → adjacency matrix
+        why: 'A 10⁵ × 10⁵ matrix has 10¹⁰ cells: far too much memory.'
+        kind: concept
+      - t: Input already given as an n × n `isConnected` matrix with n ≤ 200 → use the matrix directly
+        ok: true
+        why: 'Problem 547: converting would only add work.'
+      - t: A maze grid → build an adjacency list of every cell first
+        why: 'Unnecessary: a grid is an implicit graph; compute the 4 neighbours on the fly.'
+        kind: concept
+    explain: Pick by size and by what you are given.
+    hints:
+      - Compare the memory each option needs.
+  - id: ex-02
+    legacyId: w8d1-2
+    type: mcq
+    tag: When to mark
+    q: In BFS, why mark a node visited when you **enqueue** it rather than when you dequeue it?
+    options:
+      - t: A node with several already-visited neighbours would otherwise be enqueued once per neighbour before it is processed, wasting time and memory (and breaking O(V + E)).
+        ok: true
+        why: On a dense graph the queue can grow to O(E) or worse.
+      - t: Marking on dequeue gives wrong distances.
+        why: Distances are still right (the first dequeue wins), but the duplicates make it slow.
+        kind: concept
+      - t: It makes no difference.
+        why: It makes no difference to correctness on small inputs and a large difference to running time.
+        kind: concept
+    explain: 'Same rule for an explicit-stack DFS: mark when pushing.'
+    hints:
+      - How many times can a node with 4 visited neighbours be added?
+  - id: ex-03
+    legacyId: w8d1-3
+    type: code
+    tag: Count islands with BFS
+    q: 'Write `numIslandsBFS(grid)` (problem 200) using BFS with a head-pointer queue instead of a stack. Do not mutate the input: use a `visited` array.'
+    fn: numIslandsBFS
+    starter: |
+      function numIslandsBFS(grid) {
+
+      }
+    solution: |
+      function numIslandsBFS(grid) {
+        const m = grid.length, n = grid[0].length;
+        const seen = Array.from({ length: m }, () => new Array(n).fill(false));
+        const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        let count = 0;
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) {
+          if (grid[r][c] !== '1' || seen[r][c]) continue;
+          count++; seen[r][c] = true;
+          const q = [[r, c]];
+          for (let h = 0; h < q.length; h++) {
+            const [cr, cc] = q[h];
+            for (const [dr, dc] of dirs) {
+              const nr = cr + dr, nc = cc + dc;
+              if (nr < 0 || nr >= m || nc < 0 || nc >= n || seen[nr][nc] || grid[nr][nc] !== '1') continue;
+              seen[nr][nc] = true; q.push([nr, nc]);
+            }
+          }
+        }
+        return count;
+      }
+    tests:
+      - args:
+          - - - '1'
+              - '1'
+              - '1'
+              - '1'
+              - '0'
+            - - '1'
+              - '1'
+              - '0'
+              - '1'
+              - '0'
+            - - '1'
+              - '1'
+              - '0'
+              - '0'
+              - '0'
+            - - '0'
+              - '0'
+              - '0'
+              - '0'
+              - '0'
+        expect: 1
+      - args:
+          - - - '1'
+              - '1'
+              - '0'
+              - '0'
+              - '0'
+            - - '1'
+              - '1'
+              - '0'
+              - '0'
+              - '0'
+            - - '0'
+              - '0'
+              - '1'
+              - '0'
+              - '0'
+            - - '0'
+              - '0'
+              - '0'
+              - '1'
+              - '1'
+        expect: 3
+      - args:
+          - - - '0'
+        expect: 0
+      - args:
+          - - - '1'
+              - '0'
+              - '1'
+            - - '0'
+              - '1'
+              - '0'
+            - - '1'
+              - '0'
+              - '1'
+        expect: 5
+        hidden: true
+    explain: Diagonal cells are not neighbours, so the hidden checkerboard has 5 islands.
+    hints:
+      - Outer loop over cells; start a BFS at each unvisited land cell.
+      - Mark a cell visited when you enqueue it.
+  - id: ex-04
+    legacyId: w8d1-4
+    type: bug
+    tag: Bounds first
+    q: This flood fill throws `TypeError` on some inputs. Click the line.
+    code: |
+      function fill(grid, r, c) {
+        const stack = [[r, c]]; grid[r][c] = '0';
+        while (stack.length) {
+          const [cr, cc] = stack.pop();
+          for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+            const nr = cr + dr, nc = cc + dc;
+            if (grid[nr][nc] !== '1') continue;
+            if (nr < 0 || nr >= grid.length || nc < 0 || nc >= grid[0].length) continue;
+            grid[nr][nc] = '0'; stack.push([nr, nc]);
+          }
+        }
+      }
+    bug:
+      - 6
+    kind: impl
+    explain: It indexes before checking bounds. For a cell in the last row, `grid[nr]` is `undefined` and `undefined[nc]` throws. Check bounds first, then the value (reference 6.15 and Module 1 lesson 5).
+    fix: |
+      if (nr < 0 || nr >= grid.length || nc < 0 || nc >= grid[0].length) continue;
+      if (grid[nr][nc] !== '1') continue;
+    fine:
+      '1': Sinking the start cell before pushing is correct.
+      '8': Marking on push is correct.
+    hints:
+      - What is grid[-1] in JavaScript?
+  - id: ex-05
+    legacyId: w8d1-5
+    type: interview
+    title: Count Sub Islands (LeetCode 1905)
+    q: 'Two m × n binary grids of the same size. An island in `grid2` is a **sub-island** if every one of its land cells is also land in `grid1`. Return the number of sub-islands. Example: grid1 `[[1,1,1],[0,1,1],[1,0,0]]`, grid2 `[[1,1,0],[0,1,0],[1,0,0]]` → 2.'
+    model:
+      clarify: |
+        - 4-directional connectivity; values are 0/1 numbers here.
+        - Grids up to 500 × 500, so recursion depth could be 2.5·10⁵: use an explicit stack.
+      brute: 'Find each island of grid2, collect its cells, then check each against grid1: correct and already O(m·n).'
+      optimize: 'One traversal per island of grid2 that also tracks a flag: `ok = ok && grid1[r][c] === 1` for every cell visited. Crucially, keep exploring the whole island even after the flag turns false, so its cells are all marked and not recounted as a new island.'
+      edges: |
+        - an island of grid2 partly over water in grid1 → not counted
+        - grid2 all water → 0
+        - one big island in both → 1
+      complexity: O(m·n) time and space.
+    fn: countSubIslands
+    starter: |
+      function countSubIslands(grid1, grid2) {
+
+      }
+    solution: |
+      function countSubIslands(grid1, grid2) {
+        const m = grid2.length, n = grid2[0].length, dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const seen = Array.from({ length: m }, () => new Array(n).fill(false));
+        let count = 0;
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) {
+          if (grid2[r][c] !== 1 || seen[r][c]) continue;
+          let ok = true; seen[r][c] = true; const st = [[r, c]];
+          while (st.length) {
+            const [cr, cc] = st.pop();
+            if (grid1[cr][cc] !== 1) ok = false;
+            for (const [dr, dc] of dirs) {
+              const nr = cr + dr, nc = cc + dc;
+              if (nr < 0 || nr >= m || nc < 0 || nc >= n || seen[nr][nc] || grid2[nr][nc] !== 1) continue;
+              seen[nr][nc] = true; st.push([nr, nc]);
+            }
+          }
+          if (ok) count++;
+        }
+        return count;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 1
+              - 1
+              - 0
+              - 0
+            - - 0
+              - 1
+              - 1
+              - 1
+              - 1
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 1
+              - 0
+              - 1
+              - 1
+          - - - 1
+              - 1
+              - 1
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 1
+              - 1
+              - 1
+            - - 0
+              - 1
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 0
+              - 1
+              - 1
+              - 0
+            - - 0
+              - 1
+              - 0
+              - 1
+              - 0
+        expect: 3
+      - args:
+          - - - 1
+              - 0
+              - 1
+              - 0
+              - 1
+            - - 1
+              - 1
+              - 1
+              - 1
+              - 1
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 1
+              - 1
+              - 1
+              - 1
+            - - 1
+              - 0
+              - 1
+              - 0
+              - 1
+          - - - 0
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 1
+              - 1
+              - 1
+              - 1
+            - - 0
+              - 1
+              - 0
+              - 1
+              - 0
+            - - 0
+              - 1
+              - 0
+              - 1
+              - 0
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 1
+        expect: 2
+      - args:
+          - - - 1
+          - - - 1
+        expect: 1
+        hidden: true
+      - args:
+          - - - 0
+          - - - 1
+        expect: 0
+        hidden: true
+    explain: Stopping the traversal early when the flag fails would leave unvisited cells, which would then be counted as extra islands.
+    hints:
+      - Traverse each island of grid2 exactly as in Number of Islands.
+      - Track whether every visited cell is also land in grid1.
+      - Do not stop exploring early when the check fails.
+annotated: []

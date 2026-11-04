@@ -1,0 +1,25 @@
+---
+slug: heap-of-size-k
+number: '7.1'
+title: Heap of size k (top-K)
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Pattern 7.1
+  lines:
+    - 1447
+    - 1456
+---
+
+**Pattern 7.1: Heap of size k (top-K)**
+
+1. *Recognise:* k largest/smallest/closest/most frequent; streaming input.
+2. *Clues:* "k-th largest", "top k", "k closest", "in a stream".
+3. *From brute force:* sort all, take k: O(n log n). Keep only k candidates: O(n log k).
+4. *Why it works:* for k largest, a min-heap's root is the weakest current candidate, so each new element only needs comparing with it.
+5. *Template:* Example 2; for k smallest use a max-heap.
+6. *Complexity:* O(n log k), O(k).
+7. *Variations:* 973 (key = squared distance; no `Math.sqrt` needed), 347 (heap over frequency map entries), 703 (persistent heap across calls).
+8. *Inappropriate when:* k ≈ n (sort), or one-off k-th with O(1) space allowed (quickselect).

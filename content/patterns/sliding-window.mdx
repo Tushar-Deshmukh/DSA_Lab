@@ -1,0 +1,25 @@
+---
+slug: sliding-window
+number: '2.3'
+title: Sliding window (fixed and variable)
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Pattern 2.3
+  lines:
+    - 550
+    - 559
+---
+
+**Pattern 2.3: Sliding window (fixed and variable)**
+
+1. *Recognise:* contiguous subarray/substring with a constraint; maximise or minimise its length or count.
+2. *Clues:* "longest/shortest substring", "at most k", "contains all", "window of size k", non-negative numbers.
+3. *From brute force:* checking all O(n²) windows recomputes overlapping work. Keep a running state (sum, counts) and update it as edges move.
+4. *Why it works:* monotonicity: if `[l, r]` is invalid, every `[l, r']` with r' > r is also invalid, so `l` never needs to move back.
+5. *Template:* `for r: add(a[r]); while (invalid) remove(a[l++]); update answer`. For "minimum length", update inside the while loop while still valid.
+6. *Complexity:* O(n) time; O(alphabet) or O(k) space.
+7. *Variations:* 424 (window valid while `len - maxCount ≤ k`), 567 (fixed window of anagram counts), 76 (minimum window covering all required counts).
+8. *Inappropriate when:* negative numbers break monotonicity, or the target is a subsequence.

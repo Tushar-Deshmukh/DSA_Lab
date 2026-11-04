@@ -1,0 +1,40 @@
+---
+slug: map-set-and-objects
+section: 6
+title: 6.2 `Map`, `Set` and objects
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.2 `Map`, `Set` and objects
+  lines:
+    - 2701
+    - 2728
+---
+
+```js
+// Frequency count
+const count = new Map();
+for (const x of arr) count.set(x, (count.get(x) ?? 0) + 1);
+
+// Grouping
+const groups = new Map();
+for (const word of words) {
+  const key = [...word].sort().join('');
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key).push(word);
+}
+const result = [...groups.values()];
+
+// Iterating (insertion order is guaranteed)
+for (const [key, value] of count) { /* ... */ }
+
+// Set operations
+const seen = new Set(arr);
+const inter = [...setA].filter((x) => setB.has(x));
+
+// 26-letter counts are faster than a Map for lowercase strings
+const freq = new Array(26).fill(0);
+for (const ch of s) freq[ch.charCodeAt(0) - 97]++;
+```
+
+**Object vs `Map`.** Objects convert keys to strings (`obj[1]` and `obj['1']` collide), inherit keys such as `constructor` (`'constructor' in {}` is `true`), and need `Object.keys(obj).length` (O(n)) for their size. Use `Map` for algorithmic work. Arrays and objects as `Map` keys compare by reference: `map.get([1, 2])` never finds a previously set `[1, 2]`; encode as a string or number.

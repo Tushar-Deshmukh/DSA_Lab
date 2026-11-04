@@ -1,0 +1,15 @@
+---
+slug: common-mistakes
+title: Common mistakes
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Common mistakes
+  lines:
+    - 1011
+    - 1011
+---
+
+**Common mistakes.** Pushing `path` instead of a copy (`res.push([...path])`); forgetting to undo; using `i + 1` where reuse is allowed (39) or `i` where it is not (40); deduplicating with a `Set` of joined strings (works, but is slow and signals you missed the sort-and-skip idea); mutating the grid without restoring it (79).

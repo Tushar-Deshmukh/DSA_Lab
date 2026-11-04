@@ -1,0 +1,57 @@
+---
+slug: example-2
+title: Example 2
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Example 2
+  lines:
+    - 1029
+    - 1071
+---
+
+**Example 2: subsets (78) two ways, with the recursion tree.**
+
+```js
+// Way A: include/exclude each element. Decision per level = "take nums[i]
+// or not".
+function subsetsA(nums) {
+  const res = [], path = [];
+  function dfs(i) {
+    // all decisions made
+    if (i === nums.length) { res.push([...path]); return; }
+    path.push(nums[i]); dfs(i + 1); path.pop();                // take
+    dfs(i + 1);                                                // skip
+  }
+  dfs(0);
+  return res;
+}
+
+// Way B: every node is a subset; choose the next element from index `start`
+// onward.
+function subsetsB(nums) {
+  const res = [], path = [];
+  function dfs(start) {
+    res.push([...path]);                    // record the current subset
+    for (let i = start; i < nums.length; i++) {
+      path.push(nums[i]); dfs(i + 1); path.pop();
+    }
+  }
+  dfs(0);
+  return res;
+}
+```
+
+Recursion tree for Way A with `[1, 2]`:
+
+```
+                dfs(0) path=[]
+          take 1 /          \ skip 1
+     dfs(1) [1]               dfs(1) []
+   take 2 /   \ skip        take 2 /  \ skip
+  [1,2]        [1]           [2]       []
+```
+
+Four leaves = 2² subsets. Way B is the form that extends naturally to combinations and duplicate skipping.

@@ -1,0 +1,15 @@
+---
+slug: rotated-sorted-arrays
+title: Rotated sorted arrays
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Rotated sorted arrays
+  lines:
+    - 602
+    - 602
+---
+
+**Rotated sorted arrays.** After a rotation, at least one half around `mid` is sorted. Compare `nums[mid]` with `nums[hi]`: if `nums[mid] > nums[hi]`, the minimum lies right of mid; otherwise it is at mid or left. For searching a target (33), decide which half is sorted, then check whether the target lies within that sorted half's range.

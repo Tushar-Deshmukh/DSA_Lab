@@ -1,0 +1,25 @@
+---
+slug: sorting-algorithms-you-must-be-able-to-explain
+title: Sorting algorithms you must be able to explain
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Sorting algorithms you must be able to explain
+  lines:
+    - 606
+    - 616
+---
+
+**Sorting algorithms you must be able to explain.**
+
+| Algorithm | Time (avg / worst) | Space | Stable | Notes |
+| --- | --- | --- | --- | --- |
+| Merge sort | O(n log n) / O(n log n) | O(n) | Yes | Divide, sort halves, merge. Predictable; the merge step is reused for linked lists and k-way merges |
+| Quicksort | O(n log n) / O(n²) | O(log n) stack | No | Partition around a pivot. Random pivot makes the worst case unlikely |
+| Heap sort | O(n log n) / O(n log n) | O(1) | No | Module 7 |
+| Counting / bucket sort | O(n + k) | O(k) | Can be | Only when keys are small integers or bounded |
+| `Array.prototype.sort` (V8, TimSort) | O(n log n) | O(n) | Yes (guaranteed since ES2019) | Default compares **strings**; always pass a comparator for numbers |
+
+Comparison sorting cannot beat Ω(n log n) in the worst case, so when you see O(n) required on unbounded values, sorting is not the intended path.

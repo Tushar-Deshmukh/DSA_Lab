@@ -1,0 +1,15 @@
+---
+slug: call-stack
+title: Call stack
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Call stack
+  lines:
+    - 983
+    - 983
+---
+
+**Call stack.** Each call stores its local variables in a stack frame until it returns. Recursion depth = maximum stack height = auxiliary space. Node's default stack holds roughly 7,000–12,000 frames (measured on Node 22: about 12,500 for a function with no arguments, about 7,000 with four; LeetCode does not publish its limit); deeper recursion (a 10⁵-node skewed tree, a linked list of 10⁵ nodes) throws `RangeError: Maximum call stack size exceeded`. Then convert to iteration with an explicit stack.

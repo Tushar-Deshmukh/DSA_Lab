@@ -1,0 +1,82 @@
+---
+slug: permutations-combinations-pruning
+legacyId: w5d3
+title: Permutations, combinations and pruning
+goal: Generate permutations with a `used` array and combinations of size k with a start index, and prune branches that cannot complete.
+why: '"Order matters" versus "order does not matter" is the first question in any enumeration problem, and it decides between a `used` array and a `start` index. Pruning is what makes backtracking fast enough in practice.'
+prereqs:
+  - Backtracking and subsets (lesson 2)
+outcomes:
+  - Write permutations with `used[]`, choosing and unchoosing correctly
+  - State the complexity of permutations as O(n · n!)
+  - Write combinations of size k with a start index and the "too few left" bound
+  - Explain why pruning with `break` (not `continue`) is correct on sorted or increasing candidates
+ready:
+  - My 77 solution includes the pruning bound
+  - I state 46's complexity as O(n · n!)
+  - I drew the permutation tree for `[1,2,3]` with the used flags at each node
+summary:
+  - Order matters → `used[]` and loop over every index. Order does not → `start` index.
+  - 'Permutations: n! leaves, O(n · n!) with copying.'
+  - 'Combinations of size k: stop when `path.length === k`; prune when `n − i + 1 < k − path.length`.'
+  - Prune with `break` when every later choice is worse.
+  - 'Permutations II: sort; skip `i` if `nums[i] === nums[i−1] && !used[i−1]`.'
+revision: Write the loop header and the pruning line for `combine(n, k)` from memory, and explain why it can `break`.
+warmup:
+  problem: 90
+topic: Permutations with a `used` array; combinations with a start index and pruning
+implement: Draw the permutation tree for `[1,2,3]` with `used` flags at each node
+problemsText: 'C: 46, 77 · O: 47'
+problems:
+  - num: 46
+    tier: C
+  - num: 77
+    tier: C
+  - num: 47
+    tier: O
+doneWhen: 77 includes the pruning bound; complexity of 46 stated as O(n · n!)
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="permutations" kind="code" title="Permutations">
+
+<Include id="theory/recursion-backtracking/example-4" />
+
+<Viz id="bt-permute" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Callout kind="tip" title="Optional: Permutations II (47)">
+
+With duplicates, sort and add `if (i > 0 && nums[i] === nums[i - 1] && !used[i - 1]) continue;`. It forces equal values to be placed in left-to-right order, so each distinct arrangement is produced once.
+
+</Callout>
+
+</Unit>
+
+<Unit id="combinations-and-pruning" kind="theory" title="Combinations and pruning">
+
+<Include id="theory/recursion-backtracking/pruning" />
+
+<Viz id="bt-combine" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Include id="patterns/permutation-search-with-a-used-set" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

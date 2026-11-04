@@ -1,0 +1,73 @@
+---
+slug: tries
+legacyId: w7d5
+title: Tries
+goal: Implement a trie with insert, search and prefix search, choose between Map and 26-array children, and answer wildcard queries with DFS.
+why: Tries turn "does any word start with this?" from a scan of the dictionary into a walk of the prefix. They appear in autocomplete-style questions and are the key to Word Search II.
+prereqs:
+  - Maps and objects (Module 1 lesson 3)
+  - DFS on trees (Module 6)
+outcomes:
+  - Insert words and mark `isEnd` on the last node
+  - Distinguish search (needs `isEnd`) from startsWith (needs only the path)
+  - Use 26-slot arrays for lowercase input
+  - Handle `.` wildcards at any position by trying every child
+ready:
+  - 211 handles `.` at any position, including the last
+  - I inserted "app", "apple", "bat" and drew the trie with its `isEnd` flags
+  - I can say why a Set of words cannot answer prefix queries efficiently
+summary:
+  - 'Each node: children (Map or 26 slots) + `isEnd`.'
+  - 'insert / search / startsWith: O(L), independent of the number of words.'
+  - search checks `isEnd`; startsWith only checks the path exists.
+  - 'Wildcard: DFS over all children at a `.`.'
+  - 'Space: O(total characters stored).'
+revision: Draw the trie for "app", "apple", "bat" from memory, mark the isEnd nodes, and say what `search("ap")` and `startsWith("ap")` return.
+warmup:
+  problem: 56
+topic: 'Tries: insert, search, startsWith; Map vs 26-array children; wildcard search by DFS'
+implement: Insert "app", "apple", "bat" and draw the trie with `isEnd` flags
+problemsText: 'C: 208, 211 · O: 212'
+problems:
+  - num: 208
+    tier: C
+  - num: 211
+    tier: C
+  - num: 212
+    tier: O
+doneWhen: 211 handles `.` at any position, including the last
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="prefix-trees" kind="theory" title="Prefix trees">
+
+<Include id="theory/heaps-intervals-tries/tries" />
+
+<Include id="theory/heaps-intervals-tries/example-4" />
+
+<Include id="handbook/javascript-reference/trie" />
+
+<Viz id="trie" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Include id="patterns/trie-for-prefix-queries" />
+
+<Include id="theory/heaps-intervals-tries/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

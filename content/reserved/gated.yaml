@@ -1,0 +1,38 @@
+# Server-only. Never imported by anything that reaches a page, the client or search (D-012).
+gated:
+  - id: classification-drill-6
+    by: assessment-1
+    md: Count the number of contiguous subarrays whose sum is divisible by k (values may be negative).
+    source:
+      file: source/roadmap.md
+      lines:
+        - 3272
+        - 3272
+  - id: classification-drill-answers
+    by: classification-drill
+    md: '*Answers:* 1 boundary binary search on a rotated array; 2 variable sliding window with a count map; 3 intervals: sort + min-heap of end times (or sweep); 4 backtracking with pruning sets; 5 trie; 6 prefix sums with remainders in a hash map; 7 topological sort (Kahn); 8 unbounded-knapsack DP; 9 monotonic stack; 10 BFS on a grid; 11 Dijkstra; 12 max-heap of size k keyed by squared distance (or quickselect); 13 fast/slow pointers; 14 level-order BFS (last node per level); 15 two heaps.'
+    source:
+      file: source/roadmap.md
+      lines:
+        - 3283
+        - 3283
+  - id: placement-answer-key
+    by: placement
+    md: |-
+      1. O(n²): the inner loop runs n + (n−1) + … + 1 = n(n+1)/2 times.
+      2. O(log n): i doubles each step, so it reaches n after log₂ n steps.
+      3. O(n²): `includes` is a linear scan.
+      4. O(n²) total in the standard cost model: each `slice` can copy up to n characters. V8 often shares memory between a string and its slices, so this may run faster in practice, but interviewers expect O(n) per slice, and array slices always copy. Move an index instead.
+      5. `shift` re-indexes the remaining elements, which is O(n) per call, so BFS becomes O(V²). Use a head pointer (section 6.5).
+      6. `[1, 10, 2, 9]`: the default sort compares elements as strings. Use `(a, b) => a - b`.
+      7. Any two of: keys of any type (numbers stay numbers); no prototype keys such as `"constructor"` or `"__proto__"`; `size` is O(1); insertion order is guaranteed and iteration is direct; faster for frequent add/delete.
+      8. Time O(φⁿ) ≈ O(1.618ⁿ), commonly stated as O(2ⁿ); space O(n) for the call stack.
+      9. O(n), O(n log n), O(n √n) at a push. O(n²) is about 10¹⁰ operations and too slow.
+      10. A subarray is contiguous; a subsequence keeps order but may skip elements. There are n(n+1)/2 non-empty subarrays and 2ⁿ − 1 non-empty subsequences.
+      11. `-2147483648`: bitwise operators work on signed 32-bit integers.
+      12. The invariant: if the target exists, it lies inside `[lo, hi]` (for the closed-interval version). Each step must keep that true while shrinking the range.
+    source:
+      file: source/roadmap.md
+      lines:
+        - 107
+        - 119

@@ -1,0 +1,85 @@
+---
+slug: frequency-counting-buckets-majority
+legacyId: w1d4
+title: Frequency counting, buckets and majority votes
+goal: Find the k most frequent elements in O(n) with buckets, and find a majority element in O(1) space.
+why: '"Top k" and "most frequent" questions are everywhere. Sorting by frequency is the obvious O(n log n) answer; bucketing by count is the O(n) one, and you will redo it with a heap in Module 7. Boyer–Moore shows how a guarantee in the problem statement can remove the need for memory.'
+prereqs:
+  - Counting with a `Map` (previous lesson)
+  - Arrays of arrays
+outcomes:
+  - Explain why an array of n + 1 buckets indexed by count replaces sorting
+  - Solve Top K Frequent in O(n)
+  - Explain Boyer–Moore voting and when it needs a second pass
+  - Compute a 3 × 3 box index for Valid Sudoku
+ready:
+  - I solved 347 in O(n) with buckets and noted the heap version for Module 7
+  - My bucket trace on `[1,1,1,2,2,3]` matches the visualizer
+  - I can explain why Boyer–Moore can only return the majority when one is guaranteed
+summary:
+  - Count first; then the count itself can be an index.
+  - 'Counts are between 1 and n, so n + 1 buckets cover every case: O(n) top k.'
+  - 'Boyer–Moore: a different element cancels one vote; a true majority survives. O(1) space.'
+  - Without a guaranteed majority, verify the candidate with a second counting pass.
+  - 'Sudoku box index: `Math.floor(r / 3) * 3 + Math.floor(c / 3)`.'
+revision: From memory, explain why bucket sort by frequency is O(n), then write the two lines of Boyer–Moore inside the loop.
+warmup:
+  problem: 49
+topic: Frequency counting, bucket-by-count, majority element (Boyer-Moore as an alternative)
+implement: Bucket sort by frequency on `[1,1,1,2,2,3]`
+problemsText: 'C: 169, 347 · S: 36'
+problems:
+  - num: 169
+    tier: C
+  - num: 347
+    tier: C
+  - num: 36
+    tier: S
+doneWhen: 347 solved in O(n) with buckets; heap version noted for Module 7
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="count-then-bucket-by-count" kind="theory" title="Count, then bucket by count">
+
+Once you have counted, the question "which values are most frequent?" sounds like a sort. But counts have a special property: they are integers between 1 and n. So use them as **indices**: put each value in `buckets[count]`, then read the buckets from the highest count downwards until you have k values. No comparison sort is needed.
+
+<Viz id="bucket-freq" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="majority-element-votes-that-cancel" kind="theory" title="Majority element: votes that cancel">
+
+Majority Element (169) guarantees that one value appears more than n/2 times. A Map of counts solves it in O(n) time and O(n) space. Boyer–Moore does it in O(1) space: keep one candidate and a vote count; each element that matches adds a vote, each element that differs removes one, and when the votes reach zero the next element becomes the candidate.
+
+<Viz id="boyer-moore" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="stretch-several-keyed-sets-valid-sudoku" kind="stretch" title="Stretch: several keyed sets (Valid Sudoku)">
+
+Problem 36 checks rows, columns and 3 × 3 boxes at once. Keep one Set per row, per column and per box. The only new idea is numbering the boxes: rows 0–2 and columns 0–2 are box 0, rows 0–2 and columns 3–5 are box 1, and so on.
+
+<Exercise id="ex-05" />
+
+<Include id="theory/complexity-arrays-hashing/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

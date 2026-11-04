@@ -1,0 +1,243 @@
+exercises:
+  - id: ex-01
+    legacyId: w12d1-1
+    type: mcq
+    tag: Read the signal
+    q: A candidate gets the optimal solution but types silently for 15 minutes and presses run five times to find bugs. Which dimensions are weak? Select all that apply.
+    options:
+      - t: Communication
+        ok: true
+        why: Long silent stretches give the interviewer nothing to score.
+      - t: Verification
+        ok: true
+        why: Relying on the run button instead of a dry run is the listed weak signal.
+      - t: Approach and optimisation
+        why: The approach was optimal; what is unknown is whether it was reasoned or remembered, but the code itself is not the problem.
+        kind: concept
+      - t: Problem understanding
+        why: Nothing here says the problem was misunderstood.
+        kind: concept
+    explain: 'A correct answer is not a pass on its own: most rubrics weight the five dimensions roughly equally.'
+    hints:
+      - Which weak signals in the table does the description match?
+  - id: ex-02
+    legacyId: w12d1-2
+    type: trace
+    tag: Plan the clock
+    q: Fill in the 45-minute plan.
+    rows:
+      - prompt: Minute at which clarifying should be finished
+        answer: '5'
+      - prompt: Minute by which the interviewer should have agreed to your approach
+        answer: '15'
+      - prompt: Minutes reserved for verification (dry run and edge cases)
+        answer: '7'
+        why: 35 to 42.
+      - prompt: Minutes left for the wrap-up (complexity, improvements, questions)
+        answer: '3'
+    explain: Writing code before minute 15 without an agreed approach is the most common way to run out of time.
+    hints:
+      - The handbook's table lists the minutes and the output of each phase.
+  - id: ex-03
+    legacyId: w12d1-3
+    type: complexity
+    tag: Constraints → target complexity
+    q: From the input size alone, what running time should you aim for?
+    fields:
+      - label: n ≤ 20
+        answer: O(2ⁿ · n)
+        options:
+          - O(n!)
+          - O(2ⁿ · n)
+          - O(n²)
+          - O(n log n)
+        why:
+          O(n!): 20! ≈ 2.4·10¹⁸ is far too many; 2²⁰ ≈ 10⁶ subsets is fine.
+      - label: n ≤ 3000
+        answer: O(n²)
+        options:
+          - O(2ⁿ)
+          - O(n³)
+          - O(n²)
+          - O(log n)
+        why:
+          O(n³): 2.7·10¹⁰ operations is too slow; 9·10⁶ is comfortable.
+      - label: n ≤ 10⁵
+        answer: O(n log n)
+        options:
+          - O(n²)
+          - O(n log n)
+          - O(n³)
+          - O(2ⁿ)
+        why:
+          O(n²): 10¹⁰ operations is too slow.
+      - label: A single value up to 10⁹
+        answer: O(log n)
+        options:
+          - O(n)
+          - O(log n)
+          - O(n log n)
+        why:
+          O(n): 'Looping up to 10⁹ is too slow: think binary search on the answer, or a formula.'
+    explain: 'Rule of thumb: about 10⁸ simple operations per second, and interview limits assume well under that.'
+    hints:
+      - Plug the bound into each option and compare with about 10⁸.
+  - id: ex-04
+    legacyId: w12d1-4
+    type: pattern
+    tag: Unlabeled drill
+    q: '"Given an array and an integer k, return the maximum sum of any k consecutive elements."'
+    options:
+      - t: Fixed-size sliding window
+        ok: true
+        why: 'Add the entering element, subtract the leaving one: O(n).'
+      - t: Prefix sums with a hash map
+        why: 'Prefix sums work (sum = P[i + k] − P[i]) but the map is unnecessary: nothing is being looked up.'
+        kind: concept
+      - t: DP
+        why: There are no choices to combine; every window is evaluated once.
+        kind: concept
+    explain: '"k consecutive" with a fixed k → fixed window.'
+    hints:
+      - Does the subarray length change?
+  - id: ex-05
+    legacyId: w12d1-5
+    type: pattern
+    tag: Unlabeled drill
+    q: '"A sorted array was rotated at an unknown pivot. Find the index of a target in O(log n)."'
+    options:
+      - t: 'Modified binary search: one half is always sorted'
+        ok: true
+      - t: Two pointers from both ends
+        why: That is O(n).
+        kind: concept
+      - t: Find the pivot by scanning, then binary search
+        why: The scan is O(n), which breaks the O(log n) requirement.
+        kind: concept
+    explain: '"Sorted" (even rotated) + O(log n) → binary search.'
+    hints:
+      - Which half of [lo, hi] is guaranteed to be sorted?
+  - id: ex-06
+    legacyId: w12d1-6
+    type: pattern
+    tag: Unlabeled drill
+    q: '"Return the k-th largest element after each number arrives in a stream."'
+    options:
+      - t: A min-heap of size k
+        ok: true
+        why: 'The top of a size-k min-heap is the k-th largest: O(log k) per number.'
+      - t: Sort after every insertion
+        why: O(n log n) per number.
+        kind: concept
+      - t: Quickselect after every insertion
+        why: O(n) per number; the heap is O(log k).
+        kind: concept
+    explain: '"k-th largest" + streaming → heap of size k.'
+    hints:
+      - What must you keep, and what can you throw away?
+  - id: ex-07
+    legacyId: w12d1-7
+    type: pattern
+    tag: Unlabeled drill
+    q: '"Given a list of equations like a / b = 2.0 and b / c = 3.0, answer queries like a / c."'
+    options:
+      - t: A weighted graph and a DFS/BFS per query (or weighted Union-Find)
+        ok: true
+        why: Each equation is an edge with a ratio; a query multiplies ratios along a path.
+      - t: DP
+        why: There is no ordering of subproblems; it is reachability with weights.
+        kind: concept
+      - t: Sorting
+        why: Ratios between variables are not an order you can sort by.
+        kind: concept
+    explain: Relationships between pairs of named things → a graph, even when the problem never says "graph".
+    hints:
+      - Draw each equation as an arrow between two variables.
+  - id: ex-08
+    legacyId: w12d1-8
+    type: interview
+    title: Maximum Points You Can Obtain from Cards (LeetCode 1423)
+    q: 'Cards are in a row with points `cardPoints`. In each of exactly k steps you take one card from the left end or the right end. Return the maximum total. Example: `[1,2,3,4,5,6,1]`, k = 3 → 12.'
+    model:
+      clarify: |
+        - Exactly k cards, 1 ≤ k ≤ n ≤ 10⁵; points are positive.
+        - Only the ends: you can never take from the middle.
+      brute: 'Recursion choosing left or right k times: 2ᵏ. Better brute force: for each l from 0 to k, take l from the left and k − l from the right, each sum computed in O(k): O(k²).'
+      optimize: |
+        Whatever you take, the cards left behind form one **contiguous** block of n − k cards. Maximising what you take = minimising that block, which is a fixed-size sliding window of length n − k: O(n). Equivalently, slide l from 0 to k keeping a running left sum and right sum: O(k).
+      edges: |
+        - k = n → take everything
+        - the best answer takes all from one side
+        - a large value hidden in the middle cannot be reached
+      complexity: O(n) time (or O(k)), O(1) space.
+    fn: maxScore
+    starter: |
+      function maxScore(cardPoints, k) {
+
+      }
+    solution: |
+      function maxScore(cardPoints, k) {
+        const n = cardPoints.length, w = n - k;
+        let total = 0, win = 0;
+        for (let i = 0; i < n; i++) { total += cardPoints[i]; if (i < w) win += cardPoints[i]; }
+        let minWin = win;
+        for (let i = w; i < n; i++) { win += cardPoints[i] - cardPoints[i - w]; minWin = Math.min(minWin, win); }
+        return total - minWin;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 1
+          - 3
+        expect: 12
+      - args:
+          - - 2
+            - 2
+            - 2
+          - 2
+        expect: 4
+      - args:
+          - - 9
+            - 7
+            - 7
+            - 9
+            - 7
+            - 7
+            - 9
+          - 7
+        expect: 55
+      - args:
+          - - 1
+            - 1000
+            - 1
+          - 1
+        expect: 1
+        hidden: true
+      - args:
+          - - 1
+            - 79
+            - 80
+            - 1
+            - 1
+            - 1
+            - 200
+            - 1
+          - 3
+        expect: 202
+        hidden: true
+      - args:
+          - - 5
+          - 1
+        expect: 5
+        hidden: true
+    explain: The problem does not mention windows at all. Looking at what is **left behind** reveals one. Re-framing the question is a recognition skill of its own.
+    hints:
+      - Take a small example and look at the cards you did not take. What shape do they form?
+      - Maximising what you take is the same as minimising what you leave.
+      - The cards left behind are a window of fixed length n − k.
+annotated: []

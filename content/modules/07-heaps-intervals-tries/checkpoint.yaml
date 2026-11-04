@@ -1,0 +1,40 @@
+exercises:
+  - id: ex-01
+    legacyId: w7sat-1
+    gatedBy: mock-2
+    type: pattern
+    tag: Mixed review
+    q: '"Design a system that returns the top 3 most searched queries so far, after every new search."'
+    options:
+      - t: A hash map of counts plus a way to keep the top 3 (re-scan the small set, or a heap keyed by count)
+        ok: true
+        why: Counts change one at a time; the top 3 can be maintained cheaply.
+      - t: Sort all queries after every search
+        why: O(n log n) per search.
+        kind: concept
+      - t: A trie alone
+        why: A trie helps with prefixes, not with counting the most frequent queries (unless each node stores its top list, which is the autocomplete variant).
+        kind: concept
+    explain: 'Top-K with changing counts: map + heap.'
+    hints:
+      - What changes after each search, and how much?
+  - id: ex-02
+    legacyId: w7sat-2
+    gatedBy: mock-2
+    type: pattern
+    tag: Mixed review
+    q: '"Find the minimum number of arrows to burst all balloons, where an arrow at x bursts every balloon [s, e] with s ≤ x ≤ e."'
+    options:
+      - t: Sort by end; shoot at the end of the first balloon; skip every balloon it bursts; repeat
+        ok: true
+        why: 'Problem 452: the same sort-by-end greedy as 435, counting groups instead of removals.'
+      - t: Merge intervals and count the merged blocks
+        why: Merging chains overlaps transitively ([1,3],[2,5],[4,6] is one block but needs two arrows).
+        kind: concept
+      - t: A min-heap of starts
+        why: Start order does not tell you where one arrow can reach.
+        kind: concept
+    explain: 'Pattern 7.4: maximise compatible choices → sort by end.'
+    hints:
+      - Where should the first arrow go to burst as many balloons as possible?
+annotated: []

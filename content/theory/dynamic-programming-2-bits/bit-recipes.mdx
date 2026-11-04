@@ -1,0 +1,15 @@
+---
+slug: bit-recipes
+title: Bit recipes (i = bit position, 0 = least significant)
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Bit recipes (i = bit position, 0 = least significant)
+  lines:
+    - 2079
+    - 2079
+---
+
+**Bit recipes (i = bit position, 0 = least significant).** Check: `(x >> i) & 1`. Set: `x | (1 << i)`. Clear: `x & ~(1 << i)`. Toggle: `x ^ (1 << i)`. Remove the lowest set bit: `x & (x - 1)`. Isolate the lowest set bit: `x & -x`. Power of two: `x > 0 && (x & (x - 1)) === 0`.

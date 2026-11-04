@@ -1,0 +1,25 @@
+---
+slug: two-heaps-or-a-heap-driven-simulation
+number: '7.3'
+title: Two heaps or a heap-driven simulation
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Pattern 7.3
+  lines:
+    - 1469
+    - 1478
+---
+
+**Pattern 7.3: Two heaps or a heap-driven simulation**
+
+1. *Recognise:* you repeatedly need the current min/max while the set changes, or a median.
+2. *Clues:* "median", "data stream", "schedule tasks", "process in order of priority", "cooldown".
+3. *From brute force:* re-sorting after every change is O(n log n) per operation.
+4. *Why it works:* a heap answers min/max in O(1) and updates in O(log n).
+5. *Template:* median: push into the max-heap, move its top to the min-heap, rebalance if the min-heap is larger.
+6. *Complexity:* O(log n) per update.
+7. *Variations:* 621 Task Scheduler (a counting formula `max(tasks.length, (maxFreq - 1) * (n + 1) + countOfMax)` where n is the cooldown, or a heap simulation; derive both).
+8. *Inappropriate when:* all data is known upfront and queried once (sort).

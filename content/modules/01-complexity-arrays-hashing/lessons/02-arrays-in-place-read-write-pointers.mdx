@@ -1,0 +1,123 @@
+---
+slug: arrays-in-place-read-write-pointers
+legacyId: w1d2
+title: Arrays, in-place edits and read/write pointers
+goal: Know what JavaScript array operations cost, and modify an array in place while keeping a clear invariant.
+why: '"In place, O(1) extra space" is one of the most common constraints in array problems. The read/write pointer is its standard answer, and the invariant you state for it is exactly what an interviewer wants to hear.'
+prereqs:
+  - The previous lesson's cost model of built-ins (6.1)
+  - Loops with an index you control
+outcomes:
+  - Explain why `push` is amortised O(1) and `shift` is O(n)
+  - State the invariant of a read/write pointer loop in one sentence
+  - Remove duplicates from a sorted array and move zeros in place
+  - Avoid the shared-row bug in 2-D arrays
+ready:
+  - I can state the loop invariant for 26 and for 283 in one sentence each
+  - My dry-run table for Remove Duplicates on `[0,0,1,1,1,2,2,3,3,4]` matches the visualizer
+  - I know why `new Array(3).fill([])` is a bug
+summary:
+  - 'JS arrays are dynamic: index, `push`, `pop` O(1); `shift`, `unshift`, middle `splice`, `includes`, `slice` O(n).'
+  - 'Doubling capacity makes n pushes O(n) in total: O(1) amortised.'
+  - 'Read/write: `write` marks the end of the kept prefix; it never passes `read`, so no unread data is overwritten.'
+  - For 26, compare with the last *kept* value, `nums[write − 1]`.
+  - '2-D arrays: `Array.from({ length: m }, () => new Array(n).fill(0))`.'
+revision: Write `removeDuplicates` from memory and state its invariant. Then explain in one sentence why `shift()` inside a loop over n elements is O(n²).
+warmup:
+  problem: 1
+topic: 'Arrays: dynamic arrays, in-place edits, read/write pointers, invariants'
+implement: Dry run Remove Duplicates on `[0,0,1,1,1,2,2,3,3,4]` with a state table
+problemsText: 'C: 26, 283 · S: 121'
+problems:
+  - num: 26
+    tier: C
+  - num: 283
+    tier: C
+  - num: 121
+    tier: S
+doneWhen: You can state the loop invariant for 26 and 283 in one sentence each
+estimate:
+  T: 20
+  I: 15
+  P: 65
+  R: 15
+  'N': 5
+---
+
+<Unit id="dynamic-arrays" kind="theory" title="Dynamic arrays">
+
+<Include id="theory/complexity-arrays-hashing/arrays-in-javascript" />
+
+A JavaScript array keeps its elements in a buffer with some spare capacity. `push` writes into the spare slot. When there is none, the engine allocates a larger buffer (typically about double) and copies everything over. Step through 17 pushes and watch the total work per push stay below 3:
+
+<Viz id="amortized-push" />
+
+`shift()` is the opposite story: removing the first element means every other element moves down one slot, so it is O(n) every time. That is why Module 4 builds queues with a head index instead of `shift`.
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="copying-and-2-d-arrays" kind="reference" title="Copying and 2-D arrays">
+
+<Include id="handbook/javascript-reference/arrays-copying-2-d-arrays-sorting-and-comparators" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="read-write-pointers" kind="theory" title="Read/write pointers">
+
+Many "in place" problems keep a **prefix** of the array as the answer and grow it as they scan. Two indices do the work: `read` visits every element; `write` marks where the next kept element goes. Because `write ≤ read` at all times, writing never destroys an element that has not been read yet.
+
+<Include id="theory/complexity-arrays-hashing/example-4" />
+
+<Viz id="remove-dups" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Callout kind="warn" title="Compare with the last kept value">
+
+`nums[read] !== nums[read - 1]` happens to work on problem 26, because the input is sorted. It fails on the variation "keep at most two copies" (problem 80), where the correct test is `nums[read] !== nums[write - 2]`. Comparing with the kept prefix is the habit that transfers.
+
+</Callout>
+
+<Include id="patterns/read-write-pointers" />
+
+</Unit>
+
+<Unit id="move-zeroes-swap-instead-of-copy" kind="code" title="Move Zeroes: swap instead of copy">
+
+Problem 283 keeps the non-zero values in their original order and pushes the zeros to the end. Swapping `nums[read]` into `nums[write]` does both at once: the zero that was at `write` moves to `read`.
+
+<Viz id="move-zeroes" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="stretch-one-pass-with-a-running-state" kind="stretch" title="Stretch: one pass with a running state">
+
+Best Time to Buy and Sell Stock (121) has the same shape as Two Sum: for every sell day you want the best earlier buy day. You do not need to search for it, because the best earlier buy day is just the *cheapest price so far*, a single number you can update as you go.
+
+<Viz id="running-min" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+<Callout kind="mistake" title="Mistakes to watch for in this lesson">
+
+- `shift()`, `unshift()` or `splice()` inside a loop: each is O(n).
+- `new Array(m).fill([])` or `.fill(new Array(n))`: every row is the same array.
+- Advancing `write` on every iteration instead of only when an element is kept.
+- Returning the array instead of the length `k` on LeetCode's in-place problems.
+- `for...in` over an array: it iterates string keys, not values.
+
+</Callout>
+
+</Unit>

@@ -1,0 +1,25 @@
+---
+slug: same-direction-partitioning
+number: '2.2'
+title: Same-direction partitioning (Dutch national flag)
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Pattern 2.2
+  lines:
+    - 539
+    - 548
+---
+
+**Pattern 2.2: Same-direction partitioning (Dutch national flag)**
+
+1. *Recognise:* group elements into 2–3 classes in place.
+2. *Clues:* "sort colors", "move zeros", "partition around a value".
+3. *From brute force:* counting then rewriting takes two passes; three pointers (`low`, `mid`, `high`) do it in one.
+4. *Why it works:* invariant `[0,low)` = 0s, `[low,mid)` = 1s, `(high,n)` = 2s; `mid` scans the unknown region.
+5. *Template:* if 0 swap with low and advance both; if 1 advance mid; if 2 swap with high and decrement high only (the swapped-in value is unchecked).
+6. *Complexity:* O(n), O(1).
+7. *Variations:* quicksort partition (Module 3).
+8. *Inappropriate when:* stability (original relative order) is required.

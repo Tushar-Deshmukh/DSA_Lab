@@ -17,6 +17,17 @@ npm run dev                       # http://localhost:3000
 
 Without Docker, point `MONGODB_URI` at any MongoDB replica set. With the default `EMAIL_TRANSPORT=console`, sign-in links are printed in the terminal.
 
+## Content
+
+The course lives in `content/` as MDX and YAML ([docs/content-format.md](docs/content-format.md)).
+
+| Command | Purpose |
+| --- | --- |
+| `npm run content:check` | Validates all content; also runs before every build |
+| `npm run content:sync` | Copies the public part into MongoDB |
+| `npm run content:lock` | Adds new ids to `content/ids.lock.json` |
+| `npm run content:import` | Rebuilds `content/` from `legacy/`; needs `-- --force` once `content/` exists |
+
 ## Checks
 
 | Command | What it does |

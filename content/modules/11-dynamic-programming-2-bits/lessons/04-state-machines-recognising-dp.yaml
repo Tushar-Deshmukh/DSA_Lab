@@ -1,0 +1,252 @@
+exercises:
+  - id: ex-01
+    legacyId: w11d4-1
+    type: trace
+    tag: Run the machine by hand
+    q: '309 on `prices = [1, 2, 3, 0, 2]`. Start: hold = −∞, sold = 0, rest = 0. Give the values after each listed day.'
+    rows:
+      - prompt: hold after day 0
+        answer: '-1'
+      - prompt: sold after day 2
+        answer: '2'
+      - prompt: hold after day 3
+        answer: '1'
+        why: 'Buy at 0 from rest = 1: 1 − 0 = 1.'
+      - prompt: The answer
+        answer: '3'
+    verify: |
+      let hold = -Infinity, sold = 0, rest = 0; const out = [];
+      [1, 2, 3, 0, 2].forEach((p, d) => { const ps = sold, ph = hold, pr = rest; sold = ph + p; hold = Math.max(ph, pr - p); rest = Math.max(pr, ps); out.push([hold, sold, rest]); });
+      console.log(out[0][0]); console.log(out[2][1]); console.log(out[3][0]); console.log(Math.max(sold, rest));
+    explain: 'Buy at 1, sell at 2 (+1), cooldown on day 2, buy at 0, sell at 2 (+2): 3.'
+    hints:
+      - Compute all three new values from the previous day's three values.
+  - id: ex-02
+    legacyId: w11d4-2
+    type: bug
+    tag: Half-updated state
+    q: This 309 returns 4 for `[1, 2, 3, 0, 2]` instead of 3. Click the line that breaks the simultaneous update.
+    code: |
+      function maxProfit(prices) {
+        let hold = -Infinity, sold = 0, rest = 0;
+        for (const p of prices) {
+          const prevSold = sold;
+          sold = hold + p;
+          rest = Math.max(rest, prevSold);
+          hold = Math.max(hold, rest - p);
+        }
+        return Math.max(sold, rest);
+      }
+    bug:
+      - 5
+      - 6
+    kind: impl
+    explain: '`rest` is updated before `hold` reads it, so `hold` uses today''s rest, which may include a sale made yesterday: a buy straight after a sale, skipping the cooldown. Compute `hold` from the old rest (update hold before rest, or save every old value first).'
+    fix: |
+      const prevSold = sold, prevHold = hold, prevRest = rest;
+      sold = prevHold + p;
+      hold = Math.max(prevHold, prevRest - p);
+      rest = Math.max(prevRest, prevSold);
+    fine:
+      '3': Saving yesterday's sold is right.
+      '4': Selling from hold is right.
+    hints:
+      - Which value does hold read, and has it already been changed today?
+  - id: ex-03
+    legacyId: w11d4-3
+    type: code
+    tag: Add a transaction fee (LeetCode 714)
+    q: 'Write `maxProfitFee(prices, fee)`: unlimited transactions, no cooldown, but every sale pays `fee`. You may hold at most one share.'
+    fn: maxProfitFee
+    starter: |
+      function maxProfitFee(prices, fee) {
+
+      }
+    solution: |
+      function maxProfitFee(prices, fee) {
+        let hold = -Infinity, free = 0;
+        for (const p of prices) {
+          const prevHold = hold;
+          hold = Math.max(hold, free - p);
+          free = Math.max(free, prevHold + p - fee);
+        }
+        return free;
+      }
+    tests:
+      - args:
+          - - 1
+            - 3
+            - 2
+            - 8
+            - 4
+            - 9
+          - 2
+        expect: 8
+      - args:
+          - - 1
+            - 3
+            - 7
+            - 5
+            - 10
+            - 3
+          - 3
+        expect: 6
+      - args:
+          - - 5
+          - 1
+        expect: 0
+      - args:
+          - - 1
+            - 2
+          - 5
+        expect: 0
+        hidden: true
+      - args:
+          - - 9
+            - 8
+            - 7
+            - 1
+            - 2
+          - 3
+        expect: 0
+        hidden: true
+    explain: No cooldown means two modes are enough (holding or not); the fee sits on the sell arrow.
+    hints:
+      - 'Draw the diagram: how many modes do you need without a cooldown?'
+      - Which arrow pays the fee?
+  - id: ex-04
+    legacyId: w11d4-4
+    type: pattern
+    tag: Recognition drill
+    q: '"Return all possible ways to place n queens on an n × n board so that none attack each other."'
+    options:
+      - t: Backtracking
+        ok: true
+        why: Every configuration must be listed.
+      - t: DP
+        why: Counting them might allow DP-like caching, but listing all of them needs search.
+        kind: concept
+      - t: Greedy
+        why: No local rule guarantees a full placement.
+        kind: concept
+    explain: All solutions → backtracking.
+    hints:
+      - Count, optimum, or all solutions?
+  - id: ex-05
+    legacyId: w11d4-5
+    type: pattern
+    tag: Recognition drill
+    q: '"Minimum number of operations (insert, delete, replace a character) to turn one word into another."'
+    options:
+      - t: Two-sequence DP
+        ok: true
+        why: Edit distance (72).
+      - t: BFS over strings
+        why: Correct in principle but the state space of strings is enormous; the prefix table has only (m + 1)(n + 1) states.
+        kind: concept
+      - t: 'Greedy: fix the first mismatch'
+        why: Which operation to use at a mismatch depends on the rest of both strings.
+        kind: concept
+    explain: Two sequences and a minimum over alignments → dp[i][j].
+    hints:
+      - How many distinct (prefix of a, prefix of b) pairs are there?
+  - id: ex-06
+    legacyId: w11d4-6
+    type: pattern
+    tag: Recognition drill
+    q: '"Fewest moves for a knight to get from one square to another on an infinite board."'
+    options:
+      - t: BFS
+        ok: true
+        why: 'Equal-cost moves on a graph of squares: shortest path by layers.'
+      - t: DP over (row, column)
+        why: Moves go in all directions, so there is no acyclic fill order.
+        kind: concept
+      - t: Dijkstra
+        why: Works, but every move costs 1, so BFS is simpler and faster.
+        kind: concept
+    explain: Shortest path with unit costs → BFS, even when the question sounds like an optimisation.
+    hints:
+      - Is there an order in which every square's dependencies come first?
+  - id: ex-07
+    legacyId: w11d4-7
+    type: interview
+    title: Wiggle Subsequence (LeetCode 376)
+    q: 'A wiggle sequence has differences that strictly alternate between positive and negative (a single element, or two different elements, also count). Return the length of the longest wiggle **subsequence**. Example: `[1,7,4,9,2,5]` → 6.'
+    model:
+      clarify: |
+        - Zero differences are not allowed; equal neighbours break a wiggle.
+        - A subsequence: elements may be skipped.
+      brute: 'All subsequences: 2ⁿ.'
+      optimize: |
+        Two modes: `up` = the longest wiggle subsequence so far whose last difference was positive, `down` = whose last difference was negative. For each i: if nums[i] > nums[i − 1], `up = down + 1`; if nums[i] < nums[i − 1], `down = up + 1`; if equal, nothing changes. Start both at 1; answer max(up, down). This is a two-mode state machine, and it also has a greedy reading: count the turning points.
+      edges: |
+        - all equal → 1
+        - strictly increasing → 2
+        - leading equal elements
+      complexity: O(n) time, O(1) space.
+    fn: wiggleMaxLength
+    starter: |
+      function wiggleMaxLength(nums) {
+
+      }
+    solution: |
+      function wiggleMaxLength(nums) {
+        let up = 1, down = 1;
+        for (let i = 1; i < nums.length; i++) {
+          if (nums[i] > nums[i - 1]) up = down + 1;
+          else if (nums[i] < nums[i - 1]) down = up + 1;
+        }
+        return Math.max(up, down);
+      }
+    tests:
+      - args:
+          - - 1
+            - 7
+            - 4
+            - 9
+            - 2
+            - 5
+        expect: 6
+      - args:
+          - - 1
+            - 17
+            - 5
+            - 10
+            - 13
+            - 15
+            - 10
+            - 5
+            - 16
+            - 8
+        expect: 7
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+        expect: 2
+      - args:
+          - - 0
+            - 0
+        expect: 1
+        hidden: true
+      - args:
+          - - 3
+            - 3
+            - 3
+            - 2
+            - 5
+        expect: 3
+        hidden: true
+    explain: Here the two updates never read a value changed in the same step, so no saving is needed, but say why.
+    hints:
+      - What do you need to know about the best subsequence so far to extend it?
+      - 'Two modes: the last difference was up, or down.'
+      - Which mode does an increase extend?
+annotated: []

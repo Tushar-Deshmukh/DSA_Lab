@@ -1,0 +1,15 @@
+---
+slug: arrays-in-javascript
+title: Arrays in JavaScript
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Arrays in JavaScript
+  lines:
+    - 233
+    - 233
+---
+
+**Arrays in JavaScript.** A JS array is a dynamic array: index access and `push`/`pop` are O(1) (amortised); `shift`, `unshift`, `splice` in the middle, `indexOf`, `includes`, `slice` and spread (`[...a]`) are O(n). Avoid holes (`arr[1000] = x` on an empty array) and mixing types in hot loops; V8 then falls back to slower representations. Pre-size with `new Array(n).fill(0)` when you know the length.

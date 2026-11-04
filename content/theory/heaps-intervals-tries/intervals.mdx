@@ -1,0 +1,20 @@
+---
+slug: intervals
+title: Intervals
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Intervals
+  lines:
+    - 1354
+    - 1359
+---
+
+**Intervals.** Represent as `[start, end]`. Check whether endpoints are inclusive: `[1,2]` and `[2,3]` overlap in 56 (merge them) but meetings ending at 2 and starting at 2 do not conflict.
+
+- *Merge (56):* sort by start; extend the last merged interval while `cur.start <= last.end`.
+- *Insert (57):* add intervals ending before the new one, merge all overlapping, add the rest. O(n), no sort needed.
+- *Maximum non-overlapping set (435, 452):* sort by **end**, greedily keep the interval that finishes first (activity selection; proven in Module 9).
+- *Maximum simultaneous overlap (meeting rooms):* either sort starts and ends separately and sweep, or sort by start and keep a min-heap of end times; the heap size is the number of rooms in use. The classic "Meeting Rooms II" is Premium, so you practise the same sweep with 1094 Car Pooling.

@@ -1,0 +1,124 @@
+---
+slug: prefix-sums-difference-arrays
+legacyId: w2d5
+title: Prefix sums, prefix + hash map, difference arrays
+goal: Answer range-sum queries in O(1), count subarrays with an exact sum even when numbers are negative, and apply many range updates with a difference array.
+why: 'Prefix sums are the fix for every case where a window breaks: negative numbers, exact-sum counting, "divisible by k". The prefix + map idea is the same trick as Two Sum, applied to running totals, and it appears in interviews far more often than its difficulty suggests.'
+prereqs:
+  - 'Two Sum with a hash map (problem 1): look up the complement among values already seen'
+  - The previous lesson's sliding windows and their monotonicity condition
+outcomes:
+  - Build `pre` with `pre[0] = 0` and answer `sum(l..r) = pre[r+1] − pre[l]`
+  - 'Count subarrays with sum k using a map seeded with `{0: 1}`'
+  - Explain why a sliding window fails on problem 560
+  - Use prefix and suffix products without division (238) and a difference array for range updates (1109)
+ready:
+  - I can explain why a sliding window fails on 560, using `[1, -1, 1]`
+  - 'I can explain why the map starts with `{0: 1}`, and what breaks without it'
+  - I did three range updates with a difference array by hand and got the same result as the visualizer
+summary:
+  - '`pre[i]` = sum of the first i elements; `pre[0] = 0`; `sum(l..r) = pre[r+1] − pre[l]`.'
+  - 'Subarray sum = k ⇔ an earlier prefix equals `cur − k`. Count earlier prefixes with a map seeded `{0: 1}`.'
+  - Count first, then record the current prefix.
+  - Works with negative numbers, unlike a window. O(n) time, O(n) space.
+  - 'Difference array: `diff[l] += v; diff[r+1] −= v`, then one prefix pass.'
+revision: 'Write `subarraySum` from memory and dry-run it on `[1, -1, 1]`, k = 1. Then explain in one sentence why the map starts with `{0: 1}`.'
+warmup:
+  problem: 209
+topic: Prefix sums, prefix + hash map, prefix/suffix products, difference arrays
+implement: Build prefix array; dry run 560 on `[1,-1,1]`, k = 1; 3 range updates with a difference array
+problemsText: 'C: 303, 560 · S: 238 · O: 1109'
+problems:
+  - num: 303
+    tier: C
+  - num: 560
+    tier: C
+  - num: 238
+    tier: S
+  - num: 1109
+    tier: O
+doneWhen: 'You can explain why sliding window fails on 560 and why the map starts with `{0: 1}`'
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="prefix-sums" kind="theory" title="Prefix sums">
+
+<Include id="theory/two-pointers-windows-prefix-sums/prefix-sums" />
+
+The convention `pre[0] = 0` with `pre` one longer than the input is what makes the formula work for ranges that start at index 0: `sum(0..r) = pre[r+1] − pre[0]`. It is the most common off-by-one in this topic, so fix the convention once and use it everywhere.
+
+<Viz id="prefix-range" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="prefix-sums-hash-map-counting-exact-sums" kind="theory" title="Prefix sums + hash map: counting exact sums">
+
+Subarray Sum Equals K (560) asks how many subarrays sum to exactly k, with negatives allowed. Write the condition in prefix terms: subarray `[j..i]` sums to k exactly when `pre[i+1] − pre[j] = k`, that is, when **an earlier prefix equals `cur − k`**, where `cur` is the running sum. That is Two Sum on prefix sums: as you walk, look up how many earlier prefixes equal `cur − k`, then record `cur`.
+
+<Include id="theory/two-pointers-windows-prefix-sums/example-3" />
+
+<Viz id="prefix-map" />
+
+<Callout kind="key" title="Why `{0: 1}`">
+
+The empty prefix (sum 0, before any element) is a real prefix. It is what lets a subarray start at index 0: when `cur` itself equals k, you need `cur − k = 0` to have been "seen once". Without the seed, `[3]` with k = 3 would return 0.
+
+</Callout>
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="prefix-and-suffix-products-stretch" kind="theory" title="Prefix and suffix products (Stretch)">
+
+Product of Array Except Self (238) forbids division. The product of everything except `nums[i]` is (product of everything left of i) × (product of everything right of i). Fill `out[i]` with the left products in one pass, then sweep from the right with a running product:
+
+```js
+function productExceptSelf(nums) {
+  const n = nums.length, out = new Array(n);
+  out[0] = 1;
+  for (let i = 1; i < n; i++) out[i] = out[i - 1] * nums[i - 1];   // product of nums[0..i-1]
+  let right = 1;                                                    // product of nums[i+1..n-1]
+  for (let i = n - 1; i >= 0; i--) { out[i] *= right; right *= nums[i]; }
+  return out;
+}
+```
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="difference-arrays-optional" kind="theory" title="Difference arrays (Optional)">
+
+The reverse problem: many updates "add v to every element in [l, r]", then read the array once. Applying each update directly is O(length) per update. Instead record where each update *starts* and *stops* in a difference array, and let one prefix-sum pass apply them all.
+
+<Viz id="diff-array" />
+
+<Exercise id="ex-05" />
+
+<Include id="patterns/prefix-sums" />
+
+<Include id="theory/two-pointers-windows-prefix-sums/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+<Callout kind="interview" title="How to present prefix + map">
+
+"A window won't work because the values can be negative after the transform, so I'll use prefix sums: a subarray sums to k exactly when two prefixes differ by k. I'll keep a map from prefix sum to count, seeded with 0, so subarrays starting at index 0 are included." Interviewers listen for the reason the window fails and for the `{0: 1}` seed.
+
+</Callout>
+
+</Unit>

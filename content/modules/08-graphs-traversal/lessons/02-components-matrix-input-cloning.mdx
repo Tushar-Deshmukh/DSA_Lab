@@ -1,0 +1,70 @@
+---
+slug: components-matrix-input-cloning
+legacyId: w8d2
+title: Components, matrix input and cloning
+goal: Count components on adjacency lists and matrices with DFS and BFS, and clone a graph with a map that doubles as the visited set.
+why: '"How many groups?" and "is there a path?" are the simplest graph questions, and they are where people forget disconnected parts or misread the input format.'
+prereqs:
+  - Adjacency lists and traversals (lesson 1)
+outcomes:
+  - Count components with an outer loop over all nodes
+  - Use an adjacency matrix directly (547)
+  - Check reachability between two nodes (1971)
+  - Clone a graph with a Map from original node to copy
+ready:
+  - I can say which representation each of this lesson's problems gives me and why it matters
+  - I counted the components of lesson 1's graph by BFS and by DFS
+  - I know which line makes my count include isolated nodes
+summary:
+  - 'Components: for every node, if unvisited, count++ and traverse from it.'
+  - Isolated nodes (no edges) are components of size 1.
+  - 'Matrix input: neighbours of i are the j with `isConnected[i][j] === 1`.'
+  - 'Clone: `Map<original, copy>`; create the copy when first seen, then wire neighbours.'
+revision: Explain in one sentence why the outer loop over all nodes is necessary, and what the Map in Clone Graph is used for (two things).
+warmup:
+  problem: 200
+  note: BFS
+topic: Components on lists and matrices; cloning with a node map
+implement: Count components of lesson 1's graph by BFS and by DFS
+problemsText: 'C: 1971, 547 · S: 133'
+problems:
+  - num: 1971
+    tier: C
+  - num: 547
+    tier: C
+  - num: 133
+    tier: S
+doneWhen: You can say which representation each problem gives you and why it matters
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="components" kind="theory" title="Components">
+
+<Viz id="graph-dfs" />
+
+<Viz id="graph-bfs" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="cloning-a-graph-stretch" kind="theory" title="Cloning a graph (Stretch)">
+
+Clone Graph (133) gives you one node of a connected undirected graph and asks for a deep copy. A `Map` from each original node to its copy does two jobs: it is the visited set (a node is visited iff it has a copy), and it is how you wire a copy's neighbours to the *copies* of the original's neighbours. Create a node's copy the first time you see it; then traverse and push each copy's neighbour list.
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

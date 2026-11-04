@@ -1,0 +1,25 @@
+---
+slug: level-order-bfs
+number: '6.3'
+title: Level-order BFS
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Pattern 6.3
+  lines:
+    - 1299
+    - 1308
+---
+
+**Pattern 6.3: Level-order BFS**
+
+1. *Recognise:* levels, rows, width, left/right views, or shortest distance from the root.
+2. *Clues:* "level", "row", "depth" with "minimum", "right side", "zigzag", "average of levels".
+3. *From brute force:* DFS with a depth parameter works too, but BFS processes levels naturally and can stop early.
+4. *Why it works:* the queue holds exactly one level when each outer iteration begins.
+5. *Template:* Example 4.
+6. *Complexity:* O(n) time, O(width) space (up to n/2).
+7. *Variations:* minimum depth (111: return at the first leaf), zigzag (reverse alternate levels), maximum width (index nodes as 2i, 2i + 1).
+8. *Inappropriate when:* the problem is about subtree aggregates (DFS is simpler).

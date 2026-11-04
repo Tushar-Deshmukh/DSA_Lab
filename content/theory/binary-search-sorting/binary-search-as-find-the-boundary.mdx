@@ -1,0 +1,15 @@
+---
+slug: binary-search-as-find-the-boundary
+title: Binary search as "find the boundary"
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Binary search as "find the boundary"
+  lines:
+    - 589
+    - 589
+---
+
+**Binary search as "find the boundary".** Most bugs disappear when you stop searching for "the target" and instead search for the *first index where a monotone predicate becomes true*. A predicate is monotone if it looks like `F F F T T T` across the range. Examples: `a[i] >= target` (lower bound), `a[i] > target` (upper bound), `canFinish(speed)` (Koko).

@@ -1,0 +1,45 @@
+---
+slug: the-14-step-method
+section: 7
+title: 7.1 The 14-step method
+source:
+  file: source/roadmap.md
+  section: 7
+  key: 7.1 The 14-step method
+  lines:
+    - 3191
+    - 3223
+---
+
+| # | Step | What you write or say | Typical time (Medium) |
+| --- | --- | --- | --- |
+| 1 | Restate the problem | One sentence in your own words | 1 min |
+| 2 | Inputs, output, constraints, edge cases | n range, value range, sorted?, duplicates?, empty?, negative? | 2 min |
+| 3 | Work a small example by hand | 4–6 elements; watch what *you* do | 3 min |
+| 4 | Brute force | The most direct correct method | 2 min |
+| 5 | Its complexity | Time and space; compare with the constraints table (Module 1 theory) | 1 min |
+| 6 | Identify the bottleneck | "The inner loop searches for X" / "we recompute the same sum" | 2 min |
+| 7 | Choose a structure or pattern | Map, set, two pointers, window, heap, BFS, DP… (7.2) | 2–5 min |
+| 8 | Why it works | Invariant, monotonicity, exchange argument or recurrence | 2 min |
+| 9 | Pseudocode | 5–10 lines of comments | 3 min |
+| 10 | Implement in JavaScript | Small helpers, clear names | 10–15 min |
+| 11 | Test | Normal, boundary (empty, one element, all equal), adversarial (max n, negatives) | 3–5 min |
+| 12 | Re-analyse complexity | Including sort cost, recursion stack and output size | 1 min |
+| 13 | Explain correctness | The invariant or recurrence in two sentences | 1 min |
+| 14 | Log the lesson | Key observation and why it was hard (section 8 tracker) | 2 min |
+
+Paste this skeleton at the top of the LeetCode editor for the first four modules:
+
+```js
+/*
+1 Restate:
+2 In/Out/Constraints/Edges:
+3 Example by hand:
+4 Brute force:            5 Complexity:
+6 Bottleneck:
+7 Pattern / structure:    8 Why it works:
+9 Pseudocode:
+12 Final complexity:     13 Invariant:
+14 Lesson:
+*/
+```

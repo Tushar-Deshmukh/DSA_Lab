@@ -1,0 +1,108 @@
+---
+slug: binary-search-first-true
+legacyId: w3d1
+title: Binary search as "first true"
+goal: Write lower and upper bound by reasoning from an invariant, and use them to find the first and last position of a value without special cases.
+why: Off-by-one errors in binary search are the most common bug in coding interviews. Reasoning about a boundary and an invariant removes them, and the same `firstTrue` shape powers every binary search in this module.
+prereqs:
+  - Sorted arrays and O(log n) (Module 1)
+  - Loop invariants (read/write pointers, Module 1 lesson 2)
+outcomes:
+  - Express a search as a monotone predicate `F … F T … T` and find its first true index
+  - Use the half-open convention `[lo, hi)` consistently, and the closed one for exact search
+  - 'Prove termination: why `hi = mid` and `lo = mid + 1` always shrink the range'
+  - Solve 34 with two bound calls
+ready:
+  - I wrote `lowerBound` and `upperBound` from scratch and tested them on empty, single-element, all-equal and absent-target arrays
+  - 34 is solved with two bound calls and no special-case branches
+  - I can explain why `lo = mid` can loop forever
+summary:
+  - 'Search for a boundary: the first index where a monotone predicate is true.'
+  - 'Half-open `[lo, hi)`: `while (lo < hi)`; true → `hi = mid`; false → `lo = mid + 1`; answer `lo`.'
+  - '`hi` starts at `n` because "none qualifies" is a valid answer.'
+  - Lower bound uses `>=`, upper bound `>`; last occurrence = upperBound − 1.
+  - Closed `[lo, hi]` with `while (lo <= hi)` is for exact matches only. Never mix the two.
+revision: 'From memory, write `lowerBound`, then explain in two sentences why it terminates and why it returns the first true index. Then answer: what do lowerBound and upperBound return for `[2, 2, 2]`, target 2?'
+warmup:
+  problem: 560
+topic: Binary search as "first true"; half-open vs closed intervals; invariants and termination; lower/upper bound
+implement: Write lowerBound and upperBound from scratch; test on empty, single, all-equal, absent-target arrays; then submit your lowerBound as 35 and a closed-interval version as 704 before starting 34
+problemsText: 'C: 704, 35, 34'
+problems:
+  - num: 704
+    tier: C
+  - num: 35
+    tier: C
+  - num: 34
+    tier: C
+doneWhen: 34 solved with two bound calls, no special-case branches
+estimate:
+  T: 30
+  I: 25
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-boundary-idea" kind="theory" title="The boundary idea">
+
+<Include id="theory/binary-search-sorting/binary-search-as-find-the-boundary" />
+
+Look at `nums = [1, 2, 2, 2, 5]` and the predicate `nums[i] >= 2`. Across the array it reads `F T T T T`. The predicate is **monotone**: once it becomes true it stays true, because the array is sorted. "Where does 2 first appear?" becomes "where is the first T?", and that question always has an answer: an index from 0 to n, where n means "no T at all".
+
+That reframing is what removes the special cases. You no longer ask "did I find it?" inside the loop. You shrink the range until it pins down the boundary, then check the boundary once, after the loop.
+
+</Unit>
+
+<Unit id="two-conventions-and-how-to-derive-them" kind="theory" title="Two conventions, and how to derive them">
+
+<Include id="theory/binary-search-sorting/two-interval-conventions" />
+
+The derivation has two parts, and you should be able to say both:
+
+1. **The answer stays in the range.** If `pred(mid)` is true, the first true index is `mid` or earlier, so `hi = mid` keeps it. If false, everything up to `mid` is false, so `lo = mid + 1` keeps it.
+2. **The range shrinks.** `mid` is always in `[lo, hi)`, so `hi = mid` makes the range smaller, and so does `lo = mid + 1`. A range that shrinks by at least one every iteration must end.
+
+<Viz id="bs-lower" />
+
+<Viz id="bs-upper" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="the-code-line-by-line" kind="code" title="The code, line by line">
+
+<Include id="theory/binary-search-sorting/example-1" />
+
+<AnnotatedCode id="anno-01" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="exact-search-and-the-reference-template" kind="code" title="Exact search, and the reference template">
+
+For "is the target present, and where?", the closed convention is natural: check `mid`, and if it is not the target, exclude it from both sides.
+
+<Viz id="bs-closed" />
+
+<Include id="handbook/javascript-reference/binary-search-templates" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+<Include id="patterns/boundary-binary-search" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

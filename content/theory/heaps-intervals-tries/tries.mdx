@@ -1,0 +1,15 @@
+---
+slug: tries
+title: Tries (prefix trees)
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Tries (prefix trees)
+  lines:
+    - 1361
+    - 1361
+---
+
+**Tries (prefix trees).** Each node maps a character to a child node and has an `isEnd` flag. Insert and search cost O(L) for a word of length L, independent of how many words are stored. Space is O(total characters). Use when many queries share prefixes: autocomplete, prefix counts, word search over a dictionary. A `Set` of words answers "is this word present" in O(L) too, but cannot answer "does any word start with this prefix" efficiently.

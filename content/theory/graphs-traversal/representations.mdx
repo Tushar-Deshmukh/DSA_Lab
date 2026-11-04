@@ -1,0 +1,24 @@
+---
+slug: representations
+title: Representations
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Representations
+  lines:
+    - 1510
+    - 1519
+---
+
+**Representations.**
+
+| Representation | Space | Edge check | Iterate neighbours | Use when |
+| --- | --- | --- | --- | --- |
+| Adjacency list (`Array.from({length: n}, () => [])`) | O(V + E) | O(degree) | O(degree) | Default for interviews; sparse graphs |
+| Adjacency matrix (`n × n`) | O(V²) | O(1) | O(V) | Dense graphs, small n (≤ \~1,000), input already a matrix (547) |
+| Edge list | O(E) | O(E) | O(E) | Kruskal's MST, input format |
+| Implicit grid | none extra | O(1) | 4 or 8 neighbours | Islands, mazes, oranges |
+
+Build an undirected adjacency list from `edges` by pushing both directions. For string-labelled nodes, use a `Map` from label to array of neighbours.

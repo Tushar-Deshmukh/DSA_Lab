@@ -1,0 +1,101 @@
+---
+slug: greedy-algorithms-counterexamples
+legacyId: w9d4
+title: Greedy algorithms and counterexamples
+goal: 'Decide whether a greedy rule is correct: try to break it with small inputs, prove it with an exchange argument when it survives, and solve Jump Game I and II in one pass.'
+why: Greedy solutions are the shortest correct answers in interviews when they work and the most common wrong ones when they do not. Interviewers often ask "why does that work?" after a greedy answer; a one-line exchange argument is what they want to hear.
+prereqs:
+  - Sorting with comparators (Module 3)
+  - Intervals (Module 7 lesson 4)
+outcomes:
+  - State the greedy-choice property and optimal substructure
+  - Break "largest coin first", "shortest interval first" and "best ratio first" with counterexamples
+  - Prove activity selection ("earliest end first") with an exchange argument
+  - Solve 55 by tracking the farthest reachable index, and 45 by counting levels of reach
+ready:
+  - I can give a counterexample for "largest coin first"
+  - I wrote the earliest-end proof in my own words
+  - 55 and 45 accepted, each in one pass
+summary:
+  - Greedy is correct only with the greedy-choice property and optimal substructure.
+  - 'Validate: try to break it on 2–4 elements first; then exchange argument or "greedy stays ahead".'
+  - 'Counterexamples: coins [1,3,4] for 6; shortest interval; value/weight ratio; alternating houses.'
+  - '55: fail when i > farthest. 45: a jump each time i reaches the current level''s end.'
+  - No proof and small input → fall back to DP or search, and say so.
+revision: Give the coin counterexample from memory, then prove "earliest end first" in three sentences.
+warmup:
+  problem: 684
+topic: 'Greedy: choice property, exchange argument, counterexamples; reachability'
+implement: Break three greedy ideas from the module theory table by hand; write the earliest-end proof
+problemsText: 'C: 55, 45 · S: 455'
+problems:
+  - num: 55
+    tier: C
+  - num: 45
+    tier: C
+  - num: 455
+    tier: S
+doneWhen: You can give a counterexample for "largest coin first"
+estimate:
+  T: 25
+  I: 15
+  P: 65
+  R: 10
+  'N': 5
+---
+
+<Unit id="what-makes-greedy-correct" kind="theory" title="What makes greedy correct">
+
+<Include id="theory/graphs-weighted-greedy/greedy-algorithms" />
+
+<Include id="theory/graphs-weighted-greedy/how-to-validate-a-greedy-idea-in-an-interview" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="breaking-greedy-ideas" kind="theory" title="Breaking greedy ideas">
+
+<Include id="theory/graphs-weighted-greedy/greedy-ideas-that-fail" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="proving-earliest-end-first" kind="theory" title="Proving &quot;earliest end first&quot;">
+
+<Include id="theory/graphs-weighted-greedy/activity-selection-proof" />
+
+<Include id="patterns/greedy-by-sorting" />
+
+<Exercise id="ex-04" />
+
+<Callout kind="tip" title="Stretch: Assign Cookies (455)">
+
+Sort children by greed and cookies by size. Give each cookie, smallest first, to the least greedy unsatisfied child it satisfies. Exchange argument: if an optimal assignment gives the smallest usable cookie to someone else, swapping it to the least greedy child never loses a satisfied child.
+
+</Callout>
+
+</Unit>
+
+<Unit id="reachability-in-one-pass" kind="code" title="Reachability in one pass">
+
+<Include id="theory/graphs-weighted-greedy/example-3" />
+
+<Viz id="jump-game" />
+
+<Viz id="jump-game2" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

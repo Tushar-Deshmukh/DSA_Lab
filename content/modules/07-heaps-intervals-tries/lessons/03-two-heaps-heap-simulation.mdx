@@ -1,0 +1,71 @@
+---
+slug: two-heaps-heap-simulation
+legacyId: w7d3
+title: Two heaps and heap-driven simulation
+goal: Maintain a running median with two heaps, and simulate or count Task Scheduler's schedule.
+why: '"Median of a data stream" is a classic Hard that becomes simple once you see the two halves. Task Scheduler is the classic "simulate with a heap, then find the formula" question, and interviewers like candidates who can do both.'
+prereqs:
+  - MinHeap with a comparator (lesson 1)
+outcomes:
+  - Keep a max-heap of the lower half and a min-heap of the upper half balanced
+  - Read the median in O(1) after O(log n) inserts
+  - Explain 621 both by a heap simulation and by the counting formula
+ready:
+  - I explained 621 both by formula and by simulation
+  - I traced a running median for the stream 5, 15, 1, 3 with both heaps
+  - I can say which heap holds the extra element when the count is odd
+summary:
+  - 'Two heaps: max-heap `lo` (smaller half), min-heap `hi` (larger half); |lo| = |hi| or |hi| + 1.'
+  - 'Insert: push to lo, move lo''s top to hi, move back if hi is larger.'
+  - 'Median: lo''s top, or the average of both tops.'
+  - 'Task Scheduler: `max(tasks.length, (maxFreq − 1) · (n + 1) + countOfMax)`.'
+  - A heap simulation runs the most frequent available task each slot.
+revision: Explain the two-heap invariant in one sentence, then derive 621's formula from the picture of the most frequent task with n gaps after each copy.
+warmup:
+  problem: 215
+topic: Two heaps for a running median; heap-driven simulation; 621's counting formula
+implement: Trace a running median for the stream 5, 15, 1, 3 with both heaps
+problemsText: 'C: 621 · S: 295'
+problems:
+  - num: 621
+    tier: C
+  - num: 295
+    tier: S
+doneWhen: 621 explained both by formula and by simulation
+estimate:
+  T: 25
+  I: 25
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-running-median" kind="theory" title="The running median">
+
+<Include id="theory/heaps-intervals-tries/two-heaps" />
+
+<Viz id="two-heaps" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Include id="patterns/two-heaps-or-a-heap-driven-simulation" />
+
+</Unit>
+
+<Unit id="task-scheduler" kind="theory" title="Task Scheduler">
+
+Problem 621: tasks with a cooldown of n between two copies of the same task; find the minimum time, idling when needed. Simulate it first, then look at the picture: the most frequent task forms `maxFreq` rows of width `n + 1`, the last row only as wide as the number of tasks tied for that frequency. Other tasks fill the gaps; if there are more tasks than gaps, there is no idle at all.
+
+<Viz id="task-scheduler" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

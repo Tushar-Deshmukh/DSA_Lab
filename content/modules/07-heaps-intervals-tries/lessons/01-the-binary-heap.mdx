@@ -1,0 +1,87 @@
+---
+slug: the-binary-heap
+legacyId: w7d1
+title: The binary heap
+goal: Implement a binary min-heap with a comparator from scratch, explain sift-up and sift-down, and explain why heapify is O(n).
+why: Interviewers regularly ask JavaScript candidates to write their own priority queue, and every heap problem in this module and in Module 9 depends on one. Writing it once from understanding, not memory, is what makes it reliable under pressure.
+prereqs:
+  - Complete binary trees (Module 6 lesson 1)
+  - Array index arithmetic
+outcomes:
+  - 'Store a complete tree in an array: parent `(i − 1) >> 1`, children `2i + 1`, `2i + 2`'
+  - Write push (sift up) and pop (sift down to the smaller child)
+  - Turn it into a max-heap or a tuple heap with a comparator
+  - Explain why building a heap from n elements is O(n)
+ready:
+  - My heap passes 1046 and 215 without copying from notes
+  - I pushed 5, 3, 8, 1 and popped twice by hand, checking the array after each step
+  - I can explain why heapify is O(n) and not O(n log n)
+summary:
+  - Heap = complete binary tree with parent ≤ children (min-heap), stored in an array.
+  - 'push: append, sift up while smaller than the parent. pop: move the last to the root, sift down to the smaller child.'
+  - peek O(1); push/pop O(log n); heapify O(n); arbitrary search O(n).
+  - 'Max-heap: comparator `(a, b) => b − a`. Tuples: `(a, b) => a[0] − b[0]`.'
+  - JavaScript has no built-in priority queue.
+revision: From memory, write the index formulas for parent and children, then write `pop()` including the sift-down loop.
+warmup:
+  problem: 98
+topic: Heap property, array layout, sift up/down, O(n) heapify; no native PQ in JS
+implement: Write `MinHeap` with a comparator from scratch (6.13); push 5, 3, 8, 1 and pop twice, checking the array
+problemsText: 'C: 1046, 215 · S: 703'
+problems:
+  - num: 1046
+    tier: C
+  - num: 215
+    tier: C
+  - num: 703
+    tier: S
+doneWhen: Your heap passes both problems without copying from notes
+estimate:
+  T: 25
+  I: 30
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="heap-property-and-storage" kind="theory" title="Heap property and storage">
+
+<Include id="theory/heaps-intervals-tries/heap-property-and-storage" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="push-and-pop" kind="code" title="Push and pop">
+
+<Include id="theory/heaps-intervals-tries/example-1" />
+
+<Viz id="heap-ops" />
+
+<Exercise id="ex-02" />
+
+<Include id="theory/heaps-intervals-tries/javascript-has-no-built-in-priority-queue" />
+
+<Include id="handbook/javascript-reference/binary-heap" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="heapify-in-o-n" kind="theory" title="Heapify in O(n)">
+
+To build a heap from n unordered elements, n pushes cost O(n log n). Sifting down every non-leaf, from the last one to the root, costs O(n): most nodes are near the bottom and can only move a level or two.
+
+<Viz id="heapify" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

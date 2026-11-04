@@ -1,0 +1,24 @@
+---
+number: 7
+slug: heaps-intervals-tries
+title: Heaps, intervals and tries
+legacyId: w7
+objectives: '**A. Learning objectives.** By the end of this module you can: implement a binary min-heap with a comparator from scratch in under 15 minutes; explain sift-up, sift-down and O(n) heapify; solve top-K and k-way merge problems and justify heap vs sort vs quickselect; maintain a running median with two heaps; merge, insert and schedule intervals; implement a trie with insert, search, prefix search and wildcard search.'
+shortOnTime: keep 215, 23, 56, 435 and 208. Leave 621 for later, use 1046 and 973 as later warm-ups, and skip all Optional problems.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Three structures, each answering one question fast. A **heap** answers "what is the smallest (or largest) right now?" while elements keep arriving. **Sorted intervals** answer "what overlaps what?" with a single pass. A **trie** answers "which words start with this?" in time proportional to the prefix, not the dictionary.
+
+| Lesson | Topic | The question it answers |
+| --- | --- | --- |
+| 1 | Binary heap from scratch | the minimum, under pushes and pops |
+| 2 | Top-K and k-way merge | the k best, or the next in global order |
+| 3 | Two heaps, task scheduling | the median, or the next task to run |
+| 4 | Intervals and sweeps | overlaps, merges, rooms in use |
+| 5 | Tries | prefixes and wildcards |
+
+JavaScript has no built-in priority queue, so lesson 1's 35-line `MinHeap` is a tool you will use for the rest of the course (Dijkstra, Prim, scheduling).
+
+</Unit>

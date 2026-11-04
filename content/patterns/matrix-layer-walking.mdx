@@ -1,0 +1,25 @@
+---
+slug: matrix-layer-walking
+number: '1.4'
+title: Matrix layer walking
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Pattern 1.4
+  lines:
+    - 394
+    - 403
+---
+
+**Pattern 1.4: Matrix layer walking**
+
+1. *Recognise:* spiral order, rotation, "in place" on an n × n grid.
+2. *Clues:* "clockwise", "rotate 90 degrees", "spiral".
+3. *From brute force:* a visited matrix works for spiral but costs O(m·n) space; four shrinking boundaries (top, bottom, left, right) need O(1).
+4. *Why it works:* each pass consumes one outer ring, then moves the boundaries inwards.
+5. *Template (rotate):* transpose (swap `m[i][j]` with `m[j][i]` for j > i), then reverse each row.
+6. *Complexity:* O(m·n) time, O(1) extra space.
+7. *Variations:* counter-clockwise (transpose + reverse columns), set matrix zeroes using the first row/column as markers.
+8. *Inappropriate when:* the matrix is not square for in-place rotation (allocate a new one).

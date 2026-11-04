@@ -1,0 +1,25 @@
+---
+slug: binary-search-on-the-answer
+number: '3.2'
+title: Binary search on the answer
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Pattern 3.2
+  lines:
+    - 724
+    - 733
+---
+
+**Pattern 3.2: Binary search on the answer**
+
+1. *Recognise:* "minimum/maximum value such that a condition holds", with a huge answer range.
+2. *Clues:* "minimise the maximum", "at least", "within D days", "minimum speed/capacity".
+3. *From brute force:* try every candidate answer with an O(n) check → binary-search the candidates.
+4. *Why it works:* feasibility is monotone in the answer.
+5. *Template:* `lo` = smallest possible answer, `hi` = a value surely feasible; first feasible via half-open search.
+6. *Complexity:* O(n · log(range)).
+7. *Variations:* 1011 (lo = max weight, hi = sum), 410 split array (same check, Hard).
+8. *Inappropriate when:* feasibility is not monotone, or the check itself is exponential.

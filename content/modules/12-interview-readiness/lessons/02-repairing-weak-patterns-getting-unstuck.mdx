@@ -1,0 +1,72 @@
+---
+slug: repairing-weak-patterns-getting-unstuck
+legacyId: w12d2
+title: Repairing weak patterns, and getting unstuck
+goal: 'Use your own scorecards to repair your two weakest patterns, and practise the three recovery moves: abandoning a failing approach early, the 3-step unstick, and taking hints well.'
+why: Interviews are rarely lost on the pattern you know best. They are lost on a weak pattern, or by spending twenty minutes defending an idea that does not work. Both are fixable in this module.
+prereqs:
+  - Your journal and scorecards (Practice; Progress)
+outcomes:
+  - Pick your two weakest patterns from evidence, not feeling
+  - Re-solve two tracker problems from each, cold
+  - Recognise the four signals that an approach should be abandoned, and say the switch out loud
+  - Use the 3-step unstick and repeat a hint in your own words
+ready:
+  - Both weak patterns re-solved without hints
+  - Mixed set B attempted under time
+  - I said a switch sentence out loud at least once ("This fails on …; I'll fall back to …")
+summary:
+  - Weakest patterns = the lowest independent-solve rate on your scorecards.
+  - 'Abandon when: 10 minutes without complexity or correctness; special cases piling up; a counterexample; the same question twice.'
+  - 'Unstick: tiny example by hand → "what would make this easy?" → back to brute force.'
+  - 'Hints: repeat, connect to the bottleneck, say what changes.'
+revision: List your two weakest patterns and one clue that should have triggered each.
+topic: 'Weak-pattern repair: pick the two weakest patterns from your scorecards'
+implement: Re-solve two tracker problems from each weak pattern, cold
+problemsText: 'Mixed set B: 981, 380'
+problems: []
+doneWhen: Both weak patterns re-solved without hints
+estimate:
+  Repair: 45
+  P: 50
+  R: 20
+  'N': 5
+---
+
+<Unit id="weak-pattern-repair" kind="theory" title="Weak-pattern repair">
+
+<Include id="theory/interview-readiness/practice-structure" />
+
+Open the Practice page and filter by status: the patterns with the most "Attempted" and "Needs revision" entries, and the fewest "Solved independently", are your weak ones. Use the Progress page's mistake tally too: a cluster of P (did not recognise the pattern) points at recognition, while A (could not derive the algorithm) points at the pattern's theory example. For each weak pattern, re-solve two tracker problems cold, then re-read that pattern's "Recognise" and "Clues" lines.
+
+</Unit>
+
+<Unit id="knowing-when-to-switch" kind="theory" title="Knowing when to switch">
+
+<Include id="theory/interview-readiness/recognising-when-to-abandon-an-approach" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Viz id="house-robber" title="The fallback: a DP over prefixes on the greedy's counterexample" input={{"nums":[2,3,2],"circle":"no"}} />
+
+</Unit>
+
+<Unit id="getting-unstuck-and-taking-hints" kind="theory" title="Getting unstuck and taking hints">
+
+<Include id="theory/interview-readiness/when-you-are-stuck" />
+
+<Include id="theory/interview-readiness/taking-hints" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+Your first idea here will probably fail. Notice when, and say the switch.
+
+<Exercise id="ex-04" />
+
+</Unit>

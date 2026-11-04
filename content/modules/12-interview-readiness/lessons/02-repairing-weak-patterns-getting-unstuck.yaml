@@ -1,0 +1,136 @@
+exercises:
+  - id: ex-01
+    legacyId: w12d2-1
+    type: mcq
+    tag: Switch or continue?
+    q: Which situations are signals to abandon your current approach? Select all that apply.
+    options:
+      - t: Your greedy idea passes the examples, but you have added three special cases to make them pass
+        ok: true
+        why: Special cases piling up are a sign the core idea is wrong.
+      - t: Ten minutes in, you cannot state the approach's complexity or why it is correct
+        ok: true
+      - t: The interviewer has asked "are you sure this handles duplicates?" twice
+        ok: true
+      - t: Your O(n log n) solution is correct but you suspect O(n) exists
+        why: Finish and verify the correct solution first; mention the possible improvement at the end.
+        kind: concept
+    explain: 'Say the switch out loud with the counterexample and the fallback: interviewers reward it.'
+    hints:
+      - Which of these describe an idea that is wrong, rather than one that could be better?
+  - id: ex-02
+    legacyId: w12d2-2
+    type: pattern
+    tag: The fallback
+    q: '"Pick numbers from an array, no two adjacent, to maximise the sum." Your greedy (take the largest, block its neighbours, repeat) gives 3 on `[2, 3, 2]`, but 2 + 2 = 4. What do you switch to?'
+    options:
+      - t: 'DP over prefixes: best(i) = max(best(i − 1), best(i − 2) + nums[i])'
+        ok: true
+        why: The counterexample shows choices interact; DP considers both.
+      - t: 'Patch the greedy: if the two neighbours sum to more, take them instead'
+        why: That is a special case. It fails on longer inputs; do not patch a broken greedy.
+        kind: concept
+      - t: Sort the array first
+        why: Sorting destroys adjacency, which is the whole constraint.
+        kind: concept
+    explain: '"This greedy fails on [2, 3, 2]. I''ll fall back to a DP over prefixes, O(n)."'
+    hints:
+      - Which module's problem is this?
+  - id: ex-03
+    legacyId: w12d2-3
+    type: mcq
+    tag: Use the hint
+    q: 'You are stuck on a counting problem and the interviewer says: "What if you knew the answer for every prefix?" What is the best response?'
+    options:
+      - t: '"So if I store the result for each prefix, the answer for i comes from earlier prefixes; the bottleneck was recomputing them. Let me define dp[i] as …"'
+        ok: true
+        why: Repeat the hint, connect it to the bottleneck, and say what changes.
+      - t: '"Thanks," then continue with your original idea.'
+        why: Ignoring a hint is one of the strongest negative signals.
+        kind: concept
+      - t: '"Do you mean I should use DP?"'
+        why: Asking the interviewer to name the technique hands back the work; connect the hint yourself.
+        kind: concept
+    explain: Hints are normal and cheap when used well. Never ignore one to continue your own idea.
+    hints:
+      - Which answer shows you understood why the hint helps?
+  - id: ex-04
+    legacyId: w12d2-4
+    type: interview
+    title: Maximum Length of Subarray With Positive Product (LeetCode 1567)
+    q: 'Return the length of the longest subarray whose product is positive. Example: `[0,1,-2,-3,-4]` → 3 (`[1,-2,-3]`).'
+    model:
+      clarify: |
+        - Zeros make a product 0, which is not positive.
+        - n up to 10⁵; values up to 10⁹ in size, so products overflow immediately.
+      brute: 'Every subarray with a running product: O(n²) and the product overflows. Abandon computing products: only the **sign** matters.'
+      optimize: |
+        State machine over two lengths ending at i: `pos` = longest subarray ending at i with a positive product, `neg` = with a negative product. If x > 0: pos = pos + 1, neg = neg ? neg + 1 : 0. If x < 0: swap them: new pos = neg ? neg + 1 : 0, new neg = pos + 1. If x = 0: both reset to 0. Answer: max pos. This is 152's "track both extremes" idea, applied to lengths.
+      edges: |
+        - a single negative → 0
+        - all zeros → 0
+        - zeros splitting the array into segments
+      complexity: O(n) time, O(1) space.
+    fn: getMaxLen
+    starter: |
+      function getMaxLen(nums) {
+
+      }
+    solution: |
+      function getMaxLen(nums) {
+        let pos = 0, neg = 0, best = 0;
+        for (const x of nums) {
+          if (x === 0) { pos = 0; neg = 0; }
+          else if (x > 0) { pos = pos + 1; neg = neg ? neg + 1 : 0; }
+          else { const p = pos; pos = neg ? neg + 1 : 0; neg = p + 1; }
+          best = Math.max(best, pos);
+        }
+        return best;
+      }
+    tests:
+      - args:
+          - - 1
+            - -2
+            - -3
+            - 4
+        expect: 4
+      - args:
+          - - 0
+            - 1
+            - -2
+            - -3
+            - -4
+        expect: 3
+      - args:
+          - - -1
+            - -2
+            - -3
+            - 0
+            - 1
+        expect: 2
+      - args:
+          - - -1
+        expect: 0
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 5
+            - -6
+            - 4
+            - 0
+            - 10
+        expect: 4
+        hidden: true
+      - args:
+          - - -1
+            - 2
+        expect: 1
+        hidden: true
+    explain: 'The moment to switch is when you notice the products overflow: that tells you the real information is the sign, and the sign only needs two counters.'
+    hints:
+      - Do you need the product, or only its sign?
+      - What changes when a negative number arrives?
+      - 'Track two lengths ending here: positive and negative.'
+annotated: []

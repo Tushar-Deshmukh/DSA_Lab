@@ -1,0 +1,29 @@
+---
+number: 9
+slug: graphs-weighted-greedy
+title: Graphs II (Dijkstra, Union-Find, MST) and greedy algorithms
+legacyId: w9
+objectives: '**A. Learning objectives.** By the end of this module you can: implement Dijkstra with a min-heap and explain why it needs non-negative weights; implement Union-Find with path compression and union by size; build a minimum spanning tree with Kruskal or Prim; state what makes a greedy algorithm correct, prove simple greedy choices with an exchange argument, and break wrong greedy ideas with counterexamples.'
+shortOnTime: 'keep 743, 684, 55, 45 and 763. 1584 becomes optional; 455 can be skipped. Do not start DP (Module 10) with graphs unfinished: make time to finish 134 and 1584 if needed.'
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+In the previous module every edge cost the same, so BFS layers were distances. This module edges have weights, sets of nodes merge as edges arrive, and some problems can be solved by a single sequence of locally best choices. The common thread is **proving** that a simple rule is safe: "the popped node is final" (Dijkstra), "the cheapest edge between two trees is safe" (MST), "the earliest-ending interval can always be kept" (greedy).
+
+| Lesson | Topic | The rule you must be able to justify |
+| --- | --- | --- |
+| 1 | Dijkstra | with non-negative weights, the closest unfinished node is final |
+| 2 | Union-Find | roots identify sets; small trees go under large ones |
+| 3 | Minimum spanning tree | the cheapest edge joining two trees is always safe |
+| 4 | Greedy and counterexamples | swap the greedy choice into any optimal solution |
+| 5 | Greedy with a running quantity | one variable summarises everything a DP would store |
+| Checkpoint | **Module review + Mock 3** | interview conditions, scored |
+
+<Callout kind="warn" title="Greedy is the topic most often got wrong">
+
+Greedy solutions are short and they often pass the sample tests even when they are wrong. This module you practise the habit that protects you: before coding a greedy idea, spend three minutes trying to break it with a 2–4 element input.
+
+</Callout>
+
+</Unit>

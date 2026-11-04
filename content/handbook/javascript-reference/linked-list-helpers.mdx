@@ -1,0 +1,34 @@
+---
+slug: linked-list-helpers
+section: 6
+title: 6.6 Linked-list helpers
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.6 Linked-list helpers
+  lines:
+    - 2837
+    - 2858
+---
+
+```js
+// LeetCode defines ListNode for you; this matches it for local testing.
+function ListNode(val = 0, next = null) {
+  this.val = val;
+  this.next = next;
+}
+
+function fromArray(arr) {
+  const dummy = new ListNode();
+  let tail = dummy;
+  for (const v of arr) { tail.next = new ListNode(v); tail = tail.next; }
+  return dummy.next;
+}
+function toArray(head) {
+  const out = [];
+  for (let n = head; n; n = n.next) out.push(n.val);
+  return out;
+}
+```
+
+Adapt: use a dummy node whenever the head can change; when a list is cut, set the new tail's `next = null` immediately.

@@ -1,0 +1,351 @@
+exercises:
+  - id: ex-01
+    legacyId: w7d1-1
+    type: trace
+    tag: Index arithmetic
+    q: A heap is stored in an array. Fill in the indices.
+    rows:
+      - prompt: Parent of index 5
+        answer: '2'
+        why: (5 − 1) >> 1 = 2.
+      - prompt: Children of index 2 (as a,b)
+        answer: 5,6
+      - prompt: Parent of index 0
+        answer:
+          - none
+          - '-1'
+          - no parent
+        why: The root has no parent; the sift-up loop stops at i = 0.
+      - prompt: First leaf index in a heap of 9 elements
+        answer: '4'
+        why: Indices ≥ n >> 1 = 4 have no children.
+    verify: |
+      console.log((5 - 1) >> 1); console.log((2 * 2 + 1) + ',' + (2 * 2 + 2)); console.log('none'); console.log(9 >> 1);
+    explain: 'Because the tree is complete, these formulas never leave gaps: no pointers are needed.'
+    hints:
+      - Children of i are 2i + 1 and 2i + 2.
+  - id: ex-02
+    legacyId: w7d1-2
+    type: trace
+    tag: By hand
+    q: Start empty. Push 5, 3, 8, 1, then pop twice. Write the array after each operation.
+    rows:
+      - prompt: After push 1
+        answer:
+          - '[1,3,8,5]'
+      - prompt: First pop returns
+        answer: '1'
+      - prompt: Array after the first pop
+        answer:
+          - '[3,5,8]'
+      - prompt: Array after the second pop
+        answer:
+          - '[5,8]'
+    verify: |
+      const d = [];
+      const push = (x) => { d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (d[i] >= d[p]) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } };
+      const pop = () => { const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && d[l] < d[s]) s = l; if (r < d.length && d[r] < d[s]) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; };
+      [5, 3, 8, 1].forEach(push); console.log(JSON.stringify(d)); console.log(pop()); console.log(JSON.stringify(d)); pop(); console.log(JSON.stringify(d));
+    explain: 'Second pop: 8 moves to the root, its only child is 5, so they swap.'
+    hints:
+      - After popping, the last element moves to the root and sifts down.
+  - id: ex-03
+    legacyId: w7d1-3
+    type: code
+    tag: Write your own heap
+    q: Write `class MinHeap` with a comparator (default `(a, b) => a − b`) and methods `push(x)`, `pop()` (returns `undefined` when empty), `peek()` and `size()`. The tests call it like LeetCode's design problems.
+    fn: MinHeap
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) {
+          this.data = [];
+          this.compare = compare;
+        }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) {}
+        pop() {}
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) {
+          const d = this.data; d.push(x);
+          let i = d.length - 1;
+          while (i > 0) {
+            const p = (i - 1) >> 1;
+            if (this.compare(d[i], d[p]) >= 0) break;
+            [d[i], d[p]] = [d[p], d[i]]; i = p;
+          }
+        }
+        pop() {
+          const d = this.data;
+          if (d.length === 0) return undefined;
+          const top = d[0], last = d.pop();
+          if (d.length > 0) {
+            d[0] = last; let i = 0;
+            while (true) {
+              const l = 2 * i + 1, r = l + 1; let s = i;
+              if (l < d.length && this.compare(d[l], d[s]) < 0) s = l;
+              if (r < d.length && this.compare(d[r], d[s]) < 0) s = r;
+              if (s === i) break;
+              [d[i], d[s]] = [d[s], d[i]]; i = s;
+            }
+          }
+          return top;
+        }
+      }
+    tests:
+      - ops:
+          - - MinHeap
+          - - push
+            - 5
+          - - push
+            - 3
+          - - push
+            - 8
+          - - push
+            - 1
+          - - peek
+          - - pop
+          - - pop
+          - - size
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - null
+          - 1
+          - 1
+          - 3
+          - 2
+      - ops:
+          - - MinHeap
+          - - pop
+          - - size
+        expect:
+          - null
+          - null
+          - 0
+      - ops:
+          - - MinHeap
+          - - push
+            - 2
+          - - push
+            - 2
+          - - push
+            - 1
+          - - pop
+          - - pop
+          - - pop
+          - - pop
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - 1
+          - 2
+          - 2
+          - null
+      - ops:
+          - - MinHeap
+          - - push
+            - 9
+          - - push
+            - 4
+          - - push
+            - 7
+          - - push
+            - 1
+          - - push
+            - 8
+          - - push
+            - 2
+          - - push
+            - 3
+          - - pop
+          - - pop
+          - - pop
+          - - pop
+          - - pop
+          - - pop
+          - - pop
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - null
+          - null
+          - null
+          - null
+          - 1
+          - 2
+          - 3
+          - 4
+          - 7
+          - 8
+          - 9
+        hidden: true
+    explain: If your pops come out in sorted order on the hidden test, your sift-down chooses the smaller child correctly. This class is reused throughout the rest of the course.
+    hints:
+      - 'push: append, then swap with the parent while smaller.'
+      - 'pop: save the root, move the last element to index 0, then sift down.'
+      - When sifting down, swap with the *smaller* child.
+  - id: ex-04
+    legacyId: w7d1-4
+    type: bug
+    tag: Sift-down
+    q: 'This pop sometimes leaves the heap invalid: after pushing 1, 2, 3, 4, 5 and popping once, the root is 3 instead of 2. Click the buggy line.'
+    code: |
+      pop() {
+        const d = this.data, top = d[0], last = d.pop();
+        if (d.length) {
+          d[0] = last; let i = 0;
+          while (2 * i + 1 < d.length) {
+            const l = 2 * i + 1, r = l + 1;
+            const c = r < d.length && d[r] > d[l] ? r : l;
+            if (d[i] <= d[c]) break;
+            [d[i], d[c]] = [d[c], d[i]]; i = c;
+          }
+        }
+        return top;
+      }
+    bug:
+      - 6
+    kind: impl
+    explain: 'It picks the **larger** child. After the swap, that child becomes the parent of the smaller child, breaking the heap property. Choose the smaller child: `const c = r < d.length && d[r] < d[l] ? r : l;`.'
+    fix: |
+      const c = r < d.length && d[r] < d[l] ? r : l;
+    fine:
+      '3': Moving the last element to the root is correct.
+      '4': Looping while a left child exists is correct.
+      '7': Stopping when the parent is ≤ the chosen child is correct, once the right child is chosen.
+    hints:
+      - Which child must move up so that it is ≤ its sibling?
+  - id: ex-05
+    legacyId: w7d1-5
+    type: mcq
+    tag: Why O(n)?
+    q: Which argument shows that bottom-up heapify is O(n)?
+    options:
+      - t: About n/2 nodes are leaves (0 work), n/4 can sift down at most 1 level, n/8 at most 2, … and n/4·1 + n/8·2 + n/16·3 + … ≤ n.
+        ok: true
+        why: The deep sift-downs only happen for the few nodes near the root.
+      - t: Each sift-down is O(1).
+        why: The root's sift-down can be O(log n). The point is that few nodes are that high.
+        kind: concept
+      - t: It is actually O(n log n), the same as n pushes.
+        why: Pushing n times is O(n log n); sifting down from the bottom is O(n).
+        kind: concept
+    explain: Most of a complete tree's nodes are near the leaves, and they do the least work.
+    hints:
+      - How many nodes can sift down more than one level?
+  - id: ex-06
+    legacyId: w7d1-6
+    type: interview
+    title: Find Subsequence of Length K With the Largest Sum (LeetCode 2099)
+    q: 'Given `nums` and `k`, return any subsequence of length k with the largest sum, keeping the elements in their **original order**. Example: `nums = [2,1,3,3]`, `k = 2` → `[3,3]`; `nums = [-1,-2,3,4]`, `k = 3` → `[-1,3,4]`.'
+    model:
+      clarify: |
+        - Subsequence: keep the original relative order.
+        - Ties: any valid answer.
+      brute: 'Sort indices by value descending, take k, then sort those k indices back into original order: O(n log n). A fine first answer.'
+      optimize: 'Keep a min-heap of size k of `[value, index]`: push each element and pop the smallest when the size exceeds k. What remains are the k largest. Sort their indices and read the values: O(n log k + k log k).'
+      edges: |
+        - k = n → the whole array
+        - negative values
+        - duplicates of the k-th largest value
+      complexity: O(n log k) for the heap plus O(k log k) to restore order; O(k) space.
+    fn: maxSubsequence
+    starter: |
+      // MinHeap from this lesson is available here.
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function maxSubsequence(nums, k) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        peek() { return this.data[0]; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function maxSubsequence(nums, k) {
+        const heap = new MinHeap((a, b) => a[0] - b[0]);
+        nums.forEach((v, i) => { heap.push([v, i]); if (heap.size() > k) heap.pop(); });
+        return heap.data.map(([, i]) => i).sort((a, b) => a - b).map((i) => nums[i]);
+      }
+    checker: |
+      (got, [nums, k]) => {
+        if (!Array.isArray(got) || got.length !== k) return false;
+        const best = [...nums].sort((a, b) => b - a).slice(0, k).reduce((s, x) => s + x, 0);
+        if (got.reduce((s, x) => s + x, 0) !== best) return false;
+        let j = 0; for (const x of nums) if (j < got.length && x === got[j]) j++;
+        return j === got.length;
+      }
+    tests:
+      - args:
+          - - 2
+            - 1
+            - 3
+            - 3
+          - 2
+        expect:
+          - 3
+          - 3
+      - args:
+          - - -1
+            - -2
+            - 3
+            - 4
+          - 3
+        expect:
+          - -1
+          - 3
+          - 4
+      - args:
+          - - 3
+            - 4
+            - 3
+            - 3
+          - 2
+        expect:
+          - 4
+          - 3
+      - args:
+          - - 5
+          - 1
+        expect:
+          - 5
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          - 5
+        expect:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        hidden: true
+    explain: The checker accepts any subsequence with the maximum sum in original order.
+    hints:
+      - Which k elements do you need? A size-k min-heap keeps exactly those.
+      - Store indices with the values so you can restore the order.
+annotated: []

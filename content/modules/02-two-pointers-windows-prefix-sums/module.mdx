@@ -1,0 +1,24 @@
+---
+number: 2
+slug: two-pointers-windows-prefix-sums
+title: Two pointers, sliding window, prefix sums, strings
+legacyId: w2
+objectives: '**A. Learning objectives.** By the end of this module you can: distinguish subarray, substring and subsequence; decide between two pointers, sliding window and prefix sums from the problem statement; write a variable-size sliding window with a correct shrink condition; explain why sliding window fails with negative numbers and prefix sums + a hash map do not; derive Kadane''s algorithm from brute force.'
+shortOnTime: skip 643 and 303 (the easiest Core) and Stretch; keep 3, 567, 560 and 53, which carry the module's patterns. Take Assessment 1 even if you skipped some problems; it tells you what to repair.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Module 1 taught you to trade memory for time with a hash map. This module is about the other big trade: using the *shape* of the input (sorted order, contiguity, running totals) so that one pass does the work of two nested loops. Every pattern here starts from the same brute force, "look at every pair (i, j)", and removes most of those pairs without checking them.
+
+| Lesson | Pattern | What it removes from the O(n²) brute force |
+| --- | --- | --- |
+| 1 | Opposite-end two pointers | Pairs that provably cannot reach the target, a row or column at a time |
+| 2 | Partitioning and Kadane | Second passes; subarrays that start with a negative-sum prefix |
+| 3 | Sliding window | Windows that are known to be invalid (monotonicity) |
+| 4 | Windows with counts | Re-counting a window from scratch |
+| 5 | Prefix sums (+ map) | Re-adding the same elements for every range |
+
+<Viz id="pair-brute" title="The brute force every pattern in this module improves on" />
+
+</Unit>

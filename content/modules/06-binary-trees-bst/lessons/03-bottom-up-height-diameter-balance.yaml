@@ -1,0 +1,218 @@
+exercises:
+  - id: ex-01
+    legacyId: w6d3-1
+    type: trace
+    tag: Dry run
+    q: Diameter on `[1,2,3,4,5]`. Give height() for each node and the final answer.
+    rows:
+      - prompt: height(2)
+        answer: '2'
+      - prompt: best after processing node 2
+        answer: '2'
+      - prompt: height(1)
+        answer: '3'
+      - prompt: Diameter
+        answer: '3'
+    verify: |
+      const T = (v, l = null, r = null) => ({ v, l, r }); const t = T(1, T(2, T(4), T(5)), T(3)); let best = 0; const H = {};
+      function h(n) { if (!n) return 0; const L = h(n.l), R = h(n.r); best = Math.max(best, L + R); H[n.v] = { h: 1 + Math.max(L, R), best }; return 1 + Math.max(L, R); }
+      h(t); console.log(H[2].h); console.log(H[2].best); console.log(H[1].h); console.log(best);
+    explain: Path 4–2–1–3 has three edges.
+    hints:
+      - Leaves have height 1 (counting nodes); null has height 0.
+  - id: ex-02
+    legacyId: w6d3-2
+    type: complexity
+    tag: Naive vs one pass
+    q: 'Two diameter solutions on a skewed tree (a chain) of n nodes:'
+    code: |
+      // naive: at every node, call height(left) + height(right) from scratch
+      function diameterNaive(node) {
+        if (!node) return 0;
+        const through = height(node.left) + height(node.right);
+        return Math.max(through, diameterNaive(node.left), diameterNaive(node.right));
+      }
+    fields:
+      - label: Naive, time
+        answer: O(n²)
+        why:
+          O(n): 'height() is O(size of the subtree), and it is called at every node: n + (n−1) + … on a chain.'
+          O(n log n): That is the balanced-tree case. On a chain, subtree sizes are n, n − 1, …, 1.
+      - label: One-pass version, time
+        answer: O(n)
+    explain: Returning heights instead of recomputing them is the same "store the answer to the repeated question" move as Module 1's hash maps.
+    hints:
+      - What does one height() call cost, and how many are made?
+  - id: ex-03
+    legacyId: w6d3-3
+    type: fill
+    tag: The −1 sentinel
+    q: 'Complete `isBalanced` (problem 110): `check` returns the height, or −1 as soon as any subtree is unbalanced.'
+    template: |
+      function isBalanced(root) {
+        function check(node) {
+          if (!node) return 0;
+          const L = check(node.left);
+          if (L === -1) return -1;
+          const R = check(node.right);
+          if (R === -1) return -1;
+          if ([[0]]) return -1;
+          return [[1]];
+        }
+        return check(root) !== -1;
+      }
+    blanks:
+      - accept:
+          - Math.abs(L - R) > 1
+          - Math.abs(R - L) > 1
+      - accept:
+          - 1 + Math.max(L, R)
+          - Math.max(L, R) + 1
+    fn: isBalanced
+    adapt:
+      args:
+        - tree
+    tests:
+      - args:
+          - - 3
+            - 9
+            - 20
+            - null
+            - null
+            - 15
+            - 7
+        expect: true
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 3
+            - 3
+            - null
+            - null
+            - 4
+            - 4
+        expect: false
+      - args:
+          - []
+        expect: true
+      - args:
+          - - 1
+            - null
+            - 2
+            - null
+            - 3
+        expect: false
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - null
+            - null
+            - 5
+        expect: true
+    explain: −1 can never be a real height, so it safely means "unbalanced". Checking it right after each call stops the work early.
+    hints:
+      - When are two heights too different?
+      - What does the parent need from a balanced subtree?
+  - id: ex-04
+    legacyId: w6d3-4
+    type: mcq
+    tag: Why clamp?
+    q: In 124, why does the recursion use `Math.max(0, gain(node.left))`?
+    options:
+      - t: A branch with a negative sum only makes any path through it worse, so the path should simply not extend into it.
+        ok: true
+        why: Taking 0 means "stop here". A path must contain at least one node, which the node itself provides.
+      - t: To avoid returning negative numbers, which recursion cannot handle.
+        why: Recursion handles negatives fine; the clamp is a choice about the path.
+        kind: concept
+      - t: Because LeetCode's values are non-negative.
+        why: They can be as low as −1000; that is the whole difficulty.
+        kind: concept
+    explain: The answer is initialised to −∞ (or root.val), not 0, so an all-negative tree returns its largest single value.
+    hints:
+      - Would you ever extend a path into a subtree whose best sum is −5?
+  - id: ex-05
+    legacyId: w6d3-5
+    type: interview
+    title: Longest Univalue Path (LeetCode 687)
+    q: 'Return the length (number of edges) of the longest path in which every node has the same value. The path need not pass through the root. Example: `[5,4,5,1,1,null,5]` → 2 (the path 5–5–5 on the right).'
+    model:
+      clarify: |
+        - Edges, not nodes.
+        - The path can bend at a node (go down both sides).
+        - Empty tree → 0.
+      brute: 'From every node, compute the longest same-value path downwards on each side: O(n²) in the worst case.'
+      optimize: 'Diameter''s shape. `arrow(node)` returns the longest downward same-value path starting at node (in edges). For each child, its arrow extends to node only if the child''s value equals node''s: `L = left && left.val === node.val ? arrow(left) + 1 : 0` (still call `arrow(left)` either way so its subtree is explored). Update `best = max(best, L + R)`; return `max(L, R)`.'
+      edges: |
+        - all values equal → the diameter
+        - all values distinct → 0
+        - single node → 0
+      complexity: O(n) time, O(h) stack.
+    fn: longestUnivaluePath
+    adapt:
+      args:
+        - tree
+    starter: |
+      function longestUnivaluePath(root) {
+
+      }
+    solution: |
+      function longestUnivaluePath(root) {
+        let best = 0;
+        function arrow(node) {
+          if (!node) return 0;
+          const l = arrow(node.left), r = arrow(node.right);
+          const L = node.left && node.left.val === node.val ? l + 1 : 0;
+          const R = node.right && node.right.val === node.val ? r + 1 : 0;
+          best = Math.max(best, L + R);
+          return Math.max(L, R);
+        }
+        arrow(root);
+        return best;
+      }
+    tests:
+      - args:
+          - - 5
+            - 4
+            - 5
+            - 1
+            - 1
+            - null
+            - 5
+        expect: 2
+      - args:
+          - - 1
+            - 4
+            - 5
+            - 4
+            - 4
+            - null
+            - 5
+        expect: 2
+      - args:
+          - []
+        expect: 0
+      - args:
+          - - 1
+            - 1
+            - 1
+            - 1
+            - 1
+            - 1
+            - 1
+        expect: 4
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect: 0
+        hidden: true
+    explain: 'Recurse into every child even when values differ: the longest path may be entirely inside that subtree.'
+    hints:
+      - Which problem from this lesson has the same shape?
+      - A child's arrow only extends to the parent if their values are equal.
+annotated: []

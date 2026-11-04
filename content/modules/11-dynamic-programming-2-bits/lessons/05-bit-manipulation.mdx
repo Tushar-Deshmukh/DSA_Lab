@@ -1,0 +1,97 @@
+---
+slug: bit-manipulation
+legacyId: w11d5
+title: Bit manipulation
+goal: Use JavaScript's bitwise operators correctly within its signed 32-bit rules, and solve the standard XOR, bit-counting and power-of-two problems.
+why: Bit questions are short and appear as warm-ups or follow-ups ("can you do it in O(1) space?"). In JavaScript they come with traps (signed results, `>>` vs `>>>`, values beyond 32 bits) that interviewers sometimes probe on purpose.
+prereqs:
+  - Binary representation (any)
+outcomes:
+  - Explain two's complement and predict `1 << 31` and `x >>> 0`
+  - Apply the check / set / clear / toggle / lowest-bit recipes
+  - Solve 136 and 268 with XOR, 191 with Kernighan's loop, 338 with a bits DP
+  - Say when `>>> 0` is needed and when bitwise operators must not be used
+ready:
+  - I can explain when `>>> 0` is needed (an unsigned 32-bit result with bit 31 set) and why the current 190, which takes even n ≤ 2³¹ − 2, never produces one
+  - I printed the four values in the implement task and predicted each first
+  - 136, 191, 338 and 268 accepted
+summary:
+  - Bitwise operators work on signed 32-bit integers; results are signed.
+  - Check `(x >> i) & 1`; set `|`; clear `& ~`; toggle `^`; drop lowest `x & (x − 1)`; isolate `x & −x`.
+  - 'XOR: x ^ x = 0, x ^ 0 = x, order-independent.'
+  - '338: `bits[i] = bits[i >> 1] + (i & 1)`.'
+  - '`>>>` is the logical shift; `x >>> 0` reads the 32 bits as unsigned.'
+  - Never use bit operators on values beyond 32 bits.
+revision: Predict `(-5 >>> 0).toString(2)`, `1 << 31` and `~5` without running them, then check.
+warmup:
+  problem: 300
+topic: 'Bits: two''s complement, operators, recipes, XOR, JS 32-bit rules (6.18)'
+implement: Print `(5).toString(2)`, `(-5 >>> 0).toString(2)`, `1 << 31`, `(1 << 31) >>> 0`; write `isPowerOfTwo`
+problemsText: 'C: 136, 191, 338, 268 · O: 190, 371'
+problems:
+  - num: 136
+    tier: C
+  - num: 191
+    tier: C
+  - num: 338
+    tier: C
+  - num: 268
+    tier: C
+  - num: 190
+    tier: O
+  - num: 371
+    tier: O
+doneWhen: You can explain when `>>> 0` is needed (an unsigned 32-bit result with bit 31 set) and why the current 190, which takes even n ≤ 2³¹ − 2, never produces one
+estimate:
+  T: 25
+  I: 15
+  P: 65
+  R: 10
+  'N': 5
+---
+
+<Unit id="binary-in-javascript" kind="theory" title="Binary in JavaScript">
+
+<Include id="theory/dynamic-programming-2-bits/binary-and-twos-complement" />
+
+<Include id="handbook/javascript-reference/bit-manipulation-helpers" />
+
+<Exercise id="ex-01" />
+
+<Include id="theory/dynamic-programming-2-bits/bit-recipes" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="xor-and-counting-bits" kind="code" title="XOR and counting bits">
+
+<Include id="theory/dynamic-programming-2-bits/xor-reasoning" />
+
+<Viz id="xor-fold" />
+
+<Include id="theory/dynamic-programming-2-bits/counting-bits" />
+
+<Viz id="bit-count" />
+
+<Viz id="count-bits-dp" />
+
+<Include id="theory/dynamic-programming-2-bits/example-4" />
+
+<Exercise id="ex-03" />
+
+<Include id="theory/dynamic-programming-2-bits/bitmasks" />
+
+<Include id="theory/dynamic-programming-2-bits/javascript-pitfalls" />
+
+<Exercise id="ex-04" />
+
+<Include id="patterns/xor-and-bit-tricks" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

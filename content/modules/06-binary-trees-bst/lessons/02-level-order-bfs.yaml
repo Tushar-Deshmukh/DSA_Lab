@@ -1,0 +1,210 @@
+exercises:
+  - id: ex-01
+    legacyId: w6d2-1
+    type: trace
+    tag: Queue by level
+    q: Run level order on `[3,9,20,null,null,15,7]`. Give the values in the queue (front first) at the start of each outer iteration.
+    rows:
+      - prompt: Start of iteration 1
+        answer:
+          - '[3]'
+          - '3'
+      - prompt: Start of iteration 2
+        answer:
+          - '[9,20]'
+          - 9,20
+      - prompt: Start of iteration 3
+        answer:
+          - '[15,7]'
+          - 15,7
+    verify: |
+      const T = (v, l = null, r = null) => ({ val: v, left: l, right: r });
+      const root = T(3, T(9), T(20, T(15), T(7))); const q = [root]; let head = 0;
+      while (head < q.length) { console.log(JSON.stringify(q.slice(head).map((n) => n.val))); const size = q.length - head; for (let i = 0; i < size; i++) { const n = q[head++]; if (n.left) q.push(n.left); if (n.right) q.push(n.right); } }
+    explain: At the start of each iteration the queue holds exactly one level.
+    hints:
+      - Children are added to the back while the current level is being dequeued.
+  - id: ex-02
+    legacyId: w6d2-2
+    type: bug
+    tag: The snapshot
+    q: This version returns `[[3,9,20,15,7]]` (one big level) for `[3,9,20,null,null,15,7]`. Click the line that should use a snapshot.
+    code: |
+      function levelOrder(root) {
+        if (!root) return [];
+        const res = [], queue = [root]; let head = 0;
+        while (head < queue.length) {
+          const level = [];
+          while (head < queue.length) {
+            const node = queue[head++];
+            level.push(node.val);
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+          }
+          res.push(level);
+        }
+        return res;
+      }
+    bug:
+      - 5
+    kind: concept
+    explain: 'The inner loop keeps going while the queue is non-empty, so it also consumes the children it just enqueued: everything lands in one level. Snapshot the size first: `const size = queue.length - head; for (let i = 0; i < size; i++)`.'
+    fix: |
+      const size = queue.length - head;
+      for (let i = 0; i < size; i++) {
+    fine:
+      '2': A head index instead of shift() is right.
+      '11': Pushing each finished level is right.
+    hints:
+      - When does the inner loop stop?
+  - id: ex-03
+    legacyId: w6d2-3
+    type: code
+    tag: Same loop, different record
+    q: 'Write `averageOfLevels(root)` (problem 637): the average value of the nodes on each level, as an array.'
+    fn: averageOfLevels
+    adapt:
+      args:
+        - tree
+    compare: float
+    checker: |
+      (got, args, expect) => Array.isArray(got) && got.length === expect.length && got.every((x, i) => Math.abs(x - expect[i]) < 1e-6)
+    starter: |
+      function averageOfLevels(root) {
+
+      }
+    solution: |
+      function averageOfLevels(root) {
+        const res = [], queue = [root]; let head = 0;
+        while (head < queue.length) {
+          const size = queue.length - head; let sum = 0;
+          for (let i = 0; i < size; i++) {
+            const node = queue[head++]; sum += node.val;
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+          }
+          res.push(sum / size);
+        }
+        return res;
+      }
+    tests:
+      - args:
+          - - 3
+            - 9
+            - 20
+            - null
+            - null
+            - 15
+            - 7
+        expect:
+          - 3
+          - 14.5
+          - 11
+      - args:
+          - - 3
+            - 9
+            - 20
+            - 15
+            - 7
+        expect:
+          - 3
+          - 14.5
+          - 11
+      - args:
+          - - 1
+        expect:
+          - 1
+      - args:
+          - - 2147483647
+            - 2147483647
+            - 2147483647
+        expect:
+          - 2147483647
+          - 2147483647
+        hidden: true
+    explain: The level size you snapshot is also the divisor.
+    hints:
+      - Same loop as level order; keep a sum instead of a list.
+  - id: ex-04
+    legacyId: w6d2-4
+    type: interview
+    title: Binary Tree Zigzag Level Order Traversal (LeetCode 103)
+    q: 'Return the level-order values of a binary tree, but alternate direction: left to right on level 0, right to left on level 1, and so on. Example: `[3,9,20,null,null,15,7]` → `[[3],[20,9],[15,7]]`.'
+    model:
+      clarify: |
+        - Levels counted from 0 at the root.
+        - Empty tree → [].
+      brute: 'Level order, then reverse every other level: O(n) total, and a perfectly good answer.'
+      optimize: Same BFS; for odd levels either reverse the level array before pushing, or fill it by index from the end (`level[size − 1 − i]`). Changing the order you enqueue children breaks later levels, so keep the queue in normal order.
+      edges: |
+        - empty tree
+        - single node
+        - unbalanced tree where only one side has deep levels
+      complexity: O(n) time, O(width) space.
+    fn: zigzagLevelOrder
+    adapt:
+      args:
+        - tree
+    starter: |
+      function zigzagLevelOrder(root) {
+
+      }
+    solution: |
+      function zigzagLevelOrder(root) {
+        if (!root) return [];
+        const res = [], queue = [root]; let head = 0;
+        while (head < queue.length) {
+          const size = queue.length - head, level = new Array(size);
+          const rev = res.length % 2 === 1;
+          for (let i = 0; i < size; i++) {
+            const node = queue[head++];
+            level[rev ? size - 1 - i : i] = node.val;
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+          }
+          res.push(level);
+        }
+        return res;
+      }
+    tests:
+      - args:
+          - - 3
+            - 9
+            - 20
+            - null
+            - null
+            - 15
+            - 7
+        expect:
+          - - 3
+          - - 20
+            - 9
+          - - 15
+            - 7
+      - args:
+          - - 1
+        expect:
+          - - 1
+      - args:
+          - []
+        expect: []
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - null
+            - null
+            - 5
+        expect:
+          - - 1
+          - - 3
+            - 2
+          - - 4
+            - 5
+        hidden: true
+    explain: Writing into a pre-sized array by index avoids a separate reverse.
+    hints:
+      - Start from level order.
+      - On odd levels, place values from the end of the level array.
+annotated: []

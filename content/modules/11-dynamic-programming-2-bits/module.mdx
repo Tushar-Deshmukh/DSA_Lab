@@ -1,0 +1,23 @@
+---
+number: 11
+slug: dynamic-programming-2-bits
+title: Dynamic programming II and bit manipulation
+legacyId: w11
+objectives: '**A. Learning objectives.** By the end of this module you can: solve 0/1 knapsack and subset-sum problems with a 1-D table iterated in the correct direction; define and fill two-sequence tables (LCS, edit distance); solve LIS in O(n²) and explain the O(n log n) method; choose between expand-around-centre and interval DP for palindromes; model "holding/not holding/cooldown" as a state machine; use bitwise operators correctly within JavaScript''s 32-bit rules and solve the common XOR and bit-counting problems.'
+shortOnTime: keep 416, 1143, 72, 300, 136 and 191. Leave 309 for later, use 338 and 268 as Module 12 warm-ups, and do 5 during Module 12's repair block.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Module 10's DP used one index. This module the state grows: an item index plus a capacity (knapsack), two prefix lengths (two strings), an "ending at i" element (LIS), or a mode (holding a stock or not). Lesson 5 changes topic to bit manipulation, which is short, mechanical and full of JavaScript-specific traps.
+
+| Lesson | Topic | State or tool |
+| --- | --- | --- |
+| 1 | 0/1 knapsack (416, 494) | `dp[j]`, iterated **downwards** |
+| 2 | Two sequences (1143, 72) | `dp[i][j]` for two prefixes |
+| 3 | LIS (300) and palindromes (5, 647) | "ending at i"; 2n − 1 centres |
+| 4 | State machines (309) and recognition | one variable per mode |
+| 5 | Bits (136, 191, 338, 268) | XOR, `x & (x − 1)`, 32-bit rules |
+| Checkpoint | **Module review + Mock 4** | interview conditions, scored |
+
+</Unit>

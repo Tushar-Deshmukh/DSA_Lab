@@ -1,0 +1,25 @@
+---
+slug: two-colouring
+number: '8.4'
+title: Two-colouring (bipartite check)
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Pattern 8.4
+  lines:
+    - 1679
+    - 1688
+---
+
+**Pattern 8.4: Two-colouring (bipartite check)**
+
+1. *Recognise:* split into two groups such that connected things are in different groups.
+2. *Clues:* "bipartite", "two teams", "dislike", "possible to divide".
+3. *From brute force:* trying all 2ⁿ splits; colouring propagates forced choices in O(V + E).
+4. *Why it works:* once one node's side is fixed, each neighbour's side is forced; a conflict proves an odd cycle.
+5. *Template:* `color` array of −1; BFS from each uncoloured node; neighbour gets `1 - color[u]`; conflict → false.
+6. *Complexity:* O(V + E).
+7. *Variations:* 785, possible bipartition (886).
+8. *Inappropriate when:* more than two groups are needed (graph colouring is NP-hard in general).

@@ -1,0 +1,150 @@
+# Recommended order and prerequisites, from roadmap section 2 "Dependency chain" and the depmap visualizer.
+# The order is advice: every lesson can be opened at any time.
+map: depmap
+modules:
+  - number: 0
+    slug: foundations
+    title: Foundations
+    prerequisites: []
+    lessons:
+      - placement-check
+      - javascript-for-dsa
+      - problem-solving-method
+  - number: 1
+    slug: complexity-arrays-hashing
+    title: Complexity, arrays and hashing
+    prerequisites:
+      - foundations
+    lessons:
+      - complexity-first-hash-map
+      - arrays-in-place-read-write-pointers
+      - hash-tables-map-set-grouping
+      - frequency-counting-buckets-majority
+      - matrices-boundaries-rotation
+  - number: 2
+    slug: two-pointers-windows-prefix-sums
+    title: Two pointers, sliding window, prefix sums, strings
+    prerequisites:
+      - complexity-arrays-hashing
+    lessons:
+      - opposite-end-two-pointers
+      - partitioning-and-kadane
+      - sliding-window
+      - windows-with-counts-minimum-windows
+      - prefix-sums-difference-arrays
+  - number: 3
+    slug: binary-search-sorting
+    title: Binary search and sorting
+    prerequisites:
+      - complexity-arrays-hashing
+    lessons:
+      - binary-search-first-true
+      - predicates-rotated-arrays
+      - binary-search-on-the-answer
+      - flattened-matrices-peak-finding
+      - sorting-merge-quick-comparators
+  - number: 4
+    slug: linked-lists-stacks-queues
+    title: Linked lists, stacks, queues and monotonic stacks
+    prerequisites:
+      - complexity-arrays-hashing
+    lessons:
+      - linked-lists-dummy-nodes-reversal
+      - fast-and-slow-pointers
+      - composing-list-techniques-lru-cache
+      - stacks-queues-deques
+      - monotonic-stack-and-deque
+  - number: 5
+    slug: recursion-backtracking
+    title: Recursion and backtracking
+    prerequisites:
+      - linked-lists-stacks-queues
+    lessons:
+      - recursion-contracts-call-stacks-trees
+      - backtracking-and-subsets
+      - permutations-combinations-pruning
+      - combination-sum-letter-combinations
+      - grid-and-string-backtracking
+  - number: 6
+    slug: binary-trees-bst
+    title: Binary trees and binary search trees
+    prerequisites:
+      - linked-lists-stacks-queues
+      - recursion-backtracking
+    lessons:
+      - tree-vocabulary-traversals-question-types
+      - level-order-bfs
+      - bottom-up-height-diameter-balance
+      - top-down-lowest-common-ancestor
+      - binary-search-trees-construction
+  - number: 7
+    slug: heaps-intervals-tries
+    title: Heaps, intervals and tries
+    prerequisites:
+      - binary-search-sorting
+      - binary-trees-bst
+    lessons:
+      - the-binary-heap
+      - top-k-and-k-way-merge
+      - two-heaps-heap-simulation
+      - intervals-merge-insert-select-sweep
+      - tries
+  - number: 8
+    slug: graphs-traversal
+    title: 'Graphs I: traversal, components, BFS shortest paths, topological sort'
+    prerequisites:
+      - linked-lists-stacks-queues
+      - binary-trees-bst
+    lessons:
+      - graph-representations-traversal
+      - components-matrix-input-cloning
+      - bfs-shortest-paths-multi-source
+      - topological-sort-directed-cycles
+      - bipartite-graphs-reverse-search
+  - number: 9
+    slug: graphs-weighted-greedy
+    title: Graphs II (Dijkstra, Union-Find, MST) and greedy algorithms
+    prerequisites:
+      - binary-search-sorting
+      - heaps-intervals-tries
+      - graphs-traversal
+    lessons:
+      - dijkstras-algorithm
+      - union-find
+      - minimum-spanning-trees
+      - greedy-algorithms-counterexamples
+      - greedy-running-quantity
+  - number: 10
+    slug: dynamic-programming-1
+    title: Dynamic programming I
+    prerequisites:
+      - recursion-backtracking
+      - graphs-weighted-greedy
+    lessons:
+      - what-dp-is-four-steps
+      - take-or-skip
+      - unbounded-knapsack
+      - grid-dp
+      - string-partition-dp
+  - number: 11
+    slug: dynamic-programming-2-bits
+    title: Dynamic programming II and bit manipulation
+    prerequisites:
+      - dynamic-programming-1
+    lessons:
+      - knapsack-and-subset-sum
+      - two-sequence-dp
+      - lis-and-palindromes
+      - state-machines-recognising-dp
+      - bit-manipulation
+  - number: 12
+    slug: interview-readiness
+    title: Mixed practice and interview readiness
+    prerequisites:
+      - dynamic-programming-2-bits
+    lessons:
+      - interview-end-to-end
+      - repairing-weak-patterns-getting-unstuck
+      - mock-5-explaining-trade-offs
+      - one-hard-problem-complexity-drill
+      - mock-6-90-second-explanation

@@ -1,0 +1,19 @@
+---
+slug: when-you-cannot-identify-the-pattern
+section: 7
+title: 7.4 When you cannot identify the pattern
+source:
+  file: source/roadmap.md
+  section: 7
+  key: 7.4 When you cannot identify the pattern
+  lines:
+    - 3286
+    - 3292
+---
+
+1. **Shrink the problem.** Solve n = 1, 2, 3 by hand and write down each decision. Your manual procedure is often the algorithm.
+2. **Ask "what would make this easy?"** If the input were sorted, if I knew the answer for the prefix, if I could look up any value in O(1). Then try to create that condition (sort, DP, hash map).
+3. **Start from brute force and attack its bottleneck.** Repeated search → hash map. Repeated sums → prefix sums. Repeated subproblems → memo. Repeated min/max → heap or monotonic structure.
+4. **Change the viewpoint.** Iterate from the right instead of the left; search from the targets instead of the sources; binary-search the answer instead of computing it; complement the question (count bad instead of good).
+5. **Look at the constraints again.** They almost always reveal the target complexity, which narrows the candidates to two or three patterns.
+6. **In an interview, say all of this aloud.** "I don't see the trick yet, so let me start with brute force and look for repeated work." Interviewers often give a hint when your reasoning is visible.

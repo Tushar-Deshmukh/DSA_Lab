@@ -1,0 +1,77 @@
+---
+slug: binary-search-on-the-answer
+legacyId: w3d3
+title: Binary search on the answer
+goal: Recognise "minimum X such that something is feasible", write the feasibility check, choose the bounds, and binary-search the answer.
+why: This pattern turns problems that look like optimisation into a yes/no question plus a binary search. It appears constantly in interviews (speeds, capacities, days, "minimise the maximum") and is invisible until you know to look for it.
+prereqs:
+  - '`firstTrue` over an integer range (lessons 1–2)'
+  - Greedy one-pass checks (like counting hours or days)
+outcomes:
+  - 'Spot the clues: "minimum speed/capacity", "within D days", "minimise the maximum", huge answer ranges'
+  - Prove feasibility is monotone in the answer
+  - Choose `lo` (smallest conceivable answer) and `hi` (an answer that surely works)
+  - Write the O(n) feasibility function before the search loop
+ready:
+  - For 875 and 1011 I wrote the feasibility function and the bounds before the loop
+  - My trace for Koko with `piles = [3,6,7,11], h = 8` matches the visualizer
+  - I can say why `lo = max(weights)` for 1011
+summary:
+  - '"Minimum X such that feasible(X)" with monotone feasibility → binary-search X.'
+  - Feasibility is usually a greedy O(n) simulation.
+  - '`lo` = smallest possible answer; `hi` = a value that is surely feasible.'
+  - Total O(n · log(range)).
+  - Write `feasible` and the bounds first; the loop is the same `firstTrue` as always.
+revision: For 1011, state `lo`, `hi` and the feasibility check in words, without code. Then explain why feasibility is monotone in the capacity.
+warmup:
+  problem: 153
+topic: 'Binary search on the answer: monotone feasibility, choosing lo/hi'
+implement: Write `hoursAt(k)` for Koko and trace the search for `piles=[3,6,7,11], h=8`
+problemsText: 'C: 875, 1011 · O: 410'
+problems:
+  - num: 875
+    tier: C
+  - num: 1011
+    tier: C
+  - num: 410
+    tier: O
+doneWhen: For both problems you wrote the feasibility function and the bounds before the loop
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="searching-values-that-are-not-stored" kind="theory" title="Searching values that are not stored">
+
+<Include id="theory/binary-search-sorting/binary-search-on-the-answer" />
+
+In Koko Eating Bananas there is no array to search. Koko's speed k is unknown; the question is the smallest k that finishes in h hours. But for any *given* k you can easily check whether it works: pile p takes `⌈p / k⌉` hours, so add them up. And faster never hurts: if speed k works, every speed above k works. So the candidate speeds read `F F … F T T … T`, and the answer is the first T.
+
+<Include id="theory/binary-search-sorting/example-3" />
+
+<Viz id="bs-answer" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Include id="patterns/binary-search-on-the-answer" />
+
+<Callout kind="tip" title="Optional: Split Array Largest Sum (410)">
+
+Problem 410 is 1011 in disguise: "split into k contiguous pieces and minimise the largest piece sum" is "find the minimum capacity such that the array ships in at most k days". Same bounds, same greedy check.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

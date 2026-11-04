@@ -1,0 +1,82 @@
+---
+slug: greedy-running-quantity
+legacyId: w9d5
+title: Greedy with a running quantity
+goal: Solve single-pass greedy problems where one running value (fuel, last occurrence, smallest card) decides everything, and prove the rule that makes each pass correct.
+why: 'Gas Station and Partition Labels are frequent mediums, and both reward the same move: find the invariant, then prove the shortcut in two sentences. It is deliberately compact.'
+prereqs:
+  - Jump Game's running reach (lesson 4)
+  - Hash maps for counts and last indices (Module 1)
+outcomes:
+  - Trace 134's reset rule and prove "skip to i + 1"
+  - Explain why a non-negative total guarantees a valid start
+  - Cut 763's parts as early as possible by tracking last occurrences
+  - Solve 846 by always starting a group at the smallest remaining card
+ready:
+  - I can prove 134's "skip to i + 1" rule in two sentences
+  - I traced 134 on `gas=[1,2,3,4,5], cost=[3,4,5,1,2]`
+  - 763 and 134 accepted
+summary:
+  - '134: track `total` and `tank`; when `tank < 0`, the start moves to i + 1. Answer: start if total ≥ 0, else −1.'
+  - '763: first pass records each letter''s last index; extend `end`; cut when i === end.'
+  - '846: the smallest remaining card must start a group; consume consecutive cards with a count map.'
+  - Each is O(n) or O(n log n), and the proof is a one-line invariant.
+revision: Prove 134's reset rule out loud, then explain why cutting 763's part at the first possible index is optimal.
+warmup:
+  problem: 55
+topic: 'Greedy with a running quantity: gas station, partition labels, hand of straights'
+implement: Trace 134's reset rule on `gas=[1,2,3,4,5], cost=[3,4,5,1,2]`
+problemsText: 'C: 763, 134 · S: 846'
+problems:
+  - num: 763
+    tier: C
+  - num: 134
+    tier: C
+  - num: 846
+    tier: S
+doneWhen: You can prove 134's "skip to i + 1" rule in two sentences
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-reset-rule-134" kind="theory" title="The reset rule (134)">
+
+<Include id="patterns/greedy-reachability-and-running-balance" />
+
+<Viz id="gas-station" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="extending-to-the-last-occurrence-763" kind="theory" title="Extending to the last occurrence (763)">
+
+<Viz id="partition-labels" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="forced-choices-stretch-846" kind="code" title="Forced choices (Stretch: 846)">
+
+In Hand of Straights the smallest card left has no smaller neighbour, so it **must** start a group. That forced choice removes all guessing: take it, consume the next `groupSize − 1` consecutive values from a count map, and repeat.
+
+<Exercise id="ex-05" />
+
+<Include id="theory/graphs-weighted-greedy/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

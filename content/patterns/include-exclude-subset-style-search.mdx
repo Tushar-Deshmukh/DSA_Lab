@@ -1,0 +1,25 @@
+---
+slug: include-exclude-subset-style-search
+number: '5.1'
+title: Include/exclude (subset-style) search
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Pattern 5.1
+  lines:
+    - 1110
+    - 1119
+---
+
+**Pattern 5.1: Include/exclude (subset-style) search**
+
+1. *Recognise:* every element is either in or out; output is all valid selections.
+2. *Clues:* "all subsets", "power set", "choose any number of", n ≤ 20.
+3. *From brute force:* iterate bitmasks 0…2ⁿ−1 (valid, and good to mention); recursion makes pruning and duplicate handling easier.
+4. *Why it works:* each root-to-leaf path is exactly one combination of decisions.
+5. *Template:* Example 2.
+6. *Complexity:* O(n · 2ⁿ) time, O(n) recursion depth.
+7. *Variations:* duplicates (90), target sums (later: 416 with DP).
+8. *Inappropriate when:* you need only a count or an optimum and states repeat (use DP).

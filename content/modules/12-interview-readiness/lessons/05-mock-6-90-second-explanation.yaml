@@ -1,0 +1,38 @@
+exercises:
+  - id: ex-01
+    legacyId: w12d5-1
+    type: mcq
+    tag: What is missing?
+    q: '"Two Sum: for each number I check the hash map for target minus the number, and if it''s not there I add the number. That''s O(n)." Which parts of the six-part explanation are missing? Select all that apply.'
+    options:
+      - t: The brute force and its complexity
+        ok: true
+        why: Without O(n²) brute force, the improvement has nothing to be compared with.
+      - t: The key observation (we need the complement, and a map finds it in O(1))
+        ok: true
+      - t: An edge case (for example, not using the same element twice)
+        ok: true
+      - t: The algorithm
+        why: 'The algorithm is there: check, then add.'
+        kind: concept
+    explain: Problem → brute force → key observation → algorithm → complexity → edge case. Practising the order makes it automatic under pressure.
+    hints:
+      - Go through the six parts one by one.
+  - id: ex-02
+    legacyId: w12d5-2
+    type: mcq
+    tag: The key observation
+    q: In a 90-second explanation of Maximum Points You Can Obtain from Cards (lesson 1's guided problem), which sentence is the **key observation**?
+    options:
+      - t: '"The cards left behind always form one contiguous block of n − k, so maximising what I take means minimising that block: a fixed-size window."'
+        ok: true
+      - t: '"I loop over the array and keep a running sum."'
+        why: That describes code, not the insight that makes the code correct.
+        kind: concept
+      - t: '"It runs in O(n) time and O(1) space."'
+        why: That is the final complexity, a different part of the explanation.
+        kind: concept
+    explain: 'Model: "Take k cards from the ends to maximise the sum. Brute force tries every split of k between left and right, O(k²). Key observation: the cards left behind are one contiguous block of n − k, so I minimise that block with a fixed-size sliding window. O(n) time, O(1) space. Edge case: k = n takes everything." Now write your own for five tracker problems and time each one.'
+    hints:
+      - The observation is the sentence that, once said, makes the algorithm obvious.
+annotated: []

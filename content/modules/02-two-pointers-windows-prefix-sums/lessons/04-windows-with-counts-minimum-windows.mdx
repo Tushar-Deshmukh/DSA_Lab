@@ -1,0 +1,119 @@
+---
+slug: windows-with-counts-minimum-windows
+legacyId: w2d4
+title: Windows with counts, and minimum windows
+goal: Maintain letter counts incrementally in a fixed window, and find the shortest valid window by recording the answer inside the shrink loop.
+why: Counting characters in a window is how every anagram, permutation and "contains all of" problem is solved, and the shortest-window variant flips the template in a way that trips people up under pressure.
+prereqs:
+  - The previous lesson's fixed and variable windows
+  - '26-slot count arrays: `c.charCodeAt(0) - 97` (Module 1, problem 242)'
+outcomes:
+  - Slide a fixed window of letter counts and compare it with a target in O(1) per step
+  - Write the minimum-length window and explain why the update goes inside the `while`
+  - Track a "matches" or "missing" counter instead of comparing whole count arrays
+ready:
+  - My 209 solution updates the answer inside the shrink loop, and I can explain why
+  - I compared two 26-count arrays incrementally for 567, updating only the letters that changed
+  - I can state 76's validity condition (every required letter count is covered) in one sentence
+summary:
+  - 'Fixed window of counts: add `s[r]`, remove `s[r − k]`, compare.'
+  - Comparing 26 counts per step is O(26) = O(1); a `matches` counter avoids even that.
+  - 'Shortest valid window: once valid, record, then shrink while still valid.'
+  - The answer is recorded inside the `while`, because after the loop the window is invalid.
+  - Minimum Window Substring (76) = need counts + a `missing` counter + shortest-window shrink.
+revision: From memory, write `minSubArrayLen` and point to the line that records the answer. Then explain what changes for 76.
+warmup:
+  problem: 3
+topic: Sliding window with count arrays; minimum-length windows
+implement: Compare two 26-count arrays incrementally (for 567)
+problemsText: 'C: 567, 209 · S: 424 (if not done) · O: 76'
+problems:
+  - num: 567
+    tier: C
+  - num: 209
+    tier: C
+  - num: 424
+    tier: S
+  - num: 76
+    tier: O
+doneWhen: 209 updates the answer inside the shrink loop; you can explain why
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="fixed-windows-of-counts" kind="theory" title="Fixed windows of counts">
+
+Permutation in String (567) asks whether some window of `s2` is an anagram of `s1`. A window of length `|s1|` is an anagram exactly when its letter counts equal `s1`'s counts. So: build `need` once, slide a window of the same length over `s2`, and update the window's counts as letters enter and leave.
+
+<Viz id="win-perm" />
+
+The visualizer compares all 26 counts at every step. That is O(26) per step, which is fine: O(26 · n) is O(n). The faster version keeps a number `matches` = how many of the 26 letters currently have equal counts. When a letter enters or leaves, only that letter's equality can change, so `matches` is updated in O(1), and the window is a permutation when `matches === 26`.
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="shortest-valid-window" kind="theory" title="Shortest valid window">
+
+Minimum Size Subarray Sum (209): the shortest subarray of positive numbers with sum ≥ target. Positive numbers make validity monotone: growing a valid window keeps it valid. So grow `r` until the window is valid, then **shrink as long as it stays valid**, recording the length at each valid moment.
+
+<Viz id="win-min" />
+
+<Callout kind="key" title="Where the answer is recorded">
+
+For a *longest* window, you record after the `while` (the loop restores validity). For a *shortest* window, you record **inside** the `while`, because the loop runs only while the window is valid, and the moment it exits, the window is invalid.
+
+</Callout>
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="the-hardest-standard-window-minimum-window-substring-optional" kind="stretch" title="The hardest standard window: Minimum Window Substring (Optional)">
+
+Problem 76 combines this lesson's two ideas. Count what `t` needs. Keep `missing` = how many required characters the window still lacks (start at `t.length`). Adding a character that is still needed decrements `missing`. When `missing === 0` the window covers `t`: record it and shrink from the left while it still covers. Removing a character the window needed re-increments `missing`.
+
+```js
+function minWindow(s, t) {
+  const need = new Map();
+  for (const c of t) need.set(c, (need.get(c) ?? 0) + 1);
+  let missing = t.length, l = 0, bestL = 0, bestLen = Infinity;
+  for (let r = 0; r < s.length; r++) {
+    const c = s[r];
+    if (need.has(c)) { if (need.get(c) > 0) missing--; need.set(c, need.get(c) - 1); }
+    while (missing === 0) {                       // window covers t: record, then shrink
+      if (r - l + 1 < bestLen) { bestLen = r - l + 1; bestL = l; }
+      const d = s[l++];
+      if (need.has(d)) { need.set(d, need.get(d) + 1); if (need.get(d) > 0) missing++; }
+    }
+  }
+  return bestLen === Infinity ? '' : s.slice(bestL, bestL + bestLen);
+}
+```
+
+`need.get(c)` going negative means the window holds extra copies of `c`; those can be removed without breaking coverage, which is exactly what the `> 0` checks express.
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+<Callout kind="mistake" title="Mistakes to watch for in this lesson">
+
+- Recording a shortest-window answer after the `while` instead of inside it.
+- Forgetting to delete a map key when its count reaches 0, so `size` over-counts.
+- Rebuilding the window's counts from scratch at each step (O(n·k)).
+- In 567, comparing windows before the window has reached length `|s1|`.
+
+</Callout>
+
+</Unit>

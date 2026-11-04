@@ -1,0 +1,56 @@
+exercises:
+  - id: ex-01
+    legacyId: w11sat-1
+    gatedBy: mock-4
+    type: pattern
+    tag: Mixed review
+    q: '"Can the array be split into two subsets with equal sums?"'
+    options:
+      - t: 0/1 knapsack (subset sum) to total / 2, iterating downwards
+        ok: true
+      - t: 'Greedy: sort and alternate'
+        why: 'Sorting and alternating fails on [1, 1, 2]: it gives {2, 1} and {1}, but {1, 1} and {2} is an equal split.'
+        kind: concept
+      - t: Unbounded knapsack
+        why: Each element can be used once, not repeatedly.
+        kind: concept
+    explain: Each item once + a target sum → 0/1 knapsack (416).
+    hints:
+      - Can an element be used twice?
+  - id: ex-02
+    legacyId: w11sat-2
+    gatedBy: mock-4
+    type: pattern
+    tag: Mixed review
+    q: '"Find the longest subsequence common to two strings."'
+    options:
+      - t: Two-sequence DP, dp[i][j] over prefixes
+        ok: true
+      - t: Sliding window
+        why: A subsequence is not contiguous, and the windows of two strings do not align.
+        kind: concept
+      - t: Expand around centre
+        why: That finds palindromes in one string.
+        kind: concept
+    explain: LCS (1143).
+    hints:
+      - One string or two?
+  - id: ex-03
+    legacyId: w11sat-3
+    gatedBy: mock-4
+    type: pattern
+    tag: Mixed review
+    q: '"Every number appears exactly twice except one. Find it in O(1) extra space."'
+    options:
+      - t: XOR all the numbers
+        ok: true
+      - t: Sort and scan
+        why: Correct but O(n log n), and sorting in place changes the input.
+        kind: concept
+      - t: A hash set
+        why: O(n) extra space, which the question rules out.
+        kind: concept
+    explain: Pairs cancel under XOR (136).
+    hints:
+      - What is x ^ x?
+annotated: []

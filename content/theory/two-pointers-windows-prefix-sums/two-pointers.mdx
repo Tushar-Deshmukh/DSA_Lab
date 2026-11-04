@@ -1,0 +1,19 @@
+---
+slug: two-pointers
+title: Two pointers
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Two pointers
+  lines:
+    - 413
+    - 417
+---
+
+**Two pointers.** Two indices move through the data according to a rule that discards impossible candidates.
+
+- *Opposite ends* (`l = 0`, `r = n-1`): works when the input is sorted or symmetric (palindromes). Each step eliminates one end because it provably cannot be part of a better answer.
+- *Same direction* (slow/fast or read/write): compaction, partitioning, merging two sorted arrays.
+- *When not to use:* unsorted input where sorting would destroy needed information (e.g. original indices in Two Sum; use a hash map instead).

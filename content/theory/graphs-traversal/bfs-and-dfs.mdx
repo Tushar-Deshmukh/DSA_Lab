@@ -1,0 +1,18 @@
+---
+slug: bfs-and-dfs
+title: BFS and DFS
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: BFS and DFS
+  lines:
+    - 1521
+    - 1524
+---
+
+**BFS and DFS.** Both visit every reachable vertex once and every edge once or twice: O(V + E) time, O(V) space.
+
+- *BFS* explores in layers of increasing distance using a queue. In an unweighted graph, the first time BFS reaches a node is along a shortest path. Mark nodes visited **when you enqueue them**, not when you dequeue them, or the same node can be enqueued many times.
+- *DFS* goes deep first using recursion or a stack. Use it for components, reachability, cycle detection, topological sort and path enumeration. Recursive DFS on a 10⁵-cell grid can overflow the stack in JavaScript; switch to an explicit stack or BFS when the grid can be that large.

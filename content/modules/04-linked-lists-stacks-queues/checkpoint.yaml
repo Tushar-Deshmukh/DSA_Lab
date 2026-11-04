@@ -1,0 +1,58 @@
+exercises:
+  - id: ex-01
+    legacyId: w4sat-1
+    gatedBy: assessment-2
+    type: pattern
+    tag: Mixed review
+    q: '"Given the head of a linked list, rotate the list to the right by k places." What is the core idea?'
+    options:
+      - t: Find the length and the tail, make the list circular, then cut it at position length − (k mod length).
+        ok: true
+        why: k can exceed the length, hence the mod. Cutting means setting the new tail's next to null.
+      - t: Reverse the whole list k times.
+        why: Reversal changes order, not rotation; and k reversals would be O(k·n).
+        kind: concept
+      - t: A monotonic stack.
+        why: Nothing here asks for next greater or smaller elements.
+        kind: concept
+    explain: Problem 61. Length first, k mod length, then one cut.
+    hints:
+      - What if k is larger than the length?
+  - id: ex-02
+    legacyId: w4sat-2
+    gatedBy: assessment-2
+    type: pattern
+    tag: Mixed review
+    q: '"For each day, how many consecutive previous days (including today) had a price ≤ today''s?" (stock span)'
+    options:
+      - t: 'Monotonic stack: pop previous days with price ≤ today; the span is the distance to the day left on top (or to the start).'
+        ok: true
+        why: That is a "previous greater" query, which a decreasing stack of indices answers in O(n) total.
+      - t: Binary search on the prices.
+        why: The prices are not sorted.
+        kind: concept
+      - t: Prefix sums.
+        why: The question is about comparisons, not sums.
+        kind: concept
+    explain: '"Previous greater" variant of the monotonic stack.'
+    hints:
+      - For each day you need the nearest earlier day with a higher price.
+  - id: ex-03
+    legacyId: w4sat-3
+    gatedBy: assessment-2
+    type: pattern
+    tag: Mixed review
+    q: '"Find the minimum element of a rotated sorted array of distinct values in O(log n)."'
+    options:
+      - t: Binary search comparing nums[mid] with nums[hi]
+        ok: true
+      - t: Fast and slow pointers
+        kind: concept
+        why: There is no linked structure or cycle.
+      - t: Sort, then take the first element
+        kind: concept
+        why: O(n log n), and it ignores that the array is almost sorted.
+    explain: Module 3 lesson 2.
+    hints:
+      - O(log n) on sorted-ish data.
+annotated: []

@@ -1,0 +1,64 @@
+exercises:
+  - id: ex-01
+    legacyId: w10sat-1
+    gatedBy: assessment-5
+    type: pattern
+    tag: Mixed review
+    q: '"Return the number of distinct ways to make change for an amount using unlimited coins of each denomination."'
+    options:
+      - t: Unbounded knapsack, counting, coins in the outer loop
+        ok: true
+        why: 'Combinations, not sequences: problem 518.'
+      - t: Unbounded knapsack, counting, amounts in the outer loop
+        why: That counts 1 + 2 and 2 + 1 separately.
+        kind: concept
+      - t: Backtracking
+        why: 'Only the count is needed, and subproblems repeat: DP.'
+        kind: concept
+    explain: Count combinations → item loop outside.
+    hints:
+      - Is 1 + 2 the same as 2 + 1 here?
+  - id: ex-02
+    legacyId: w10sat-2
+    gatedBy: assessment-5
+    type: pattern
+    tag: Mixed review
+    q: '"Each house has money; adjacent houses cannot both be robbed; the houses are in a circle."'
+    options:
+      - t: 'House Robber twice: without the first house, and without the last'
+        ok: true
+      - t: 'Greedy: rob every other house starting from the richest'
+        why: Fails on inputs like [2, 1, 1, 2] even without the circle.
+        kind: concept
+      - t: Grid DP
+        why: There is no grid; the dependency is linear.
+        kind: concept
+    explain: Reduce the circular case to two linear runs (213).
+    hints:
+      - Can the first and last house both be robbed?
+  - id: ex-03
+    legacyId: w10sat-3
+    gatedBy: assessment-5
+    type: complexity
+    tag: Mixed review
+    q: 'Word Break with `s.length = n`, checking every split point j for every i, and building `s.slice(j, i)` each time:'
+    fields:
+      - label: Time
+        answer: O(n³)
+        options:
+          - O(n)
+          - O(n²)
+          - O(n³)
+          - O(2ⁿ)
+        why:
+          O(n²): There are O(n²) pairs (j, i), and each slice and hash costs O(n).
+      - label: Space for the table
+        answer: O(n)
+        options:
+          - O(1)
+          - O(n)
+          - O(n²)
+    explain: Bounding j by the longest dictionary word reduces the pairs to O(n · L).
+    hints:
+      - Count the pairs, then the cost of each check.
+annotated: []

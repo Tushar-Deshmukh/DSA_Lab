@@ -1,0 +1,49 @@
+---
+slug: example-1
+title: Example 1
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Example 1
+  lines:
+    - 250
+    - 284
+---
+
+**Example 1: same output, three complexities (Contains Duplicate).**
+
+```js
+// O(n^2) time, O(1) space: compare every pair
+function hasDupBrute(nums) {
+  for (let i = 0; i < nums.length; i++)
+    for (let j = i + 1; j < nums.length; j++)
+      if (nums[i] === nums[j]) return true;
+  return false;
+}
+
+// O(n log n) time; sorts in place, so duplicates become neighbours.
+// Extra space: O(1) with an in-place sort such as heapsort, but V8's
+// built-in sort (TimSort) may allocate up to O(n) temporary memory.
+function hasDupSort(nums) {
+  // numeric comparator, never the default sort
+  nums.sort((a, b) => a - b);
+  for (let i = 1; i < nums.length; i++)
+    if (nums[i] === nums[i - 1]) return true;
+  return false;
+}
+
+// O(n) average time, O(n) space: remember what we have seen
+function hasDupSet(nums) {
+  const seen = new Set();
+  for (const x of nums) {
+    // O(1) average lookup replaces the inner loop
+    if (seen.has(x)) return true;
+    seen.add(x);
+  }
+  return false;
+}
+```
+
+The bottleneck in the brute force is the inner loop answering "have I seen this value before?". A `Set` answers that question in O(1), which removes a whole factor of n. This "identify the repeated question, then store the answer" move is the most important optimisation in the course.

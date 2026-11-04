@@ -1,0 +1,246 @@
+exercises:
+  - id: ex-01
+    legacyId: w7d2-1
+    type: mcq
+    tag: Size k, not n
+    q: To find the 10 largest of 10⁶ numbers, why use a min-heap of size 10 rather than a max-heap of all 10⁶ numbers?
+    options:
+      - t: The size-10 heap costs O(n log 10) time and O(10) space; a full max-heap costs O(n) to build plus O(10 log n) to pop, and O(n) space.
+        ok: true
+        why: Both are fast in time here, but the small heap uses constant memory and works on a stream.
+      - t: A max-heap cannot return the largest elements.
+        why: 'It can: pop it 10 times. The difference is space and streaming.'
+        kind: concept
+      - t: A min-heap is always faster than a max-heap.
+        why: They are the same structure with a different comparator.
+        kind: concept
+    explain: 'The handbook''s common-mistakes list warns against heaps of all n elements for k largest: no better than sorting.'
+    hints:
+      - What does each approach need to keep in memory?
+  - id: ex-02
+    legacyId: w7d2-2
+    type: pattern
+    tag: Choose the approach
+    q: '"Return the k-th largest element of an array once. You may modify the array, and you want O(1) extra space."'
+    options:
+      - t: Quickselect
+        ok: true
+        why: O(n) average, in place. Mention the O(n²) worst case and the random pivot.
+      - t: A min-heap of size k
+        why: 'O(n log k) time and O(k) space: fine, but not O(1) space.'
+        kind: concept
+      - t: Bucket by frequency
+        why: Values are not bounded counts here.
+        kind: concept
+    explain: One-off k-th element + in place → quickselect. Streaming or many queries → heap.
+    hints:
+      - Look at the space requirement.
+  - id: ex-03
+    legacyId: w7d2-3
+    type: complexity
+    tag: Merge k Sorted Lists
+    q: Merge k sorted lists with N elements in total, using a heap of the current heads.
+    fields:
+      - label: Time
+        answer: O(N log k)
+        options:
+          - O(N k)
+          - O(N log k)
+          - O(N log N)
+          - O(k log N)
+        why:
+          O(N k): That is scanning all k heads for each output element. The heap finds the minimum head in O(log k).
+          O(N log N): That is concatenate-and-sort, which ignores that the lists are already sorted.
+      - label: Extra space (besides the output)
+        answer: O(k)
+        options:
+          - O(1)
+          - O(k)
+          - O(N)
+          - O(N k)
+    explain: N pops and N pushes on a heap of at most k elements.
+    hints:
+      - How big does the heap get, and how many operations happen?
+  - id: ex-04
+    legacyId: w7d2-4
+    type: code
+    tag: Merge k sorted arrays
+    q: 'Write `mergeKArrays(arrays)`: merge several sorted arrays into one sorted array with a heap of `[value, arrayIndex, position]`. A `MinHeap` class is provided.'
+    fn: mergeKArrays
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function mergeKArrays(arrays) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function mergeKArrays(arrays) {
+        const heap = new MinHeap((a, b) => a[0] - b[0]);
+        arrays.forEach((a, i) => { if (a.length) heap.push([a[0], i, 0]); });
+        const out = [];
+        while (heap.size()) {
+          const [v, i, p] = heap.pop();
+          out.push(v);
+          if (p + 1 < arrays[i].length) heap.push([arrays[i][p + 1], i, p + 1]);
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 4
+              - 5
+            - - 1
+              - 3
+              - 4
+            - - 2
+              - 6
+        expect:
+          - 1
+          - 1
+          - 2
+          - 3
+          - 4
+          - 4
+          - 5
+          - 6
+      - args:
+          - []
+        expect: []
+      - args:
+          - - []
+            - - 1
+        expect:
+          - 1
+      - args:
+          - - - 2
+              - 9
+            - - 1
+              - 7
+              - 8
+            - - 3
+        expect:
+          - 1
+          - 2
+          - 3
+          - 7
+          - 8
+          - 9
+        hidden: true
+      - args:
+          - - - 5
+              - 5
+            - - 5
+        expect:
+          - 5
+          - 5
+          - 5
+        hidden: true
+    explain: 'Problem 23 is the same algorithm with list nodes instead of [array, position] pairs: push nodes, and push `node.next` after popping.'
+    hints:
+      - Push the first element of every non-empty array.
+      - After popping an element, push the next element of the same array.
+  - id: ex-05
+    legacyId: w7d2-5
+    type: interview
+    title: Kth Smallest Element in a Sorted Matrix (LeetCode 378)
+    q: 'In an n × n matrix where every row and every column is sorted ascending, return the k-th smallest element (counting duplicates). Example: `[[1,5,9],[10,11,13],[12,13,15]]`, k = 8 → 13.'
+    model:
+      clarify: |
+        - Rows and columns both sorted; duplicates count separately.
+        - n up to 300, so n² = 9·10⁴ elements.
+      brute: 'Flatten and sort: O(n² log n). Acceptable to state.'
+      optimize: 'Treat each row as a sorted list and run a k-way merge, but stop after k pops: push the first element of every row (or of the first k rows), pop k − 1 times pushing each popped element''s right neighbour, and the next pop is the answer. O(k log n). (Binary search on the value with a staircase count is an O(n log(range)) alternative.)'
+      edges: |
+        - k = 1 → matrix[0][0]; k = n² → the last element
+        - duplicates
+        - 1 × 1 matrix
+      complexity: O(n + k log n) time with a heap of size ≤ n.
+    fn: kthSmallest
+    starter: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function kthSmallest(matrix, k) {
+
+      }
+    solution: |
+      class MinHeap {
+        constructor(compare = (a, b) => a - b) { this.data = []; this.compare = compare; }
+        size() { return this.data.length; }
+        push(x) { const d = this.data; d.push(x); let i = d.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.compare(d[i], d[p]) >= 0) break; [d[i], d[p]] = [d[p], d[i]]; i = p; } }
+        pop() { const d = this.data; if (!d.length) return undefined; const top = d[0], last = d.pop(); if (d.length) { d[0] = last; let i = 0; while (true) { const l = 2 * i + 1, r = l + 1; let s = i; if (l < d.length && this.compare(d[l], d[s]) < 0) s = l; if (r < d.length && this.compare(d[r], d[s]) < 0) s = r; if (s === i) break; [d[i], d[s]] = [d[s], d[i]]; i = s; } } return top; }
+      }
+      function kthSmallest(matrix, k) {
+        const n = matrix.length, heap = new MinHeap((a, b) => a[0] - b[0]);
+        for (let r = 0; r < Math.min(n, k); r++) heap.push([matrix[r][0], r, 0]);
+        let v;
+        for (let i = 0; i < k; i++) {
+          const [x, r, c] = heap.pop(); v = x;
+          if (c + 1 < n) heap.push([matrix[r][c + 1], r, c + 1]);
+        }
+        return v;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 5
+              - 9
+            - - 10
+              - 11
+              - 13
+            - - 12
+              - 13
+              - 15
+          - 8
+        expect: 13
+      - args:
+          - - - -5
+          - 1
+        expect: -5
+      - args:
+          - - - 1
+              - 2
+            - - 1
+              - 3
+          - 2
+        expect: 1
+      - args:
+          - - - 1
+              - 2
+            - - 1
+              - 3
+          - 4
+        expect: 3
+        hidden: true
+      - args:
+          - - - 1
+              - 3
+              - 5
+            - - 6
+              - 7
+              - 12
+            - - 11
+              - 14
+              - 14
+          - 6
+        expect: 11
+        hidden: true
+    explain: The k-th pop of a k-way merge is the k-th smallest overall.
+    hints:
+      - Each row is a sorted list.
+      - Run a k-way merge but stop at the k-th pop.
+annotated: []

@@ -1,0 +1,58 @@
+exercises:
+  - id: ex-01
+    legacyId: w9sat-1
+    gatedBy: mock-3
+    type: pattern
+    tag: Mixed review
+    q: '"A grid of heights; moving between adjacent cells costs the height difference. Find the route from top-left to bottom-right that minimises the total cost."'
+    options:
+      - t: 'Dijkstra on the grid: weights are non-negative and vary'
+        ok: true
+        why: Each cell is a node; each move is an edge with weight |Δh|.
+      - t: BFS
+        why: BFS minimises the number of moves, not the total weight.
+        kind: concept
+      - t: 'Greedy: always move to the neighbour with the smallest difference'
+        why: 'A cheap first step can lead into an expensive region: a classic greedy that fails.'
+        kind: concept
+    explain: Weighted, non-negative, minimum total → Dijkstra. (1631 minimises the maximum instead of the sum; the same algorithm works.)
+    hints:
+      - Are all moves equally expensive?
+  - id: ex-02
+    legacyId: w9sat-2
+    gatedBy: mock-3
+    type: pattern
+    tag: Mixed review
+    q: '"Friendships are added one at a time; after each, report how many friend groups there are."'
+    options:
+      - t: Union-Find, decrementing the count on every successful union
+        ok: true
+      - t: BFS after each new friendship
+        why: Correct but O(E·(V + E)) overall.
+        kind: concept
+      - t: Topological sort
+        why: There is no direction or ordering in friendships.
+        kind: concept
+    explain: Incremental connectivity → DSU.
+    hints:
+      - Edges arrive over time and are never removed.
+  - id: ex-03
+    legacyId: w9sat-3
+    gatedBy: mock-3
+    type: pattern
+    tag: Mixed review
+    q: '"Coins of given denominations; return the fewest coins that make the amount."'
+    options:
+      - t: Dynamic programming (322, in the next module)
+        ok: true
+        why: Largest-coin-first fails for coins [1, 3, 4] and amount 6.
+      - t: 'Greedy: largest coin first'
+        why: Works for some coin systems (like 1, 5, 10, 25) but not in general.
+        kind: concept
+      - t: Binary search
+        why: There is no monotone predicate to search over.
+        kind: concept
+    explain: When you cannot prove a greedy choice and a small counterexample exists, use DP.
+    hints:
+      - Try coins [1, 3, 4] with amount 6.
+annotated: []

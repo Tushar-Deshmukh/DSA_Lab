@@ -1,0 +1,255 @@
+exercises:
+  - id: ex-01
+    legacyId: w4d2-1
+    type: bug
+    tag: Null checks
+    q: 'This throws `TypeError: Cannot read properties of null` on some lists. Click the line.'
+    code: |
+      function middleNode(head) {
+        let slow = head, fast = head;
+        while (fast.next) {
+          slow = slow.next;
+          fast = fast.next.next;
+        }
+        return slow;
+      }
+    bug:
+      - 2
+    kind: impl
+    explain: 'For an even-length list, `fast` becomes `null` after jumping two steps from the second-to-last node, and `fast.next` then throws. Check `fast` itself first: `while (fast && fast.next)`.'
+    fix: |
+      while (fast && fast.next) {
+    fine:
+      '4': '`fast.next.next` is safe inside the loop, because the loop checked `fast.next`.'
+    hints:
+      - Try `[1, 2]`. Where is fast after one iteration?
+  - id: ex-02
+    legacyId: w4d2-2
+    type: trace
+    tag: Six nodes, cycle of four
+    q: Nodes are indices 0–5; the tail (5) links back to index 2, so the cycle is 2 → 3 → 4 → 5 → 2. Run Floyd's algorithm.
+    rows:
+      - prompt: After step 1 (slow, fast)
+        answer: 1,2
+      - prompt: After step 3 (slow, fast)
+        answer: 3,2
+        why: 'fast: 4 → 5 → 2.'
+      - prompt: Steps until they meet
+        answer: '4'
+      - prompt: Index where phase 2 finds the cycle start
+        answer: '2'
+    verify: |
+      const nxt = (i) => (i < 5 ? i + 1 : 2); let slow = 0, fast = 0, k = 0; const seen = [];
+      do { slow = nxt(slow); fast = nxt(nxt(fast)); k++; seen.push(slow + ',' + fast); } while (slow !== fast);
+      let p = 0; while (p !== slow) { p = nxt(p); slow = nxt(slow); }
+      console.log(seen[0]); console.log(seen[2]); console.log(k); console.log(p);
+    explain: 'Here a = 2 (head to start), c = 4 and they met b = 2 steps into the cycle (at index 4): a = kc − b = 4 − 2 = 2. Walking 2 steps from index 4 lands on index 2, the start.'
+    hints:
+      - Write slow and fast after every step; fast wraps from 5 back to 2.
+  - id: ex-03
+    legacyId: w4d2-3
+    type: mcq
+    tag: The argument
+    q: Why can fast never jump over slow inside a cycle?
+    options:
+      - t: Each step, fast moves 2 and slow moves 1, so the distance from fast to slow (going forward) shrinks by exactly 1 per step; it must pass through 0.
+        ok: true
+        why: A gap that drops by one each step cannot skip zero.
+      - t: Because fast moves exactly twice as fast.
+        why: The ratio matters for the middle-finding trick; for meeting, what matters is that the relative speed is 1.
+        kind: concept
+      - t: It can; that is why the algorithm sometimes needs a second lap.
+        why: With relative speed 1 they always meet within one lap of slow entering the cycle.
+        kind: concept
+    explain: 'If fast moved 3 and slow 1, the gap would shrink by 2 each step and could jump from 1 to −1: that is why speeds 2 and 1 are used.'
+    hints:
+      - Think about the gap between them, not their positions.
+  - id: ex-04
+    legacyId: w4d2-4
+    type: fill
+    tag: Cycle detection
+    q: Complete `hasCycle(head)` (problem 141). The tests build lists with and without a cycle.
+    template: |
+      function hasCycle(head) {
+        let slow = head, fast = head;
+        while ([[0]]) {
+          slow = slow.next;
+          fast = [[1]];
+          if (slow === fast) return true;
+        }
+        return false;
+      }
+    blanks:
+      - accept:
+          - fast && fast.next
+          - fast !== null && fast.next !== null
+          - fast != null && fast.next != null
+      - accept:
+          - fast.next.next
+    fn: hasCycle
+    adapt:
+      args:
+        - cycle
+    tests:
+      - args:
+          - - - 3
+              - 2
+              - 0
+              - -4
+            - 1
+        expect: true
+      - args:
+          - - - 1
+              - 2
+            - 0
+        expect: true
+      - args:
+          - - - 1
+            - -1
+        expect: false
+      - args:
+          - - []
+            - -1
+        expect: false
+      - args:
+          - - - 1
+              - 2
+              - 3
+              - 4
+              - 5
+            - -1
+        expect: false
+      - args:
+          - - - 1
+            - 0
+        expect: true
+    explain: 'Compare node *objects* with `===`, not values: two different nodes can hold the same value.'
+    hints:
+      - The loop must stop safely when the list ends.
+  - id: ex-05
+    legacyId: w4d2-5
+    type: code
+    tag: A variation
+    q: 'Write `kthFromEnd(head, k)`: return the **value** of the k-th node from the end (k = 1 is the last node) in one pass. 1 ≤ k ≤ length.'
+    fn: kthFromEnd
+    adapt:
+      args:
+        - list
+    starter: |
+      function kthFromEnd(head, k) {
+
+      }
+    solution: |
+      function kthFromEnd(head, k) {
+        let slow = head, fast = head;
+        for (let i = 0; i < k; i++) fast = fast.next;
+        while (fast) { slow = slow.next; fast = fast.next; }
+        return slow.val;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          - 2
+        expect: 4
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          - 5
+        expect: 1
+      - args:
+          - - 9
+          - 1
+        expect: 9
+      - args:
+          - - 1
+            - 2
+          - 1
+        expect: 2
+        hidden: true
+    explain: To *read* the k-th from the end, a gap of k from the head is enough. To *delete* it (problem 19), start at a dummy and use a gap of k + 1 so slow stops one node earlier.
+    hints:
+      - Move fast k steps first.
+      - Then move both until fast is null.
+  - id: ex-06
+    legacyId: w4d2-6
+    type: interview
+    title: Palindrome Linked List (LeetCode 234)
+    q: 'Given the head of a singly linked list, return true if it is a palindrome. Follow-up: O(n) time and O(1) space. Example: `1 → 2 → 2 → 1` → true.'
+    model:
+      clarify: |
+        - Values are digits 0–9; up to 10⁵ nodes.
+        - May I modify the list? (If yes, restore it afterwards to be polite.)
+      brute: 'Copy the values into an array and check it with two pointers: O(n) time, O(n) space.'
+      optimize: Find the middle with fast/slow, reverse the second half in place (lesson 1), then walk the first half and the reversed second half together comparing values. For odd length the middle node ends up on the reversed side; comparing until the shorter half runs out handles it.
+      edges: |
+        - single node → true
+        - two nodes equal / different
+        - odd length `1 → 2 → 1`
+      complexity: O(n) time; O(1) extra space.
+    fn: isPalindromeList
+    adapt:
+      args:
+        - list
+    starter: |
+      function isPalindromeList(head) {
+
+      }
+    solution: |
+      function isPalindromeList(head) {
+        let slow = head, fast = head;
+        while (fast && fast.next) { slow = slow.next; fast = fast.next.next; }
+        let prev = null, cur = slow;
+        while (cur) { const next = cur.next; cur.next = prev; prev = cur; cur = next; }
+        let a = head, b = prev;
+        while (b) {
+          if (a.val !== b.val) return false;
+          a = a.next; b = b.next;
+        }
+        return true;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 1
+        expect: true
+      - args:
+          - - 1
+            - 2
+        expect: false
+      - args:
+          - - 1
+            - 2
+            - 1
+        expect: true
+      - args:
+          - - 1
+        expect: true
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 2
+            - 2
+        expect: false
+        hidden: true
+      - args:
+          - - 4
+            - 4
+        expect: true
+        hidden: true
+    explain: 'Three lesson 1–2 techniques composed: middle, reverse, two-pointer compare.'
+    hints:
+      - Find the middle first.
+      - Reverse the second half.
+      - Compare the two halves node by node.
+annotated: []

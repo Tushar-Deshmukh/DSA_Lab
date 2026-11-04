@@ -1,0 +1,27 @@
+---
+slug: example-3
+title: Example 3
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Example 3
+  lines:
+    - 1073
+    - 1085
+---
+
+**Example 3: Subsets II (90), dry run of duplicate skipping.** Input `[1, 2, 2]` (already sorted). Using Way B with the skip rule:
+
+| Call | start | loop i | nums\[i\] | skip? | path after push |
+| --- | --- | --- | --- | --- | --- |
+| dfs(0) | 0 | 0 | 1 | no | \[1\] |
+| dfs(1) | 1 | 1 | 2 | no (i = start) | \[1,2\] |
+| dfs(2) | 2 | 2 | 2 | no (i = start) | \[1,2,2\] |
+| back in dfs(1) | 1 | 2 | 2 | **yes** (i > start, equals previous) | — |
+| back in dfs(0) | 0 | 1 | 2 | no | \[2\] |
+| dfs(2) | 2 | 2 | 2 | no | \[2,2\] |
+| back in dfs(0) | 0 | 2 | 2 | **yes** | — |
+
+Output: `[] [1] [1,2] [1,2,2] [2] [2,2]`, six subsets, no duplicates.

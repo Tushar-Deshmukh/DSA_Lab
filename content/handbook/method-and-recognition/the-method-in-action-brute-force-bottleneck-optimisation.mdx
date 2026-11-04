@@ -1,0 +1,44 @@
+---
+slug: the-method-in-action-brute-force-bottleneck-optimisation
+section: 7
+title: '7.5 The method in action: brute force → bottleneck → optimisation'
+source:
+  file: source/roadmap.md
+  section: 7
+  key: '7.5 The method in action: brute force → bottleneck → optimisation'
+  lines:
+    - 3295
+    - 3326
+---
+
+| Pattern | Problem | Brute force | Bottleneck | Optimisation | Result |
+| --- | --- | --- | --- | --- | --- |
+| Hash lookup | 1 Two Sum | Check all pairs, O(n²) | Inner loop searches for `target − x` | Map of seen values | O(n) time, O(n) space |
+| Two pointers | 167 Two Sum II | All pairs, O(n²) | Ignores sorted order | Discard one end per step | O(n), O(1) |
+| Sliding window | 3 Longest Substring | All substrings with a set check, O(n³) | Rebuilding overlapping windows | Keep a window and last-seen map | O(n) |
+| Prefix sums | 560 Subarray Sum = K | All subarrays, O(n²) with running sums | Matching sums one by one | Count earlier prefixes in a map | O(n) |
+| Binary search on answer | 875 Koko | Try every speed, O(max · n) | Linear scan over a monotone range | Binary search the speed | O(n log max) |
+| Monotonic stack | 739 Daily Temperatures | Scan right from each day, O(n²) | Rescanning colder days | Stack of unresolved days | O(n) |
+| Backtracking | 39 Combination Sum | All multisets, then filter | Exploring sums already over target | Sorted candidates + break | Exponential, O(N^(T/M + 1)) worst case (T = target, M = smallest candidate); pruning cuts the constant, not the bound |
+| Bottom-up tree DFS | 543 Diameter | Height from every node, O(n²) | Recomputing heights | Return height, update global | O(n) |
+| Heap | 215 Kth Largest | Sort, O(n log n) | Ordering elements we never need | Size-k min-heap | O(n log k) |
+| BFS | 994 Rotting Oranges | Simulate minute by minute rescanning the grid, O((mn)²) | Rescanning unchanged cells | Multi-source BFS queue | O(mn) |
+| Dijkstra | 743 Network Delay | Enumerate all paths, exponential | Revisiting nodes via longer routes | Heap by distance, finalise once | O((V + E) log V) |
+| DP | 322 Coin Change | Recursion over coins, exponential | Same remaining amount solved repeatedly | Memo/table over amounts | O(amount × coins) |
+
+**Full walk-through: 739 Daily Temperatures.**
+
+1. *Restate:* for each day, how many days until a warmer day (0 if none).
+2. *Constraints:* n ≤ 10⁵, temperatures 30–100. Edge cases: one day, strictly decreasing, all equal.
+3. *Example:* `[73,74,75,71,69,72,76,73]` → `[1,1,4,2,1,1,0,0]`. By hand, I keep a mental list of days still waiting for a warmer day.
+4. *Brute force:* for each i, scan j > i until warmer.
+5. *Complexity:* O(n²) worst case (decreasing input) = 10¹⁰: too slow.
+6. *Bottleneck:* colder days are rescanned for every earlier day.
+7. *Pattern:* "next greater element" → monotonic stack of waiting indices.
+8. *Why it works:* the stack's temperatures are decreasing; a warmer day resolves every colder waiting day on top; each index is pushed and popped once.
+9. *Pseudocode:* for each i: while stack top is colder than t\[i\], pop j and set ans\[j\] = i − j; push i.
+10. *Implement:* section 6.19 with `res[j] = i - j`.
+11. *Test:* `[30]` → `[0]`; `[90,80,70]` → `[0,0,0]`; `[50,50]` → `[0,0]` (strictly warmer only).
+12. *Complexity:* O(n) time, O(n) space.
+13. *Correctness:* invariant: the stack holds exactly the unresolved indices, in decreasing temperature order.
+14. *Lesson:* "days until" + "next warmer" = monotonic stack of indices; I first stored values and could not compute distances.

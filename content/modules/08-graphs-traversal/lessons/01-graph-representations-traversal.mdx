@@ -1,0 +1,90 @@
+---
+slug: graph-representations-traversal
+legacyId: w8d1
+title: Graph representations and traversal
+goal: Turn edges or grids into an adjacency structure, and traverse it with DFS and BFS, marking visited at the right moment.
+why: Graph questions are among the most frequent at product companies, and almost all of them start with building the graph and choosing a traversal. Getting the visited rule right is what keeps them linear.
+prereqs:
+  - Stacks and head-pointer queues (Module 4)
+  - Grid directions and bounds checks (Module 1 lesson 5)
+  - Tree DFS and BFS (Module 6)
+outcomes:
+  - Build adjacency lists from undirected and directed edge lists
+  - Treat a grid as an implicit graph with 4 neighbours
+  - Write iterative DFS and BFS that mark nodes visited when they are pushed
+  - Count islands by sinking each island as it is found
+ready:
+  - I solved 200 with both DFS and BFS
+  - I can explain marking on push/enqueue
+  - I built the adjacency list for `[[0,1],[1,2],[3,4]]` and ran iterative DFS on it
+summary:
+  - 'Adjacency list: O(V + E) space; the default. Matrix: O(V²), for dense or matrix-given graphs.'
+  - 'Undirected: push both directions.'
+  - DFS (stack or recursion) and BFS (queue) both run in O(V + E).
+  - Mark visited when pushing; marking on pop can enqueue a node many times.
+  - 'Grids: check bounds before indexing; recursion on 10⁵ cells can overflow, so use a stack.'
+revision: Write iterative DFS over an adjacency list from memory, with the visited check in the right place, and say what changes for BFS.
+warmup:
+  problem: 208
+topic: Graph terms, representations, building adjacency lists; grids as implicit graphs; visited rules (6.15)
+implement: Build an adjacency list from `[[0,1],[1,2],[3,4]]` (undirected) and run iterative DFS on it
+problemsText: 'C: 733, 200 · S: 695'
+problems:
+  - num: 733
+    tier: C
+  - num: 200
+    tier: C
+  - num: 695
+    tier: S
+doneWhen: 200 solved with both DFS and BFS; you can explain marking on push/enqueue
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="vocabulary-and-representations" kind="theory" title="Vocabulary and representations">
+
+<Include id="theory/graphs-traversal/terminology" />
+
+<Include id="theory/graphs-traversal/representations" />
+
+<Viz id="graph-build" />
+
+<Include id="handbook/javascript-reference/graphs" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="traversal-and-the-visited-rule" kind="theory" title="Traversal and the visited rule">
+
+<Include id="theory/graphs-traversal/bfs-and-dfs" />
+
+<Include id="theory/graphs-traversal/visited-state" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="grids-as-graphs-islands" kind="code" title="Grids as graphs: islands">
+
+<Include id="theory/graphs-traversal/example-1" />
+
+<Viz id="islands" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Include id="patterns/flood-fill-and-connected-components" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

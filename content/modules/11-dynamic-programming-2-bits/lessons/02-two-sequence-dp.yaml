@@ -1,0 +1,190 @@
+exercises:
+  - id: ex-01
+    legacyId: w11d2-1
+    type: trace
+    tag: Edit distance by hand
+    q: Edit distance from `"horse"` to `"ros"` (the implement task). Rows are prefixes of "horse", columns prefixes of "ros".
+    rows:
+      - prompt: dp[1][1] ("h" → "r")
+        answer: '1'
+      - prompt: dp[2][2] ("ho" → "ro")
+        answer: '1'
+        why: o = o, so copy the diagonal dp[1][1] = 1.
+      - prompt: dp[5][3], the answer
+        answer: '3'
+      - prompt: The bottom row, as a list
+        answer: '[5,4,4,3]'
+    verify: |
+      const a = 'horse', b = 'ros', dp = Array.from({ length: 6 }, (_, i) => Array.from({ length: 4 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+      for (let i = 1; i <= 5; i++) for (let j = 1; j <= 3; j++) dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      console.log(dp[1][1]); console.log(dp[2][2]); console.log(dp[5][3]); console.log(JSON.stringify(dp[5]));
+    explain: horse → rorse (replace h) → rose (delete r) → ros (delete e).
+    hints:
+      - Row 0 is 0, 1, 2, 3; column 0 is 0, 1, …, 5.
+      - On a match, copy the diagonal; otherwise 1 + the smallest of the three neighbours.
+  - id: ex-02
+    legacyId: w11d2-2
+    type: bug
+    tag: Base cases for edit distance
+    q: This Edit Distance returns 0 for `("abc", "")` instead of 3. Click the line.
+    code: |
+      function minDistance(a, b) {
+        const m = a.length, n = b.length;
+        const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+        for (let j = 0; j <= n; j++) dp[0][j] = j;
+        for (let i = 1; i <= m; i++)
+          for (let j = 1; j <= n; j++)
+            dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+        return dp[m][n];
+      }
+    bug:
+      - 2
+      - 3
+    kind: impl
+    explain: 'Column 0 is never set, so `dp[i][0]` stays 0, claiming "abc" becomes "" for free. Turning a prefix of length i into the empty string takes i deletions: add `for (let i = 0; i <= m; i++) dp[i][0] = i;`.'
+    fix: |
+      for (let i = 0; i <= m; i++) dp[i][0] = i;
+      for (let j = 0; j <= n; j++) dp[0][j] = j;
+    fine:
+      '6': The transition is correct.
+    hints:
+      - What is dp[3][0] here, and what should it be?
+  - id: ex-03
+    legacyId: w11d2-3
+    type: mcq
+    tag: Name the operation
+    q: In edit distance, `dp[i][j] = 1 + dp[i − 1][j]` corresponds to which operation?
+    options:
+      - t: 'Delete a[i − 1]: the rest of a[0..i−1) must still become b[0..j).'
+        ok: true
+      - t: Insert b[j − 1]
+        why: 'Insert is `dp[i][j − 1]`: after inserting b[j − 1], a[0..i) must still become b[0..j−1).'
+        kind: concept
+      - t: Replace a[i − 1] with b[j − 1]
+        why: 'Replace is the diagonal `dp[i − 1][j − 1]`: both last characters are used up.'
+        kind: concept
+    explain: Top = delete, left = insert, diagonal = replace (or free, on a match).
+    hints:
+      - Which prefix lost a character?
+  - id: ex-04
+    legacyId: w11d2-4
+    type: code
+    tag: Delete Operation for Two Strings (LeetCode 583)
+    q: 'Write `minDeletions(a, b)`: the minimum number of characters to delete, from either string, to make them equal. Example: `"sea"`, `"eat"` → 2.'
+    fn: minDeletions
+    starter: |
+      function minDeletions(a, b) {
+
+      }
+    solution: |
+      function minDeletions(a, b) {
+        const m = a.length, n = b.length;
+        let prev = new Array(n + 1).fill(0);
+        for (let i = 1; i <= m; i++) {
+          const cur = new Array(n + 1).fill(0);
+          for (let j = 1; j <= n; j++) cur[j] = a[i - 1] === b[j - 1] ? prev[j - 1] + 1 : Math.max(prev[j], cur[j - 1]);
+          prev = cur;
+        }
+        return m + n - 2 * prev[n];
+      }
+    tests:
+      - args:
+          - sea
+          - eat
+        expect: 2
+      - args:
+          - leetcode
+          - etco
+        expect: 4
+      - args:
+          - a
+          - a
+        expect: 0
+      - args:
+          - abc
+          - def
+        expect: 6
+        hidden: true
+      - args:
+          - ''
+          - ab
+        expect: 2
+        hidden: true
+    explain: 'What survives in both strings is a common subsequence, so keep the longest one: m + n − 2 · LCS. The solution also shows the two-row version.'
+    hints:
+      - After the deletions, what do the two remaining strings have in common?
+      - Which known table gives the longest such string?
+      - Total deletions = everything that is not part of it, in both strings.
+  - id: ex-05
+    legacyId: w11d2-5
+    type: interview
+    title: Interleaving String (LeetCode 97)
+    q: 'Return true if `s3` can be formed by interleaving `s1` and `s2`: taking all characters of both, keeping each string''s own order. Example: `"aabcc"`, `"dbbca"`, `"aadbbcbcac"` → true.'
+    model:
+      clarify: |
+        - Lengths must add up: |s1| + |s2| = |s3|, otherwise false immediately.
+        - Strings up to 100 (s3 up to 200).
+      brute: 'Recursion: at each step take the next character from s1 or s2 if it matches s3: exponential with repeated (i, j).'
+      optimize: |
+        Two-sequence DP. State: `dp[i][j]` = can `s1[0..i)` and `s2[0..j)` interleave into `s3[0..i+j)`. Transition: `dp[i][j] = (dp[i−1][j] && s1[i−1] === s3[i+j−1]) || (dp[i][j−1] && s2[j−1] === s3[i+j−1])`. Base dp[0][0] = true; row 0 and column 0 follow the same rule with one string. Answer dp[m][n]. One row is enough.
+      edges: |
+        - all empty → true
+        - lengths do not add up → false
+        - both strings could supply the next character (the reason greedy fails)
+      complexity: O(m·n) time, O(n) space with one row.
+    fn: isInterleave
+    starter: |
+      function isInterleave(s1, s2, s3) {
+
+      }
+    solution: |
+      function isInterleave(s1, s2, s3) {
+        const m = s1.length, n = s2.length;
+        if (m + n !== s3.length) return false;
+        const dp = new Array(n + 1).fill(false);
+        for (let i = 0; i <= m; i++) for (let j = 0; j <= n; j++) {
+          if (i === 0 && j === 0) dp[0] = true;
+          else dp[j] = (i > 0 && dp[j] && s1[i - 1] === s3[i + j - 1]) || (j > 0 && dp[j - 1] && s2[j - 1] === s3[i + j - 1]);
+        }
+        return dp[n];
+      }
+    tests:
+      - args:
+          - aabcc
+          - dbbca
+          - aadbbcbcac
+        expect: true
+      - args:
+          - aabcc
+          - dbbca
+          - aadbbbaccc
+        expect: false
+      - args:
+          - ''
+          - ''
+          - ''
+        expect: true
+      - args:
+          - a
+          - ''
+          - a
+        expect: true
+        hidden: true
+      - args:
+          - ab
+          - ba
+          - abab
+        expect: true
+        hidden: true
+      - args:
+          - abc
+          - ''
+          - ab
+        expect: false
+        hidden: true
+    explain: Greedily taking from s1 whenever it matches fails when both strings offer the same next character; the table tries both.
+    hints:
+      - Which two prefixes does a cell describe, and which prefix of s3?
+      - The last character of s3[0..i+j) came from s1 or from s2.
+      - Check the lengths first.
+annotated: []

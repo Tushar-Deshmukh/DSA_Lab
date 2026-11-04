@@ -1,0 +1,305 @@
+exercises:
+  - id: ex-01
+    legacyId: w9d4-1
+    type: mcq
+    tag: The two properties
+    q: Which statement describes the **greedy-choice property**?
+    options:
+      - t: Some optimal solution begins with the choice greedy makes.
+        ok: true
+        why: So committing to it never rules out an optimum.
+      - t: The locally best choice is always unique.
+        why: Ties are common and harmless; uniqueness is not the point.
+        kind: concept
+      - t: After the choice, the rest is a smaller instance of the same problem.
+        why: That is optimal substructure, the second property. Greedy needs both.
+        kind: concept
+      - t: The algorithm runs in O(n log n).
+        why: Running time says nothing about correctness.
+        kind: concept
+    explain: 'Exchange arguments prove the greedy-choice property: take any optimal solution and swap the greedy choice in without making it worse.'
+    hints:
+      - Which property is about the **first** decision?
+  - id: ex-02
+    legacyId: w9d4-2
+    type: trace
+    tag: Break them by hand
+    q: Work out each greedy answer and the true optimum from the table.
+    rows:
+      - prompt: 'Coins [1, 3, 4], amount 6, largest coin first: number of coins'
+        answer: '3'
+      - prompt: The optimal number of coins
+        answer: '2'
+      - prompt: 'Knapsack, capacity 50, items (w10, v60), (w20, v100), (w30, v120), best ratio first: total value'
+        answer: '160'
+      - prompt: The optimal value
+        answer: '220'
+    verify: |
+      let amt = 6, cnt = 0; for (const c of [4, 3, 1]) while (amt >= c) { amt -= c; cnt++; } console.log(cnt);
+      const dp = new Array(7).fill(Infinity); dp[0] = 0; for (let a = 1; a <= 6; a++) for (const c of [1, 3, 4]) if (c <= a) dp[a] = Math.min(dp[a], dp[a - c] + 1); console.log(dp[6]);
+      const items = [[10, 60], [20, 100], [30, 120]]; let cap = 50, val = 0; for (const [w, v] of [...items].sort((a, b) => b[1] / b[0] - a[1] / a[0])) if (w <= cap) { cap -= w; val += v; } console.log(val);
+      let best = 0; for (let m = 0; m < 8; m++) { let w = 0, v = 0; items.forEach(([a, b], i) => { if (m >> i & 1) { w += a; v += b; } }); if (w <= 50) best = Math.max(best, v); } console.log(best);
+    explain: One small counterexample is a complete disproof. Each of these needs DP instead (Modules 10–11).
+    hints:
+      - Simulate the greedy literally, then try every combination.
+  - id: ex-03
+    legacyId: w9d4-3
+    type: mcq
+    tag: Find the counterexample
+    q: 'Claim: "to schedule the most non-overlapping meetings, always pick the meeting that **starts** earliest." Which input breaks it?'
+    options:
+      - t: '[1,10], [2,3], [4,5]'
+        ok: true
+        why: 'Earliest start picks [1,10] and blocks both others: 1 meeting instead of 2.'
+      - t: '[1,2], [3,4], [5,6]'
+        why: Every rule picks all three here; it cannot distinguish them.
+        kind: concept
+      - t: '[1,3], [2,4]'
+        why: Any rule gets 1 here, which is optimal.
+        kind: concept
+    explain: 'Good counterexamples are tiny and make the greedy choice look attractive but costly: one long interval that blocks several short ones.'
+    hints:
+      - Make the earliest-starting meeting very long.
+  - id: ex-04
+    legacyId: w9d4-4
+    type: code
+    tag: Activity selection
+    q: 'Write `maxMeetings(intervals)`: return the largest number of pairwise non-overlapping intervals `[start, end]`. Intervals that only touch (`[1,2]` and `[2,3]`) do not overlap.'
+    fn: maxMeetings
+    starter: |
+      function maxMeetings(intervals) {
+
+      }
+    solution: |
+      function maxMeetings(intervals) {
+        const sorted = [...intervals].sort((a, b) => a[1] - b[1]);
+        let count = 0, lastEnd = -Infinity;
+        for (const [s, e] of sorted) if (s >= lastEnd) { count++; lastEnd = e; }
+        return count;
+      }
+    tests:
+      - args:
+          - - - 1
+              - 5
+            - - 4
+              - 7
+            - - 6
+              - 10
+        expect: 2
+      - args:
+          - - - 1
+              - 10
+            - - 2
+              - 3
+            - - 4
+              - 5
+        expect: 2
+      - args:
+          - - - 1
+              - 2
+            - - 2
+              - 3
+            - - 3
+              - 4
+            - - 1
+              - 3
+        expect: 3
+      - args:
+          - []
+        expect: 0
+      - args:
+          - - - 1
+              - 2
+            - - 1
+              - 2
+            - - 1
+              - 2
+        expect: 1
+        hidden: true
+      - args:
+          - - - 5
+              - 6
+            - - 1
+              - 2
+            - - 3
+              - 4
+            - - 0
+              - 7
+        expect: 3
+        hidden: true
+    explain: 'This is 435 seen from the other side: the minimum number to remove is n minus this count.'
+    hints:
+      - Sort by end time.
+      - Take an interval if it starts at or after the last taken end.
+  - id: ex-05
+    legacyId: w9d4-5
+    type: fill
+    tag: Jump Game II (45)
+    q: 'Complete `jump(nums)`: the minimum number of jumps to reach the last index (always reachable).'
+    template: |
+      function jump(nums) {
+        let jumps = 0, end = 0, farthest = 0;
+        for (let i = 0; i < nums.length - 1; i++) {
+          farthest = Math.max(farthest, i + nums[i]);
+          if ([[0]]) { jumps++; [[1]]; }
+        }
+        return jumps;
+      }
+    blanks:
+      - accept:
+          - i === end
+          - end === i
+          - i == end
+          - end == i
+      - accept:
+          - end = farthest
+    fn: jump
+    tests:
+      - args:
+          - - 2
+            - 3
+            - 1
+            - 1
+            - 4
+        expect: 2
+      - args:
+          - - 2
+            - 3
+            - 0
+            - 1
+            - 4
+        expect: 2
+      - args:
+          - - 0
+        expect: 0
+      - args:
+          - - 1
+            - 1
+            - 1
+            - 1
+        expect: 3
+      - args:
+          - - 1
+            - 2
+        expect: 1
+    explain: 'The loop stops before the last index: reaching it does not need another jump. Including it would count one jump too many when a level ends exactly there.'
+    hints:
+      - A jump is spent when you reach the end of what the current number of jumps can cover.
+      - The next level reaches as far as anything in this level could.
+  - id: ex-06
+    legacyId: w9d4-6
+    type: complexity
+    tag: Jump Game approaches
+    q: 'For 55 (Jump Game) with n elements:'
+    fields:
+      - label: DP canReach[i]
+        answer: O(n²)
+        options:
+          - O(n)
+          - O(n log n)
+          - O(n²)
+          - O(2ⁿ)
+        why:
+          O(n): Each reachable index marks up to nums[i] indices ahead, which is O(n) per index.
+      - label: Greedy farthest
+        answer: O(n)
+        options:
+          - O(n)
+          - O(n log n)
+          - O(n²)
+          - O(2ⁿ)
+      - label: Greedy extra space
+        answer: O(1)
+        options:
+          - O(1)
+          - O(n)
+    explain: 'The greedy works because reachability is contiguous: one number, `farthest`, stores everything the DP table would.'
+    hints:
+      - What does the DP do for each index?
+  - id: ex-07
+    legacyId: w9d4-7
+    type: interview
+    title: Two City Scheduling (LeetCode 1029)
+    q: '2n people; `costs[i] = [aCost, bCost]` to fly person i to city A or B. Exactly n people must go to each city. Return the minimum total cost. Example: `[[10,20],[30,200],[400,50],[30,20]]` → 110.'
+    model:
+      clarify: |
+        - Exactly half to each city.
+        - Costs are positive integers; 2n up to 100.
+      brute: 'Try every way to choose n people for A: C(2n, n), exponential.'
+      optimize: |
+        Start by sending everyone to B, then choose n people to switch to A. Switching person i changes the total by `a − b`, so choose the n most negative differences: sort by `a − b`, first half to A, rest to B. Exchange argument: if an optimal plan sends x to A and y to B with `a_x − b_x > a_y − b_y`, swapping them changes the cost by `(a_y − b_y) − (a_x − b_x) < 0`, so it was not optimal.
+      edges: |
+        - all differences equal → any split works
+        - n = 1
+        - one person far cheaper in A but another even more so
+      complexity: O(n log n) time, O(n) for the sorted copy.
+    fn: twoCitySchedCost
+    starter: |
+      function twoCitySchedCost(costs) {
+
+      }
+    solution: |
+      function twoCitySchedCost(costs) {
+        const s = [...costs].sort((x, y) => (x[0] - x[1]) - (y[0] - y[1]));
+        const n = s.length / 2;
+        let total = 0;
+        s.forEach(([a, b], i) => { total += i < n ? a : b; });
+        return total;
+      }
+    tests:
+      - args:
+          - - - 10
+              - 20
+            - - 30
+              - 200
+            - - 400
+              - 50
+            - - 30
+              - 20
+        expect: 110
+      - args:
+          - - - 259
+              - 770
+            - - 448
+              - 54
+            - - 926
+              - 667
+            - - 184
+              - 139
+            - - 840
+              - 118
+            - - 577
+              - 469
+        expect: 1859
+      - args:
+          - - - 1
+              - 2
+            - - 3
+              - 4
+        expect: 5
+        hidden: true
+      - args:
+          - - - 515
+              - 563
+            - - 451
+              - 713
+            - - 537
+              - 709
+            - - 343
+              - 819
+            - - 855
+              - 779
+            - - 457
+              - 60
+            - - 650
+              - 359
+            - - 631
+              - 42
+        expect: 3086
+        hidden: true
+    explain: 'Sorting by cheaper city alone (`min(a, b)`) fails: it ignores how much each person **saves** by going to their better city.'
+    hints:
+      - Suppose everyone goes to B first. What does moving one person to A cost?
+      - Sort by that cost.
+      - Prove it by swapping two people who are in the wrong order.
+annotated: []

@@ -1,0 +1,15 @@
+---
+slug: counting-bits
+title: Counting bits
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Counting bits
+  lines:
+    - 2083
+    - 2083
+---
+
+**Counting bits.** Brian Kernighan's loop removes one set bit per iteration (`while (x) { x &= x - 1; count++ }`), so it runs once per set bit. For all numbers 0..n (338), DP: `bits[i] = bits[i >> 1] + (i & 1)`.

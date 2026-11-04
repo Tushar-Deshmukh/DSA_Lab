@@ -1,0 +1,15 @@
+---
+slug: monotonic-stack
+title: Monotonic stack
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Monotonic stack
+  lines:
+    - 779
+    - 779
+---
+
+**Monotonic stack.** A stack kept increasing or decreasing. When a new element breaks the order, everything it pops has found its "next greater" (or smaller) element: the new one. Each index is pushed and popped once, so O(n) total. Store **indices**, not values, so you can compute distances (739) and widths (84).

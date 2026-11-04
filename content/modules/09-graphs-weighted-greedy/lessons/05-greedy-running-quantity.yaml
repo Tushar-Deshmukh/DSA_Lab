@@ -1,0 +1,318 @@
+exercises:
+  - id: ex-01
+    legacyId: w9d5-1
+    type: trace
+    tag: Trace the reset rule
+    q: Gas Station with `gas = [1,2,3,4,5]`, `cost = [3,4,5,1,2]` (the handbook's implement task).
+    rows:
+      - prompt: gas[i] − cost[i] for each station, as a list
+        answer: '[-2,-2,-2,3,3]'
+      - prompt: The value of `start` after processing station 2
+        answer: '3'
+        why: The tank goes negative at stations 0, 1 and 2, moving start to 1, 2, then 3.
+      - prompt: '`total` at the end'
+        answer: '0'
+      - prompt: The answer
+        answer: '3'
+    verify: |
+      const gas = [1, 2, 3, 4, 5], cost = [3, 4, 5, 1, 2]; const d = gas.map((g, i) => g - cost[i]); console.log(JSON.stringify(d));
+      let total = 0, tank = 0, start = 0, after2 = null;
+      for (let i = 0; i < 5; i++) { total += d[i]; tank += d[i]; if (tank < 0) { start = i + 1; tank = 0; } if (i === 2) after2 = start; }
+      console.log(after2); console.log(total); console.log(total >= 0 ? start : -1);
+    explain: 'Starting at 3: tank 3, 6, then 4, 2, 0 after stations 0, 1 and 2. It ends at exactly 0, which is allowed.'
+    hints:
+      - Write the differences first.
+      - Every time the running tank drops below 0, the next station becomes the candidate.
+  - id: ex-02
+    legacyId: w9d5-2
+    type: mcq
+    tag: Why skip to i + 1?
+    q: Starting at s, the tank first goes negative at station i. Why can no station between s and i be a valid start?
+    options:
+      - t: Reaching any station j in (s, i] from s left a tank ≥ 0. Starting at j instead begins with 0, which is no better, so it also runs out at i.
+        ok: true
+        why: 'That is the whole proof: dropping a prefix with non-negative sum can only lower the tank.'
+      - t: Because the stations between s and i all have negative gas − cost.
+        why: 'Not necessarily: some of them can be positive. The argument uses running sums, not single stations.'
+        kind: concept
+      - t: Because the answer is unique.
+        why: Uniqueness is guaranteed by the problem, but it does not explain why those starts fail.
+        kind: concept
+    explain: 'The second half of the proof: if `total ≥ 0`, the final candidate start covers the deficit before it with the surplus after it.'
+    hints:
+      - Compare the tank when arriving at j from s with starting at j empty.
+  - id: ex-03
+    legacyId: w9d5-3
+    type: fill
+    tag: Gas Station (134)
+    q: Complete `canCompleteCircuit(gas, cost)`.
+    template: |
+      function canCompleteCircuit(gas, cost) {
+        let total = 0, tank = 0, start = 0;
+        for (let i = 0; i < gas.length; i++) {
+          const diff = gas[i] - cost[i];
+          total += diff; tank += diff;
+          if ([[0]]) { [[1]]; tank = 0; }
+        }
+        return [[2]];
+      }
+    blanks:
+      - accept:
+          - tank < 0
+          - 0 > tank
+      - accept:
+          - start = i + 1
+          - start = 1 + i
+      - accept:
+          - 'total >= 0 ? start : -1'
+          - 'total < 0 ? -1 : start'
+          - '0 <= total ? start : -1'
+    fn: canCompleteCircuit
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          - - 3
+            - 4
+            - 5
+            - 1
+            - 2
+        expect: 3
+      - args:
+          - - 2
+            - 3
+            - 4
+          - - 3
+            - 4
+            - 3
+        expect: -1
+      - args:
+          - - 5
+            - 1
+            - 2
+            - 3
+            - 4
+          - - 4
+            - 4
+            - 1
+            - 5
+            - 1
+        expect: 4
+      - args:
+          - - 3
+          - - 3
+        expect: 0
+    explain: One pass, O(n) time and O(1) space; the brute force simulates from every start in O(n²).
+    hints:
+      - When does the current candidate fail?
+      - Which station is the next candidate?
+      - What does a negative total mean?
+  - id: ex-04
+    legacyId: w9d5-4
+    type: mcq
+    tag: Why cut as early as possible?
+    q: In Partition Labels, why is it safe to cut as soon as `i === end`?
+    options:
+      - t: Every letter in the current part has its last occurrence at or before i, so the cut is valid; cutting later would only merge this part with the next, giving fewer parts.
+        ok: true
+      - t: Because the parts must have equal size.
+        why: Parts can have any sizes; the problem wants as many as possible.
+        kind: concept
+      - t: Because letters cannot repeat inside a part.
+        why: They can and do repeat; what matters is that none appears in a later part.
+        kind: concept
+    explain: 'Greedy stays ahead: after each cut, greedy has at least as many parts as any valid partition of the same prefix.'
+    hints:
+      - What would a later cut gain?
+  - id: ex-05
+    legacyId: w9d5-5
+    type: code
+    tag: Hand of Straights (846)
+    q: 'Write `isNStraightHand(hand, groupSize)`: can the cards be split into groups of `groupSize` consecutive values?'
+    fn: isNStraightHand
+    starter: |
+      function isNStraightHand(hand, groupSize) {
+
+      }
+    solution: |
+      function isNStraightHand(hand, groupSize) {
+        if (hand.length % groupSize !== 0) return false;
+        const count = new Map();
+        for (const c of hand) count.set(c, (count.get(c) || 0) + 1);
+        for (const c of [...count.keys()].sort((a, b) => a - b)) {
+          const k = count.get(c);
+          if (k === 0) continue;
+          for (let v = c; v < c + groupSize; v++) {
+            if ((count.get(v) || 0) < k) return false;
+            count.set(v, count.get(v) - k);
+          }
+        }
+        return true;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 6
+            - 2
+            - 3
+            - 4
+            - 7
+            - 8
+          - 3
+        expect: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          - 4
+        expect: false
+      - args:
+          - - 1
+            - 1
+            - 2
+            - 2
+            - 3
+            - 3
+          - 3
+        expect: true
+      - args:
+          - - 5
+          - 1
+        expect: true
+      - args:
+          - - 8
+            - 10
+            - 12
+          - 3
+        expect: false
+        hidden: true
+      - args:
+          - - 1
+            - 1
+            - 2
+            - 3
+          - 2
+        expect: false
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 3
+            - 4
+            - 5
+          - 3
+        expect: true
+        hidden: true
+    explain: Starting k groups at once (k = the count of the smallest card) makes it O(n log n) for the sort plus O(n · groupSize) worst case for the scan.
+    hints:
+      - Which card is forced to start a group?
+      - Keep counts in a Map and walk the distinct values in sorted order.
+      - If the smallest card appears k times, k groups start there.
+  - id: ex-06
+    legacyId: w9d5-6
+    type: interview
+    title: Merge Triplets to Form Target Triplet (LeetCode 1899)
+    q: '`triplets[i] = [a, b, c]`. An operation picks two triplets and replaces one with their element-wise maximum. Can you make `target` appear as one of the triplets? Example: `[[2,5,3],[1,8,4],[1,7,5]]`, target `[2,7,5]` → true (merge the first and third).'
+    model:
+      clarify: |
+        - Any number of operations; values up to 1000; up to 10⁵ triplets.
+      brute: 'Search over sequences of merges: exponential.'
+      optimize: |
+        Merging only takes maxima, so values never decrease. A triplet with any coordinate **greater** than the target's can never be used: it would push that coordinate past the target forever. Every other triplet is safe to merge. So: keep the triplets with all three values ≤ target, take the element-wise max of them, and check whether it equals the target.
+      edges: |
+        - the target itself is in the list → true
+        - every triplet exceeds the target somewhere → false
+        - safe triplets cover only two of the three coordinates → false
+      complexity: O(n) time, O(1) space.
+    fn: mergeTriplets
+    starter: |
+      function mergeTriplets(triplets, target) {
+
+      }
+    solution: |
+      function mergeTriplets(triplets, target) {
+        const got = [0, 0, 0];
+        for (const t of triplets) {
+          if (t[0] > target[0] || t[1] > target[1] || t[2] > target[2]) continue;
+          for (let k = 0; k < 3; k++) got[k] = Math.max(got[k], t[k]);
+        }
+        return got[0] === target[0] && got[1] === target[1] && got[2] === target[2];
+      }
+    tests:
+      - args:
+          - - - 2
+              - 5
+              - 3
+            - - 1
+              - 8
+              - 4
+            - - 1
+              - 7
+              - 5
+          - - 2
+            - 7
+            - 5
+        expect: true
+      - args:
+          - - - 3
+              - 4
+              - 5
+            - - 4
+              - 5
+              - 6
+          - - 3
+            - 2
+            - 5
+        expect: false
+      - args:
+          - - - 2
+              - 5
+              - 3
+            - - 2
+              - 3
+              - 4
+            - - 1
+              - 2
+              - 5
+            - - 5
+              - 2
+              - 3
+          - - 5
+            - 5
+            - 5
+        expect: true
+      - args:
+          - - - 1
+              - 1
+              - 1
+          - - 1
+            - 1
+            - 1
+        expect: true
+        hidden: true
+      - args:
+          - - - 1
+              - 3
+              - 1
+            - - 3
+              - 1
+              - 1
+          - - 3
+            - 3
+            - 2
+        expect: false
+        hidden: true
+    explain: 'The greedy is "merge everything safe": merging a safe triplet can never hurt, because it cannot push any value past the target.'
+    hints:
+      - Can a value ever go down after a merge?
+      - Which triplets can never be part of the answer?
+      - Merge all the others and compare.
+annotated: []

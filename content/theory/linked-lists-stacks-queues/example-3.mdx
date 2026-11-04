@@ -1,0 +1,57 @@
+---
+slug: example-3
+title: Example 3
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Example 3
+  lines:
+    - 846
+    - 888
+---
+
+**Example 3: LRU cache design (146).** Requirements: `get` and `put` in O(1); evict the least recently used key when over capacity.
+
+- Hash map alone: O(1) lookup, but no O(1) way to find the least recent key.
+- Array of keys by recency: O(n) to move a key to the front.
+- **Map + doubly linked list:** the map gives key → node; the list orders nodes by recency, with O(1) unlink and insert at the head given the node. Two sentinel nodes (`head`, `tail`) remove all null checks.
+
+```js
+class LRUCache {
+  constructor(capacity) {
+    this.cap = capacity;
+    this.map = new Map();                        // key -> node
+    // most recent side
+    this.head = { key: 0, val: 0, prev: null, next: null };
+    // least recent side
+    this.tail = { key: 0, val: 0, prev: null, next: null };
+    this.head.next = this.tail; this.tail.prev = this.head;
+  }
+  #remove(node) { node.prev.next = node.next; node.next.prev = node.prev; }
+  #addFront(node) {
+    node.next = this.head.next; node.prev = this.head;
+    this.head.next.prev = node; this.head.next = node;
+  }
+  get(key) {
+    const node = this.map.get(key);
+    if (!node) return -1;
+    // mark as most recently used
+    this.#remove(node); this.#addFront(node);
+    return node.val;
+  }
+  put(key, value) {
+    if (this.map.has(key)) this.#remove(this.map.get(key));
+    const node = { key, val: value, prev: null, next: null };
+    this.#addFront(node); this.map.set(key, node);
+    if (this.map.size > this.cap) {
+      const lru = this.tail.prev;                 // least recently used
+      // node stores its key so we can delete it from the map
+      this.#remove(lru); this.map.delete(lru.key);
+    }
+  }
+}
+```
+
+A JavaScript shortcut exists (a `Map` keeps insertion order, so delete-and-reinsert moves a key to the end, and `map.keys().next().value` is the oldest). Mention it as a trade-off, but implement the linked list: it is what the interviewer is testing.

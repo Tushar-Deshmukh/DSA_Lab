@@ -1,0 +1,25 @@
+---
+slug: choose-from-remaining
+number: '5.2'
+title: Choose-from-remaining (combinations)
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Pattern 5.2
+  lines:
+    - 1121
+    - 1130
+---
+
+**Pattern 5.2: Choose-from-remaining (combinations)**
+
+1. *Recognise:* select k items or reach a target; order does not matter.
+2. *Clues:* "combinations", "combination sum", "unique combinations", "each number may be used once/unlimited".
+3. *From brute force:* generating all permutations and deduplicating wastes n! work; a `start` index enforces increasing order, so each combination appears once.
+4. *Why it works:* choosing only from `start` onwards gives a canonical order for each set.
+5. *Template:* `dfs(start, remaining)`: record when complete; loop `i` from `start`; recurse with `i` (reuse allowed, 39) or `i + 1` (no reuse, 40, 77).
+6. *Complexity:* bounded by O(n · 2ⁿ); combinations of size k: O(k · C(n, k)).
+7. *Variations:* phone letters (17: one level per digit, branch over its letters), generate parentheses (22: state = open and close counts; add `(` if open \< n, `)` if close \< open).
+8. *Inappropriate when:* only the number of combinations is asked (DP, Module 10).

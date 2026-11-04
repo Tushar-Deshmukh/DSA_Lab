@@ -1,0 +1,25 @@
+---
+slug: read-write-pointers
+number: '1.3'
+title: Read/write pointers (in-place compaction)
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Pattern 1.3
+  lines:
+    - 383
+    - 392
+---
+
+**Pattern 1.3: Read/write pointers (in-place compaction)**
+
+1. *Recognise:* "in place", "O(1) extra space", "return the new length", "move all X to the end".
+2. *Clues:* sorted input with duplicates; a filter that must not allocate.
+3. *From brute force:* building a new array is O(n) extra space; instead overwrite the prefix of the same array.
+4. *Why it works:* the write pointer never passes the read pointer, so you never overwrite unread data.
+5. *Template:* `write` marks the end of the kept prefix; `read` scans; copy when the element should be kept.
+6. *Complexity:* O(n) time, O(1) space.
+7. *Variations:* swap instead of copy (283 Move Zeroes keeps non-zero order and moves zeros back).
+8. *Inappropriate when:* the original order of discarded elements must be preserved somewhere.

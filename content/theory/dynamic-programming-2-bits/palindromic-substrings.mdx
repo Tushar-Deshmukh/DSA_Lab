@@ -1,0 +1,18 @@
+---
+slug: palindromic-substrings
+title: Palindromic substrings (5, 647)
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Palindromic substrings (5, 647)
+  lines:
+    - 2056
+    - 2059
+---
+
+**Palindromic substrings (5, 647).** Two approaches:
+
+- *Expand around centre:* for each of the 2n − 1 centres, expand while the ends match. O(n²) time, O(1) space. Simplest in interviews.
+- *Interval DP:* `pal[i][j] = s[i] === s[j] && (j - i < 2 || pal[i+1][j-1])`, filled by increasing length. O(n²) time and space. Useful when later steps need the table (palindrome partitioning with minimum cuts).

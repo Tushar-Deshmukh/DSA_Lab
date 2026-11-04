@@ -1,0 +1,25 @@
+---
+slug: k-way-merge
+number: '7.2'
+title: K-way merge
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Pattern 7.2
+  lines:
+    - 1458
+    - 1467
+---
+
+**Pattern 7.2: K-way merge**
+
+1. *Recognise:* several sorted sequences must be combined or scanned in global order.
+2. *Clues:* "merge k sorted", "smallest range covering k lists", "k-th smallest in a sorted matrix".
+3. *From brute force:* concatenate and sort: O(N log N). The heap exploits existing order: O(N log k).
+4. *Why it works:* the next global minimum is always one of the k current heads.
+5. *Template:* push all heads `[val, listIndex]`; pop min; push that list's next element.
+6. *Complexity:* O(N log k), O(k).
+7. *Variations:* pairwise divide-and-conquer merge (no heap), merging sorted arrays with index pointers.
+8. *Inappropriate when:* k = 2 (two pointers are simpler).

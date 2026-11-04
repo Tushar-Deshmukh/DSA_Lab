@@ -1,0 +1,301 @@
+exercises:
+  - id: ex-01
+    legacyId: w4d4-1
+    type: fill
+    tag: Matching
+    q: Complete `isValid` (problem 20).
+    template: |
+      function isValid(s) {
+        const match = { ')': '(', ']': '[', '}': '{' };
+        const stack = [];
+        for (const c of s) {
+          if (!(c in match)) stack.push(c);
+          else if ([[0]] !== match[c]) return false;
+        }
+        return [[1]];
+      }
+    blanks:
+      - accept:
+          - stack.pop()
+      - accept:
+          - stack.length === 0
+          - '!stack.length'
+          - stack.length == 0
+    fn: isValid
+    tests:
+      - args:
+          - ()[]{}
+        expect: true
+      - args:
+          - (]
+        expect: false
+      - args:
+          - ([)]
+        expect: false
+      - args:
+          - '{[]}'
+        expect: true
+      - args:
+          - ((
+        expect: false
+      - args:
+          - ']'
+        expect: false
+    explain: Popping an empty array returns `undefined`, which never equals an opener, so a closer with nothing open correctly returns false.
+    hints:
+      - On a closer, what must the most recent opener be?
+      - What must be true at the very end?
+  - id: ex-02
+    legacyId: w4d4-2
+    type: predict
+    tag: Integer division
+    q: Problem 150 truncates division toward zero. What does this print?
+    code: |
+      console.log(Math.trunc(-7 / 2), Math.floor(-7 / 2), Math.trunc(7 / 2));
+    answer: -3 -4 3
+    traps:
+      -4 -4 3: '`Math.trunc` drops the fraction (toward zero); `Math.floor` rounds down, which differs for negative numbers.'
+      -3 -3 3: '`Math.floor(-3.5)` is −4: floor rounds toward −∞.'
+    explain: Use `Math.trunc` when a problem says "truncate toward zero" (C/Java integer division). Reference 6.4 covers this pitfall.
+    hints:
+      - What is −7 / 2 as a decimal?
+  - id: ex-03
+    legacyId: w4d4-3
+    type: bug
+    tag: Operand order
+    q: This RPN evaluator returns −1 for `["4", "3", "-"]` instead of 1. Click the buggy line.
+    code: |
+      function evalRPN(tokens) {
+        const st = [];
+        for (const t of tokens) {
+          if (!['+', '-', '*', '/'].includes(t)) { st.push(Number(t)); continue; }
+          const a = st.pop(), b = st.pop();
+          st.push(t === '+' ? a + b : t === '-' ? a - b : t === '*' ? a * b : Math.trunc(a / b));
+        }
+        return st.pop();
+      }
+    bug:
+      - 4
+    kind: impl
+    explain: 'The first pop returns the **right** operand (pushed last). `4 3 -` means 4 − 3, so pop `b` first, then `a`: `const b = st.pop(), a = st.pop();`.'
+    fix: |
+      const b = st.pop(), a = st.pop();
+    fine:
+      '3': Converting number tokens with `Number` is right; `includes` on a 4-element array is O(1).
+      '5': '`Math.trunc` for division is right.'
+    hints:
+      - Which operand was pushed last?
+  - id: ex-04
+    legacyId: w4d4-4
+    type: complexity
+    tag: Why it matters for BFS
+    q: A BFS over V vertices and E edges uses `queue.shift()` to dequeue. What does dequeuing cost in total?
+    fields:
+      - label: Total cost of all dequeues (worst case)
+        answer: O(n²)
+        options:
+          - O(1)
+          - O(n)
+          - O(n log n)
+          - O(n²)
+        why:
+          O(n): Each `shift` re-indexes everything still in the queue. With up to V elements queued, V shifts cost up to O(V²).
+    explain: Here n = V. A head index makes each dequeue O(1), restoring O(V + E) for the whole BFS.
+    hints:
+      - What does one shift cost on a queue of length k?
+  - id: ex-05
+    legacyId: w4d4-5
+    type: code
+    tag: Build a deque
+    q: 'Write a class `Deque` backed by a circular buffer: `pushBack(x)`, `pushFront(x)`, `popFront()`, `popBack()` (return `undefined` when empty), and `size()`. Grow by doubling when full. Every operation O(1) amortised; do not use `shift`, `unshift` or `splice`.'
+    fn: Deque
+    starter: |
+      class Deque {
+        constructor(cap = 4) {
+          this.buf = new Array(cap);
+          this.head = 0;   // index of the front element
+          this.len = 0;    // number of stored elements
+        }
+        pushBack(x) {}
+        pushFront(x) {}
+        popFront() {}
+        popBack() {}
+        size() { return this.len; }
+      }
+    solution: |
+      class Deque {
+        constructor(cap = 4) {
+          this.buf = new Array(cap);
+          this.head = 0;
+          this.len = 0;
+        }
+        #idx(i) { return (this.head + i) % this.buf.length; }
+        #grow() {
+          const nb = new Array(this.buf.length * 2);
+          for (let i = 0; i < this.len; i++) nb[i] = this.buf[this.#idx(i)];
+          this.buf = nb; this.head = 0;
+        }
+        pushBack(x) { if (this.len === this.buf.length) this.#grow(); this.buf[this.#idx(this.len)] = x; this.len++; }
+        pushFront(x) {
+          if (this.len === this.buf.length) this.#grow();
+          this.head = (this.head - 1 + this.buf.length) % this.buf.length;
+          this.buf[this.head] = x; this.len++;
+        }
+        popFront() { if (!this.len) return undefined; const x = this.buf[this.head]; this.head = this.#idx(1); this.len--; return x; }
+        popBack() { if (!this.len) return undefined; this.len--; return this.buf[this.#idx(this.len)]; }
+        size() { return this.len; }
+      }
+    tests:
+      - ops:
+          - - Deque
+          - - pushBack
+            - 1
+          - - pushBack
+            - 2
+          - - pushFront
+            - 0
+          - - popFront
+          - - popBack
+          - - size
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - 0
+          - 2
+          - 1
+      - ops:
+          - - Deque
+          - - popFront
+          - - popBack
+          - - size
+        expect:
+          - null
+          - null
+          - null
+          - 0
+      - ops:
+          - - Deque
+            - 2
+          - - pushFront
+            - 3
+          - - pushFront
+            - 2
+          - - pushFront
+            - 1
+          - - pushBack
+            - 4
+          - - pushBack
+            - 5
+          - - popFront
+          - - popFront
+          - - popFront
+          - - popFront
+          - - popFront
+          - - popFront
+        expect:
+          - null
+          - null
+          - null
+          - null
+          - null
+          - null
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - null
+      - ops:
+          - - Deque
+            - 1
+          - - pushBack
+            - 1
+          - - popFront
+          - - pushBack
+            - 2
+          - - pushFront
+            - 7
+          - - popBack
+          - - popBack
+          - - size
+        expect:
+          - null
+          - null
+          - 1
+          - null
+          - null
+          - 2
+          - 7
+          - 0
+        hidden: true
+    explain: 'Index arithmetic: the i-th element from the front lives at `(head + i) % capacity`. `pushFront` steps head backwards with `+ capacity` to avoid a negative remainder. An empty pop returns `undefined`, which the tests record as null.'
+    hints:
+      - Write a helper idx(i) = (head + i) % buf.length.
+      - 'pushFront: move head back one slot (mod capacity), then write there.'
+      - Grow by copying the elements in front-to-back order into a buffer twice as large.
+  - id: ex-06
+    legacyId: w4d4-6
+    type: interview
+    title: Backspace String Compare (LeetCode 844)
+    q: 'Given strings `s` and `t`, return true if they are equal when both are typed into empty text editors, where `#` means backspace. Backspacing an empty editor does nothing. Example: `s = "ab#c"`, `t = "ad#c"` → true (both become "ac").'
+    model:
+      clarify: |
+        - Lowercase letters and '#'.
+        - Backspace on empty text does nothing.
+        - Follow-up: O(1) extra space?
+      brute: 'Build each final string with a stack (push letters, pop on ''#''), then compare: O(m + n) time, O(m + n) space. A clean first answer.'
+      optimize: For O(1) space, walk both strings from the end with two pointers, keeping a count of pending backspaces for each; skip characters that a later '#' deletes; compare the next surviving characters.
+      edges: |
+        - more '#' than letters `\"a##c\"` → \"c\"
+        - both become empty `\"a#\"`, `\"b#\"` → true
+        - different lengths after processing
+      complexity: Stack version O(m + n) time and space; two-pointer version O(m + n) time, O(1) space.
+    fn: backspaceCompare
+    starter: |
+      function backspaceCompare(s, t) {
+
+      }
+    solution: |
+      function backspaceCompare(s, t) {
+        const build = (str) => {
+          const st = [];
+          for (const c of str) { if (c === '#') st.pop(); else st.push(c); }
+          return st.join('');
+        };
+        return build(s) === build(t);
+      }
+    tests:
+      - args:
+          - ab#c
+          - ad#c
+        expect: true
+      - args:
+          - ab##
+          - c#d#
+        expect: true
+      - args:
+          - a#c
+          - b
+        expect: false
+      - args:
+          - a##c
+          - '#a#c'
+        expect: true
+        hidden: true
+      - args:
+          - xy#z
+          - xzz#
+        expect: true
+        hidden: true
+      - args:
+          - bxj##tw
+          - bxo#j##tw
+        expect: true
+        hidden: true
+    explain: '`pop()` on an empty array is harmless, which handles backspace on empty text.'
+    hints:
+      - Which structure models typing and backspace?
+      - Push letters; on '#', pop.
+annotated: []

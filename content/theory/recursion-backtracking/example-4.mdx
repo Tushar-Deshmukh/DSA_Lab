@@ -1,0 +1,34 @@
+---
+slug: example-4
+title: Example 4
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Example 4
+  lines:
+    - 1087
+    - 1106
+---
+
+**Example 4: permutations (46) with a `used` array.** Decision per level: which unused number goes in the next position.
+
+```js
+function permute(nums) {
+  const res = [], path = [], used = new Array(nums.length).fill(false);
+  function dfs() {
+    if (path.length === nums.length) { res.push([...path]); return; }
+    for (let i = 0; i < nums.length; i++) {
+      if (used[i]) continue;
+      used[i] = true; path.push(nums[i]);   // choose
+      dfs();                                 // explore
+      path.pop(); used[i] = false;           // unchoose
+    }
+  }
+  dfs();
+  return res;
+}
+```
+
+Permutations II (47) adds: sort, then skip `i` if `nums[i] === nums[i-1] && !used[i-1]` (use equal values only in left-to-right order).

@@ -1,0 +1,215 @@
+exercises:
+  - id: ex-01
+    legacyId: w11d5-1
+    type: predict
+    tag: The implement task
+    q: Predict each line, then run it in your console to check.
+    code: |
+      console.log((5).toString(2));
+      console.log((-5 >>> 0).toString(2));
+      console.log(1 << 31);
+      console.log((1 << 31) >>> 0);
+    answer: |-
+      101
+      11111111111111111111111111111011
+      -2147483648
+      2147483648
+    normalize: exact
+    traps:
+      ? "101\n-101\n-2147483648\n2147483648"
+      : '`>>> 0` turns −5 into its unsigned 32-bit value before printing, so you see all 32 bits of its two''s complement, not a minus sign.'
+      ? "101\n11111111111111111111111111111011\n2147483648\n2147483648"
+      : '`1 << 31` sets bit 31, the sign bit of a signed 32-bit integer: the result is negative.'
+    explain: '−5 = ~5 + 1: invert 101 and add 1. Bit 31 set means negative when signed, 2³¹ when unsigned.'
+    hints:
+      - Bitwise results are signed 32-bit integers.
+      - '`>>> 0` reinterprets the same 32 bits as unsigned.'
+  - id: ex-02
+    legacyId: w11d5-2
+    type: code
+    tag: Power of two (LeetCode 231)
+    q: Write `isPowerOfTwo(n)` without loops.
+    fn: isPowerOfTwo
+    starter: |
+      function isPowerOfTwo(n) {
+
+      }
+    solution: |
+      function isPowerOfTwo(n) {
+        return n > 0 && (n & (n - 1)) === 0;
+      }
+    tests:
+      - args:
+          - 1
+        expect: true
+      - args:
+          - 16
+        expect: true
+      - args:
+          - 3
+        expect: false
+      - args:
+          - 0
+        expect: false
+        hidden: true
+      - args:
+          - -16
+        expect: false
+        hidden: true
+      - args:
+          - 1073741824
+        expect: true
+        hidden: true
+    explain: 'A power of two has exactly one set bit, and `n & (n − 1)` clears it. The `n > 0` guard matters: 0 & −1 is 0, and negative numbers are never powers of two.'
+    hints:
+      - How many 1 bits does a power of two have?
+      - Which recipe removes the lowest set bit?
+      - What about 0 and negatives?
+  - id: ex-03
+    legacyId: w11d5-3
+    type: bug
+    tag: The unsigned result
+    q: This Reverse Bits is meant to return the unsigned 32-bit result. For `n = 1` it returns −2147483648 instead of 2147483648. Click the line.
+    code: |
+      function reverseBits(n) {
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+          res = (res << 1) | (n & 1);
+          n >>>= 1;
+        }
+        return res;
+      }
+    bug:
+      - 6
+    kind: impl
+    explain: Reversing 1 puts the 1 in bit 31. Every bitwise result in JavaScript is a **signed** 32-bit integer, so `res` reads as −2³¹. Return `res >>> 0` to reinterpret the same 32 bits as unsigned. (The current LeetCode 190 only gives even n ≤ 2³¹ − 2, so bit 31 of its result is never set; the general version needs the line.)
+    fix: |
+      return res >>> 0;
+    fine:
+      '3': Shifting res left and OR-ing in the low bit of n is right.
+      '4': '`>>>=` is the logical shift; for exactly 32 iterations `>>=` would also read bits 0..31 correctly, but `>>>` states the intent.'
+    hints:
+      - Which bit of res holds the 1 at the end?
+      - What does a signed 32-bit integer with bit 31 set mean?
+  - id: ex-04
+    legacyId: w11d5-4
+    type: code
+    tag: Subsets with a bitmask
+    q: 'Write `subsetSums(nums)`: return the sums of all 2ⁿ subsets, in mask order (mask 0, 1, 2, … where bit i set means nums[i] is included). n ≤ 10.'
+    fn: subsetSums
+    starter: |
+      function subsetSums(nums) {
+
+      }
+    solution: |
+      function subsetSums(nums) {
+        const n = nums.length, out = [];
+        for (let mask = 0; mask < (1 << n); mask++) {
+          let s = 0;
+          for (let i = 0; i < n; i++) if ((mask >> i) & 1) s += nums[i];
+          out.push(s);
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+        expect:
+          - 0
+          - 1
+          - 2
+          - 3
+      - args:
+          - - 5
+        expect:
+          - 0
+          - 5
+      - args:
+          - []
+        expect:
+          - 0
+      - args:
+          - - 1
+            - 10
+            - 100
+        expect:
+          - 0
+          - 1
+          - 10
+          - 11
+          - 100
+          - 101
+          - 110
+          - 111
+        hidden: true
+    explain: Mask m includes nums[i] exactly when bit i of m is 1, so counting from 0 to 2ⁿ − 1 visits every subset once.
+    hints:
+      - Loop mask from 0 to (1 << n) − 1.
+      - Check bit i with (mask >> i) & 1.
+  - id: ex-05
+    legacyId: w11d5-5
+    type: interview
+    title: Minimum Flips to Make a OR b Equal to c (LeetCode 1318)
+    q: 'Given positive integers a, b and c, return the minimum number of single-bit flips in a and b so that `(a | b) === c`. Example: a = 2, b = 6, c = 5 → 3.'
+    model:
+      clarify: |
+        - Values up to 10⁹, which fits in 31 bits, so bitwise operators are safe.
+        - Flips may be made in a, in b, or both.
+      brute: 'Try flip sets: exponential and unnecessary; bits are independent.'
+      optimize: |
+        Each bit position is independent. Look at bits x (of a), y (of b), z (of c). If z = 1, you need at least one of x, y to be 1: cost 1 if both are 0, else 0. If z = 0, both must be 0: cost x + y. Sum over the 31 positions (or loop while any of a, b, c is non-zero).
+      edges: |
+        - already equal → 0
+        - c = 0 → the number of set bits in a plus in b
+        - a bit set in both a and b where c has 0 → costs 2
+      complexity: O(31) = O(1) time and space.
+    fn: minFlips
+    starter: |
+      function minFlips(a, b, c) {
+
+      }
+    solution: |
+      function minFlips(a, b, c) {
+        let flips = 0;
+        while (a || b || c) {
+          const x = a & 1, y = b & 1, z = c & 1;
+          flips += z ? (x | y ? 0 : 1) : x + y;
+          a >>>= 1; b >>>= 1; c >>>= 1;
+        }
+        return flips;
+      }
+    tests:
+      - args:
+          - 2
+          - 6
+          - 5
+        expect: 3
+      - args:
+          - 4
+          - 2
+          - 7
+        expect: 1
+      - args:
+          - 1
+          - 2
+          - 3
+        expect: 0
+      - args:
+          - 8
+          - 3
+          - 5
+        expect: 3
+        hidden: true
+      - args:
+          - 1000000000
+          - 1
+          - 0
+        expect: 14
+        hidden: true
+    explain: The case "z = 0 but both x and y are 1" costs 2, which is the case most first attempts miss.
+    hints:
+      - Can a flip at one position affect another position?
+      - Handle each bit of c being 0 or 1 separately.
+      - If c's bit is 0, how many of a's and b's bits must change?
+annotated: []

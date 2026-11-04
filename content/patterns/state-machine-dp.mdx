@@ -1,0 +1,25 @@
+---
+slug: state-machine-dp
+number: '11.4'
+title: State-machine DP
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Pattern 11.4
+  lines:
+    - 2206
+    - 2215
+---
+
+**Pattern 11.4: State-machine DP**
+
+1. *Recognise:* a fixed set of modes with rules for moving between them each step.
+2. *Clues:* "cooldown", "transaction fee", "at most k transactions", "hold/sell".
+3. *From brute force:* recursion with (day, mode) as state; only 2–3 modes, so O(n) states.
+4. *Why it works:* the best value for each mode on day i depends only on the modes on day i − 1.
+5. *Template:* one variable per mode; compute the new values from the old ones simultaneously (store old values before overwriting).
+6. *Complexity:* O(n · modes), O(modes).
+7. *Variations:* 309 cooldown, stock with fee (714).
+8. *Inappropriate when:* modes are not finite or small.

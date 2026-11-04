@@ -1,0 +1,15 @@
+---
+slug: state-machine-dp
+title: State-machine DP (309)
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: State-machine DP (309)
+  lines:
+    - 2061
+    - 2061
+---
+
+**State-machine DP (309).** When the rules depend on a mode (holding a stock, in cooldown, free), make one variable per mode per day and write transitions between modes: `hold = max(hold, rest - price)`, `sold = hold + price`, `rest = max(rest, prevSold)`. Draw the mode diagram before coding.

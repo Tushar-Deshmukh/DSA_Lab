@@ -186,6 +186,8 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 - Tables 83 of 83 and code blocks 63 of 63 survive.
 - Compiling and rendering everything took 852 ms.
 
+**Phase 2 result.** js-yaml 5.5.0 and 4.1.0 parse all 424 legacy YAML blocks identically, except one value: `args: [[0, -0]]` in `w01.md:307`, where 5.5.0 reads -0 and 4.1.0 reads 0. The importer reads with 4.1.0, so `content/` holds the 0 that the legacy course ran with. A test records this exception. How the escaping is done changed: see D-028.
+
 **Fidelity gate (Phase 2).** Every lesson's rendered text equals the legacy renderer's text, apart from logged rewrites. Imported exercises deep-equal the legacy `dist/exercises.json`, apart from logged rewrites.
 
 **Rejected.**
@@ -488,3 +490,58 @@ idb-keyval was dropped (D-014). The rest of the second column is added in the ph
 - Hand-written validators instead of `zod/mini`: they would drift from the schemas the server uses.
 
 **Reversal cost.** Low. These are imports, and the budget test shows the effect of any change.
+
+---
+
+## D-027 Gated text: reserved statements and answers stay out of page payloads (Phase 2)
+
+**Context.** Plan question 5 settled the "after" units of checkpoints and the clue words, but three things were left that rule 3 or rule 4 still forbids on a public page:
+- Drill item 6 restates a problem of Assessment 1 exactly, in three places: the Module 3 checkpoint, the Foundations method lesson, and handbook section 7.3. Learners can open any of them before Assessment 1.
+- Section 1 ends with the answer key to the placement check.
+- Section 7.3 has the answers to the classification drill, which is also an exercise set.
+
+**Decision.** Gated text is held back until an event. No wording changes: the text only moves.
+- **An exercise** carries `gatedBy: <event>`. It is never synced and never ships in a page before the event. This covers the 27 exercises in checkpoint "after" units (`gatedBy` is that checkpoint's `gateId`), plus drill item 6 in both copies (`gatedBy: assessment-1`).
+- **A sentence in a page** moves to `content/reserved/gated.yaml`, and the page holds `<Gated id="…" />`. There are three: drill item 6, the drill answers, and the placement answer key.
+- **Events** are `assessment-N`, `mock-N`, `placement` and `classification-drill`.
+
+Phase 2 stores the data and enforces it in the checks and in sync. The endpoint and the component that reveal gated text come with checkpoints in Phase 6.
+
+**Rejected.**
+- Rewording drill item 6 so it no longer matches the problem: the content rules allow only dates, the rename and verified errors, and the drill would then differ from section 7.3.
+- Leaving it visible: it breaks "unseen stays unseen".
+- Dropping item 6: learners who have finished Assessment 1 lose nothing by seeing it, and the drill is meant to have 15 items.
+
+**Honest limit.** As in D-012, the gate is not a secret. Guests have no server-side state, so the event is reported by the browser.
+
+**Reversal cost.** Low. The exercises keep their text, and removing `gatedBy` or inlining a sentence restores the legacy page.
+
+---
+
+## D-028 Imported text is changed by reviewed edits, and proven by replaying a log (Phase 2)
+
+**Decision.**
+- Hand-reviewed edits name a line and the exact text they replace, and the importer stops if that text is not there. Regular-expression rules cover wording with one meaning everywhere ("Week 3", "Yesterday's"). Exercises are rewritten as parsed objects, and only in their text fields.
+- Every change goes to `docs/import/changes.json`, with its rule. `docs/date-rewrites.md` and `docs/content-changes.md` are generated from it.
+- The fidelity tests do not use the rewrite code. They replay the log over the untouched legacy files, parse with the ported legacy parsers, render with the legacy renderer, and compare with `content/`. Separate tests prove the ported parsers match the legacy build on the original files. Whatever is left is judged by the date check.
+- MDX stays byte-for-byte the legacy Markdown, except for a backslash before `{`, `}` and `<` in text. The syntax tree finds those; nothing is re-serialised (a refinement of D-008, which assumed the MDX serialiser). Re-serialising would have changed list markers, table padding and escapes across every file, and the files would no longer read like their source.
+
+**Rejected.**
+- Rewrite rules alone: many sentences depend on context, so a rule would have produced wrong text with nothing to catch it.
+- Writing the new text directly into `content/` without a log: nothing could prove what else changed.
+- Comparing the new MDX only with the importer's own output: that proves nothing.
+
+**Reversal cost.** Low. This is tooling, and `content/` stays plain MDX and YAML without it.
+
+---
+
+## D-029 The repository is public (your choice, 2026-11-04)
+
+**Decision.** You chose to keep the GitHub repository public, after a warning about what that exposes.
+
+**Consequences.**
+- Everything in the repository can be read by anyone: answers, solutions, hidden tests, `content/reserved/` and the brief. A learner can read the reserved problems on GitHub.
+- "Unseen stays unseen" therefore means that the product never shows them early: they stay out of pages, bundles, search and sitemaps. It does not mean they are secret.
+- No secrets go in the repository. The Atlas connection string and other credentials stay in Vercel's settings.
+
+**Reversal cost.** Low. The repository can be made private in its settings at any time, although GitHub limits CI minutes on private repositories and anything already public may have been copied.

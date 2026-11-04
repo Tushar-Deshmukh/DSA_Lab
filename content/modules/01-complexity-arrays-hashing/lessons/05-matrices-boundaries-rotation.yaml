@@ -1,0 +1,213 @@
+exercises:
+  - id: ex-01
+    legacyId: w1d5-1
+    type: predict
+    tag: Out of bounds
+    q: What does this print?
+    code: |
+      const grid = [[1, 2], [3, 4]];
+      console.log(grid[2]);
+      try { console.log(grid[-1][0]); }
+      catch (e) { console.log(e.name); }
+      console.log(grid[0][5]);
+    answer: |-
+      undefined
+      TypeError
+      undefined
+    normalize: exact
+    traps:
+      ? "undefined\nundefined\nundefined"
+      : '`grid[-1]` is `undefined`, and reading `[0]` of `undefined` throws a TypeError; it does not return `undefined`.'
+    explain: 'A missing row is `undefined` and indexing into it throws. A missing column of an existing row just gives `undefined`. Both are bugs waiting to happen: bounds-check first.'
+    hints:
+      - What is `grid[-1]`, and what happens when you index into it?
+  - id: ex-02
+    legacyId: w1d5-2
+    type: mcq
+    tag: Neighbours
+    q: Cell `(0, 2)` in a 3 × 3 grid. Which of its 4-directional neighbours exist?
+    options:
+      - t: (1, 2) and (0, 1)
+        ok: true
+        why: 'Down and left. Up would be row −1 and right would be column 3: both out of bounds.'
+      - t: (1, 2), (0, 1) and (0, 3)
+        why: Column 3 does not exist in a 3-column grid (columns 0–2).
+        kind: impl
+      - t: (1, 2), (-1, 2), (0, 1) and (0, 3)
+        why: Corner cells have only two neighbours.
+        kind: impl
+    explain: Corner cells have 2 neighbours, edge cells 3, interior cells 4.
+    hints:
+      - Which rows and columns are valid?
+  - id: ex-03
+    legacyId: w1d5-3
+    type: bug
+    tag: The edge cases
+    q: This version outputs `[1, 2, 3, 4, 3, 2]` for the single row `[[1, 2, 3, 4]]`. Click the line where the missing check belongs.
+    code: |
+      function spiralOrder(m) {
+        const out = [];
+        let top = 0, bottom = m.length - 1, left = 0, right = m[0].length - 1;
+        while (top <= bottom && left <= right) {
+          for (let c = left; c <= right; c++) out.push(m[top][c]);
+          top++;
+          for (let r = top; r <= bottom; r++) out.push(m[r][right]);
+          right--;
+          for (let c = right; c >= left; c--) out.push(m[bottom][c]);
+          bottom--;
+          for (let r = bottom; r >= top; r--) out.push(m[r][left]);
+          left++;
+        }
+        return out;
+      }
+    bug:
+      - 8
+    kind: impl
+    explain: 'After the top row, `top` (1) is past `bottom` (0): there is no bottom row left, but this loop walks row `bottom` = 0 again, backwards. Guard it with `if (top <= bottom)`. The left pass needs `if (left <= right)` for the n × 1 case.'
+    fix: |
+      if (top <= bottom) {
+        for (let c = right; c >= left; c--) out.push(m[bottom][c]);
+        bottom--;
+      }
+      if (left <= right) {
+        for (let r = bottom; r >= top; r--) out.push(m[r][left]);
+        left++;
+      }
+    fine:
+      '3': The loop condition is right; the problem is inside the loop.
+      '4': The top pass always runs on a valid row.
+      '6': This loop simply does not run when top > bottom, so it is safe.
+    hints:
+      - Trace the single-row case. Which pass outputs elements a second time?
+  - id: ex-04
+    legacyId: w1d5-4
+    type: trace
+    tag: By hand
+    q: Rotate `[[1,2,3],[4,5,6],[7,8,9]]` clockwise by transpose + reverse.
+    rows:
+      - prompt: Number of swaps in the transpose (j > i only)
+        answer: '3'
+        why: (0,1)↔(1,0), (0,2)↔(2,0), (1,2)↔(2,1).
+      - prompt: Row 0 after the transpose
+        answer:
+          - '[1,4,7]'
+        why: Row 0 becomes the old column 0.
+      - prompt: Row 0 after reversing
+        answer:
+          - '[7,4,1]'
+      - prompt: The final matrix
+        answer:
+          - '[[7,4,1],[8,5,2],[9,6,3]]'
+    verify: |
+      const m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]; let swaps = 0;
+      for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) { [m[i][j], m[j][i]] = [m[j][i], m[i][j]]; swaps++; }
+      console.log(swaps); console.log(JSON.stringify(m[0]));
+      for (const row of m) row.reverse();
+      console.log(JSON.stringify(m[0])); console.log(JSON.stringify(m));
+    explain: 'Check one element directly: 1 was at (0, 0) and should end at (0, 2). It did.'
+    hints:
+      - Only swap pairs with j > i; swapping every pair twice undoes the transpose.
+  - id: ex-05
+    legacyId: w1d5-5
+    type: mcq
+    tag: Variations
+    q: How do you rotate 90° **counter-clockwise** in place?
+    options:
+      - t: 'Transpose, then reverse each column (equivalently: reverse each row first, then transpose).'
+        ok: true
+        why: (r, c) → (c, r) → (n − 1 − c, r), which is the counter-clockwise rotation.
+      - t: Transpose twice.
+        why: Transposing twice gives back the original matrix.
+        kind: concept
+      - t: Reverse each row, then reverse each row again.
+        why: That also restores the original.
+        kind: concept
+    explain: Pattern 1.4 lists it as a variation. Check any proposed sequence on one element.
+    hints:
+      - Where should the top-right element end up?
+  - id: ex-06
+    legacyId: w1d5-6
+    type: interview
+    title: Spiral Matrix II (LeetCode 59)
+    q: 'Given a positive integer `n`, generate an n × n matrix filled with the numbers 1 to n² in spiral order. Example: `n = 3` → `[[1,2,3],[8,9,4],[7,6,5]]`.'
+    model:
+      clarify: |
+        - n ≥ 1; n = 1 → `[[1]]`.
+        - Clockwise, starting at the top-left.
+      brute: 'Simulate a walker with a direction and a visited matrix, turning when the next cell is out of bounds or filled: O(n²) time and space (the output is O(n²) anyway).'
+      optimize: Same four boundaries as Spiral Matrix, but write a counter instead of reading values. Because the matrix is square, the `if` checks before the bottom and left passes still matter for odd n (the centre cell).
+      edges: |
+        - n = 1 → [[1]]
+        - n = 2 → [[1,2],[4,3]]
+        - odd n: the centre is filled exactly once
+      complexity: O(n²) time, O(1) extra space besides the output.
+    fn: generateMatrix
+    starter: |
+      function generateMatrix(n) {
+        const m = Array.from({ length: n }, () => new Array(n).fill(0));
+
+        return m;
+      }
+    solution: |
+      function generateMatrix(n) {
+        const m = Array.from({ length: n }, () => new Array(n).fill(0));
+        let top = 0, bottom = n - 1, left = 0, right = n - 1, v = 1;
+        while (top <= bottom && left <= right) {
+          for (let c = left; c <= right; c++) m[top][c] = v++;
+          top++;
+          for (let r = top; r <= bottom; r++) m[r][right] = v++;
+          right--;
+          if (top <= bottom) { for (let c = right; c >= left; c--) m[bottom][c] = v++; bottom--; }
+          if (left <= right) { for (let r = bottom; r >= top; r--) m[r][left] = v++; left++; }
+        }
+        return m;
+      }
+    tests:
+      - args:
+          - 1
+        expect:
+          - - 1
+      - args:
+          - 2
+        expect:
+          - - 1
+            - 2
+          - - 4
+            - 3
+      - args:
+          - 3
+        expect:
+          - - 1
+            - 2
+            - 3
+          - - 8
+            - 9
+            - 4
+          - - 7
+            - 6
+            - 5
+      - args:
+          - 4
+        expect:
+          - - 1
+            - 2
+            - 3
+            - 4
+          - - 12
+            - 13
+            - 14
+            - 5
+          - - 11
+            - 16
+            - 15
+            - 6
+          - - 10
+            - 9
+            - 8
+            - 7
+        hidden: true
+    explain: 'Writing instead of reading: the boundary logic is identical.'
+    hints:
+      - Reuse the spiral boundaries from this lesson.
+      - Write v++ into each cell instead of pushing values.
+annotated: []

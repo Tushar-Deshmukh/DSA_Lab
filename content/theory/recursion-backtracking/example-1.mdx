@@ -1,0 +1,27 @@
+---
+slug: example-1
+title: Example 1
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Example 1
+  lines:
+    - 1015
+    - 1027
+---
+
+**Example 1: fast power (50), recursion that halves the problem.**
+
+```js
+function myPow(x, n) {
+  if (n < 0) return 1 / myPow(x, -n);   // handle negative exponent once
+  if (n === 0) return 1;                // base case
+  // compute once and reuse: this is the whole trick
+  const half = myPow(x, Math.floor(n / 2));
+  return n % 2 === 0 ? half * half : half * half * x;
+}
+```
+
+Calling `myPow(x, n/2)` twice instead of storing `half` turns O(log n) into O(n). Recursion tree with storing: one branch per level, log₂ n levels.

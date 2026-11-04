@@ -1,0 +1,46 @@
+---
+slug: dynamic-programming
+section: 6
+title: 6.17 Dynamic programming
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.17 Dynamic programming
+  lines:
+    - 3118
+    - 3151
+---
+
+```js
+// Top-down with a numeric memo for two indices (faster than string keys)
+function lcsMemo(a, b) {
+  const m = a.length, n = b.length;
+  const memo = new Array((m + 1) * (n + 1)).fill(-1);
+  function f(i, j) {                            // LCS of a[i..] and b[j..]
+    if (i === m || j === n) return 0;
+    const key = i * (n + 1) + j;
+    if (memo[key] !== -1) return memo[key];
+    const res = a[i] === b[j]
+      ? 1 + f(i + 1, j + 1)
+      : Math.max(f(i + 1, j), f(i, j + 1));
+    memo[key] = res;
+    return res;
+  }
+  return f(0, 0);
+}
+
+// Bottom-up with two rolling rows
+function lcs(a, b) {
+  let prev = new Array(b.length + 1).fill(0);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = new Array(b.length + 1).fill(0);
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = a[i - 1] === b[j - 1]
+        ? prev[j - 1] + 1
+        : Math.max(prev[j], cur[j - 1]);
+    }
+    prev = cur;
+  }
+  return prev[b.length];
+}
+```

@@ -1,0 +1,211 @@
+---
+slug: partitioning-and-kadane
+legacyId: w2d2
+title: Partitioning and Kadane
+goal: Partition an array into three groups in one pass, prove which wall to move in Container With Most Water, and derive Kadane's algorithm from the brute force.
+why: 'This lesson has three ideas that recur constantly: an *invariant* that describes regions of the array (partitioning, used again by quicksort in the next module), a *proof* that one pointer move is safe (the container argument), and your first *dynamic programming* step, "the best answer ending here", which Module 10 generalises.'
+prereqs:
+  - The previous lesson's opposite-end loop and its "discard what cannot win" argument
+  - 'Swapping two array elements: `[a[i], a[j]] = [a[j], a[i]]`'
+  - Running sums
+outcomes:
+  - State the Dutch-flag invariant and explain why `mid` does not advance after a swap with `high`
+  - Prove that moving the shorter wall in problem 11 never discards the best container
+  - Derive `cur = max(x, cur + x)` from the O(n²) brute force, and explain the `nums[0]` initialisation
+ready:
+  - I traced the Dutch flag on `[2,0,2,1,1,0]` and my regions matched the visualizer at every step
+  - I wrote Kadane from the sentence "the best subarray ending here either extends the previous one or starts fresh", not from memory
+  - I can explain why `cur` and `best` start at `nums[0]` and not at 0
+summary:
+  - 'Dutch flag: `[0,low)` = 0s, `[low,mid)` = 1s, `(high,n−1]` = 2s, `[mid,high]` unknown. Each step shrinks the unknown region by one.'
+  - After swapping with `high`, the value arriving at `mid` is unchecked, so `mid` stays.
+  - 'Container: the shorter wall caps every narrower container that uses it, so it can be discarded.'
+  - 'Kadane: best ending at i = max(a[i], best ending at i−1 + a[i]). Keep one number, not a table: O(n), O(1).'
+  - Start Kadane at `nums[0]`; starting at 0 returns 0 for all-negative input.
+revision: Explain from memory why `mid` stays put after the swap with `high`, and write Kadane in four lines. Then state the one-sentence proof for Container With Most Water.
+warmup:
+  problem: 167
+topic: Same-direction partitioning (Dutch flag); Kadane derived from brute force
+implement: Dutch flag trace on `[2,0,2,1,1,0]`; Kadane trace on `[-2,1,-3,4,-1,2,1,-5,4]`
+problemsText: 'C: 11, 53 · S: 75 · O: 42'
+problems:
+  - num: 11
+    tier: C
+  - num: 53
+    tier: C
+  - num: 75
+    tier: S
+  - num: 42
+    tier: O
+doneWhen: Kadane written from the "best ending here" sentence, not from memory
+estimate:
+  T: 20
+  I: 20
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="same-direction-pointers-the-dutch-national-flag" kind="theory" title="Same-direction pointers: the Dutch national flag">
+
+In the previous lesson both pointers walked *towards* each other. Same-direction pointers walk the *same* way and split the array into regions that each mean something. You met the simplest version in Module 1 (Move Zeroes: a write pointer behind a read pointer). Sort Colors needs three groups, so it needs three pointers.
+
+<Include id="patterns/same-direction-partitioning" />
+
+Picture the array as four regions, always in this order:
+
+| region | indices | contains |
+| --- | --- | --- |
+| zeros | `[0, low)` | only 0s, final |
+| ones | `[low, mid)` | only 1s, final |
+| unknown | `[mid, high]` | not yet examined |
+| twos | `(high, n − 1]` | only 2s, final |
+
+At the start, everything is unknown (`low = mid = 0`, `high = n − 1`). Each step looks at `nums[mid]`, the first unknown value, and moves it into the right region. When the unknown region is empty (`mid > high`), the array is sorted.
+
+<Viz id="dutch-flag" />
+
+<Callout kind="key" title="Why `mid` does not move after a swap with `high`">
+
+When `nums[mid]` is 2, you swap it with `nums[high]`. The value that arrives at `mid` came from the *unknown* region, so nobody has looked at it yet. It might be a 0 or a 2. Advancing `mid` would leave it unclassified. A swap with `low` is different: the value arriving from `low` is from the 1s region (or it is the same element when `low === mid`), so it is already known to be a 1.
+
+</Callout>
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="proving-a-pointer-move-container-with-most-water" kind="theory" title="Proving a pointer move: Container With Most Water">
+
+Problem 11 looks like the previous lesson's pair search, but there is no target. You want the pair of walls `(l, r)` that maximises `min(h[l], h[r]) × (r − l)`. Start with the widest pair. Which wall should move?
+
+The area is capped by the **shorter** wall. Suppose `h[l] < h[r]`. Every other container that uses wall `l` is *narrower* (its right wall is closer) and still capped at height `h[l]` or lower. So none of them can beat the current area. Wall `l` has nothing left to offer: discard it. Moving the taller wall could never help, because the shorter wall would still be the cap while the width shrinks.
+
+<Viz id="container" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="kadanes-algorithm-derived" kind="theory" title="Kadane's algorithm, derived">
+
+<Include id="theory/two-pointers-windows-prefix-sums/kadanes-algorithm" />
+
+You will not memorise Kadane. You will derive it, because the derivation is the reusable part.
+
+<Stages title="Maximum Subarray (problem 53), from brute force to one pass">
+
+<Stage name="problem" label="Understand the problem">
+
+Given `nums`, find the contiguous subarray with the largest sum and return the sum. `nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]` → 6, from `[4, -1, 2, 1]`. Constraints allow n up to 10⁵, so O(n²) (10¹⁰) is too slow and the target is O(n) or O(n log n).
+
+</Stage>
+
+<Stage name="naive" label="Naive approach">
+
+Try every start `i` and every end `j ≥ i`. Summing each subarray from scratch is O(n³). Keeping a running sum as `j` grows makes it O(n²):
+
+```js
+function maxSubArrayBrute(nums) {
+  let best = -Infinity;
+  for (let i = 0; i < nums.length; i++) {
+    let sum = 0;
+    for (let j = i; j < nums.length; j++) {
+      sum += nums[j];              // sum of nums[i..j]
+      best = Math.max(best, sum);
+    }
+  }
+  return best;
+}
+```
+
+<Exercise id="ex-05" />
+
+</Stage>
+
+<Stage name="insight" label="Discover the optimisation">
+
+Turn the loops around: fix the **end** `j` instead of the start. Ask: *what is the best subarray that ends exactly at j?* It either
+
+- is just `[nums[j]]`, or
+- extends the best subarray ending at `j − 1` by one element.
+
+Nothing else is possible: any subarray ending at j that is longer than one element consists of a subarray ending at j − 1, plus `nums[j]`, and the best such one uses the best subarray ending at j − 1. So
+
+`bestEnding[j] = max(nums[j], bestEnding[j − 1] + nums[j])`
+
+and the answer is the largest `bestEnding[j]` over all j. In words: **if the best sum ending just before here is negative, drop it and start fresh**.
+
+| j | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| nums[j] | −2 | 1 | −3 | 4 | −1 | 2 | 1 | −5 | 4 |
+| bestEnding[j] | −2 | 1 | −2 | 4 | 3 | 5 | **6** | 1 | 5 |
+| choice | start | restart | extend | restart | extend | extend | extend | extend | extend |
+
+Each value needs only the previous one, so the table collapses into a single variable `cur`.
+
+</Stage>
+
+<Stage name="dryrun" label="Visual dry run">
+
+<Viz id="kadane" />
+
+</Stage>
+
+<Stage name="code" label="JavaScript implementation">
+
+<Include id="theory/two-pointers-windows-prefix-sums/example-4" />
+
+<AnnotatedCode id="anno-01" />
+
+</Stage>
+
+<Stage name="complexity" label="Complexity derivation">
+
+One loop of n − 1 iterations, O(1) work each: **O(n) time**. Two variables: **O(1) space**. The table version would be O(n) space; noticing that each entry needs only the previous one is the same space optimisation you will make in Module 10 DP problems.
+
+</Stage>
+
+<Stage name="practice" label="Independent practice">
+
+<Exercise id="ex-06" />
+
+<Exercise id="ex-07" />
+
+</Stage>
+
+</Stages>
+
+<Include id="patterns/kadane" />
+
+<Exercise id="ex-08" />
+
+</Unit>
+
+<Unit id="optional-trapping-rain-water" kind="stretch" title="Optional: Trapping Rain Water">
+
+Problem 42 (Optional in this lesson) combines both ideas. Water above index i is `min(maxLeft, maxRight) − height[i]`. Two pointers work because whichever side has the smaller maximum is the limit: if `height[l] < height[r]`, the right side already has a wall at least as tall as `leftMax`, so the left maximum decides index `l`.
+
+<Viz id="trap" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-09" />
+
+<Callout kind="mistake" title="Mistakes to watch for in this lesson">
+
+- Advancing `mid` after the swap with `high` in the Dutch flag.
+- Writing `mid < high` instead of `mid <= high`: the last unknown element is never classified.
+- Moving the taller wall in problem 11 "to look for a bigger one".
+- Initialising Kadane with 0, which breaks all-negative input.
+- Using `r − l + 1` as the container width: walls at indices 0 and 8 are 8 apart.
+
+</Callout>
+
+</Unit>

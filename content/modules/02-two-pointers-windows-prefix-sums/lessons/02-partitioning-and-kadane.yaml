@@ -1,0 +1,392 @@
+exercises:
+  - id: ex-01
+    legacyId: w2d2-1
+    type: trace
+    tag: Your turn
+    q: Trace `sortColors` on `nums = [2, 0, 1]`. After each loop iteration, write the array and the three pointers as `low,mid,high`.
+    code: |
+      let low = 0, mid = 0, high = nums.length - 1;
+      while (mid <= high) {
+        if (nums[mid] === 0) { [nums[low], nums[mid]] = [nums[mid], nums[low]]; low++; mid++; }
+        else if (nums[mid] === 1) mid++;
+        else { [nums[mid], nums[high]] = [nums[high], nums[mid]]; high--; }
+      }
+    rows:
+      - prompt: Array after iteration 1
+        answer: '[1,0,2]'
+        why: 'nums[0] = 2: swap with index 2, high becomes 1.'
+      - prompt: low,mid,high after iteration 1
+        answer: 0,0,1
+        why: mid stays at 0 because the 1 that arrived is unchecked.
+      - prompt: Array after iteration 2
+        answer: '[1,0,2]'
+        why: nums[0] = 1, so only mid moves.
+      - prompt: low,mid,high after iteration 3
+        answer: 1,2,1
+        why: 'nums[1] = 0: swap with low (index 0) → [0,1,2]; low and mid both advance. Now mid > high, so the loop ends.'
+    verify: |
+      const nums = [2, 0, 1]; let low = 0, mid = 0, high = nums.length - 1; const out = [];
+      while (mid <= high) {
+        if (nums[mid] === 0) { [nums[low], nums[mid]] = [nums[mid], nums[low]]; low++; mid++; }
+        else if (nums[mid] === 1) mid++;
+        else { [nums[mid], nums[high]] = [nums[high], nums[mid]]; high--; }
+        out.push([JSON.stringify(nums), [low, mid, high].join(',')]);
+      }
+      console.log(out[0][0]); console.log(out[0][1]); console.log(out[1][0]); console.log(out[2][1]);
+    explain: Three iterations for three elements. Each iteration shrinks the unknown region by exactly one.
+    hints:
+      - Iteration 1 looks at nums[0] = 2.
+  - id: ex-02
+    legacyId: w2d2-2
+    type: bug
+    tag: The classic slip
+    q: This version sometimes leaves a 0 in the middle. For example, `[2, 0, 1]` becomes `[1, 0, 2]`. Click the buggy line.
+    code: |
+      function sortColors(nums) {
+        let low = 0, mid = 0, high = nums.length - 1;
+        while (mid <= high) {
+          if (nums[mid] === 0) {
+            [nums[low], nums[mid]] = [nums[mid], nums[low]];
+            low++; mid++;
+          } else if (nums[mid] === 1) {
+            mid++;
+          } else {
+            [nums[mid], nums[high]] = [nums[high], nums[mid]];
+            high--; mid++;
+          }
+        }
+      }
+    bug:
+      - 10
+    kind: impl
+    explain: After swapping with `high`, the value now at `mid` came from the unknown region and has not been examined. `mid++` skips it. On `[2, 0, 1]` the 1 arrives at index 0 and is skipped; then index 1 (the 0) is skipped too, because `mid` passes `high`. Remove `mid++` from this branch.
+    fix: |
+      [nums[mid], nums[high]] = [nums[high], nums[mid]];
+      high--;
+    fine:
+      '2': '`<=`, not `<`: when `mid === high` there is still one unknown element to classify.'
+      '5': 'Advancing both is right here: the value that came from `low` is a 1 (already classified), or the same element.'
+    hints:
+      - Which swap brings an *unexamined* value to position `mid`?
+  - id: ex-03
+    legacyId: w2d2-3
+    type: mcq
+    tag: The proof
+    q: Heights `[1, 8, 6, 2, 5, 4, 8, 3, 7]`, `l = 0` (height 1), `r = 8` (height 7). Area = 1 × 8 = 8. Why is it safe to move `l`?
+    options:
+      - t: Every other container using wall 0 is narrower than 8 and still at most 1 tall, so none can have area above 8.
+        ok: true
+        why: The shorter wall caps the height; width only decreases from here.
+      - t: Because moving the taller wall is never useful in any two-pointer problem.
+        why: That is a slogan, not a reason. In 167 the rule is about sums, not heights.
+        kind: concept
+      - t: Because height 1 is the smallest in the array.
+        why: It also happens to be the smallest, but the argument works whenever h[l] < h[r], even if smaller walls exist elsewhere.
+        kind: concept
+      - t: Because area 8 is already the answer.
+        why: The answer here is 49 (walls 1 and 8). Moving l is how we find it.
+        kind: concept
+    explain: 'Practise saying it: "The shorter wall limits the height, and any other container with that wall is narrower, so it can''t do better. Discard it."'
+    hints:
+      - What happens to the width if you keep wall 0 and choose any other right wall?
+  - id: ex-04
+    legacyId: w2d2-4
+    type: fill
+    tag: From memory
+    q: Complete `maxArea`. Your version runs against the tests.
+    template: |
+      function maxArea(height) {
+        let l = 0, r = height.length - 1, best = 0;
+        while (l < r) {
+          const h = [[0]];
+          best = Math.max(best, [[1]]);
+          if (height[l] < height[r]) l++;
+          else [[2]];
+        }
+        return best;
+      }
+    blanks:
+      - accept:
+          - Math.min(height[l], height[r])
+          - Math.min(height[r], height[l])
+      - accept:
+          - h * (r - l)
+          - (r - l) * h
+          - h*(r-l)
+      - accept:
+          - r--
+          - r -= 1
+          - --r
+          - r = r - 1
+    fn: maxArea
+    tests:
+      - args:
+          - - 1
+            - 8
+            - 6
+            - 2
+            - 5
+            - 4
+            - 8
+            - 3
+            - 7
+        expect: 49
+      - args:
+          - - 1
+            - 1
+        expect: 1
+      - args:
+          - - 4
+            - 3
+            - 2
+            - 1
+            - 4
+        expect: 16
+      - args:
+          - - 1
+            - 2
+            - 1
+        expect: 2
+      - args:
+          - - 2
+            - 3
+            - 10
+            - 5
+            - 7
+            - 8
+            - 9
+        expect: 36
+    explain: Width is `r − l` (the distance between the walls), not `r − l + 1`.
+    hints:
+      - The water level is set by the shorter wall.
+  - id: ex-05
+    legacyId: w2d2-5
+    type: complexity
+    tag: Analyse the brute force
+    q: What does the running-sum brute force cost?
+    code: |
+      for (let i = 0; i < n; i++) {
+        let sum = 0;
+        for (let j = i; j < n; j++) { sum += nums[j]; best = Math.max(best, sum); }
+      }
+    fields:
+      - label: Time
+        answer: O(n²)
+        why:
+          O(n³): That would be true if each subarray were summed from scratch. The running sum makes each (i, j) pair O(1).
+          O(n log n): 'The inner loop runs n − i times: n + (n−1) + … + 1 = n(n+1)/2.'
+      - label: Extra space
+        answer: O(1)
+    explain: 'n(n+1)/2 pairs of (i, j), O(1) work each: O(n²) time, O(1) space.'
+    hints:
+      - Count how many (i, j) pairs the two loops visit.
+  - id: ex-06
+    legacyId: w2d2-6
+    type: predict
+    tag: The initialisation trap
+    q: Someone started Kadane at 0. What does this print?
+    code: |
+      function maxSubArrayZero(nums) {
+        let cur = 0, best = 0;
+        for (const x of nums) {
+          cur = Math.max(x, cur + x);
+          best = Math.max(best, cur);
+        }
+        return best;
+      }
+      console.log(maxSubArrayZero([-3, -1, -2]));
+    answer: '0'
+    traps:
+      '-1': 'That is the correct answer to the problem, but this code starts `best` at 0, and no `cur` ever exceeds 0, so it returns 0: a sum of an empty subarray, which the problem does not allow.'
+      '-6': That would be the sum of the whole array. Kadane never adds everything here because each element restarts.
+    explain: '`best` starts at 0 and every `cur` is negative (−3, −1, −2), so `best` never changes. The problem requires a non-empty subarray, so the right answer is −1. Initialise with `nums[0]`.'
+    hints:
+      - 'Track `best`: what is it before the loop, and does any `cur` beat it?'
+  - id: ex-07
+    legacyId: w2d2-7
+    type: code
+    tag: Write it from the sentence
+    q: Write `maxSubArray(nums)` (problem 53) from the sentence "the best subarray ending here either extends the previous one or starts fresh". Do not scroll up.
+    fn: maxSubArray
+    starter: |
+      function maxSubArray(nums) {
+
+      }
+    solution: |
+      function maxSubArray(nums) {
+        let cur = nums[0], best = nums[0];
+        for (let i = 1; i < nums.length; i++) {
+          cur = Math.max(nums[i], cur + nums[i]);
+          best = Math.max(best, cur);
+        }
+        return best;
+      }
+    tests:
+      - args:
+          - - -2
+            - 1
+            - -3
+            - 4
+            - -1
+            - 2
+            - 1
+            - -5
+            - 4
+        expect: 6
+      - args:
+          - - 1
+        expect: 1
+      - args:
+          - - 5
+            - 4
+            - -1
+            - 7
+            - 8
+        expect: 23
+      - args:
+          - - -3
+            - -1
+            - -2
+        expect: -1
+        hidden: true
+      - args:
+          - - -1
+        expect: -1
+        hidden: true
+      - args:
+          - - 2
+            - -1
+            - 2
+            - -1
+            - 2
+        expect: 4
+        hidden: true
+      - args:
+          - - 0
+            - 0
+            - 0
+        expect: 0
+        hidden: true
+    explain: The hidden all-negative test catches a 0 initialisation.
+    hints:
+      - 'Two variables: the best sum ending at the current index, and the best overall.'
+      - Start both at nums[0] and loop from index 1.
+  - id: ex-08
+    legacyId: w2d2-8
+    type: pattern
+    tag: Spot the disguise
+    q: 'Problem 121: given daily prices, buy on one day and sell on a later day for the largest profit. Which statement is true?'
+    options:
+      - t: 'It is Kadane on the daily differences `prices[i] − prices[i−1]`: a profit is the sum of a contiguous run of differences.'
+        ok: true
+        why: Selling on day j after buying on day i earns the sum of differences i+1..j, so the best profit is the maximum subarray of differences (or 0).
+      - t: It needs two nested loops because the buy day must come before the sell day.
+        why: That is the brute force. Tracking the minimum price so far (or Kadane on differences) does it in one pass.
+        kind: concept
+      - t: It is a sliding window with a fixed size.
+        why: The holding period can be any length.
+        kind: concept
+    explain: The handbook lists 121 as Kadane on differences. The other one-pass form, "best profit = price − lowest price so far", is the same idea seen from the sell day.
+    hints:
+      - Write profit(i, j) as a sum of consecutive differences.
+  - id: ex-09
+    legacyId: w2d2-9
+    type: interview
+    title: Maximum Sum Circular Subarray (LeetCode 918)
+    q: '`nums` is circular: the element after the last one is the first one. Return the maximum sum of a non-empty subarray, where a subarray may wrap around the end but uses each element at most once. Example: `[5, -3, 5]` → 10 (wrapping `[5, 5]`). Constraints: 1 ≤ n ≤ 3·10⁴, −3·10⁴ ≤ nums[i] ≤ 3·10⁴.'
+    model:
+      clarify: |
+        - Non-empty subarray, so all-negative input returns the largest element.
+        - Each element at most once, so the window cannot be longer than n.
+        - Is n ≥ 1 guaranteed? (Yes.)
+      brute: 'Try every start and every length 1..n with indices taken mod n: O(n²) time, O(1) space. Too slow for 3·10⁴ in the worst case only by a little, but still worth stating first.'
+      optimize: |
+        A best subarray either does **not** wrap (plain Kadane gives it) or **does** wrap. A wrapping subarray is the whole array minus a contiguous middle part, and it is largest when that middle part has the *minimum* sum. So run Kadane twice in one pass, once for the maximum and once for the minimum subarray sum: answer = max(maxSum, total − minSum). Exception: if every number is negative, `total − minSum` corresponds to an empty subarray, so return `maxSum`.
+      edges: |
+        - All negative `[-3, -2, -3]` → −2 (not 0)
+        - Single element `[7]` → 7
+        - No wrap needed `[1, -2, 3, -2]` → 3
+        - Wrap needed `[5, -3, 5]` → 10
+      complexity: O(n) time, one pass with four running values; O(1) space.
+    fn: maxSubarraySumCircular
+    starter: |
+      function maxSubarraySumCircular(nums) {
+
+      }
+    solution: |
+      function maxSubarraySumCircular(nums) {
+        let total = 0, curMax = 0, curMin = 0, maxSum = -Infinity, minSum = Infinity;
+        for (const x of nums) {
+          curMax = Math.max(x, curMax + x); maxSum = Math.max(maxSum, curMax);
+          curMin = Math.min(x, curMin + x); minSum = Math.min(minSum, curMin);
+          total += x;
+        }
+        return maxSum < 0 ? maxSum : Math.max(maxSum, total - minSum);
+      }
+    tests:
+      - args:
+          - - 1
+            - -2
+            - 3
+            - -2
+        expect: 3
+      - args:
+          - - 5
+            - -3
+            - 5
+        expect: 10
+      - args:
+          - - -3
+            - -2
+            - -3
+        expect: -2
+      - args:
+          - - 7
+        expect: 7
+        hidden: true
+      - args:
+          - - 3
+            - -1
+            - 2
+            - -1
+        expect: 4
+        hidden: true
+      - args:
+          - - 3
+            - -2
+            - 2
+            - -3
+        expect: 3
+        hidden: true
+      - args:
+          - - -2
+            - 4
+            - -5
+            - 4
+            - -5
+            - 9
+            - 4
+        expect: 15
+        hidden: true
+    explain: '`maxSum < 0` means every element is negative; then the wrap formula would describe an empty subarray.'
+    hints:
+      - 'Split the answer into two cases: the subarray wraps, or it does not.'
+      - A wrapping subarray is everything except a contiguous middle part.
+      - Which middle part should you remove to make the rest as large as possible?
+annotated:
+  - id: anno-01
+    code: |-
+      function maxSubArray(nums) {
+        let cur = nums[0], best = nums[0];
+        for (let i = 1; i < nums.length; i++) {
+          cur = Math.max(nums[i], cur + nums[i]);
+          best = Math.max(best, cur);
+        }
+        return best;
+      }
+    notes:
+      '2': '`cur` = best sum of a subarray ending at the current index; `best` = best seen anywhere. Both start at `nums[0]`, the only subarray ending at index 0.'
+      '3': Start at 1 because index 0 is already handled.
+      '4': The whole derivation in one line. `cur + nums[i]` extends; `nums[i]` restarts.
+      '5': The answer can end anywhere, so keep the maximum of every `cur`.
+    title: Kadane, line by line

@@ -1,0 +1,283 @@
+exercises:
+  - id: ex-01
+    legacyId: w8d3-1
+    type: code
+    tag: BFS distances
+    q: 'Write `shortestPath(n, edges, src, dst)`: the minimum number of edges from src to dst in an undirected graph, or −1 if unreachable.'
+    fn: shortestPath
+    starter: |
+      function shortestPath(n, edges, src, dst) {
+
+      }
+    solution: |
+      function shortestPath(n, edges, src, dst) {
+        const adj = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) { adj[u].push(v); adj[v].push(u); }
+        const dist = new Array(n).fill(-1);
+        dist[src] = 0;
+        const q = [src];
+        for (let h = 0; h < q.length; h++) {
+          const u = q[h];
+          if (u === dst) return dist[u];
+          for (const v of adj[u]) if (dist[v] === -1) { dist[v] = dist[u] + 1; q.push(v); }
+        }
+        return -1;
+      }
+    tests:
+      - args:
+          - 6
+          - - - 0
+              - 1
+            - - 1
+              - 2
+            - - 2
+              - 3
+            - - 0
+              - 4
+            - - 4
+              - 3
+            - - 3
+              - 5
+          - 0
+          - 5
+        expect: 3
+      - args:
+          - 3
+          - - - 0
+              - 1
+          - 0
+          - 2
+        expect: -1
+      - args:
+          - 1
+          - []
+          - 0
+          - 0
+        expect: 0
+      - args:
+          - 5
+          - - - 0
+              - 1
+            - - 1
+              - 2
+            - - 2
+              - 3
+            - - 3
+              - 4
+            - - 0
+              - 4
+          - 0
+          - 3
+        expect: 2
+        hidden: true
+    explain: '`dist` doubles as the visited array: −1 means not yet reached.'
+    hints:
+      - Use dist = −1 for unvisited; set it when you enqueue.
+  - id: ex-02
+    legacyId: w8d3-2
+    type: trace
+    tag: Rebuild the table
+    q: Rotting oranges on `[[2,1,1],[1,1,0],[0,1,1]]`. Fill in the table from the handbook yourself.
+    rows:
+      - prompt: Fresh oranges at the start
+        answer: '6'
+      - prompt: Cells that rot in minute 2, as r,c;r,c (any order)
+        answer:
+          - 0,2;1,1
+          - 1,1;0,2
+      - prompt: Fresh left after minute 3
+        answer: '1'
+      - prompt: Answer
+        answer: '4'
+    verify: |
+      const g = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]; let q = [], fresh = 0;
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { if (g[r][c] === 2) q.push([r, c]); else if (g[r][c] === 1) fresh++; }
+      console.log(fresh); const log = []; let min = 0;
+      while (q.length && fresh) { const nx = []; for (const [r, c] of q) for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const rr = r + a, cc = c + b; if (rr < 0 || cc < 0 || rr > 2 || cc > 2 || g[rr][cc] !== 1) continue; g[rr][cc] = 2; fresh--; nx.push(rr + ',' + cc); } min++; log.push([nx.join(';'), fresh]); q = nx.map((s) => s.split(',').map(Number)); }
+      console.log(log[1][0]); console.log(log[2][1]); console.log(min);
+    explain: Minute 1 rots (0,1) and (1,0); minute 2 rots (0,2) and (1,1); minute 3 rots (2,1); minute 4 rots (2,2).
+    hints:
+      - Process the whole queue for one minute before counting the next.
+  - id: ex-03
+    legacyId: w8d3-3
+    type: bug
+    tag: Minutes and −1
+    q: This rotting-oranges solution returns 4 on `[[2,1,1],[0,1,1],[1,0,1]]`, where the bottom-left orange can never rot (answer −1). Click the buggy line.
+    code: |
+      function orangesRotting(grid) {
+        const m = grid.length, n = grid[0].length, q = [];
+        for (let r = 0; r < m; r++) for (let c = 0; c < n; c++) if (grid[r][c] === 2) q.push([r, c]);
+        let minutes = 0, head = 0;
+        while (head < q.length) {
+          const size = q.length - head; let rotted = false;
+          for (let i = 0; i < size; i++) {
+            const [r, c] = q[head++];
+            for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+              const nr = r + dr, nc = c + dc;
+              if (nr < 0 || nr >= m || nc < 0 || nc >= n || grid[nr][nc] !== 1) continue;
+              grid[nr][nc] = 2; q.push([nr, nc]); rotted = true;
+            }
+          }
+          if (rotted) minutes++;
+        }
+        return minutes;
+      }
+    bug:
+      - 16
+    kind: concept
+    explain: 'It never checks whether fresh oranges remain. Count the fresh oranges at the start, decrement when one rots, and return `fresh === 0 ? minutes : -1`.'
+    fix: |
+      return fresh === 0 ? minutes : -1;   // with fresh counted at the start and decremented on each rot
+    fine:
+      '5': 'Snapshotting the level size is right: one level per minute.'
+      '14': Counting a minute only when something rotted avoids an off-by-one at the end, which is fine.
+    hints:
+      - What does the function return when some orange is never reached?
+  - id: ex-04
+    legacyId: w8d3-4
+    type: interview
+    title: Shortest Bridge (LeetCode 934)
+    q: 'An n × n grid of 0s (water) and 1s (land) contains exactly two islands (4-directional). Return the smallest number of 0s you must flip to 1 to connect them. Example: `[[0,1,0],[0,0,0],[0,0,1]]` → 2.'
+    model:
+      clarify: |
+        - Exactly two islands are guaranteed.
+        - n up to 100.
+      brute: 'For every pair of land cells, one from each island, take Manhattan distance − 1: O((n²)²) = 10⁸ for n = 100, too slow.'
+      optimize: 'Two phases. Phase 1: find any land cell and flood-fill its island (DFS with a stack), marking every cell visited and putting all of them in a queue: they are the BFS sources at distance 0. Phase 2: multi-source BFS outwards over water, one layer at a time; the first time you step onto an unvisited land cell, the number of layers expanded is the number of flips.'
+      edges: |
+        - islands touching diagonally → 1
+        - one island surrounding the other
+        - islands in opposite corners
+      complexity: 'O(n²) time and space: each cell is visited once in each phase.'
+    fn: shortestBridge
+    starter: |
+      function shortestBridge(grid) {
+
+      }
+    solution: |
+      function shortestBridge(grid) {
+        const n = grid.length, dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const seen = Array.from({ length: n }, () => new Array(n).fill(false));
+        let q = [];
+        outer: for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (grid[r][c] === 1) {
+          const st = [[r, c]]; seen[r][c] = true;
+          while (st.length) {
+            const [a, b] = st.pop(); q.push([a, b]);
+            for (const [dr, dc] of dirs) {
+              const nr = a + dr, nc = b + dc;
+              if (nr < 0 || nr >= n || nc < 0 || nc >= n || seen[nr][nc] || grid[nr][nc] !== 1) continue;
+              seen[nr][nc] = true; st.push([nr, nc]);
+            }
+          }
+          break outer;
+        }
+        for (let steps = 0; q.length; steps++) {
+          const next = [];
+          for (const [a, b] of q) for (const [dr, dc] of dirs) {
+            const nr = a + dr, nc = b + dc;
+            if (nr < 0 || nr >= n || nc < 0 || nc >= n || seen[nr][nc]) continue;
+            if (grid[nr][nc] === 1) return steps;
+            seen[nr][nc] = true; next.push([nr, nc]);
+          }
+          q = next;
+        }
+        return -1;
+      }
+    tests:
+      - args:
+          - - - 0
+              - 1
+            - - 1
+              - 0
+        expect: 1
+      - args:
+          - - - 0
+              - 1
+              - 0
+            - - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 1
+        expect: 2
+      - args:
+          - - - 1
+              - 1
+              - 1
+              - 1
+              - 1
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 1
+            - - 1
+              - 0
+              - 1
+              - 0
+              - 1
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 1
+            - - 1
+              - 1
+              - 1
+              - 1
+              - 1
+        expect: 1
+      - args:
+          - - - 1
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 1
+        expect: 5
+        hidden: true
+      - args:
+          - - - 1
+              - 1
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 1
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 1
+              - 1
+            - - 0
+              - 0
+              - 0
+              - 1
+              - 1
+        expect: 3
+        hidden: true
+    explain: Phase 1 is Number of Islands; phase 2 is Rotting Oranges with a whole island as the source. Combining two known patterns is what this problem tests.
+    hints:
+      - Which earlier problem finds all cells of one island?
+      - Which earlier problem spreads outwards from many sources at once?
+      - Count BFS layers until you touch the other island.
+annotated: []

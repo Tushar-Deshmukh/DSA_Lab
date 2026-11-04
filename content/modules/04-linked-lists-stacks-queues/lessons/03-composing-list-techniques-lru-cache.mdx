@@ -1,0 +1,94 @@
+---
+slug: composing-list-techniques-lru-cache
+legacyId: w4d3
+title: Composing list techniques; the LRU cache
+goal: Combine middle-finding, reversal and merging, and design an O(1) LRU cache from a Map and a doubly linked list with sentinels.
+why: LRU Cache is one of the most frequently asked design-flavoured coding questions at product companies. It is also the clearest example of choosing two data structures so that each covers the other's weakness.
+prereqs:
+  - Reversal and dummy nodes (lesson 1), middle-finding (lesson 2)
+  - '`Map` operations (Module 1)'
+outcomes:
+  - Solve Reorder List as middle + reverse + interleave, nulling the new tail
+  - Explain why neither a Map alone nor an array alone gives O(1) LRU operations
+  - Implement unlink and insert-at-front on a doubly linked list with sentinels
+  - Trace LRU operations, including updates and evictions
+ready:
+  - 146 passes with my own doubly linked list
+  - 143 sets the new tail's `next` to null
+  - I ran 6 LRU operations with capacity 2 on paper and drew the list after each
+summary:
+  - Reorder List = find middle, cut, reverse the second half, interleave.
+  - Every cut needs `tail.next = null`, or the list keeps a cycle.
+  - 'LRU: Map key → node (O(1) find) + doubly linked list by recency (O(1) move and evict).'
+  - Sentinels `head` and `tail` remove every null check.
+  - The node stores its key so eviction can delete the map entry.
+revision: 'Without code, explain the LRU design in three sentences: what the map holds, what the list order means, and what happens on get, put and eviction.'
+warmup:
+  problem: 19
+topic: 'Combining list techniques; LRU design: Map + doubly linked list with sentinels'
+implement: On paper, run 6 LRU operations (capacity 2) and draw the list after each
+problemsText: 'C: 143, 146 · O: 92'
+problems:
+  - num: 143
+    tier: C
+  - num: 146
+    tier: C
+  - num: 92
+    tier: O
+doneWhen: 146 passes with your own doubly linked list; 143 sets the new tail's `next` to null
+estimate:
+  T: 20
+  I: 20
+  P: 65
+  R: 10
+  'N': 5
+---
+
+<Unit id="composing-techniques-reorder-list" kind="theory" title="Composing techniques: Reorder List">
+
+Reorder List (143) turns `L0 → L1 → … → Ln` into `L0 → Ln → L1 → Ln−1 → …`. None of its steps is new:
+
+1. Find the middle with fast/slow (lesson 2).
+2. **Cut** the list there: the first half's last node gets `next = null`.
+3. Reverse the second half (lesson 1).
+4. Interleave the two halves, like a merge that alternates instead of comparing.
+
+The classic failure is step 2. If the first half's tail still points into the second half, the final list contains a cycle, and LeetCode reports a time-out or a memory error rather than a wrong answer.
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="lru-cache-design" kind="theory" title="LRU cache design">
+
+<Include id="theory/linked-lists-stacks-queues/example-3" />
+
+<Viz id="lru" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+<Callout kind="tip" title="The JavaScript shortcut">
+
+A `Map` remembers insertion order, so deleting and re-inserting a key moves it to the end, and `map.keys().next().value` is the oldest key. That gives a 10-line LRU. Mention it as a trade-off in an interview, then implement the linked list: that is what is being tested.
+
+</Callout>
+
+<Callout kind="tip" title="Optional: Reverse Linked List II (92)">
+
+Reversing positions `left..right` is this lesson's Optional problem: walk a dummy-based pointer to the node *before* `left`, then repeatedly move the next node of the segment to the segment's front ("head insertion") `right − left` times. The dummy matters because `left` can be 1.
+
+</Callout>
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

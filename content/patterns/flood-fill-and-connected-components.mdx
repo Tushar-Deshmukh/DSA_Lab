@@ -1,0 +1,25 @@
+---
+slug: flood-fill-and-connected-components
+number: '8.1'
+title: Flood fill and connected components
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Pattern 8.1
+  lines:
+    - 1646
+    - 1655
+---
+
+**Pattern 8.1: Flood fill and connected components**
+
+1. *Recognise:* count or measure groups of connected cells/nodes.
+2. *Clues:* "islands", "provinces", "connected", "regions", "flood", "area".
+3. *From brute force:* for each cell, re-explore its group: O((mn)²). Marking visited makes each cell processed once.
+4. *Why it works:* one traversal from an unvisited node visits exactly its component.
+5. *Template:* outer loop over all nodes; when unvisited, increment count and traverse (Example 1).
+6. *Complexity:* O(V + E) (grid: O(m·n)).
+7. *Variations:* max area (695: return size from the traversal), provinces from an adjacency matrix (547), clone graph (133: a `Map` from old node to its copy doubles as visited).
+8. *Inappropriate when:* edges are added over time and connectivity is queried in between (Union-Find, Module 9).

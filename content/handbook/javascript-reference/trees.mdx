@@ -1,0 +1,43 @@
+---
+slug: trees
+section: 6
+title: 6.12 Trees
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.12 Trees
+  lines:
+    - 2988
+    - 3018
+---
+
+```js
+// Bottom-up: return information from children
+function height(node) {
+  if (!node) return 0;
+  return 1 + Math.max(height(node.left), height(node.right));
+}
+
+// Top-down: pass information to children
+function walk(node, state) {
+  if (!node) return;
+  // use node and state here
+  walk(node.left, /* next state */ state);
+  walk(node.right, state);
+}
+
+// Iterative preorder
+function preorder(root) {
+  const out = [], stack = root ? [root] : [];
+  while (stack.length) {
+    const node = stack.pop();
+    out.push(node.val);
+    // right first so left is processed first
+    if (node.right) stack.push(node.right);
+    if (node.left) stack.push(node.left);
+  }
+  return out;
+}
+// Iterative inorder: Module 6 theory, Example 3.
+// Level-order BFS: Module 6 theory, Example 4.
+```

@@ -1,0 +1,122 @@
+---
+slug: sorting-merge-quick-comparators
+legacyId: w3d5
+title: 'Sorting: merge sort, quicksort, stability and comparators'
+goal: Implement merge sort and three-way quicksort from memory, explain stability, write correct comparators, and choose between sorting, hashing and binary search.
+why: You will rarely be asked to sort from scratch, but you will be asked how sorting works, why it is O(n log n), whether it is stable, and you will write comparators constantly. Merge sort's merge step also returns for linked lists (Module 4) and k-way merges (Module 7).
+prereqs:
+  - Recursion trees (Module 1 lesson 1)
+  - Two pointers on two sorted sequences (Module 2)
+outcomes:
+  - Implement merge sort and derive O(n log n) from its recursion tree
+  - Implement quicksort with a random pivot and three-way partition, and explain its worst case
+  - Explain stability and when it matters
+  - Write numeric, descending, multi-key and string comparators that return numbers
+  - Decide between sorting, hashing and binary search for a given task
+ready:
+  - 912 passes with my own merge sort
+  - My comparators return numbers, not booleans
+  - I sorted `[{name, age}]` by age then name, and know why stability makes a two-pass sort work
+summary:
+  - 'Merge sort: O(n log n) always, O(n) space, stable. Merge with `<=` to keep it stable.'
+  - 'Quicksort: O(n log n) average, O(n²) worst; random pivot; three-way partition for duplicates; not stable.'
+  - Comparison sorts cannot beat Ω(n log n) in the worst case.
+  - '`sort()` without a comparator compares strings: `[10, 9, 1]` → `[1, 10, 9]`.'
+  - Comparator returns negative / zero / positive; tie-break with `||`.
+revision: Write merge sort from memory and point to the line that makes it stable. Then write a comparator that sorts by age ascending, then by name.
+warmup:
+  problem: 1011
+topic: Merge sort, quicksort (random pivot, partition), stability, comparators, sort vs hash vs binary search (6.3, 6.8)
+implement: Implement merge sort and quicksort from memory; sort `[{name, age}]` by age then name
+problemsText: 'C: 88, 912 · S: 179'
+problems:
+  - num: 88
+    tier: C
+  - num: 912
+    tier: C
+  - num: 179
+    tier: S
+doneWhen: 912 passes with your own merge sort; comparator returns numbers, not booleans
+estimate:
+  T: 30
+  I: 30
+  P: 45
+  R: 10
+  'N': 5
+---
+
+<Unit id="the-algorithms-you-must-be-able-to-explain" kind="theory" title="The algorithms you must be able to explain">
+
+<Include id="theory/binary-search-sorting/sorting-algorithms-you-must-be-able-to-explain" />
+
+</Unit>
+
+<Unit id="merge-sort" kind="code" title="Merge sort">
+
+<Include id="theory/binary-search-sorting/example-4" />
+
+<Viz id="merge-sort" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="quicksort" kind="code" title="Quicksort">
+
+<Include id="handbook/javascript-reference/sorting-implementations" />
+
+<Viz id="quicksort3" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="stability-and-comparators" kind="theory" title="Stability and comparators">
+
+<Include id="theory/binary-search-sorting/stability" />
+
+<Include id="theory/binary-search-sorting/comparators" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+<Exercise id="ex-07" />
+
+</Unit>
+
+<Unit id="sort-hash-or-binary-search" kind="theory" title="Sort, hash or binary search?">
+
+<Include id="theory/binary-search-sorting/sorting-vs-hashing-vs-binary-search" />
+
+<Exercise id="ex-08" />
+
+<Include id="theory/binary-search-sorting/common-mistakes" />
+
+<Include id="patterns/sort-first-then-scan" />
+
+</Unit>
+
+<Unit id="merge-sorted-array-88-merge-from-the-back" kind="code" title="Merge Sorted Array (88): merge from the back">
+
+This lesson's first Core problem is the merge step run backwards. `nums1` has empty space at its end, so filling from the back never overwrites a value that has not been merged.
+
+<Viz id="merge-back" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-09" />
+
+<Callout kind="interview" title="Explaining a sort in an interview">
+
+"I'll sort, which is O(n log n). JavaScript's sort is stable, so equal keys keep their order. I'm passing a numeric comparator because the default compares strings." If asked to implement one: merge sort is the safe choice: guaranteed O(n log n), stable, and easy to get right.
+
+</Callout>
+
+</Unit>

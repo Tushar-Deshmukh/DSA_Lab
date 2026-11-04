@@ -1,0 +1,59 @@
+---
+slug: one-hard-problem-complexity-drill
+legacyId: w12d4
+title: One Hard problem, and the complexity drill
+goal: Finish one unsolved Hard problem with the time-boxed hint ladder, re-explain it without notes, and state time and space correctly for ten tracker problems.
+why: Hards in interviews are usually a known pattern with one extra twist. Working one through with structured hints teaches you how to use hints under pressure. The complexity drill keeps the most frequently asked follow-up ("what is the complexity?") automatic.
+prereqs:
+  - The hint ladder (section 8)
+outcomes:
+  - Choose a Hard from the list that you have not solved and time-box it
+  - Use the hint ladder in order, logging the rung you needed
+  - Re-explain the solution without notes
+  - State time and space, including recursion stack, sorting and output size, for 10 tracker problems
+ready:
+  - The Hard is solved (hints allowed) and re-explained without notes
+  - 'Drill: 10 tracker problems, time and space stated correctly'
+  - The hint rung I needed is logged in the journal
+summary:
+  - 'Hard list: 42, 76, 84, 124, 239, 295, 297 (pick one not yet solved).'
+  - Time box 40 minutes, then climb the hint ladder one rung at a time.
+  - Complexity includes the recursion stack, the sort, and the size of the output.
+revision: Pick any three tracker problems and say their time and space in under a minute.
+topic: One Hard problem with the hint ladder; complexity drill
+implement: —
+problemsText: One of 42, 76, 84, 124, 239, 295, 297 not yet solved
+problems: []
+doneWhen: 'Hard solved (hints allowed) and re-explained without notes; drill: 10 tracker problems, time and space stated correctly'
+estimate:
+  P: 60
+  drill: 20
+  R: 30
+  'N': 10
+---
+
+<Unit id="the-hard-problem" kind="theory" title="The Hard problem">
+
+Choose one you have not solved: [42 Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/), [76 Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/), [84 Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/), [124 Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/), [239 Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/), [295 Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/), [297 Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/). Give it 40 minutes of your own work, then use the hint ladder on the Revision rules page one rung at a time, and record in the journal which rung you needed. Then close everything and explain it from scratch.
+
+<Callout kind="key" title="What makes a Hard hard">
+
+Most Hards are a pattern you know plus one twist: a window that must also track counts (76), a stack that also measures widths (84), a tree return value that differs from the answer you track (124). Ask "which pattern almost works, and what does it fail to keep track of?"
+
+</Callout>
+
+</Unit>
+
+<Unit id="complexity-drill" kind="theory" title="Complexity drill">
+
+<Include id="theory/interview-readiness/complexity-drill" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>

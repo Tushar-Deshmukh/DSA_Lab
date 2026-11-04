@@ -1,0 +1,83 @@
+# Server-only. Never imported by anything that reaches a page, the client or search (D-012).
+notes:
+  - Each pool has three Medium problems not used anywhere else in this plan.
+  - After each mock, the two unused pool problems become extra practice.
+mocks:
+  - id: 1
+    slug: mock-1
+    topics: Arrays, hashing, prefix sums, two pointers, stacks
+    pool:
+      - num: 525
+        title: Contiguous Array
+        url: https://leetcode.com/problems/contiguous-array/
+      - num: 1679
+        title: Max Number of K-Sum Pairs
+        url: https://leetcode.com/problems/max-number-of-k-sum-pairs/
+      - num: 735
+        title: Asteroid Collision
+        url: https://leetcode.com/problems/asteroid-collision/
+  - id: 2
+    slug: mock-2
+    topics: Trees, heaps, prefix sums on paths
+    pool:
+      - num: 1161
+        title: Maximum Level Sum of a Binary Tree
+        url: https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/
+      - num: 437
+        title: Path Sum III
+        url: https://leetcode.com/problems/path-sum-iii/
+      - num: 692
+        title: Top K Frequent Words
+        url: https://leetcode.com/problems/top-k-frequent-words/
+  - id: 3
+    slug: mock-3
+    topics: Graphs (BFS/DFS), greedy reachability
+    pool:
+      - num: 1926
+        title: Nearest Exit from Entrance in Maze
+        url: https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/
+      - num: 1466
+        title: Reorder Routes to Make All Paths Lead to the City Zero
+        url: https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
+      - num: 1306
+        title: Jump Game III
+        url: https://leetcode.com/problems/jump-game-iii/
+  - id: 4
+    slug: mock-4
+    topics: Dynamic programming
+    pool:
+      - num: 931
+        title: Minimum Falling Path Sum
+        url: https://leetcode.com/problems/minimum-falling-path-sum/
+      - num: 1048
+        title: Longest String Chain
+        url: https://leetcode.com/problems/longest-string-chain/
+      - num: 120
+        title: Triangle
+        url: https://leetcode.com/problems/triangle/
+  - id: 5
+    slug: mock-5
+    topics: 'Mixed: heaps, graphs, design'
+    pool:
+      - num: 1834
+        title: Single-Threaded CPU
+        url: https://leetcode.com/problems/single-threaded-cpu/
+      - num: 2101
+        title: Detonate the Maximum Bombs
+        url: https://leetcode.com/problems/detonate-the-maximum-bombs/
+      - num: 1352
+        title: Product of the Last K Numbers
+        url: https://leetcode.com/problems/product-of-the-last-k-numbers/
+  - id: 6
+    slug: mock-6
+    topics: 'Mixed: trees as graphs, multi-source BFS, sliding window'
+    pool:
+      - num: 863
+        title: All Nodes Distance K in Binary Tree
+        url: https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+      - num: 1162
+        title: As Far from Land as Possible
+        url: https://leetcode.com/problems/as-far-from-land-as-possible/
+      - num: 2024
+        title: Maximize the Confusion of an Exam
+        url: https://leetcode.com/problems/maximize-the-confusion-of-an-exam/

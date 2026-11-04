@@ -1,0 +1,15 @@
+---
+slug: example-5
+title: Example 5
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Example 5
+  lines:
+    - 1988
+    - 1988
+---
+
+**Example 5: grid DP (62 Unique Paths).** `dp[r][c]` = paths to cell (r, c) = `dp[r-1][c] + dp[r][c-1]`; first row and column are 1. Space-optimised to one row: `row[c] += row[c - 1]` for each new row. With obstacles (63), set a blocked cell to 0, including in the first row/column (cells after an obstacle there are unreachable).

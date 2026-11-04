@@ -1,0 +1,238 @@
+exercises:
+  - id: ex-01
+    legacyId: w2d5-1
+    type: trace
+    tag: Build it
+    q: For `nums = [3, -2, 5, 1]`, fill in the prefix array and two queries.
+    rows:
+      - prompt: pre (all 5 values, as a list)
+        answer:
+          - '[0,3,1,6,7]'
+        why: 0, then 0+3, 3−2, 1+5, 6+1.
+      - prompt: sum(1..2) = pre[3] − pre[1] =
+        answer: '3'
+        why: 6 − 3 = 3, which is −2 + 5.
+      - prompt: sum(0..3) =
+        answer: '7'
+        why: pre[4] − pre[0] = 7 − 0.
+    verify: |
+      const nums = [3, -2, 5, 1]; const pre = [0]; for (const x of nums) pre.push(pre.at(-1) + x);
+      console.log(JSON.stringify(pre)); console.log(pre[3] - pre[1]); console.log(pre[4] - pre[0]);
+    explain: Range [l, r] uses pre[r + 1] and pre[l]. The +1 is there because pre[i] covers the first i elements.
+    hints:
+      - pre has one more entry than nums, and pre[0] = 0.
+  - id: ex-02
+    legacyId: w2d5-2
+    type: mcq
+    tag: Why not a window?
+    q: Why does a sliding window fail on problem 560 (for example `nums = [1, -1, 1]`, k = 1)?
+    options:
+      - t: With negative numbers, adding an element can decrease the sum, so an invalid window can become valid again by growing; there is no safe rule for moving `l`.
+        ok: true
+        why: Monotonicity is the precondition for a window, and negatives break it.
+      - t: Because windows can only find the longest subarray, never count subarrays.
+        why: Windows can count (for example "subarrays with sum ≤ k" over positive numbers); the problem here is monotonicity.
+        kind: concept
+      - t: Because the answer could be larger than n.
+        why: True (there can be O(n²) subarrays), but a prefix-map count handles that fine. It is not why the window fails.
+        kind: concept
+    explain: On `[1, -1, 1]` the valid subarrays are `[1]`, `[1, -1, 1]` and the last `[1]`. A window that drops the left `1` after finding the first answer could never find `[1, -1, 1]`.
+    hints:
+      - What happens to the sum when −1 enters the window?
+  - id: ex-03
+    legacyId: w2d5-3
+    type: code
+    tag: Write it
+    q: 'Write `subarraySum(nums, k)` (problem 560): the number of contiguous subarrays whose sum is k. Negative numbers are allowed.'
+    fn: subarraySum
+    starter: |
+      function subarraySum(nums, k) {
+
+      }
+    solution: |
+      function subarraySum(nums, k) {
+        const countOfPrefix = new Map([[0, 1]]);
+        let cur = 0, count = 0;
+        for (const x of nums) {
+          cur += x;
+          count += countOfPrefix.get(cur - k) ?? 0;
+          countOfPrefix.set(cur, (countOfPrefix.get(cur) ?? 0) + 1);
+        }
+        return count;
+      }
+    tests:
+      - args:
+          - - 1
+            - 1
+            - 1
+          - 2
+        expect: 2
+      - args:
+          - - 1
+            - 2
+            - 3
+          - 3
+        expect: 2
+      - args:
+          - - 1
+            - -1
+            - 1
+          - 1
+        expect: 3
+      - args:
+          - - 3
+          - 3
+        expect: 1
+        hidden: true
+      - args:
+          - - 0
+            - 0
+            - 0
+          - 0
+        expect: 6
+        hidden: true
+      - args:
+          - - -1
+            - -1
+            - 1
+          - 0
+        expect: 1
+        hidden: true
+      - args:
+          - - 3
+            - 4
+            - 7
+            - 2
+            - -3
+            - 1
+            - 4
+            - 2
+          - 7
+        expect: 4
+        hidden: true
+    explain: 'The `[0,0,0]`, k = 0 test fails if you record `cur` before counting (each prefix would match itself) or forget the `{0: 1}` seed.'
+    hints:
+      - Keep a running sum `cur` and a map from prefix sum to how many times it has appeared.
+      - Seed the map with prefix 0 seen once.
+      - Add the count of `cur − k` before recording `cur`.
+  - id: ex-04
+    legacyId: w2d5-4
+    type: complexity
+    tag: Analyse it
+    q: What do the time and extra space of `productExceptSelf` come to? (Do not count the output array, as the problem says.)
+    fields:
+      - label: Time
+        answer: O(n)
+      - label: Extra space
+        answer: O(1)
+        why:
+          O(n): The output array does not count, and the right-hand products live in one variable, not an array.
+    explain: Two passes of n steps; one extra variable.
+    hints:
+      - How many arrays besides `out` does it create?
+  - id: ex-05
+    legacyId: w2d5-5
+    type: trace
+    tag: By hand
+    q: 'n = 5, updates (0-based, inclusive): `[1, 3, +2]`, `[0, 1, +5]`, `[2, 4, −1]`. Fill in the difference array and the final result.'
+    rows:
+      - prompt: diff after all updates (6 slots)
+        answer:
+          - '[5,2,-6,0,-2,1]'
+        why: 'diff[1] += 2, diff[4] −= 2; then diff[0] += 5, diff[2] −= 5; then diff[2] −= 1, diff[5] += 1. Slot 2 receives two stops: −5 and −1.'
+      - prompt: final array
+        answer:
+          - '[5,7,1,1,-1]'
+        why: 'Running sum of diff[0..4]: 5, 5+2 = 7, 7−6 = 1, 1+0 = 1, 1−2 = −1.'
+    verify: |
+      const n = 5, diff = new Array(n + 1).fill(0);
+      for (const [l, r, v] of [[1, 3, 2], [0, 1, 5], [2, 4, -1]]) { diff[l] += v; diff[r + 1] -= v; }
+      const out = []; let run = 0; for (let i = 0; i < n; i++) { run += diff[i]; out.push(run); }
+      console.log(JSON.stringify(diff)); console.log(JSON.stringify(out));
+    explain: 'Check one element directly: index 1 gets +2 (first update) and +5 (second) = 7.'
+    hints:
+      - 'Each update touches exactly two slots: l and r + 1.'
+  - id: ex-06
+    legacyId: w2d5-6
+    type: interview
+    title: Binary Subarrays With Sum (LeetCode 930)
+    q: 'Given a binary array `nums` and an integer `goal`, return the number of non-empty contiguous subarrays whose sum is `goal`. Example: `[1,0,1,0,1]`, goal 2 → 4.'
+    model:
+      clarify: |
+        - Values are only 0 and 1; goal can be 0.
+        - n up to 3·10⁴, so O(n²) is borderline: aim for O(n).
+      brute: 'Every subarray with a running sum: O(n²).'
+      optimize: |
+        Prefix sums: the subarray (j, i] has sum `goal` exactly when `prefix[i] − prefix[j] = goal`. Walk once, keeping a map of how many times each prefix sum has appeared (seeded with `{0: 1}`), and add `count[cur − goal]` at each step. This is 560's counting idea. A plain sliding window fails when goal = 0, because runs of zeros make "shrink while too big" miss subarrays; the window version needs the `atMost(goal) − atMost(goal − 1)` trick, which is worth mentioning as an O(1)-space alternative.
+      edges: |
+        - goal = 0 with runs of zeros (`[0,0,0,0,0]` → 15)
+        - goal larger than the number of 1s → 0
+        - single element
+      complexity: O(n) time, O(n) space for the map (O(1) with the atMost window).
+    fn: numSubarraysWithSum
+    starter: |
+      function numSubarraysWithSum(nums, goal) {
+
+      }
+    solution: |
+      function numSubarraysWithSum(nums, goal) {
+        const count = new Map([[0, 1]]);
+        let cur = 0, total = 0;
+        for (const x of nums) {
+          cur += x;
+          total += count.get(cur - goal) || 0;
+          count.set(cur, (count.get(cur) || 0) + 1);
+        }
+        return total;
+      }
+    tests:
+      - args:
+          - - 1
+            - 0
+            - 1
+            - 0
+            - 1
+          - 2
+        expect: 4
+      - args:
+          - - 0
+            - 0
+            - 0
+            - 0
+            - 0
+          - 0
+        expect: 15
+      - args:
+          - - 1
+          - 1
+        expect: 1
+      - args:
+          - - 1
+            - 1
+            - 1
+          - 0
+        expect: 0
+        hidden: true
+      - args:
+          - - 0
+            - 1
+            - 0
+          - 1
+        expect: 4
+        hidden: true
+      - args:
+          - - 1
+            - 0
+            - 0
+            - 1
+            - 1
+            - 0
+          - 2
+        expect: 7
+        hidden: true
+    explain: Counting (not first index) is what the map stores here, because every earlier matching prefix gives a different subarray.
+    hints:
+      - Write the condition for subarray (j, i] in terms of two prefix sums.
+      - How many earlier prefixes equal cur − goal?
+      - Seed the map so subarrays starting at index 0 are counted.
+annotated: []

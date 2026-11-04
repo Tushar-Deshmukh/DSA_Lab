@@ -1,0 +1,25 @@
+---
+slug: monotonic-stack
+number: '4.4'
+title: Monotonic stack
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Pattern 4.4
+  lines:
+    - 960
+    - 969
+---
+
+**Pattern 4.4: Monotonic stack**
+
+1. *Recognise:* for each element, the nearest greater/smaller element to the left or right, or spans bounded by such elements.
+2. *Clues:* "next greater", "days until warmer", "previous smaller", "stock span", "largest rectangle", "visible".
+3. *From brute force:* O(n²) scanning outwards from each element; the stack keeps only candidates that can still be an answer.
+4. *Why it works:* an element smaller than a newer, larger element can never be the next greater for anything later, so it is popped forever.
+5. *Template:* Example 2; flip `<` to `>` for next smaller; iterate right-to-left for "previous" variants.
+6. *Complexity:* O(n) amortised, O(n) space.
+7. *Variations:* 739 (store index, answer = distance), previous greater/smaller variants (read the stack top before pushing), 84 histogram (each bar's width = distance between its previous and next smaller bars).
+8. *Inappropriate when:* you need the k-th greater or arbitrary range queries (use sorting, heaps or segment trees).

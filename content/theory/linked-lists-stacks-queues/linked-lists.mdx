@@ -1,0 +1,25 @@
+---
+slug: linked-lists
+title: Linked lists
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Linked lists
+  lines:
+    - 752
+    - 762
+---
+
+**Linked lists.** Each node holds a value and a pointer to the next node (`next`), and in a doubly linked list also `prev`. You only have a reference to the head.
+
+| Operation | Array | Singly linked list |
+| --- | --- | --- |
+| Access i-th element | O(1) | O(i) |
+| Insert/delete at head | O(n) | O(1) |
+| Insert/delete after a known node | O(n) | O(1) |
+| Delete a known node | O(n) | O(1) doubly; O(n) singly (need the previous node) |
+| Memory locality | Contiguous, cache-friendly | Scattered, extra pointer per node |
+
+*Why learn them if JS has arrays:* interviewers use them to test pointer discipline, and they are the backbone of LRU caches, adjacency lists, hash-table chaining and queues.

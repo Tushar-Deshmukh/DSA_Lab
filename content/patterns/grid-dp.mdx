@@ -1,0 +1,25 @@
+---
+slug: grid-dp
+number: '10.3'
+title: Grid DP
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Pattern 10.3
+  lines:
+    - 2014
+    - 2023
+---
+
+**Pattern 10.3: Grid DP**
+
+1. *Recognise:* move through a grid in restricted directions (right/down); count paths or minimise cost.
+2. *Clues:* "only move down or right", "minimum path sum", "number of unique paths", "obstacles".
+3. *From brute force:* DFS over all paths is exponential (C(m+n, m) paths); each cell's answer depends only on two neighbours.
+4. *Why it works:* every path into (r, c) comes from (r−1, c) or (r, c−1).
+5. *Template:* fill row by row; first row/column handled as base cases.
+6. *Complexity:* O(m·n) time, O(n) space with one row.
+7. *Variations:* 63 obstacles, 64 min path sum.
+8. *Inappropriate when:* movement is in all four directions (cycles: use BFS/Dijkstra).

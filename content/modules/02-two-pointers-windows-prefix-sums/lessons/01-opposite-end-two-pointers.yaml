@@ -1,0 +1,473 @@
+exercises:
+  - id: ex-01
+    legacyId: w2d1-1
+    type: mcq
+    tag: Vocabulary
+    q: For `s = "abcd"`, which of these are **substrings**? Select all that apply.
+    options:
+      - t: '`"bc"`'
+        ok: true
+        why: Contiguous characters at indices 1–2.
+      - t: '`"ac"`'
+        why: It skips `b`. That makes it a subsequence, not a substring.
+        kind: concept
+      - t: '`"abcd"`'
+        ok: true
+        why: The whole string is a substring of itself.
+      - t: '`"db"`'
+        why: Order is reversed, so it is neither a substring nor a subsequence.
+        kind: concept
+    explain: A substring keeps characters adjacent and in order. A subsequence keeps the order but may skip.
+    hints:
+      - Contiguous means no gaps between the chosen positions.
+  - id: ex-02
+    legacyId: w2d1-2
+    type: mcq
+    tag: The proof
+    q: '`numbers = [1, 3, 4, 6, 8, 11]`, `target = 17`. At the start, `l = 0` and `r = 5`, and `1 + 11 = 12 < 17`. Why is it safe to move `l` instead of `r`?'
+    options:
+      - t: Because 1 is the smallest number, and small numbers are usually not in the answer.
+        why: '"Usually" is not a proof. The argument must hold for every input.'
+        kind: concept
+      - t: 1 + 11 is the largest sum that 1 can make with any remaining number, and it is still less than 17, so no pair containing 1 can reach 17.
+        ok: true
+        why: Exactly. Pairing 1 with anything smaller than 11 only makes the sum smaller.
+      - t: Moving r would also be fine; either move works.
+        why: Moving r would discard 11, and 11 could be in the answer (6 + 11 = 17 is the answer here).
+        kind: concept
+      - t: Because l < r must stay true.
+        why: Both moves keep l ≤ r. The loop condition is not what makes the move correct.
+        kind: concept
+    explain: 'This is the whole correctness argument. Practise saying it out loud: interviewers ask for it.'
+    hints:
+      - Which partner gives 1 its largest possible sum?
+  - id: ex-03
+    legacyId: w2d1-3
+    type: fill
+    tag: From memory
+    q: Fill in the three missing pieces. Your version is checked by running it against tests, so any correct expression is accepted.
+    template: |
+      function twoSumSorted(numbers, target) {
+        let l = 0, r = [[0]];
+        while ([[1]]) {
+          const sum = numbers[l] + numbers[r];
+          if (sum === target) return [l + 1, r + 1];
+          if (sum < target) [[2]];
+          else r--;
+        }
+        return [];
+      }
+    blanks:
+      - accept:
+          - numbers.length - 1
+          - numbers.length-1
+      - accept:
+          - l < r
+          - l<r
+          - r > l
+      - accept:
+          - l++
+          - l += 1
+          - l = l + 1
+          - ++l
+    fn: twoSumSorted
+    tests:
+      - args:
+          - - 2
+            - 7
+            - 11
+            - 15
+          - 9
+        expect:
+          - 1
+          - 2
+      - args:
+          - - 2
+            - 3
+            - 4
+          - 6
+        expect:
+          - 1
+          - 3
+      - args:
+          - - -1
+            - 0
+          - -1
+        expect:
+          - 1
+          - 2
+      - args:
+          - - 1
+            - 3
+            - 4
+            - 6
+            - 8
+            - 11
+          - 17
+        expect:
+          - 4
+          - 6
+      - args:
+          - - 1
+            - 2
+            - 2
+            - 4
+            - 4
+          - 8
+        expect:
+          - 4
+          - 5
+    explain: '`l < r` stops before the pointers share an index. `l++` discards the left value when the sum is too small.'
+    hints:
+      - The right pointer starts at the last valid index.
+      - The loop must stop when only one element is left.
+  - id: ex-04
+    legacyId: w2d1-4
+    type: trace
+    tag: Your turn
+    q: Now trace `numbers = [-3, -1, 0, 2, 5, 8]`, `target = 4` without running anything. Fill each row, then check.
+    code: |
+      let l = 0, r = numbers.length - 1;
+      while (l < r) {
+        const sum = numbers[l] + numbers[r];
+        if (sum === target) return [l + 1, r + 1];
+        if (sum < target) l++;
+        else r--;
+      }
+    rows:
+      - prompt: 'Step 1: sum of numbers[0] + numbers[5]'
+        answer: '5'
+        why: -3 + 8 = 5, which is greater than 4, so r moves to 4.
+      - prompt: 'Step 2: sum (l = 0, r = 4)'
+        answer: '2'
+        why: -3 + 5 = 2 < 4, so l moves to 1.
+      - prompt: 'Step 3: sum (l = 1, r = 4)'
+        answer: '4'
+        why: '-1 + 5 = 4: found.'
+      - prompt: Returned value
+        answer:
+          - '[2,5]'
+          - '[2, 5]'
+        why: Indices 1 and 4, plus 1 each (1-based).
+    explain: Negative numbers change nothing. The argument uses only sorted order.
+    hints:
+      - Start with l = 0 and r = 5. Compute numbers[l] + numbers[r] and compare it with 4.
+  - id: ex-05
+    legacyId: w2d1-5
+    type: complexity
+    tag: Analyse it
+    q: What are the time and extra-space complexities of the two-pointer version on an array of length n?
+    fields:
+      - label: Time
+        answer: O(n)
+        why:
+          O(n log n): No sorting happens here; the input arrives sorted. If you had to sort first, it would be O(n log n).
+          O(n²): That is the brute force. Here each iteration moves a pointer, and they can move at most n − 1 times in total.
+          O(log n): Binary search halves the range; two pointers shrink it by one per step.
+      - label: Extra space
+        answer: O(1)
+        why:
+          O(n): A hash map would need O(n). This version stores only two indices and a sum.
+    explain: The gap r − l starts at n − 1 and drops by 1 per iteration, so at most n − 1 iterations of O(1) work.
+    hints:
+      - How much does r − l change in one iteration?
+  - id: ex-06
+    legacyId: w2d1-6
+    type: predict
+    tag: JavaScript strings
+    q: What does this print?
+    code: |
+      let s = "cat";
+      s[0] = "b";
+      const chars = [...s];
+      chars[0] = "h";
+      console.log(s, chars.join(""));
+    answer: cat hat
+    normalize: exact
+    traps:
+      bat hat: Strings are immutable. `s[0] = "b"` is silently ignored (outside strict mode) and `s` stays "cat". Only the array copy changed.
+      bat bat: Two misconceptions. Assigning to `s[0]` does nothing, and `chars` is a separate copy.
+      hat hat: '`[...s]` copies the characters into a new array, so changing `chars` does not touch `s`.'
+    explain: '`s[0] = "b"` does nothing to a string (in strict mode it throws a TypeError). Spread `[...s]` makes an independent array you can edit, and `join("")` turns it back into a string.'
+    hints:
+      - Can a JavaScript string be changed in place?
+  - id: ex-07
+    legacyId: w2d1-7
+    type: bug
+    tag: Skip loops
+    q: This version crashes on `s = " .,"` (only punctuation). Click the line that causes it.
+    code: |
+      function isPalindrome(s) {
+        let l = 0, r = s.length - 1;
+        while (l < r) {
+          while (!isAlnum(s[l])) l++;
+          while (!isAlnum(s[r])) r--;
+          if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;
+          l++; r--;
+        }
+        return true;
+      }
+    bug:
+      - 3
+    kind: impl
+    explain: On `" .,"` nothing is alphanumeric, so `l` runs past the end of the string. `s[3]` is `undefined`, and `isAlnum(undefined)` throws when it calls `charCodeAt`. Every inner skip loop must also check `l < r`.
+    fix: |
+      while (l < r && !isAlnum(s[l])) l++;
+      while (l < r && !isAlnum(s[r])) r--;
+    fine:
+      '2': '`l < r` is the right outer condition: the middle character of an odd-length string needs no partner.'
+      '4': This loop has the same flaw, but on `" .,"` the program has already crashed on the line above.
+      '5': Comparing lower-cased characters is correct; this line is only reached with valid indices once the skip loops are fixed.
+    hints:
+      - What happens to `l` when there are no letters at all?
+      - Which loop has no upper bound on `l`?
+  - id: ex-08
+    legacyId: w2d1-8
+    type: code
+    tag: Implement it
+    q: 'Write `isPalindrome(s)` for problem 125: true if, after lower-casing letters and removing everything that is not a letter or digit, `s` reads the same forwards and backwards. Use two pointers and O(1) extra space: do not build a cleaned copy of the string.'
+    fn: isPalindrome
+    starter: |
+      function isPalindrome(s) {
+        // two pointers; skip non-alphanumerics on each side; compare lower-cased
+      }
+
+      function isAlnum(c) {
+        const x = c.charCodeAt(0);
+        return (x >= 48 && x <= 57) || (x >= 65 && x <= 90) || (x >= 97 && x <= 122);
+      }
+    solution: |
+      function isPalindrome(s) {
+        let l = 0, r = s.length - 1;
+        while (l < r) {
+          if (!isAlnum(s[l])) { l++; continue; }
+          if (!isAlnum(s[r])) { r--; continue; }
+          if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;
+          l++; r--;
+        }
+        return true;
+      }
+
+      function isAlnum(c) {
+        const x = c.charCodeAt(0);
+        return (x >= 48 && x <= 57) || (x >= 65 && x <= 90) || (x >= 97 && x <= 122);
+      }
+    tests:
+      - args:
+          - 'A man, a plan, a canal: Panama'
+        expect: true
+      - args:
+          - race a car
+        expect: false
+      - args:
+          - " "
+        expect: true
+      - args:
+          - ' .,'
+        expect: true
+        hidden: true
+      - args:
+          - 0P
+        expect: false
+        hidden: true
+      - args:
+          - ab_a
+        expect: true
+        hidden: true
+      - args:
+          - a
+        expect: true
+        hidden: true
+      - args:
+          - Aa
+        expect: true
+        hidden: true
+    explain: 'Hidden tests cover the traps: only punctuation (pointers must not run off the end), `"0P"` (digits are kept, and 0 is not the letter O), and `_` (not alphanumeric).'
+    hints:
+      - Start with `let l = 0, r = s.length - 1;` and a `while (l < r)` loop.
+      - If `s[l]` is not alphanumeric, move `l` and `continue` so the loop condition is re-checked.
+      - Compare `s[l].toLowerCase()` with `s[r].toLowerCase()`.
+  - id: ex-09
+    legacyId: w2d1-9
+    type: pattern
+    tag: Choose the pattern
+    q: '"Given an array of **distinct, unsorted** integers and a target, return the **indices** of the two numbers that add up to the target." Which approach fits best?'
+    options:
+      - t: Opposite-end two pointers on the array as given
+        why: Without sorted order, a sum that is too small says nothing about which end is useless.
+        kind: concept
+      - t: Sort, then two pointers
+        why: It finds the values, but sorting moves them, so the original indices are lost unless you sort `[value, index]` pairs. It works, but costs O(n log n) for no benefit.
+        kind: concept
+      - t: One pass with a hash map from value to index
+        ok: true
+        why: O(n) time; each number looks up its complement among the numbers already seen.
+      - t: Sliding window
+        why: The two numbers need not be adjacent or in a contiguous range.
+        kind: concept
+    explain: This is problem 1. The words "unsorted" and "indices" both point away from two pointers.
+    clues: unsorted · return indices · exactly one pair
+    hints:
+      - Would sorting destroy something the answer needs?
+  - id: ex-10
+    legacyId: w2d1-10
+    type: pattern
+    tag: Choose the pattern
+    q: '"Given a **sorted** array, return a new array of the **squares** of each number, also sorted." Example: `[-4, -1, 0, 3, 10]` → `[0, 1, 9, 16, 100]`. Which approach is O(n)?'
+    options:
+      - t: Square everything, then sort
+        why: Correct, but O(n log n).
+        kind: concept
+      - t: Two pointers from both ends, filling the result from the back
+        ok: true
+        why: The largest square is always at one of the two ends (the most negative or the most positive number). Take the bigger one, write it at the end, move that pointer.
+      - t: A hash map of squares
+        why: A map does not produce sorted order.
+        kind: concept
+    explain: This is problem 977, one of Pattern 2.1's variations. You will code it in the guided problem below.
+    hints:
+      - Where in a sorted array can the largest absolute value be?
+  - id: ex-11
+    legacyId: w2d1-11
+    type: interview
+    title: Squares of a Sorted Array (LeetCode 977)
+    q: 'Given an integer array `nums` sorted in non-decreasing order, return an array of the squares of each number, sorted in non-decreasing order. Constraints: 1 ≤ n ≤ 10⁴, −10⁴ ≤ nums[i] ≤ 10⁴. Follow-up: can you do it in O(n)?'
+    model:
+      clarify: |
+        - Can the array contain negatives? (Yes, that is the whole difficulty.) Zeros? Duplicates? (Yes.)
+        - Return a new array, or overwrite the input? (New array is fine.)
+        - Range of values: up to 10⁴, so squares fit easily in a double (10⁸).
+      brute: 'Square every element and sort: O(n log n) time, O(n) space for the output (plus the sort''s own space). Correct, simple, and a fine first answer to say out loud.'
+      optimize: |
+        The squares are not sorted because negatives flip: `[-4, -1, 0, 3]` squares to `[16, 1, 0, 9]`. But the **largest** square must come from one of the two ends: the most negative or the most positive value. So put `l = 0`, `r = n − 1`, and fill the result from the back: compare `nums[l]²` and `nums[r]²`, write the larger at position `k`, move that pointer, `k--`. Each step places one final value.
+      edges: |
+        - All negative `[-5, -3, -1]` → `[1, 9, 25]`
+        - All non-negative (already in order)
+        - Single element `[-7]` → `[49]`
+        - Equal absolute values `[-2, 2]` → `[4, 4]`
+      complexity: 'O(n) time: each iteration writes one output cell and moves one pointer. O(1) extra space beyond the output array, which the problem requires anyway.'
+    fn: sortedSquares
+    starter: |
+      function sortedSquares(nums) {
+        const out = new Array(nums.length);
+        // two pointers at the ends; fill out from the back
+        return out;
+      }
+    solution: |
+      function sortedSquares(nums) {
+        const out = new Array(nums.length);
+        let l = 0, r = nums.length - 1;
+        for (let k = nums.length - 1; k >= 0; k--) {
+          const a = nums[l] * nums[l], b = nums[r] * nums[r];
+          if (a > b) { out[k] = a; l++; }
+          else { out[k] = b; r--; }
+        }
+        return out;
+      }
+    tests:
+      - args:
+          - - -4
+            - -1
+            - 0
+            - 3
+            - 10
+        expect:
+          - 0
+          - 1
+          - 9
+          - 16
+          - 100
+      - args:
+          - - -7
+            - -3
+            - 2
+            - 3
+            - 11
+        expect:
+          - 4
+          - 9
+          - 9
+          - 49
+          - 121
+      - args:
+          - - -5
+            - -3
+            - -1
+        expect:
+          - 1
+          - 9
+          - 25
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect:
+          - 1
+          - 4
+          - 9
+        hidden: true
+      - args:
+          - - -7
+        expect:
+          - 49
+        hidden: true
+      - args:
+          - - -2
+            - 2
+        expect:
+          - 4
+          - 4
+        hidden: true
+      - args:
+          - - 0
+            - 0
+        expect:
+          - 0
+          - 0
+        hidden: true
+    explain: The loop runs exactly n times; `k` counts down, so the largest remaining square always lands in the last free slot.
+    hints:
+      - Where is the largest square? Not in the middle.
+      - Fill the answer from the last index towards the first.
+      - Compare `nums[l] * nums[l]` with `nums[r] * nums[r]`; write the bigger one at `out[k]`.
+  - id: ex-12
+    legacyId: w2d1-12
+    type: mcq
+    tag: Stretch check
+    q: In 3Sum, after sorting `[-1, 0, 1, 2, -1, -4]` to `[-4, -1, -1, 0, 1, 2]`, why do we skip `i = 2`?
+    options:
+      - t: Because `nums[2] === nums[1]`, every triplet starting with it was already found from `i = 1`.
+        ok: true
+        why: Fixing the same value twice would list the same triplets again.
+      - t: Because negative numbers cannot be the smallest element of a triplet summing to 0.
+        why: '`-1` is the smallest element of `[-1, 0, 1]`.'
+        kind: concept
+      - t: Because i must skip every other index.
+        why: There is no such rule; only equal neighbours are skipped.
+        kind: concept
+    explain: Skipping equal values for `i` (and for `l` and `r` after a match) is what keeps the output free of duplicate triplets without a Set.
+    hints:
+      - Compare nums[2] with nums[1].
+annotated:
+  - id: anno-01
+    code: |-
+      function twoSumSorted(numbers, target) {
+        let l = 0, r = numbers.length - 1;
+        while (l < r) {
+          const sum = numbers[l] + numbers[r];
+          if (sum === target) return [l + 1, r + 1];
+          if (sum < target) l++;
+          else r--;
+        }
+        return [];
+      }
+    notes:
+      '2': Start with the widest range. `r` is the last valid index, `length - 1`.
+      '3': '`<`, not `<=`: a pair needs two different indices. When `l === r` only one element is left.'
+      '4': The only work per step. No inner loop, so the loop body is O(1).
+      '5': The problem numbers positions from 1, hence `+ 1`. Returning `[l, r]` is the most common slip on this problem.
+      '6': Too small even with the largest partner → discard the left value.
+      '7': Too large even with the smallest partner → discard the right value. `else` covers `sum > target` because equality returned on line 5.
+      '9': Unreachable on LeetCode 167 (a solution is guaranteed) but keeps the function total for other inputs.
+    title: Two Sum II (problem 167), returning 1-based indices

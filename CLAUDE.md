@@ -4,7 +4,7 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 
 ## Where things stand
 
-- Phase 0 (read and plan) was approved on 2026-11-04. Phase 1 (foundation) is built and tested on branch `phase-1-foundation`, waiting for review.
+- Phase 0 (read and plan) was approved on 2026-11-04. Phase 1 (foundation) is merged. Phase 2 (content pipeline) is built and tested on branch `phase-2-content`, waiting for review.
 - The legacy course lives in `legacy/` and is never edited. `npm run legacy:test` runs its tests on a temporary copy.
 - Where to look:
   - `docs/progress.md`: what each phase built and tested.
@@ -57,7 +57,9 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 
 ## Content conventions (from Phase 2)
 
-- `content/` (MDX and YAML) is the source of truth. MongoDB holds read-optimised copies made by `npm run content:sync`.
+- `content/` (MDX and YAML) is the source of truth, and `docs/content-format.md` describes it. MongoDB holds read-optimised copies made by `npm run content:sync`.
+- To change imported text, add an edit to `scripts/import/rewrites-*.ts` and run `npm run content:import -- --force`. `tests/content/fidelity.test.ts` fails on any change that is not in the log.
+- Text that restates a reserved problem or gives an answer away is gated (D-027): `gatedBy` on an exercise, or `<Gated id>` with the text in `content/reserved/gated.yaml`.
 - Each roadmap theory fragment is stored once, with its `source` reference, and included elsewhere by id.
 - Slugs are frozen in `content/ids.lock.json` once released. `legacy-id-map.json` maps every legacy id.
 - MDX may use only the registered components, with literal props: no `import`, `export` or JavaScript expressions.
@@ -88,6 +90,10 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 | `npm run build:e2e` then `npm run test:e2e` | Playwright against a production build made with test settings; `npx playwright install` once |
 | `npm run legacy:test` | the legacy suite on a patched copy (`-- --only=content,templates` for a quick run) |
 | `npm run check:deps` | fails if the production dependency tree holds two MongoDB drivers |
+| `npm run content:check` | validates `content/`; also runs before every build |
+| `npm run content:sync` | copies the public part of `content/` into MongoDB; needs `MONGODB_URI` or `.env.local` |
+| `npm run content:lock` | adds new ids to `content/ids.lock.json` |
+| `npm run content:import` | rebuilds `content/` and the rewrite lists from `legacy/`; `-- --force` once `content/` exists |
 
 Sign-in methods are fixed at build time, because `/sign-in` is static. Set `EMAIL_TRANSPORT` and `GITHUB_*` before `npm run build`.
 

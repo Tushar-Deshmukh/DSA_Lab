@@ -1,0 +1,15 @@
+---
+slug: bipartite-graphs
+title: Bipartite graphs
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Bipartite graphs
+  lines:
+    - 1537
+    - 1537
+---
+
+**Bipartite graphs.** Vertices can be split into two sets with every edge crossing between them ⇔ the graph has no odd cycle. Check by BFS/DFS 2-colouring: colour a start node 0, neighbours 1, their neighbours 0; a conflict means not bipartite. Run it from every uncoloured node because the graph may be disconnected.

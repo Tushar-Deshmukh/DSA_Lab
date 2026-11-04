@@ -1,0 +1,30 @@
+---
+slug: binary-search-templates
+section: 6
+title: 6.9 Binary search templates
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.9 Binary search templates
+  lines:
+    - 2907
+    - 2924
+---
+
+```js
+// First index in [lo, hi) where pred is true; returns hi if none.
+// pred must look like F...F T...T over the range.
+function firstTrue(lo, hi, pred) {
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);   // safe for large answer ranges
+    if (pred(mid)) hi = mid;
+    else lo = mid + 1;
+  }
+  return lo;
+}
+// lower bound:  firstTrue(0, n, (i) => nums[i] >= target)
+// upper bound:  firstTrue(0, n, (i) => nums[i] > target)
+// on answers:   firstTrue(minAns, maxAns + 1, (k) => feasible(k))
+```
+
+Adapt: for "last index where pred is true", search for the first index where it becomes false and subtract 1.

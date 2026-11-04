@@ -1,0 +1,208 @@
+exercises:
+  - id: ex-01
+    legacyId: w7d4-1
+    type: bug
+    tag: Containment
+    q: This merge returns `[[1,3]]` for `[[1,10],[2,3]]`. Click the buggy line.
+    code: |
+      function merge(intervals) {
+        intervals.sort((a, b) => a[0] - b[0]);
+        const res = [intervals[0].slice()];
+        for (let i = 1; i < intervals.length; i++) {
+          const last = res[res.length - 1], [s, e] = intervals[i];
+          if (s <= last[1]) last[1] = e;
+          else res.push([s, e]);
+        }
+        return res;
+      }
+    bug:
+      - 5
+    kind: impl
+    explain: When the new interval lies inside the current block, its end is smaller than the block's end, and `last[1] = e` shrinks the block. Use `last[1] = Math.max(last[1], e)`.
+    fix: |
+      if (s <= last[1]) last[1] = Math.max(last[1], e);
+    fine:
+      '1': Sorting by start with a numeric comparator is right.
+      '2': Copying the first interval avoids mutating the input.
+    hints:
+      - What should happen when an interval is completely inside the block?
+  - id: ex-02
+    legacyId: w7d4-2
+    type: mcq
+    tag: Why sort by end?
+    q: Intervals `[[1,100],[2,3],[4,5]]`. What goes wrong if you sort by **start** and greedily keep an interval when it does not overlap the last kept one?
+    options:
+      - t: '[1,100] is kept first, and then [2,3] and [4,5] overlap it and are removed: 1 kept instead of 2.'
+        ok: true
+        why: Starting first says nothing about how much room an interval leaves; ending first does.
+      - t: Nothing; start order and end order give the same answer.
+        why: This example is a counterexample.
+        kind: concept
+      - t: It crashes on intervals of different lengths.
+        why: It runs fine and returns the wrong answer.
+        kind: concept
+    explain: Greedy algorithms need a proof or a counterexample search; this one is the classic counterexample.
+    hints:
+      - Simulate the start-order greedy by hand.
+  - id: ex-03
+    legacyId: w7d4-3
+    type: code
+    tag: A small sweep
+    q: 'Write `canAttendAll(meetings)`: true if one person can attend every meeting `[start, end)`, i.e. no two overlap (a meeting may start exactly when another ends).'
+    fn: canAttendAll
+    starter: |
+      function canAttendAll(meetings) {
+
+      }
+    solution: |
+      function canAttendAll(meetings) {
+        const m = meetings.map((x) => [...x]).sort((a, b) => a[0] - b[0]);
+        for (let i = 1; i < m.length; i++) if (m[i][0] < m[i - 1][1]) return false;
+        return true;
+      }
+    tests:
+      - args:
+          - - - 0
+              - 30
+            - - 5
+              - 10
+            - - 15
+              - 20
+        expect: false
+      - args:
+          - - - 7
+              - 10
+            - - 2
+              - 4
+        expect: true
+      - args:
+          - - - 1
+              - 5
+            - - 5
+              - 8
+        expect: true
+      - args:
+          - []
+        expect: true
+        hidden: true
+      - args:
+          - - - 1
+              - 2
+            - - 3
+              - 4
+            - - 2
+              - 3
+        expect: true
+        hidden: true
+      - args:
+          - - - 1
+              - 3
+            - - 2
+              - 4
+            - - 5
+              - 6
+        expect: false
+        hidden: true
+    explain: 'After sorting by start, only neighbours can overlap. `<` (not `≤`) because touching endpoints are allowed here: read the endpoint rule every time.'
+    hints:
+      - After sorting by start, which pairs can possibly overlap?
+  - id: ex-04
+    legacyId: w7d4-4
+    type: interview
+    title: Interval List Intersections (LeetCode 986)
+    q: 'Two lists of closed intervals, each sorted and pairwise disjoint. Return their intersection. Example: `A = [[0,2],[5,10],[13,23],[24,25]]`, `B = [[1,5],[8,12],[15,24],[25,26]]` → `[[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]`.'
+    model:
+      clarify: |
+        - Closed intervals: [5,10] and [1,5] intersect in [5,5].
+        - Both lists sorted and internally disjoint; either may be empty.
+      brute: 'Compare every pair: O(m · n).'
+      optimize: 'Two pointers, like merging. The intersection of A[i] and B[j] is `[max(starts), min(ends)]` if that is non-empty. Then advance the pointer whose interval ends first: it cannot intersect anything else in the other list.'
+      edges: |
+        - one list empty → []
+        - touching endpoints → single-point intervals
+        - one interval covering several of the other list
+      complexity: O(m + n) time, O(1) extra space besides the output.
+    fn: intervalIntersection
+    starter: |
+      function intervalIntersection(A, B) {
+
+      }
+    solution: |
+      function intervalIntersection(A, B) {
+        const res = []; let i = 0, j = 0;
+        while (i < A.length && j < B.length) {
+          const lo = Math.max(A[i][0], B[j][0]), hi = Math.min(A[i][1], B[j][1]);
+          if (lo <= hi) res.push([lo, hi]);
+          if (A[i][1] < B[j][1]) i++; else j++;
+        }
+        return res;
+      }
+    tests:
+      - args:
+          - - - 0
+              - 2
+            - - 5
+              - 10
+            - - 13
+              - 23
+            - - 24
+              - 25
+          - - - 1
+              - 5
+            - - 8
+              - 12
+            - - 15
+              - 24
+            - - 25
+              - 26
+        expect:
+          - - 1
+            - 2
+          - - 5
+            - 5
+          - - 8
+            - 10
+          - - 15
+            - 23
+          - - 24
+            - 24
+          - - 25
+            - 25
+      - args:
+          - - - 1
+              - 3
+            - - 5
+              - 9
+          - []
+        expect: []
+      - args:
+          - - - 1
+              - 7
+          - - - 3
+              - 10
+        expect:
+          - - 3
+            - 7
+        hidden: true
+      - args:
+          - - - 0
+              - 10
+          - - - 1
+              - 2
+            - - 4
+              - 5
+            - - 8
+              - 12
+        expect:
+          - - 1
+            - 2
+          - - 4
+            - 5
+          - - 8
+            - 10
+        hidden: true
+    explain: Advancing the interval that ends first is the same "discard what cannot help" argument as two pointers in Module 2.
+    hints:
+      - What is the intersection of two intervals?
+      - Which interval can be discarded after comparing the two current ones?
+annotated: []

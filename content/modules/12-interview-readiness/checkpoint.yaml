@@ -1,0 +1,56 @@
+exercises:
+  - id: ex-01
+    legacyId: w12sat-1
+    gatedBy: assessment-6
+    type: pattern
+    tag: Final review
+    q: '"Find the length of the longest substring without repeating characters."'
+    options:
+      - t: Variable sliding window with a last-seen map
+        ok: true
+      - t: DP over prefixes
+        why: Possible but more complicated; validity is monotone, so a window is the natural fit.
+        kind: concept
+      - t: Backtracking
+        why: Only one optimum is asked for.
+        kind: concept
+    explain: Longest contiguous + a validity rule that shrinking preserves → variable window.
+    hints:
+      - If a window is valid, is every smaller window inside it valid?
+  - id: ex-02
+    legacyId: w12sat-2
+    gatedBy: assessment-6
+    type: pattern
+    tag: Final review
+    q: '"Courses have prerequisites; return an order in which all can be taken, or an empty list if impossible."'
+    options:
+      - t: Topological sort (Kahn's algorithm)
+        ok: true
+      - t: Dijkstra
+        why: There are no weights or distances.
+        kind: concept
+      - t: Union-Find
+        why: Union-Find ignores edge direction, which is the whole point here.
+        kind: concept
+    explain: Order under directed dependencies → topological sort; a cycle means impossible.
+    hints:
+      - Is the relationship directed?
+  - id: ex-03
+    legacyId: w12sat-3
+    gatedBy: assessment-6
+    type: pattern
+    tag: Final review
+    q: '"Return the minimum number of coins to make an amount, with unlimited coins of each denomination."'
+    options:
+      - t: Unbounded knapsack DP with Infinity for unreachable
+        ok: true
+      - t: Greedy, largest coin first
+        why: Fails for coins [1, 3, 4] and amount 6.
+        kind: concept
+      - t: BFS over amounts
+        why: Works (each coin is an edge of cost 1), but the DP is simpler and the standard answer.
+        kind: concept
+    explain: Fewest items reaching a sum with reuse → unbounded knapsack.
+    hints:
+      - Does greedy survive [1, 3, 4] and 6?
+annotated: []

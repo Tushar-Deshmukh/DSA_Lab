@@ -1,0 +1,20 @@
+---
+slug: strings-numbers-and-integer-pitfalls
+section: 6
+title: 6.4 Strings, numbers and integer pitfalls
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.4 Strings, numbers and integer pitfalls
+  lines:
+    - 2757
+    - 2764
+---
+
+- Strings are immutable: `s[0] = 'x'` silently does nothing. Convert with `const chars = [...s]`, edit, then `chars.join('')`.
+- Character codes: `'a'.charCodeAt(0)` is 97; `String.fromCharCode(97 + i)`.
+- Integer division: `Math.trunc(a / b)` truncates toward zero (C/Java behaviour, required by 150); `Math.floor` rounds down, which differs for negatives.
+- Modulo of negatives: `-7 % 3` is `-1`; normalise with `((a % m) + m) % m`.
+- Safe integers: exact up to 2⁵³ − 1 (`Number.MAX_SAFE_INTEGER` ≈ 9·10¹⁵). Products of two values near 10⁹ exceed it; use `BigInt` (`10n ** 18n`) or apply the modulus as you go (`(a * b) % MOD` can lose precision when a·b > 2⁵³; use BigInt or split the multiplication).
+- Bitwise operators coerce to signed 32-bit integers (6.18). Never use `x | 0` or `~~x` as a floor: they truncate toward zero (so \~\~-2.5 is -2, not -3) and wrap beyond ±2³¹. Use Math.floor or Math.trunc.
+- `Infinity` and `-Infinity` are convenient sentinels for min/max DP; `0 * Infinity` is `NaN`, so guard arithmetic on unreachable states.

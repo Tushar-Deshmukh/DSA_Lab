@@ -1,0 +1,29 @@
+---
+slug: module-by-module-overview
+section: 2
+title: Module-by-module overview
+source:
+  file: source/roadmap.md
+  section: 2
+  key: Week-by-week overview
+  lines:
+    - 135
+    - 151
+---
+
+Problem counts are Core / Stretch / Optional. Core is required. Stretch is done in the same lesson if time allows, otherwise later. Optional problems are Hard or advanced and may be skipped without consequence.
+
+| Module | Main topic | Subtopics | Core patterns | Difficulty | New problems C/S/O | Revision and assessment | Learning outcome |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Complexity, arrays, hashing | Big O/Θ/Ω, amortised cost, constraints → algorithm, in-place edits, Map/Set, frequency counting, bucket idea, matrix traversal | Hash lookup, frequency map, read/write pointers, boundary-shrinking matrix walk | Easy–Medium | 10 / 3 / 1 | Warm-up in each lesson; checkpoint review + complexity drill | Analyse any loop/recursion; replace a nested loop with a hash map |
+| 2 | Two pointers, sliding window, prefix sums | Opposite/same-direction pointers, fixed and variable windows, prefix sums + hash map, Kadane, difference arrays, palindromes | Two pointers, sliding window, prefix-sum counting, Kadane | Medium | 10 / 4 / 3 | **Assessment 1** | Recognise and derive the four linear patterns from brute force |
+| 3 | Binary search and sorting | Closed vs half-open intervals, lower/upper bound, rotated arrays, search on answer, merge sort, quicksort, stability, comparators | Boundary binary search, binary search on answer, sort-then-scan | Medium | 11 / 2 / 1 | Checkpoint review | Write bug-free binary search by reasoning about invariants |
+| 4 | Linked lists, stacks, queues | Dummy nodes, reversal, fast/slow pointers, LRU design, stack/queue implementations, monotonic stack | In-place reversal, fast/slow, monotonic stack | Medium | 11 / 4 / 2 | **Assessment 2** | Rewire pointers without losing nodes; spot "next greater" problems |
+| 5 | Recursion and backtracking | Base case, recursion trees, call stack, subsets, permutations, combinations, pruning, duplicates, grid search | Choose/explore/unchoose, include/exclude | Medium–Hard | 10 / 3 / 2 | Checkpoint review + **Mock 1** | Define recursive state and stopping rules; analyse exponential complexity |
+| 6 | Trees and BSTs | Traversals (recursive + iterative), BFS levels, height/diameter, path problems, LCA, BST validation, construction | Bottom-up return values, top-down parameters, level BFS, inorder = sorted | Medium | 11 / 7 / 1 | **Assessment 3** | Classify tree problems as children / ancestors / levels and solve them |
+| 7 | Heaps, intervals, tries | Heap operations, custom MinHeap, top-K, k-way merge, two heaps, interval merging and scheduling, trie | Heap of size k, k-way merge, sort-by-start sweep, prefix tree | Medium–Hard | 8 / 4 / 3 | Checkpoint review + **Mock 2** | Choose heap vs sort; implement a heap and trie from scratch |
+| 8 | Graphs I | Representations, BFS/DFS, visited state, components, grids, multi-source BFS, cycle detection, topological sort, bipartite | Flood fill, BFS shortest path, Kahn's algorithm, 3-colour DFS | Medium | 10 / 4 / 2 | **Assessment 4** | Model a problem as a graph and pick BFS vs DFS vs topo sort |
+| 9 | Graphs II and greedy | Dijkstra, Union-Find, MST (Kruskal/Prim), greedy choice, exchange arguments, counterexamples | Dijkstra with heap, DSU, greedy with proof | Medium–Hard | 7 / 4 / 1 | Checkpoint review + **Mock 3** | Run Dijkstra and DSU from memory; prove or break a greedy idea |
+| 10 | Dynamic programming I | Overlapping subproblems, memoisation, tabulation, space optimisation, 1-D DP, unbounded knapsack, grid DP | State → transition → base case, take/skip | Hard (conceptually) | 10 / 2 / 2 | **Assessment 5** | Turn brute-force recursion into memo, then table, then O(1) space |
+| 11 | DP II and bits | 0/1 knapsack, subset sum, LCS, edit distance, LIS, palindromic DP, state machines; bitwise ops and JS 32-bit rules | Two-sequence DP, knapsack, XOR tricks | Hard | 10 / 2 / 2 | Checkpoint review + **Mock 4** | Define 2-D DP states; recognise when DP is unnecessary |
+| 12 | Interview readiness | Unlabeled mixed sets, weak-pattern repair, one hard problem, verbal drills | All patterns, mixed | Medium–Hard | 6 + 1 Hard | **Mocks 5–6**, **Assessment 6** | Solve unseen mediums in ≤ 40 min while explaining clearly |

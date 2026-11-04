@@ -1,0 +1,25 @@
+---
+slug: top-down-recursion
+number: '6.2'
+title: Top-down recursion (pass information to children)
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Pattern 6.2
+  lines:
+    - 1288
+    - 1297
+---
+
+**Pattern 6.2: Top-down recursion (pass information to children)**
+
+1. *Recognise:* a node's answer depends on its ancestors: path sums, ranges, maxima along the path.
+2. *Clues:* "root-to-leaf", "path from root", "good node", "ancestor", "valid range".
+3. *From brute force:* storing every root-to-node path costs O(n·h); passing a running value costs O(1) per call.
+4. *Why it works:* each call receives exactly the summary of its ancestors it needs.
+5. *Template:* `function f(node, state) { if (!node) return; check(node, state); f(node.left, next(state, node)); f(node.right, next(state, node)); }`.
+6. *Complexity:* O(n) time, O(h) space (plus output for path lists).
+7. *Variations:* collect paths with backtracking (113: push, recurse, pop), count good nodes (1448: pass max so far), validate BST (98).
+8. *Inappropriate when:* the answer needs subtree aggregates (use 6.1).

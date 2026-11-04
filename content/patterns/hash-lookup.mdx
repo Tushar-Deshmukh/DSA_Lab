@@ -1,0 +1,25 @@
+---
+slug: hash-lookup
+number: '1.1'
+title: Hash lookup ("have I seen the complement?")
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Pattern 1.1
+  lines:
+    - 361
+    - 370
+---
+
+**Pattern 1.1: Hash lookup ("have I seen the complement?")**
+
+1. *Recognise:* you need pairs, duplicates or membership, and the brute force has an inner loop that searches for a value.
+2. *Clues:* "two numbers that add up to", "contains duplicate", "exists", "first unique", unsorted input.
+3. *From brute force:* the inner loop asks one question per element; store answers in a `Map`/`Set` as you go.
+4. *Why it works:* every pair (i, j) with i \< j is checked when j is visited, because i is already in the map.
+5. *Template:* one pass; compute what you need; check the map; then insert the current element.
+6. *Complexity:* O(n) average time, O(n) space.
+7. *Variations:* store index (Two Sum), count (frequency), or first position (longest subarray problems in Module 2).
+8. *Inappropriate when:* the input is sorted and O(1) space is required (use two pointers), or you need ordered/range answers.

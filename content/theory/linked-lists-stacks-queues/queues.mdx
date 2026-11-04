@@ -1,0 +1,15 @@
+---
+slug: queues
+title: Queues
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Queues
+  lines:
+    - 777
+    - 777
+---
+
+**Queues.** FIFO. `Array.prototype.shift()` is O(n) because every remaining element is re-indexed, which turns an O(V + E) BFS into O(V²) on large inputs. Use an array with a moving head index (section 6.5), or two stacks (232: amortised O(1) because each element moves from the in-stack to the out-stack once). A **deque** allows push/pop at both ends; in JS implement it with a circular buffer or a doubly linked list (section 6.5).

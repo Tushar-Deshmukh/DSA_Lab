@@ -31,7 +31,7 @@ Other differences between the brief and the files:
 - Four tests and `tools/pdf.mjs` load `playwright`, which `package.json` does not declare. `package.json` declares `js-yaml ^4.1.0` and `marked ^15.0.12` (the lockfile pins 4.1.0 and 15.0.12) and has no build or test scripts; the README lists the commands.
 - `@pull wN:Key` is documented in the brief but used 0 times.
 - The brief names three section tags (`theory`, `code`, `guided`). The content uses ten, plus 36 untagged headings (section 5).
-- Exercise fields that the brief's schema does not list: `tag` (on every exercise), `title` (interview), `clues`, `code` on mcq and trace, `w` (width) on fill blanks and trace rows, `placeholder` (predict), `multi` (mcq). A test's `expect` can be a description rather than a value when a checker decides (for example "any balanced BST", "any valid order").
+- Exercise fields that the brief's schema does not list: `tag` (on every exercise except interview), `title` (interview), `clues`, `code` on trace. The legacy app also supports `code` on mcq, `w` (width) on fill blanks and trace rows, `placeholder` (predict) and `multi` (mcq), but no exercise uses them. (Corrected in Phase 2: this line first listed those as in use.) A test's `expect` can be a description rather than a value when a checker decides (for example "any balanced BST", "any valid order").
 - Line numbers: `bug` and `fine` are 0-based; `anno` notes are 1-based.
 - 3 visualizers have no random-input generator (`depmap`, `recognise`, `interview-clock`), so "300 random inputs" applies to 126.
 - Legacy exercise ids are `<lessonId>-<n>` (for example `w2d1-3`), not `w2d1-q3` as in the brief's example.
@@ -148,7 +148,7 @@ Section 6 subsections pulled into lessons (14): 6.1 W1L1, 6.3 W1L2, 6.2 W1L3, 6.
 - By page kind: study lessons 340, Saturday pages 52, extra pages 29.
 - Runnable tests: 655, of which 233 hidden (fill tests are never hidden). Custom checkers: 5. Class-style `ops` tests: 6 exercises. Compare modes: unordered 7, float 3, sorted 2.
 - Adapters: arguments `tree` 9, `list` 6, `badfn` 1, `cycle` 1; return `list` 3, `tree` 2, `arg0prefix` 2. Supported but unused: `nodeIndex`, `arg0`.
-- Every exercise has an `explain` and at least one hint (300 with 1, 76 with 2, 45 with 3). Every wrong option has a `why` and a `kind` (concept or implementation). Multi-answer MCQs: 15. All 57 interview exercises have `fn` and a model answer with all five stages (clarify, brute, optimize, edges, complexity).
+- Every exercise has an `explain` and at least one hint (300 with 1, 76 with 2, 45 with 3). Every wrong option has a `why`, and options with a `kind` say `concept` (272) or `impl` (13); 164 options have no `kind`. (Corrected in Phase 2: this line first said every wrong option has a `kind`, spelled `implementation`.) Multi-answer MCQs: 15. All 57 interview exercises have `fn` and a model answer with all five stages (clarify, brute, optimize, edges, complexity).
 - Fill: 147 accepted alternatives over 27 exercises. Trace: 186 rows over 50 exercises; 47 have a `verify` script. **No `verify`: `w2d1-4`, `w9d3-1`, `w12d1-2`** (answers checked by hand and correct).
 - Reference solutions total 41,769 characters; `dist/exercises.json` is 562,366 bytes.
 - The 15-statement classification drill appears twice, identically: `w3sat-1…15` and `method-1…15`.

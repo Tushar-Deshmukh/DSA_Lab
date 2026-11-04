@@ -1,0 +1,21 @@
+---
+slug: dijkstras-algorithm
+title: Dijkstra's algorithm
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Dijkstra's algorithm
+  lines:
+    - 1707
+    - 1713
+---
+
+**Dijkstra's algorithm.** Shortest paths from one source in a graph with **non-negative** weights. Keep `dist[]` (∞ except the source = 0) and a min-heap of `[distance, node]`. Repeatedly pop the closest unfinalised node and *relax* its edges: if `dist[u] + w < dist[v]`, update `dist[v]` and push `[dist[v], v]`.
+
+- *Why it works:* when a node is popped with the smallest tentative distance, no other route can be shorter, because every other route would go through a node at least as far away and add non-negative weights.
+- *Lazy deletion:* JS heaps have no decrease-key, so push duplicates and skip a popped entry if `d > dist[u]` (stale).
+- *Complexity:* O((V + E) log V) with a binary heap.
+- *When not to use:* negative edges (use Bellman-Ford, O(V·E)); unweighted graphs (plain BFS is simpler and O(V + E)); weights of only 0 and 1 (0-1 BFS with a deque).
+- *Variants:* "minimise the maximum edge on the path" (1631 Path With Minimum Effort) uses the same algorithm with `max(dist[u], w)` instead of `dist[u] + w`. "At most k stops" (787) breaks Dijkstra's assumption because a longer-cost path with fewer stops may be needed; use Bellman-Ford limited to k + 1 rounds or BFS by stops.

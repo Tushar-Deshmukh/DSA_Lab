@@ -1,0 +1,25 @@
+---
+slug: bfs-shortest-path
+number: '8.2'
+title: BFS shortest path (single or multi-source)
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Pattern 8.2
+  lines:
+    - 1657
+    - 1666
+---
+
+**Pattern 8.2: BFS shortest path (single or multi-source)**
+
+1. *Recognise:* minimum number of steps/moves/minutes in an unweighted graph or grid.
+2. *Clues:* "minimum steps", "shortest path" with equal costs, "nearest", "minutes until", "distance to the nearest 0".
+3. *From brute force:* DFS over all paths is exponential; BFS reaches each node first along a shortest path.
+4. *Why it works:* BFS processes nodes in non-decreasing distance order.
+5. *Template:* queue with all sources at distance 0; mark on enqueue; process level by level or store `dist`.
+6. *Complexity:* O(V + E).
+7. *Variations:* 1091 (8 directions, start/end blocked checks), 542 (multi-source from all 0s), 127 word ladder (neighbours = one-letter changes; use wildcard buckets like `h*t`).
+8. *Inappropriate when:* edges have different weights (Dijkstra, Module 9).

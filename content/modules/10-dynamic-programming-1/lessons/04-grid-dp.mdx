@@ -1,0 +1,73 @@
+---
+slug: grid-dp
+legacyId: w10d4
+title: Grid DP
+goal: Fill a 2-D table where each cell depends on the cell above and the cell to the left, handle obstacles in the base cases, and compress the table to one row.
+why: 'Grid path problems are common warm-up DP questions, and the one-row compression is a standard follow-up ("can you do it in O(n) space?"). They also train the habit of checking iteration order: every cell you read must already be filled.'
+prereqs:
+  - Lesson 1's four steps
+  - 2-D arrays and grid bounds (Module 1)
+outcomes:
+  - Fill the Unique Paths table for a 3 × 3 grid, then the one-row version
+  - Solve Minimum Path Sum (64) in O(n) extra space
+  - Handle obstacles, including on the first row and column (63)
+  - Say why grid DP fails when movement is in all four directions
+ready:
+  - 64 solved in O(n) extra space
+  - I filled the 3 × 3 Unique Paths table, then the one-row version
+  - 63 handles an obstacle on the first row
+summary:
+  - '`dp[r][c] = combine(dp[r − 1][c], dp[r][c − 1]) (+ cell)`.'
+  - 'First row and column: only one neighbour; obstacles there block everything after them.'
+  - 'One row: `row[c] = combine(row[c], row[c − 1])`, filled left to right.'
+  - O(m·n) time, O(n) space.
+  - 'Four-directional movement creates cycles: use BFS or Dijkstra instead.'
+revision: Write 64 with one row from memory, and say in one sentence why `row[c]` still holds the value from the row above when you read it.
+warmup:
+  problem: 322
+topic: Grid DP; compressing to one row
+implement: Unique Paths 3×3 table, then the one-row version
+problemsText: 'C: 62, 64 · S: 63'
+problems:
+  - num: 62
+    tier: C
+  - num: 64
+    tier: C
+  - num: 63
+    tier: S
+doneWhen: 64 solved in O(n) extra space
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="two-neighbours-per-cell" kind="theory" title="Two neighbours per cell">
+
+<Include id="theory/dynamic-programming-1/example-5" />
+
+<Viz id="grid-dp" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="one-row-is-enough" kind="code" title="One row is enough">
+
+<Include id="patterns/grid-dp" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

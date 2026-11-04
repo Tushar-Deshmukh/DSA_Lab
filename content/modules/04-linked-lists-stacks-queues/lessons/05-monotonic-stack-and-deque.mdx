@@ -1,0 +1,93 @@
+---
+slug: monotonic-stack-and-deque
+legacyId: w4d5
+title: Monotonic stacks and the monotonic deque
+goal: Solve "next greater/smaller element" problems in O(n) with a monotonic stack of indices, measure distances and widths, and preview the sliding-window maximum with a monotonic deque.
+why: 'Monotonic stacks look like magic until you see the invariant: an element that can never be an answer again is popped forever. They turn many O(n²) "look outwards from each element" problems into O(n), and the histogram problem is a classic Hard.'
+prereqs:
+  - Stacks (lesson 4)
+  - 'Amortised arguments: count total pushes and pops, not per-iteration work (Module 2 lesson 3)'
+outcomes:
+  - Write next greater, next smaller and previous greater/smaller variants
+  - Store indices so distances (739) and widths (84) can be computed
+  - Explain why the whole algorithm is O(n) even with a nested `while`
+  - Describe the monotonic deque for sliding-window maxima
+ready:
+  - 739 stores indices, and I can state why each index is pushed and popped once
+  - I dry-ran `nextGreater([2,1,5,3,6])` and adapted it for previous-smaller
+  - I can say which index on the stack gives a bar's left boundary in 84
+summary:
+  - Keep a stack of indices whose values are monotone (decreasing for next greater).
+  - 'A new larger value resolves every smaller waiting index: pop and record.'
+  - 'Each index is pushed once and popped at most once: O(n).'
+  - 'Store indices, not values: distances `i − j`, widths between previous and next smaller.'
+  - 'Monotonic deque: same idea plus removing expired indices from the front.'
+revision: From memory, write `nextGreater` and explain why the nested `while` does not make it O(n²). Then name what to change for "next smaller".
+warmup:
+  problem: 146
+topic: 'Monotonic stack: next greater/smaller, previous variants, widths; monotonic queue preview'
+implement: Dry run `nextGreater([2,1,5,3,6])`; adapt it for previous-smaller
+problemsText: 'C: 496, 739 · S: 84'
+problems:
+  - num: 496
+    tier: C
+  - num: 739
+    tier: C
+  - num: 84
+    tier: S
+doneWhen: 739 stores indices; you can state why each index is pushed and popped once
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-invariant" kind="theory" title="The invariant">
+
+<Include id="theory/linked-lists-stacks-queues/monotonic-stack" />
+
+<Include id="theory/linked-lists-stacks-queues/example-2" />
+
+<Viz id="mono-stack" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="distances-and-widths" kind="theory" title="Distances and widths">
+
+Storing indices is what turns "the next greater value" into "how many days until it" (739): when index j is popped at i, the wait is `i − j`.
+
+<Viz id="daily-temps" />
+
+Largest Rectangle in Histogram (84, Stretch) uses both neighbours at once. When bar `top` is popped by a lower bar `i`, the bar below it on the stack is its previous smaller bar, and `i` is its next smaller bar, so the widest rectangle of height `h[top]` spans between them.
+
+<Viz id="histogram" />
+
+<Include id="patterns/monotonic-stack" />
+
+</Unit>
+
+<Unit id="preview-the-monotonic-deque" kind="theory" title="Preview: the monotonic deque">
+
+<Include id="theory/linked-lists-stacks-queues/monotonic-queue" />
+
+<Include id="theory/linked-lists-stacks-queues/example-4" />
+
+<Viz id="mono-deque" />
+
+<Include id="theory/linked-lists-stacks-queues/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-04" />
+
+</Unit>

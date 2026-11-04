@@ -1,0 +1,193 @@
+exercises:
+  - id: ex-01
+    legacyId: w3d2-1
+    type: code
+    tag: firstTrue in action
+    q: 'Write `firstBadVersion(n, isBad)`: return the first version v in 1..n with `isBad(v)` true (one is guaranteed). Call `isBad` as few times as possible (O(log n)).'
+    fn: firstBadVersion
+    starter: |
+      function firstBadVersion(n, isBad) {
+
+      }
+    solution: |
+      function firstBadVersion(n, isBad) {
+        let lo = 1, hi = n;
+        while (lo < hi) {
+          const mid = Math.floor((lo + hi) / 2);
+          if (isBad(mid)) hi = mid;
+          else lo = mid + 1;
+        }
+        return lo;
+      }
+    adapt:
+      args:
+        - null
+        - badfn
+    tests:
+      - args:
+          - 5
+          - 4
+        expect: 4
+      - args:
+          - 1
+          - 1
+        expect: 1
+      - args:
+          - 10
+          - 1
+        expect: 1
+        hidden: true
+      - args:
+          - 10
+          - 10
+        expect: 10
+        hidden: true
+      - args:
+          - 2147483647
+          - 2147483647
+        expect: 2147483647
+        hidden: true
+    explain: The last test has n = 2³¹ − 1. `(lo + hi) >> 1` would overflow to a negative number there; `Math.floor((lo + hi) / 2)` is exact because doubles hold integers up to 2⁵³.
+    hints:
+      - The search range is [1, n], and an answer is guaranteed, so hi can start at n.
+      - Use Math.floor((lo + hi) / 2) for the midpoint.
+  - id: ex-02
+    legacyId: w3d2-2
+    type: mcq
+    tag: Why nums[hi]?
+    q: Why does `findMin` compare `nums[mid]` with `nums[hi]` instead of `nums[lo]`?
+    options:
+      - t: If `nums[mid] > nums[hi]`, the drop must be between mid and hi; otherwise mid..hi is sorted and the minimum is at mid or left. Both cases are decided, including the unrotated array.
+        ok: true
+        why: 'With nums[lo], the test `nums[mid] > nums[lo]` is also true on an unrotated array, where the minimum is at lo, not right of mid: it needs a special case.'
+      - t: Because nums[hi] is always the maximum.
+        why: In a rotated array nums[hi] is in the second run, often small.
+        kind: concept
+      - t: Either works the same.
+        why: 'Try `[1, 2, 3]`: `nums[1] > nums[0]` would send the search right, past the minimum.'
+        kind: concept
+    explain: Comparing with the right end always tells you which side of mid holds the drop.
+    hints:
+      - Try both comparisons on the unrotated array [1, 2, 3].
+  - id: ex-03
+    legacyId: w3d2-3
+    type: trace
+    tag: Lesson 2 dry runs
+    q: Run `findMin` on the three arrays from this lesson's plan. Give the number of loop iterations and the result for each.
+    rows:
+      - prompt: '[4,5,6,7,0,1,2]: iterations'
+        answer: '3'
+      - prompt: '[1,2,3]: iterations, then result as `k → v`'
+        answer:
+          - 2 → 1
+          - 2->1
+          - 2→1
+        why: 'mid = 1: 2 ≤ 3 → hi = 1; mid = 0: 1 ≤ 2 → hi = 0. Result nums[0] = 1.'
+      - prompt: '[2,1]: iterations, then result as `k → v`'
+        answer:
+          - 1 → 1
+          - 1->1
+          - 1→1
+        why: 'mid = 0: 2 > 1 → lo = 1. Result nums[1] = 1.'
+    verify: |
+      function run(nums) { let lo = 0, hi = nums.length - 1, it = 0; while (lo < hi) { it++; const mid = lo + ((hi - lo) >> 1); if (nums[mid] > nums[hi]) lo = mid + 1; else hi = mid; } return [it, nums[lo]]; }
+      console.log(run([4, 5, 6, 7, 0, 1, 2])[0]); const b = run([1, 2, 3]); console.log(b[0] + ' → ' + b[1]); const c = run([2, 1]); console.log(c[0] + ' → ' + c[1]);
+    explain: Two-element arrays are where off-by-one bugs live; always dry-run one.
+    hints:
+      - Write lo, hi, mid for every iteration.
+  - id: ex-04
+    legacyId: w3d2-4
+    type: bug
+    tag: Range check
+    q: This version of 33 misses the target 4 in `[4, 5, 6, 7, 0, 1, 2]`. Click the buggy line.
+    code: |
+      function search(nums, target) {
+        let lo = 0, hi = nums.length - 1;
+        while (lo <= hi) {
+          const mid = lo + ((hi - lo) >> 1);
+          if (nums[mid] === target) return mid;
+          if (nums[lo] <= nums[mid]) {
+            if (nums[lo] < target && target < nums[mid]) hi = mid - 1;
+            else lo = mid + 1;
+          } else {
+            if (nums[mid] < target && target <= nums[hi]) lo = mid + 1;
+            else hi = mid - 1;
+          }
+        }
+        return -1;
+      }
+    bug:
+      - 6
+    kind: impl
+    explain: '`nums[lo] < target` excludes the case `target === nums[lo]`. With target 4 = nums[0], the check fails and the search goes right, away from it. The left half''s range is `[nums[lo], nums[mid])`, so the test is `nums[lo] <= target`.'
+    fix: |
+      if (nums[lo] <= target && target < nums[mid]) hi = mid - 1;
+    fine:
+      '5': '`<=` is right here: when lo === mid, the one-element left half counts as sorted.'
+      '9': 'The right-half check is correct: `(nums[mid], nums[hi]]`.'
+    hints:
+      - Which endpoint of the sorted half is excluded by the comparison?
+  - id: ex-05
+    legacyId: w3d2-5
+    type: interview
+    title: Sqrt(x) (LeetCode 69)
+    q: 'Given a non-negative integer `x`, return the square root of x rounded down to the nearest integer, without using `Math.sqrt` or `**`. Example: `x = 8` → 2. Constraint: 0 ≤ x ≤ 2³¹ − 1.'
+    model:
+      clarify: |
+        - Integer result, rounded down.
+        - x can be 0 or 1.
+        - x up to about 2.1·10⁹, so a linear scan of candidates is too slow.
+      brute: 'Try k = 0, 1, 2, … while k·k ≤ x: O(√x), about 46,000 steps at the top of the range. Workable, but say it and move on.'
+      optimize: The predicate `k * k > x` is monotone in k (F … F T … T). The answer is the last k with `k * k <= x`, which is `firstTrue(k * k > x) − 1`. Search k in `[0, x + 1)`. Products stay below 2⁵³, so plain numbers are exact.
+      edges: |
+        - x = 0 → 0; x = 1 → 1
+        - perfect squares (16 → 4) and just below (15 → 3)
+        - x = 2³¹ − 1 → 46340
+      complexity: O(log x) time, O(1) space.
+    fn: mySqrt
+    starter: |
+      function mySqrt(x) {
+
+      }
+    solution: |
+      function mySqrt(x) {
+        let lo = 0, hi = x + 1;               // first k with k * k > x lies in [0, x + 1]
+        while (lo < hi) {
+          const mid = Math.floor((lo + hi) / 2);
+          if (mid * mid > x) hi = mid;
+          else lo = mid + 1;
+        }
+        return lo - 1;
+      }
+    tests:
+      - args:
+          - 4
+        expect: 2
+      - args:
+          - 8
+        expect: 2
+      - args:
+          - 0
+        expect: 0
+      - args:
+          - 1
+        expect: 1
+        hidden: true
+      - args:
+          - 15
+        expect: 3
+        hidden: true
+      - args:
+          - 16
+        expect: 4
+        hidden: true
+      - args:
+          - 2147483647
+        expect: 46340
+        hidden: true
+    explain: '"Last true" = "first false" − 1: search for the first k that is too big.'
+    hints:
+      - Write a predicate on k that looks like F F F T T T.
+      - The answer is the last k with k·k ≤ x.
+      - 'Use Math.floor((lo + hi) / 2): x + 1 can exceed 2³¹.'
+annotated: []

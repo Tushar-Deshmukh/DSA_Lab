@@ -1,0 +1,102 @@
+---
+slug: tree-vocabulary-traversals-question-types
+legacyId: w6d1
+title: Tree vocabulary, traversals and the three question types
+goal: Read LeetCode's tree arrays, write preorder, inorder and postorder recursively and inorder iteratively, and classify any tree problem by where its information comes from.
+why: Classifying the question first is the single habit that makes tree problems routine. Iterative traversal shows you understand the call stack well enough to replace it.
+prereqs:
+  - Recursion and the call stack (Module 5 lesson 1)
+  - Stacks (Module 4 lesson 4)
+outcomes:
+  - Use root, leaf, depth, height, balanced, complete and skewed correctly
+  - Draw a tree from `[3,9,20,null,null,15,7]`
+  - Write the three DFS orders and say what each is used for
+  - Write iterative inorder and preorder with an explicit stack
+  - Label problems as children / ancestors / levels
+ready:
+  - I wrote 94 iteratively
+  - I labelled 104, 226 and 94 as children / ancestors / levels
+  - I traced iterative preorder and inorder on `[3,9,20,null,null,15,7]`
+summary:
+  - LeetCode trees are level-order arrays with `null` for missing children.
+  - 'Preorder: node first (copy, pass info down). Inorder: BST in sorted order. Postorder: combine children.'
+  - Recursive DFS uses O(h) stack; h is O(n) for a skewed tree.
+  - 'Iterative inorder: push lefts, pop, visit, go right. Iterative preorder: pop, visit, push right then left.'
+  - 'Decide first: children (return values), ancestors (parameters) or levels (BFS).'
+revision: Write iterative inorder from memory, then classify "maximum depth", "count nodes greater than every ancestor" and "average of each level" by question type.
+warmup:
+  problem: 79
+topic: Tree terms, LeetCode array format, recursive DFS orders, iterative inorder; the three question types
+implement: Draw `[3,9,20,null,null,15,7]`; trace iterative preorder and inorder
+problemsText: 'C: 104, 226, 94 · S: 100'
+problems:
+  - num: 104
+    tier: C
+  - num: 226
+    tier: C
+  - num: 94
+    tier: C
+  - num: 100
+    tier: S
+doneWhen: 94 written iteratively; each problem labelled children / ancestors / levels
+estimate:
+  T: 30
+  I: 20
+  P: 50
+  R: 15
+  'N': 5
+---
+
+<Unit id="vocabulary" kind="theory" title="Vocabulary">
+
+<Include id="theory/binary-trees-bst/terminology" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="leetcodes-tree-format" kind="theory" title="LeetCode's tree format">
+
+<Include id="theory/binary-trees-bst/leetcode-tree-input" />
+
+<Viz id="tree-build" />
+
+</Unit>
+
+<Unit id="depth-first-traversals" kind="theory" title="Depth-first traversals">
+
+<Include id="theory/binary-trees-bst/depth-first-traversals" />
+
+<Viz id="tree-dfs" />
+
+<Exercise id="ex-02" />
+
+</Unit>
+
+<Unit id="iterative-traversal" kind="code" title="Iterative traversal">
+
+<Include id="theory/binary-trees-bst/example-3" />
+
+<Viz id="tree-inorder-iter" />
+
+<Include id="handbook/javascript-reference/trees" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="classify-first" kind="theory" title="Classify first">
+
+<Include id="theory/binary-trees-bst/the-three-question-types" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

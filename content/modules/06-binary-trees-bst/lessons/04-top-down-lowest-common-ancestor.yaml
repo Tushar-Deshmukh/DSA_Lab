@@ -1,0 +1,198 @@
+exercises:
+  - id: ex-01
+    legacyId: w6d4-1
+    type: code
+    tag: Top-down digits
+    q: 'Write `sumNumbers(root)` (problem 129): each root-to-leaf path of single digits forms a number (`1 → 2 → 3` is 123). Return the sum of all those numbers.'
+    fn: sumNumbers
+    adapt:
+      args:
+        - tree
+    starter: |
+      function sumNumbers(root) {
+
+      }
+    solution: |
+      function sumNumbers(root) {
+        function dfs(node, cur) {
+          if (!node) return 0;
+          cur = cur * 10 + node.val;
+          if (!node.left && !node.right) return cur;
+          return dfs(node.left, cur) + dfs(node.right, cur);
+        }
+        return dfs(root, 0);
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+        expect: 25
+      - args:
+          - - 4
+            - 9
+            - 0
+            - 5
+            - 1
+        expect: 1026
+      - args:
+          - - 5
+        expect: 5
+      - args:
+          - - 1
+            - 0
+        expect: 10
+        hidden: true
+      - args:
+          - - 1
+            - null
+            - 2
+            - null
+            - 3
+        expect: 123
+        hidden: true
+    explain: 'The number formed so far is the ancestor information: it flows down as `cur * 10 + val`, and leaves report the finished number up.'
+    hints:
+      - What does a node need to know from its ancestors?
+      - Only leaves complete a number.
+  - id: ex-02
+    legacyId: w6d4-2
+    type: bug
+    tag: Leaves only
+    q: This Path Sum returns true for `root = [1,2]`, `targetSum = 1`, but the only root-to-leaf path is 1 → 2 (sum 3). Click the buggy line.
+    code: |
+      function hasPathSum(root, targetSum) {
+        if (!root) return targetSum === 0;
+        return hasPathSum(root.left, targetSum - root.val) ||
+               hasPathSum(root.right, targetSum - root.val);
+      }
+    bug:
+      - 1
+    kind: concept
+    explain: 'Reaching `null` is not reaching a leaf. Node 1 has a null right child, so the right call sees `targetSum = 0` and returns true, as if 1 were a leaf. Check at real leaves: `if (!root) return false; const rest = targetSum - root.val; if (!root.left && !root.right) return rest === 0;`.'
+    fix: |
+      if (!root) return false;
+      const rest = targetSum - root.val;
+      if (!root.left && !root.right) return rest === 0;
+      return hasPathSum(root.left, rest) || hasPathSum(root.right, rest);
+    fine:
+      '2': Recursing on both children with the reduced target is right.
+    hints:
+      - Is node 1 a leaf?
+  - id: ex-03
+    legacyId: w6d4-3
+    type: trace
+    tag: Lesson 4 trace
+    q: Run 236 on `[3,5,1,6,2,0,8,null,null,7,4]` with p = 6, q = 2. What does each call return? Write the node's value or `null`.
+    rows:
+      - prompt: call on node 6
+        answer: '6'
+        why: 'It is p: return it (case 1).'
+      - prompt: call on node 2
+        answer: '2'
+        why: 'It is q: return it without looking at 7 and 4.'
+      - prompt: call on node 5
+        answer: '5'
+        why: 'Left returned 6, right returned 2: both non-null, so 5 is the LCA (case 2).'
+      - prompt: call on node 1
+        answer: 'null'
+      - prompt: call on the root 3
+        answer: '5'
+        why: 'Left 5, right null: pass 5 up (case 3).'
+    verify: |
+      const T = (v, l = null, r = null) => ({ v, l, r });
+      const t = T(3, T(5, T(6), T(2, T(7), T(4))), T(1, T(0), T(8))); const ret = {};
+      function f(n) { if (!n) return null; if (n.v === 6 || n.v === 2) { ret[n.v] = n.v; return n; } const L = f(n.l), R = f(n.r); const r = L && R ? n : L || R; ret[n.v] = r ? r.v : 'null'; return r; }
+      f(t); for (const k of [6, 2, 5, 1, 3]) console.log(ret[k]);
+    explain: The return value means "p, q, or their LCA, if any of them is in this subtree; otherwise null".
+    hints:
+      - 'Case 1: the node is p or q. Case 2: both sides found something. Case 3: pass up whichever side found something.'
+  - id: ex-04
+    legacyId: w6d4-4
+    type: mcq
+    tag: The contract
+    q: What does `lowestCommonAncestor(node, p, q)` return when p is in node's subtree and q is not?
+    options:
+      - t: p (or a node that leads to it), which the caller then passes upward until it meets the side containing q
+        ok: true
+        why: Case 1 returns p itself; ancestors in case 3 pass it up.
+      - t: null, because the LCA is not in this subtree
+        why: Returning null would lose the information that p was found.
+        kind: concept
+      - t: The root of the whole tree
+        why: A call only knows about its own subtree.
+        kind: concept
+    explain: 'The return value has three meanings: p or q (one found), the LCA (both found), or null (neither). Saying this in the interview is half the solution.'
+    hints:
+      - What must the caller learn from this call?
+  - id: ex-05
+    legacyId: w6d4-5
+    type: interview
+    title: Binary Tree Paths (LeetCode 257)
+    q: 'Return all root-to-leaf paths as strings in any order, with values joined by `"->"`. Example: `[1,2,3,null,5]` → `["1->2->5", "1->3"]`.'
+    model:
+      clarify: |
+        - Root-to-leaf only.
+        - Any order; values may be negative.
+      brute: This is already enumeration; the choice is how to carry the path.
+      optimize: 'Top-down DFS with a shared path array: push the value, and at a leaf record `path.join(''->'')`; recurse; pop. (Passing a new string down also works and needs no pop, at the cost of building strings at every level.)'
+      edges: |
+        - single node → [\"1\"]
+        - negative values `-1->-2`
+        - a skewed tree (one path)
+      complexity: O(n · h) time including building the strings, O(h) extra space for the path.
+    fn: binaryTreePaths
+    adapt:
+      args:
+        - tree
+    compare: unordered
+    starter: |
+      function binaryTreePaths(root) {
+
+      }
+    solution: |
+      function binaryTreePaths(root) {
+        const res = [], path = [];
+        function dfs(node) {
+          if (!node) return;
+          path.push(node.val);
+          if (!node.left && !node.right) res.push(path.join('->'));
+          else { dfs(node.left); dfs(node.right); }
+          path.pop();
+        }
+        dfs(root);
+        return res;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 3
+            - null
+            - 5
+        expect:
+          - 1->2->5
+          - 1->3
+      - args:
+          - - 1
+        expect:
+          - '1'
+      - args:
+          - - -1
+            - -2
+        expect:
+          - -1->-2
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - null
+            - 3
+        expect:
+          - 1->2->3
+        hidden: true
+    explain: Top-down information (the path) plus Module 5's push / recurse / pop.
+    hints:
+      - What does each call need from its ancestors?
+      - Record at leaves; undo the push before returning.
+annotated: []

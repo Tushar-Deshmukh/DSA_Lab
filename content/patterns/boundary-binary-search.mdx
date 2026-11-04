@@ -1,0 +1,25 @@
+---
+slug: boundary-binary-search
+number: '3.1'
+title: Boundary binary search
+module: binary-search-sorting
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 3
+  key: Pattern 3.1
+  lines:
+    - 713
+    - 722
+---
+
+**Pattern 3.1: Boundary binary search**
+
+1. *Recognise:* sorted data and you need a position: first/last occurrence, insertion point, count of elements below x.
+2. *Clues:* "sorted", "O(log n)", "first", "last", "insert position", "closest".
+3. *From brute force:* a linear scan for the boundary is O(n); monotonicity lets you discard half each step.
+4. *Why it works:* the invariant keeps the boundary inside `[lo, hi]` and the range shrinks every iteration.
+5. *Template:* half-open lower bound (Example 1), with the predicate changed per problem.
+6. *Complexity:* O(log n), O(1).
+7. *Variations:* rotated arrays (153, 33), peak finding (162: compare `nums[mid]` with `nums[mid+1]`), 2-D matrix as a flattened array (74: `row = Math.floor(i / n)`, `col = i % n`).
+8. *Inappropriate when:* the data is unsorted and only one query is made (a linear scan is O(n) without the sort).

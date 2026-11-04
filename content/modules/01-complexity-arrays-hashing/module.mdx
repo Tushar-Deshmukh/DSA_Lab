@@ -1,0 +1,24 @@
+---
+number: 1
+slug: complexity-arrays-hashing
+title: Complexity, arrays and hashing
+legacyId: w1
+objectives: '**A. Learning objectives.** By the end of this module you can: derive the time and space complexity of loops, nested loops and simple recursion; use input constraints to choose a target complexity; explain why a hash map gives average O(1) lookup and when it does not; replace a nested-loop search with a hash map; modify an array in place with read/write pointers; traverse a matrix in spiral order and rotate it in place.'
+shortOnTime: drop all Stretch and Optional problems; keep Core. If you are still short of time, merge lesson 4 into lesson 5 by doing only 347 and 54, and leave 169 and 48 for later. Never skip the checkpoint review; shorten it to three re-solves.
+---
+
+<Unit id="how-this-module-fits-together" kind="overview" title="How this module fits together">
+
+Everything in the next eleven modules is judged by one question: *how does the work grow as the input grows?* This module gives you the tools to answer it (lesson 1), the cost model of JavaScript's arrays (lesson 2), the data structure that makes most brute force fast (hash maps, lessons 3–4) and the index arithmetic of grids (lesson 5).
+
+| Lesson | Topic | The move you learn |
+| --- | --- | --- |
+| 1 | Complexity | Count operations as n grows; read n from the constraints |
+| 2 | Arrays and in-place edits | Keep an invariant while overwriting the same array |
+| 3 | Hash tables | Replace an inner search loop with an O(1) average lookup |
+| 4 | Frequency counting | Count, then bucket by count instead of sorting |
+| 5 | Matrices | Walk boundaries; rotate by transpose + reverse |
+
+<Viz id="growth" title="Why the target complexity matters: the same n, six growth rates" />
+
+</Unit>

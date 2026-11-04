@@ -1,0 +1,77 @@
+---
+slug: bottom-up-height-diameter-balance
+legacyId: w6d3
+title: 'Bottom-up recursion: height, diameter, balance'
+goal: Compute subtree information in one postorder pass, returning one value to the parent while updating a global answer.
+why: Diameter, balance and maximum path sum are among the most common tree interview questions, and they share one shape. The naive versions are O(n²); one pass is O(n), and explaining that difference is part of the answer.
+prereqs:
+  - Postorder (lesson 1)
+  - Recursion contracts (Module 5 lesson 1)
+outcomes:
+  - Write height as a bottom-up recursion
+  - Compute the diameter with a global best and say why it is O(n)
+  - Check balance with a −1 sentinel that short-circuits
+  - Explain why 124 clamps negative branches at 0
+ready:
+  - I can explain why 543 is O(n) and the naive version O(n²)
+  - My diameter dry run on `[1,2,3,4,5]` matches the visualizer
+  - I wrote 110 with a −1 sentinel
+summary:
+  - 'Bottom-up: `f(node)` returns something about the subtree; postorder combines children.'
+  - Return what the **parent** needs (height); update the **answer** separately (best).
+  - Diameter through a node = L + R (edges); height = 1 + max(L, R).
+  - 'Balanced: return −1 for "unbalanced" and propagate it.'
+  - 'Max path sum: return node + max(0, best branch); answer = node + left + right.'
+revision: State, without code, what `height(node)` returns and what it updates in the diameter solution. Then say what the −1 means in Balanced Binary Tree.
+warmup:
+  problem: 102
+topic: 'Bottom-up recursion + global answer: height, diameter, balance'
+implement: Dry run diameter on `[1,2,3,4,5]`
+problemsText: 'C: 543, 110 · S: 572 · O: 124'
+problems:
+  - num: 543
+    tier: C
+  - num: 110
+    tier: C
+  - num: 572
+    tier: S
+  - num: 124
+    tier: O
+doneWhen: You can explain why 543 is O(n) and the naive version O(n²)
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="return-one-thing-update-another" kind="theory" title="Return one thing, update another">
+
+<Include id="patterns/bottom-up-recursion" />
+
+<Include id="theory/binary-trees-bst/example-1" />
+
+<Viz id="tree-diameter" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="clamping-negative-branches-optional" kind="theory" title="Clamping negative branches (Optional)">
+
+Binary Tree Maximum Path Sum (124) uses the same shape with sums. The function returns the best **downward** path starting at the node (what a parent can extend): `node.val + max(0, left, right)`, where 0 means "do not take that branch". The global answer considers the path that bends at the node: `node.val + max(0, left) + max(0, right)`.
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

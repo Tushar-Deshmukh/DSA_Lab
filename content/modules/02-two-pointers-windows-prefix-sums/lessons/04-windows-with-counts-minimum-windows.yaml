@@ -1,0 +1,278 @@
+exercises:
+  - id: ex-01
+    legacyId: w2d4-1
+    type: fill
+    tag: The matches counter
+    q: Complete the O(1)-per-step update. `adjust(i, delta)` changes `win[i]` by delta and keeps `matches` (the number of letters whose counts are equal) correct.
+    template: |
+      function checkInclusion(s1, s2) {
+        if (s1.length > s2.length) return false;
+        const need = new Array(26).fill(0), win = new Array(26).fill(0);
+        for (const c of s1) need[c.charCodeAt(0) - 97]++;
+        let matches = 0;
+        for (let i = 0; i < 26; i++) if (need[i] === win[i]) matches++;
+        const adjust = (i, delta) => {
+          if (win[i] === need[i]) [[0]];
+          win[i] += delta;
+          if (win[i] === need[i]) [[1]];
+        };
+        const k = s1.length;
+        for (let r = 0; r < s2.length; r++) {
+          adjust(s2.charCodeAt(r) - 97, +1);
+          if (r >= k) adjust(s2.charCodeAt(r - k) - 97, [[2]]);
+          if (matches === 26) return true;
+        }
+        return false;
+      }
+    blanks:
+      - accept:
+          - matches--
+          - matches -= 1
+          - --matches
+      - accept:
+          - matches++
+          - matches += 1
+          - ++matches
+      - accept:
+          - '-1'
+    fn: checkInclusion
+    tests:
+      - args:
+          - ab
+          - eidbaooo
+        expect: true
+      - args:
+          - ab
+          - eidboaoo
+        expect: false
+      - args:
+          - adc
+          - dcda
+        expect: true
+      - args:
+          - a
+          - b
+        expect: false
+      - args:
+          - abc
+          - ab
+        expect: false
+      - args:
+          - aab
+          - cbaab
+        expect: true
+    explain: Before the change, if this letter was matching it no longer will be (−1). After the change, if it now matches, +1. Only one letter's equality can change per adjustment.
+    hints:
+      - If a letter was equal before the change, the change breaks the equality.
+      - The leaving letter's count goes down by one.
+  - id: ex-02
+    legacyId: w2d4-2
+    type: bug
+    tag: Shortest window
+    q: This returns 3 for `target = 7, nums = [2,3,1,2,4,3]`; the answer is 2. Click the line that is in the wrong place.
+    code: |
+      function minSubArrayLen(target, nums) {
+        let l = 0, sum = 0, best = Infinity;
+        for (let r = 0; r < nums.length; r++) {
+          sum += nums[r];
+          while (sum >= target) {
+            sum -= nums[l++];
+          }
+          if (l > 0) best = Math.min(best, r - l + 2);
+        }
+        return best === Infinity ? 0 : best;
+      }
+    bug:
+      - 7
+    kind: concept
+    explain: After the loop the window is invalid; `r − l + 2` tries to measure the last valid window, but `l` may have moved several steps, so the length is wrong, and it records lengths at steps where no new valid window existed. Record inside the loop, while the window is valid.
+    fix: |
+      while (sum >= target) {
+        best = Math.min(best, r - l + 1);
+        sum -= nums[l++];
+      }
+    fine:
+      '4': '`while` is correct: several shrinks may be possible in a row.'
+      '5': The shrink itself is fine.
+      '9': Returning 0 when no window qualifies is what the problem asks.
+    hints:
+      - Is the window valid or invalid at the moment the line runs?
+  - id: ex-03
+    legacyId: w2d4-3
+    type: code
+    tag: Write it
+    q: Write `minSubArrayLen(target, nums)` (problem 209). All numbers are positive. Return 0 if no subarray reaches the target.
+    fn: minSubArrayLen
+    starter: |
+      function minSubArrayLen(target, nums) {
+
+      }
+    solution: |
+      function minSubArrayLen(target, nums) {
+        let l = 0, sum = 0, best = Infinity;
+        for (let r = 0; r < nums.length; r++) {
+          sum += nums[r];
+          while (sum >= target) {
+            best = Math.min(best, r - l + 1);
+            sum -= nums[l++];
+          }
+        }
+        return best === Infinity ? 0 : best;
+      }
+    tests:
+      - args:
+          - 7
+          - - 2
+            - 3
+            - 1
+            - 2
+            - 4
+            - 3
+        expect: 2
+      - args:
+          - 4
+          - - 1
+            - 4
+            - 4
+        expect: 1
+      - args:
+          - 11
+          - - 1
+            - 1
+            - 1
+            - 1
+            - 1
+            - 1
+            - 1
+            - 1
+        expect: 0
+      - args:
+          - 15
+          - - 1
+            - 2
+            - 3
+            - 4
+            - 5
+        expect: 5
+        hidden: true
+      - args:
+          - 3
+          - - 3
+        expect: 1
+        hidden: true
+      - args:
+          - 6
+          - - 10
+            - 2
+            - 3
+        expect: 1
+        hidden: true
+    explain: 'O(n): l and r each move at most n times.'
+    hints:
+      - Grow r, adding to the sum.
+      - While the sum is at least the target, record the length, then remove nums[l].
+  - id: ex-04
+    legacyId: w2d4-4
+    type: mcq
+    tag: Check your reading
+    q: In `minWindow`, what does `need.get(c) === -2` mean at some moment?
+    options:
+      - t: The window contains two more copies of `c` than `t` requires.
+        ok: true
+        why: '`need` starts at the required count and is decremented for each copy in the window.'
+      - t: The window is missing two copies of `c`.
+        why: A missing copy keeps the value positive.
+        kind: concept
+      - t: '`c` does not appear in `t`.'
+        why: Characters not in `t` are never stored in `need`.
+        kind: impl
+    explain: Surplus copies are why shrinking can continue past them without incrementing `missing`.
+    hints:
+      - '`need` is decremented every time a copy enters the window.'
+  - id: ex-05
+    legacyId: w2d4-5
+    type: interview
+    title: Fruit Into Baskets (LeetCode 904)
+    q: '`fruits[i]` is the type of fruit on tree i in a row. You have two baskets, each holding one type (unlimited amount). Starting at any tree, you pick one fruit from every tree moving right, and must stop when a fruit fits in neither basket. Return the maximum number of fruits you can pick. Example: `[1,2,3,2,2]` → 4 (`[2,3,2,2]`).'
+    model:
+      clarify: |
+        - Must the picked trees be consecutive? (Yes: you stop at the first fruit that does not fit.)
+        - Types are integers; n up to 10⁵.
+      brute: 'For every start, walk right until a third type appears: O(n²).'
+      optimize: |
+        Reword: the longest contiguous window with **at most 2 distinct values**. Adding a tree can only keep or increase the number of distinct types, so validity is monotone. State: a `Map` from type to count in the window. Invalid: `map.size > 2`. Shrink by decrementing `fruits[l]` and deleting the key when it reaches 0.
+      edges: |
+        - One type only `[3,3,3]` → 3
+        - Two types `[1,2,1]` → 3
+        - Every tree different `[1,2,3,4]` → 2
+      complexity: O(n) time; O(1) space (the map never holds more than 3 keys).
+    fn: totalFruit
+    starter: |
+      function totalFruit(fruits) {
+
+      }
+    solution: |
+      function totalFruit(fruits) {
+        const count = new Map();
+        let l = 0, best = 0;
+        for (let r = 0; r < fruits.length; r++) {
+          count.set(fruits[r], (count.get(fruits[r]) ?? 0) + 1);
+          while (count.size > 2) {
+            const f = fruits[l++];
+            count.set(f, count.get(f) - 1);
+            if (count.get(f) === 0) count.delete(f);
+          }
+          best = Math.max(best, r - l + 1);
+        }
+        return best;
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+            - 1
+        expect: 3
+      - args:
+          - - 0
+            - 1
+            - 2
+            - 2
+        expect: 3
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 2
+            - 2
+        expect: 4
+      - args:
+          - - 3
+            - 3
+            - 3
+            - 1
+            - 2
+            - 1
+            - 1
+            - 2
+            - 3
+            - 3
+            - 4
+        expect: 5
+        hidden: true
+      - args:
+          - - 1
+        expect: 1
+        hidden: true
+      - args:
+          - - 1
+            - 2
+            - 3
+            - 4
+        expect: 2
+        hidden: true
+    explain: Deleting the key at count 0 is what makes `count.size` mean "distinct types in the window".
+    hints:
+      - Rephrase the baskets rule as a property of a window.
+      - Keep a count of each type in the window.
+      - Remove a key from the map when its count drops to 0.
+annotated: []

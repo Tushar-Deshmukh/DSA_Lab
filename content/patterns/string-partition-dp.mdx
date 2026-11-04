@@ -1,0 +1,25 @@
+---
+slug: string-partition-dp
+number: '10.4'
+title: String partition DP (prefix feasibility or count)
+module: dynamic-programming-1
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 10
+  key: Pattern 10.4
+  lines:
+    - 2025
+    - 2034
+---
+
+**Pattern 10.4: String partition DP (prefix feasibility or count)**
+
+1. *Recognise:* split a string into valid pieces; is it possible, or how many ways?
+2. *Clues:* "segmented into dictionary words", "number of ways to decode", "partition".
+3. *From brute force:* recursion trying every split point re-solves the same suffixes; cache by start or end index.
+4. *Why it works:* the prefix `s[0..i)` is valid iff some valid prefix `s[0..j)` is followed by a valid piece `s[j..i)`.
+5. *Template:* `dp[0] = true` (or 1); `for i in 1..n: for each valid last piece s[j..i): dp[i] ||= dp[j]` (or `+=`).
+6. *Complexity:* 139: O(n² · L) with substring creation, or O(n · maxWordLength) if you bound j; 91: O(n).
+7. *Variations:* 91 (one- and two-digit pieces; `'0'` is invalid alone), 131 (palindromic pieces, backtracking for all partitions).
+8. *Inappropriate when:* you must list all partitions (backtracking, possibly with memo).

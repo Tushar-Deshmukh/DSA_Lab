@@ -1,0 +1,39 @@
+exercises:
+  - id: ex-01
+    legacyId: w6sat-1
+    gatedBy: assessment-3
+    type: pattern
+    tag: Classify
+    q: '"Return the maximum difference |a.val − b.val| where a is an ancestor of b."'
+    options:
+      - t: 'Top-down: pass the minimum and maximum seen on the path; compare at each node'
+        ok: true
+        why: The answer at a node depends on its ancestors' extreme values.
+      - t: Level-order BFS
+        why: Levels do not capture ancestor relationships.
+        kind: concept
+      - t: Inorder traversal
+        why: Inorder order is unrelated to ancestry.
+        kind: concept
+    explain: Information from ancestors → parameters.
+    hints:
+      - What does a node need to know about the path above it?
+  - id: ex-02
+    legacyId: w6sat-2
+    gatedBy: assessment-3
+    type: pattern
+    tag: Classify
+    q: '"Return true if the tree is height-balanced."'
+    options:
+      - t: 'Bottom-up: return heights, with −1 meaning unbalanced'
+        ok: true
+      - t: Top-down with depth parameters
+        why: Balance depends on subtree heights, which come from children.
+        kind: concept
+      - t: BFS until the first leaf
+        why: That finds the minimum depth, not balance at every node.
+        kind: concept
+    explain: Information from children → return values.
+    hints:
+      - Where does a node's balance information come from?
+annotated: []

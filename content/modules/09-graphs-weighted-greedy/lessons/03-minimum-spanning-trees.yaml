@@ -1,0 +1,263 @@
+exercises:
+  - id: ex-01
+    legacyId: w9d3-1
+    type: trace
+    tag: Kruskal by hand
+    q: Kruskal on 5 nodes with edges `0–1 (4), 0–2 (1), 1–2 (2), 1–3 (5), 3–4 (3)`.
+    rows:
+      - prompt: The first edge taken, as u-v
+        answer:
+          - 0-2
+          - 2-0
+      - prompt: The one edge skipped because it would close a cycle, as u-v
+        answer:
+          - 0-1
+          - 1-0
+      - prompt: Total MST weight
+        answer: '11'
+      - prompt: Number of edges in the MST
+        answer: '4'
+    explain: 'Sorted: 0–2 (1), 1–2 (2), 3–4 (3), 0–1 (4), 1–3 (5). Take 1, 2, 3; skip 4 (0 and 1 are already joined through 2); take 5. Total 1 + 2 + 3 + 5 = 11, with V − 1 = 4 edges.'
+    hints:
+      - Sort by weight first.
+      - 'Before taking an edge, ask: are its ends already in the same tree?'
+  - id: ex-02
+    legacyId: w9d3-2
+    type: code
+    tag: Kruskal
+    q: 'Write `mstCost(n, edges)`: nodes 0..n−1, `edges[i] = [u, v, w]` undirected. Return the total weight of a minimum spanning tree, or −1 if the graph is not connected.'
+    fn: mstCost
+    starter: |
+      function mstCost(n, edges) {
+
+      }
+    solution: |
+      function mstCost(n, edges) {
+        const parent = Array.from({ length: n }, (_, i) => i);
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+        let cost = 0, used = 0;
+        for (const [u, v, w] of [...edges].sort((a, b) => a[2] - b[2])) {
+          const ru = find(u), rv = find(v);
+          if (ru === rv) continue;
+          parent[ru] = rv; cost += w; used++;
+        }
+        return used === n - 1 ? cost : -1;
+      }
+    tests:
+      - args:
+          - 5
+          - - - 0
+              - 1
+              - 4
+            - - 0
+              - 2
+              - 1
+            - - 1
+              - 2
+              - 2
+            - - 1
+              - 3
+              - 5
+            - - 2
+              - 3
+              - 8
+            - - 3
+              - 4
+              - 3
+        expect: 11
+      - args:
+          - 4
+          - - - 0
+              - 1
+              - 2
+            - - 2
+              - 3
+              - 5
+        expect: -1
+      - args:
+          - 1
+          - []
+        expect: 0
+      - args:
+          - 4
+          - - - 0
+              - 1
+              - 1
+            - - 1
+              - 2
+              - 1
+            - - 2
+              - 3
+              - 1
+            - - 3
+              - 0
+              - 1
+            - - 0
+              - 2
+              - 1
+        expect: 3
+        hidden: true
+      - args:
+          - 2
+          - - - 0
+              - 1
+              - 5
+            - - 0
+              - 1
+              - 2
+        expect: 2
+        hidden: true
+    explain: 'Counting the edges used is how you detect a disconnected graph: a spanning tree has exactly n − 1 edges.'
+    hints:
+      - Sort a copy of the edges by weight.
+      - 'Use DSU: take an edge only if its ends have different roots.'
+      - How many edges does a spanning tree of n nodes have?
+  - id: ex-03
+    legacyId: w9d3-3
+    type: complexity
+    tag: Which MST, which graph
+    q: '1584 with n = 1000 points: compare the approaches.'
+    fields:
+      - label: Kruskal (all pairs, sorted)
+        answer: O(n² log n)
+        options:
+          - O(n²)
+          - O(n² log n)
+          - O(n log n)
+          - O(n³)
+        why:
+          O(n²): There are about n²/2 edges, and sorting them adds a log factor.
+      - label: Prim, array version
+        answer: O(n²)
+        options:
+          - O(n²)
+          - O(n² log n)
+          - O(n log n)
+          - O(n³)
+        why:
+          O(n² log n): 'No heap: each of the n rounds scans n entries.'
+      - label: Extra space for array Prim
+        answer: O(n)
+        options:
+          - O(1)
+          - O(n)
+          - O(n²)
+        why:
+          O(n²): Distances are computed on the fly from coordinates; nothing stores the edges.
+    explain: Dense graph → array Prim. Sparse graph given as an edge list → Kruskal or heap Prim.
+    hints:
+      - How many edges does a complete graph on n points have?
+  - id: ex-04
+    legacyId: w9d3-4
+    type: bug
+    tag: Read last round's values
+    q: This 787 solution sometimes returns a cheaper price than is possible within k stops. Click the line.
+    code: |
+      function findCheapestPrice(n, flights, src, dst, k) {
+        const dist = new Array(n).fill(Infinity);
+        dist[src] = 0;
+        for (let round = 0; round <= k; round++) {
+          for (const [u, v, p] of flights) {
+            if (dist[u] + p < dist[v]) dist[v] = dist[u] + p;
+          }
+        }
+        return dist[dst] === Infinity ? -1 : dist[dst];
+      }
+    bug:
+      - 5
+    kind: concept
+    explain: 'Updating `dist` in place lets one round use a value set earlier in the **same** round, chaining two flights in one round. With flights 0→1 (100), 1→2 (100), 0→2 (500) and k = 0, it returns 200 (two flights) instead of 500. Read from a copy: `const next = dist.slice();`, update `next`, then `dist = next` after the round.'
+    fix: |
+      const next = dist.slice();
+      for (const [u, v, p] of flights) if (dist[u] + p < next[v]) next[v] = dist[u] + p;
+      dist = next;   // (declare dist with let)
+    fine:
+      '3': k stops means k + 1 flights, so k + 1 rounds is right.
+      '8': Returning −1 for unreachable is right.
+    hints:
+      - How many flights can a single round chain together here?
+  - id: ex-05
+    legacyId: w9d3-5
+    type: interview
+    title: Minimum Score of a Path Between Two Cities (LeetCode 2492)
+    q: 'Cities 1..n and undirected roads `[a, b, distance]`. A path''s score is the minimum distance of any road on it; paths may revisit cities and roads. Return the minimum possible score of a path from city 1 to city n (a path is guaranteed to exist). Example: n = 4, roads `[[1,2,9],[2,3,6],[2,4,5],[1,4,7]]` → 5.'
+    model:
+      clarify: |
+        - Revisiting is allowed, which changes everything: any road in the component of city 1 can be walked to and back.
+        - The graph may be disconnected; other components do not matter.
+      brute: 'Search over paths for the smallest edge: exponential, and unnecessary once revisiting is understood.'
+      optimize: Because 1 and n are connected and a path may detour anywhere in their component, the answer is simply the smallest road weight in the component containing city 1. Find the component with DSU (union every road, then scan roads whose endpoint has the same root as 1) or with one BFS/DFS from 1.
+      edges: |
+        - a smaller road in a different component must be ignored
+        - n = 2 with a single road
+        - multiple roads between the same pair
+      complexity: O(n + E · α(n)) time, O(n) space.
+    fn: minScore
+    starter: |
+      function minScore(n, roads) {
+
+      }
+    solution: |
+      function minScore(n, roads) {
+        const parent = Array.from({ length: n + 1 }, (_, i) => i);
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+        for (const [a, b] of roads) { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; }
+        const root = find(1);
+        let best = Infinity;
+        for (const [a, , d] of roads) if (find(a) === root) best = Math.min(best, d);
+        return best;
+      }
+    tests:
+      - args:
+          - 4
+          - - - 1
+              - 2
+              - 9
+            - - 2
+              - 3
+              - 6
+            - - 2
+              - 4
+              - 5
+            - - 1
+              - 4
+              - 7
+        expect: 5
+      - args:
+          - 4
+          - - - 1
+              - 2
+              - 2
+            - - 1
+              - 3
+              - 4
+            - - 3
+              - 4
+              - 7
+        expect: 2
+      - args:
+          - 6
+          - - - 1
+              - 2
+              - 5
+            - - 2
+              - 6
+              - 3
+            - - 4
+              - 5
+              - 1
+        expect: 3
+        hidden: true
+      - args:
+          - 2
+          - - - 1
+              - 2
+              - 8
+        expect: 8
+        hidden: true
+    explain: 'The key step is a clarification, not an algorithm: once revisiting is allowed, the problem reduces to "smallest edge in a component".'
+    hints:
+      - If you may revisit roads, which roads can a path from 1 to n use?
+      - Find the component that contains city 1.
+      - Ignore roads in other components.
+annotated: []

@@ -1,0 +1,25 @@
+---
+slug: opposite-end-two-pointers
+number: '2.1'
+title: Opposite-end two pointers
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Pattern 2.1
+  lines:
+    - 528
+    - 537
+---
+
+**Pattern 2.1: Opposite-end two pointers**
+
+1. *Recognise:* sorted array or a symmetric structure; looking for a pair/triplet or comparing ends.
+2. *Clues:* "sorted", "pair with sum", "palindrome", "container", "in place with O(1) space".
+3. *From brute force:* the O(n²) pair loop wastes work on pairs that cannot win. Sorted order tells you which end to discard.
+4. *Why it works:* moving the pointer at the smaller/limiting side is the only move that can improve the answer (Container With Most Water: width shrinks, so only a taller limiting wall can help).
+5. *Template:* `while (l < r) { evaluate; move l or r by the rule }`.
+6. *Complexity:* O(n) per scan; 3Sum = sort O(n log n) + n scans = O(n²).
+7. *Variations:* 3Sum (fix one, two-pointer the rest, skip duplicates), squares of a sorted array (fill from the back), trapping rain water.
+8. *Inappropriate when:* input is unsorted and original indices matter, or you need all pairs (output itself is O(n²)).

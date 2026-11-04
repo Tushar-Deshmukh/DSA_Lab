@@ -1,0 +1,15 @@
+---
+slug: pointer-rewiring-rule
+title: Pointer-rewiring rule
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Pointer-rewiring rule
+  lines:
+    - 766
+    - 766
+---
+
+**Pointer-rewiring rule.** Before changing `node.next`, save anything you still need (`const next = cur.next`). Draw boxes and arrows for every step on paper; most linked-list bugs are lost references or a forgotten `null` at the new tail (creating a cycle).

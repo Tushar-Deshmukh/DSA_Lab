@@ -1,0 +1,15 @@
+---
+slug: duplicates
+title: Duplicates
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Duplicates
+  lines:
+    - 1007
+    - 1007
+---
+
+**Duplicates.** If the input has duplicates and the output must not, sort first, then at the same recursion level skip a value equal to the previous one: `if (i > start && nums[i] === nums[i - 1]) continue;`. The condition `i > start` allows the duplicate to be used deeper in the same branch, but not as an alternative choice at the same level.

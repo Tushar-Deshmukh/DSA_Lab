@@ -1,0 +1,25 @@
+---
+slug: kadane
+number: '2.5'
+title: Kadane (best subarray ending here)
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Pattern 2.5
+  lines:
+    - 572
+    - 581
+---
+
+**Pattern 2.5: Kadane (best subarray ending here)**
+
+1. *Recognise:* maximum/minimum sum or product of a contiguous subarray.
+2. *Clues:* "maximum subarray", "best time to buy and sell once" (121 is Kadane on daily differences).
+3. *From brute force:* O(n²) over all subarrays → keep only the best answer ending at the previous index.
+4. *Why it works:* any optimal subarray ending at j has an optimal prefix ending at j−1, or none.
+5. *Template:* `cur = max(x, cur + x); best = max(best, cur)`.
+6. *Complexity:* O(n), O(1).
+7. *Variations:* maximum product (track both max and min, because a negative flips them; 152 in Module 10), circular subarray.
+8. *Inappropriate when:* the subarray has length constraints (use prefix sums + deque) or must be non-contiguous (DP or greedy).

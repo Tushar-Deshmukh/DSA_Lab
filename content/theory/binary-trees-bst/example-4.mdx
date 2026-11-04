@@ -1,0 +1,37 @@
+---
+slug: example-4
+title: Example 4
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Example 4
+  lines:
+    - 1251
+    - 1273
+---
+
+**Example 4: level-order BFS (102) with a head-pointer queue.**
+
+```js
+function levelOrder(root) {
+  if (!root) return [];
+  const res = [], queue = [root];
+  let head = 0;
+  while (head < queue.length) {
+    // nodes currently queued = one full level
+    const levelSize = queue.length - head, level = [];
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue[head++];
+      level.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    res.push(level);
+  }
+  return res;
+}
+```
+
+Right side view (199) is the same loop recording only the last node of each level.

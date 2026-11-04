@@ -27,11 +27,17 @@ export async function hitRateLimit(
   const update = { $inc: { count: 1 }, $setOnInsert: { expiresAt } };
   let doc;
   try {
-    doc = await models.RateLimit.findOneAndUpdate({ key, windowStart }, update, { upsert: true, new: true });
+    doc = await models.RateLimit.findOneAndUpdate({ key, windowStart }, update, {
+      upsert: true,
+      returnDocument: 'after',
+    });
   } catch (err) {
     // Two first hits in the same window can race on the unique index; the retry finds the winner's document.
     if ((err as { code?: number }).code !== 11000) throw err;
-    doc = await models.RateLimit.findOneAndUpdate({ key, windowStart }, update, { upsert: true, new: true });
+    doc = await models.RateLimit.findOneAndUpdate({ key, windowStart }, update, {
+      upsert: true,
+      returnDocument: 'after',
+    });
   }
   const count = doc.count;
   const retryAfterSeconds = Math.max(1, Math.ceil((windowStart.getTime() + windowMs - now) / 1000));

@@ -1,0 +1,100 @@
+---
+slug: binary-search-trees-construction
+legacyId: w6d5
+title: Binary search trees and construction
+goal: Use the BST property for O(h) searches and sorted traversal, validate a BST with bounds, find the LCA in a BST, and build a tree from preorder and inorder.
+why: '"Validate a BST" is a classic trap question, and construction from traversals tests whether you understand what each traversal order guarantees.'
+prereqs:
+  - Top-down parameters (lesson 4)
+  - Iterative inorder (lesson 1)
+outcomes:
+  - State the BST property and its consequences (sorted inorder, O(h) operations)
+  - Validate a BST with (low, high) bounds, and explain why child comparisons fail
+  - Find the k-th smallest with an early-stopping inorder
+  - Walk to the LCA in a BST
+  - Build a tree from preorder and inorder with a position map and index bounds
+ready:
+  - My 98 uses bounds (or inorder), not child comparisons
+  - I validated `[5,4,6,null,null,3,7]` with bounds by hand
+  - I built the tree for preorder `[3,9,20,15,7]`, inorder `[9,3,15,20,7]` by hand
+summary:
+  - 'BST: left subtree < node < right subtree, at every node. Inorder is sorted.'
+  - 'Search, insert, delete: O(h); O(log n) only if balanced.'
+  - Validate with bounds passed down; each bound comes from an ancestor.
+  - k-th smallest = k-th pop of iterative inorder.
+  - 'Construction: preorder gives roots; inorder splits left and right; Map + bounds = O(n).'
+revision: Explain in two sentences why comparing each node only with its children cannot validate a BST, using `[5,4,6,null,null,3,7]`.
+warmup:
+  problem: 236
+topic: BST property, inorder = sorted, validation by bounds, kth smallest, LCA in a BST, construction from traversals
+implement: Validate `[5,4,6,null,null,3,7]` with bounds; build the tree for preorder `[3,9,20,15,7]`, inorder `[9,3,15,20,7]` by hand
+problemsText: 'C: 98, 230 · S: 235, 105'
+problems:
+  - num: 98
+    tier: C
+  - num: 230
+    tier: C
+  - num: 235
+    tier: S
+  - num: 105
+    tier: S
+doneWhen: 98 uses bounds (or inorder), not child comparisons
+estimate:
+  T: 25
+  I: 20
+  P: 55
+  R: 15
+  'N': 5
+---
+
+<Unit id="the-bst-property" kind="theory" title="The BST property">
+
+<Include id="theory/binary-trees-bst/binary-search-trees" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="validating-a-bst" kind="theory" title="Validating a BST">
+
+<Include id="theory/binary-trees-bst/example-2" />
+
+<Viz id="bst-validate" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="ordering-shortcuts-k-th-smallest-and-lca" kind="theory" title="Ordering shortcuts: k-th smallest and LCA">
+
+<Include id="patterns/bst-ordering" />
+
+Kth Smallest (230) is iterative inorder with an early stop: try the "k = 3" preset in lesson 1's visualizer above, or here:
+
+<Viz id="tree-inorder-iter" title="k-th smallest: stop after k pops" input={{"tree":[5,3,6,2,4,null,null,1],"k":3}} />
+
+The LCA in a BST (235, Stretch) needs no recursion at all: if both values are smaller than the current node, go left; if both are larger, go right; otherwise they split here.
+
+<Viz id="bst-lca" />
+
+</Unit>
+
+<Unit id="building-a-tree-from-two-traversals-stretch" kind="theory" title="Building a tree from two traversals (Stretch)">
+
+<Include id="theory/binary-trees-bst/constructing-a-tree-from-traversals" />
+
+<Viz id="tree-construct" />
+
+<Exercise id="ex-04" />
+
+<Include id="theory/binary-trees-bst/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

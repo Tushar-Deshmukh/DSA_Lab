@@ -1,0 +1,20 @@
+---
+slug: how-to-validate-a-greedy-idea-in-an-interview
+title: How to validate a greedy idea in an interview
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: How to validate a greedy idea in an interview
+  lines:
+    - 1731
+    - 1736
+---
+
+**How to validate a greedy idea in an interview.**
+
+1. Try to break it: test small, adversarial inputs (2–4 elements) for 3–5 minutes. One counterexample kills it.
+2. *Exchange argument:* take any optimal solution that differs from greedy at the first decision; show you can swap in the greedy choice without making it worse.
+3. *Greedy stays ahead:* show that after every step greedy's partial solution is at least as good as any other's.
+4. If you cannot do 2 or 3 and the input is small, fall back to DP or search, and say so.

@@ -1,0 +1,78 @@
+---
+slug: state-machines-recognising-dp
+legacyId: w11d4
+title: State machines and recognising DP
+goal: Model problems with modes (holding, sold, resting) as one variable per mode with transitions between them, and classify unlabelled problems as DP, greedy, backtracking or graph.
+why: The stock problems are a family interviewers love because a small rule change (cooldown, fee, k transactions) breaks memorised answers but not a drawn state diagram. The recognition drill is practice for Module 12, where problems come without labels.
+prereqs:
+  - 121 (running minimum) and Module 10's linear DP
+outcomes:
+  - Draw the hold / sold / rest diagram for 309 and code it from the diagram
+  - Update all modes from the previous day's values, never a half-updated mix
+  - Adapt the machine to a transaction fee (714)
+  - Decide quickly whether a problem is DP, greedy, backtracking or graph search
+ready:
+  - 309 written from the diagram
+  - Both cold re-solves (322 and 62) done in under 20 minutes
+  - I drew the diagram before writing any code
+summary:
+  - One variable per mode; transitions = arrows in the diagram.
+  - '309: `sold = hold + p; hold = max(hold, rest − p); rest = max(rest, prevSold)`.'
+  - Compute every new value from yesterday's values (save them first).
+  - 'DP test: can you name the subproblem in a sentence, and does recursion revisit it?'
+revision: Draw the 309 diagram from memory and say which arrow encodes the cooldown.
+warmup:
+  problem: 72
+topic: State-machine DP; DP recognition drill (DP, greedy, backtracking or graph?)
+implement: Draw the hold / sold / rest diagram for 309
+problemsText: 'C: 309 + cold re-solves 322, 62'
+problems:
+  - num: 309
+    tier: C
+doneWhen: 309 written from the diagram; both re-solves under 20 minutes
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+resolves:
+  - problems:
+      - 322
+  - problems:
+      - 62
+---
+
+<Unit id="modes-as-states" kind="theory" title="Modes as states">
+
+<Include id="theory/dynamic-programming-2-bits/state-machine-dp" />
+
+<Viz id="stock-cooldown" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Include id="patterns/state-machine-dp" />
+
+</Unit>
+
+<Unit id="recognising-dp" kind="theory" title="Recognising DP">
+
+<Include id="theory/dynamic-programming-2-bits/recognising-dp-vs-not" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-07" />
+
+</Unit>

@@ -1,0 +1,15 @@
+---
+slug: activity-selection-proof
+title: Activity selection proof (why "earliest end" is right)
+module: graphs-weighted-greedy
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 9
+  key: Activity selection proof (why "earliest end" is right)
+  lines:
+    - 1748
+    - 1748
+---
+
+**Activity selection proof (why "earliest end" is right).** Let G be greedy's first choice (earliest end). Take any optimal set O; its first interval ends no earlier than G. Replacing it with G keeps O valid (G ends earlier, so it cannot clash with the rest) and the same size. Repeat on the remaining intervals. So greedy is optimal.

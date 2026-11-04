@@ -1,0 +1,25 @@
+---
+slug: pointer-rewiring-with-a-dummy-node
+number: '4.1'
+title: Pointer rewiring with a dummy node
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Pattern 4.1
+  lines:
+    - 927
+    - 936
+---
+
+**Pattern 4.1: Pointer rewiring with a dummy node**
+
+1. *Recognise:* modify list structure: reverse, remove, insert, merge, reorder.
+2. *Clues:* "in place", "return the head", "remove all nodes with", "merge two sorted lists".
+3. *From brute force:* copying values into an array and rebuilding is O(n) space and usually forbidden; rewire pointers instead.
+4. *Why it works:* each node's `next` is changed exactly once after its successor is saved.
+5. *Template:* `dummy → head`; `prev` trails `cur`; save `next`, rewire, advance; return `dummy.next`.
+6. *Complexity:* O(n), O(1).
+7. *Variations:* reverse a sub-range (92), merge (21), reorder = find middle + reverse second half + merge alternately (143).
+8. *Inappropriate when:* random access is needed repeatedly (convert to an array if allowed).

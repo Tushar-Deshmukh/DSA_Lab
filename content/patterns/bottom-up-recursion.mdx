@@ -1,0 +1,25 @@
+---
+slug: bottom-up-recursion
+number: '6.1'
+title: Bottom-up recursion (return values from children)
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: Pattern 6.1
+  lines:
+    - 1277
+    - 1286
+---
+
+**Pattern 6.1: Bottom-up recursion (return values from children)**
+
+1. *Recognise:* the answer for a node is a combination of its subtrees' answers.
+2. *Clues:* "height", "balanced", "diameter", "maximum path sum", "subtree", "LCA".
+3. *From brute force:* recomputing subtree values from each node is O(n²); one postorder pass that returns them is O(n).
+4. *Why it works:* by the time a node is processed, both children's results are final.
+5. *Template:* `function f(node) { if (!node) return BASE; const L = f(node.left), R = f(node.right); update global; return combine(L, R, node); }`.
+6. *Complexity:* O(n) time, O(h) space.
+7. *Variations:* balanced (return −1 for unbalanced to short-circuit), max path sum (124: return the best single downward branch, clamped at 0; update the global with left + node + right), subtree check (572).
+8. *Inappropriate when:* the answer depends on the path above the node (use 6.2).

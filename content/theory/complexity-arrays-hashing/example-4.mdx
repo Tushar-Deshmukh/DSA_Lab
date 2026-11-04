@@ -1,0 +1,34 @@
+---
+slug: example-4
+title: Example 4
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Example 4
+  lines:
+    - 338
+    - 357
+---
+
+**Example 4: read/write pointers (Remove Duplicates from Sorted Array).**
+
+```js
+function removeDuplicates(nums) {
+  if (nums.length === 0) return 0;
+  // next position to place a unique value
+  let write = 1;
+  for (let read = 1; read < nums.length; read++) {
+    // new value compared to the last kept value
+    if (nums[read] !== nums[write - 1]) {
+      nums[write] = nums[read];
+      write++;
+    }
+  }
+  // length of the unique prefix
+  return write;
+}
+```
+
+Dry run `[1,1,2,3,3]`: read=1 (1 = kept 1, skip); read=2 (2 ≠ 1, write 2 at index 1, write=2); read=3 (3 ≠ 2, write at 2, write=3); read=4 (3 = 3, skip). Result `[1,2,3,…]`, length 3. Invariant: `nums[0..write-1]` always holds the unique values seen so far, in order.

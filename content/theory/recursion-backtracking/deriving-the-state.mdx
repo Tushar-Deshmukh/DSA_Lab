@@ -1,0 +1,19 @@
+---
+slug: deriving-the-state
+title: Deriving the state (do this instead of memorising templates)
+module: recursion-backtracking
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 5
+  key: Deriving the state (do this instead of memorising templates)
+  lines:
+    - 1001
+    - 1005
+---
+
+**Deriving the state (do this instead of memorising templates).** Ask three questions:
+
+1. *What decision am I making at each level?* (include element i or not; which unused element goes in position k; which character goes next)
+2. *What do I need to know to make the remaining decisions?* That becomes the parameters: start index, remaining target, used flags, current path.
+3. *When is a branch complete or dead?* That gives the base cases and pruning conditions.

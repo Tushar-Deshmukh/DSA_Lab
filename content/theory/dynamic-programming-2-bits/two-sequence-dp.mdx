@@ -1,0 +1,19 @@
+---
+slug: two-sequence-dp
+title: Two-sequence DP (LCS, edit distance)
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Two-sequence DP (LCS, edit distance)
+  lines:
+    - 2048
+    - 2052
+---
+
+**Two-sequence DP (LCS, edit distance).** State `dp[i][j]` = answer for prefixes `a[0..i)` and `b[0..j)`. Table size (m+1) × (n+1); row 0 and column 0 are the empty-prefix base cases.
+
+- *LCS (1143):* if `a[i-1] === b[j-1]`, `dp[i][j] = dp[i-1][j-1] + 1`; else `max(dp[i-1][j], dp[i][j-1])`.
+- *Edit distance (72):* if characters match, `dp[i-1][j-1]`; else `1 + min(dp[i-1][j] (delete), dp[i][j-1] (insert), dp[i-1][j-1] (replace))`. Base: `dp[i][0] = i`, `dp[0][j] = j`.
+- *Complexity:* O(m·n) time; O(min(m, n)) space with two rows.

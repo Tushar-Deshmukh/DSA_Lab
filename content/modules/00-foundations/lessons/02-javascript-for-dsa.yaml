@@ -1,0 +1,35 @@
+exercises:
+  - id: ex-01
+    legacyId: reference-1
+    type: predict
+    tag: The 2-D array bug (6.3)
+    q: What does this print?
+    code: |
+      const bad = new Array(3).fill([]);
+      bad[0].push(1);
+      console.log(JSON.stringify(bad));
+    answer: '[[1],[1],[1]]'
+    normalize: exact
+    traps:
+      '[[1],[],[]]': '`fill([])` puts the same array object in all three slots, so pushing into one pushes into all. Use `Array.from({ length: 3 }, () => [])`.'
+    explain: '`fill` copies the reference, not the array.'
+    hints:
+      - How many arrays does `fill([])` create?
+  - id: ex-02
+    legacyId: reference-2
+    type: mcq
+    tag: Choosing the queue (6.5)
+    q: A sliding-window-maximum solution needs to add at the back, and remove from both the front and the back, n times. Which structure from 6.5 keeps every operation O(1) amortised?
+    options:
+      - t: The circular-buffer Deque
+        ok: true
+      - t: A plain array with push, pop and shift
+        why: '`shift` is O(n), so the total can become O(n²).'
+        kind: concept
+      - t: The head-pointer Queue
+        why: It cannot remove from the back.
+        kind: concept
+    explain: Front and back removal → deque.
+    hints:
+      - Which end does each operation touch?
+annotated: []

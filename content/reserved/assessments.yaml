@@ -1,0 +1,85 @@
+# Server-only. Never imported by anything that reaches a page, the client or search (D-012).
+assessments:
+  - id: A1
+    slug: assessment-1
+    problems:
+      - num: 1456
+        title: Maximum Number of Vowels in a Substring of Given Length
+        url: https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/
+        difficulty: Medium
+        minutes: 25
+      - num: 974
+        title: Subarray Sums Divisible by K
+        url: https://leetcode.com/problems/subarray-sums-divisible-by-k/
+        difficulty: Medium
+        minutes: 35
+  - id: A2
+    slug: assessment-2
+    problems:
+      - num: 82
+        title: Remove Duplicates from Sorted List II
+        url: https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+        difficulty: Medium
+        minutes: 30
+      - num: 901
+        title: Online Stock Span
+        url: https://leetcode.com/problems/online-stock-span/
+        difficulty: Medium
+        minutes: 30
+  - id: A3
+    slug: assessment-3
+    problems:
+      - num: 216
+        title: Combination Sum III
+        url: https://leetcode.com/problems/combination-sum-iii/
+        difficulty: Medium
+        minutes: 25
+      - num: 1026
+        title: Maximum Difference Between Node and Ancestor
+        url: https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/
+        difficulty: Medium
+        minutes: 30
+  - id: A4
+    slug: assessment-4
+    problems:
+      - num: 1642
+        title: Furthest Building You Can Reach
+        url: https://leetcode.com/problems/furthest-building-you-can-reach/
+        difficulty: Medium
+        minutes: 35
+      - num: 1376
+        title: Time Needed to Inform All Employees
+        url: https://leetcode.com/problems/time-needed-to-inform-all-employees/
+        difficulty: Medium
+        minutes: 30
+  - id: A5
+    slug: assessment-5
+    problems:
+      - num: 1319
+        title: Number of Operations to Make Network Connected
+        url: https://leetcode.com/problems/number-of-operations-to-make-network-connected/
+        difficulty: Medium
+        minutes: 30
+      - num: 343
+        title: Integer Break
+        url: https://leetcode.com/problems/integer-break/
+        difficulty: Medium
+        minutes: 30
+  - id: A6
+    slug: assessment-6
+    problems:
+      - num: 909
+        title: Snakes and Ladders
+        url: https://leetcode.com/problems/snakes-and-ladders/
+        difficulty: Medium
+        minutes: 35
+      - num: 1049
+        title: Last Stone Weight II
+        url: https://leetcode.com/problems/last-stone-weight-ii/
+        difficulty: Medium
+        minutes: 30
+      - num: 1268
+        title: Search Suggestions System
+        url: https://leetcode.com/problems/search-suggestions-system/
+        difficulty: Medium
+        minutes: 25

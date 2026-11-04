@@ -1,0 +1,87 @@
+---
+slug: fast-and-slow-pointers
+legacyId: w4d2
+title: Fast and slow pointers
+goal: Find the middle, detect a cycle, find its start and reach the k-th node from the end, each in one pass with O(1) space, and explain why the pointers meet.
+why: Fast/slow pointers replace "count the length first" and "remember every node you visited" with two pointers and an argument. Interviewers ask *why* fast meets slow, so the proof is part of the answer.
+prereqs:
+  - Traversing lists and the dummy node (lesson 1)
+outcomes:
+  - Find the middle with `while (fast && fast.next)` and say which middle you get for even length
+  - Explain why fast must meet slow inside a cycle, and why it cannot skip over it
+  - Find the cycle start and derive `a = kc − b`
+  - Remove the n-th node from the end with a gap of n + 1 behind a dummy
+ready:
+  - I can explain why fast meets slow inside a cycle
+  - I drew Floyd's pointers on a 6-node list with a cycle of length 4
+  - My loop conditions never dereference `null` (`fast && fast.next`)
+summary:
+  - slow moves 1, fast moves 2; when fast reaches the end, slow is at the middle.
+  - 'In a cycle, fast gains 1 node per step: the gap shrinks to 0 within one lap.'
+  - 'Cycle start: after meeting, restart one pointer at the head; step both by 1.'
+  - 'k-th from end: give fast a head start, then move both until fast reaches the end.'
+  - All O(n) time, O(1) space.
+revision: Explain in three sentences why Floyd's pointers must meet in a cycle. Then write the loop condition for the middle and say which middle it returns for `[1, 2, 3, 4]`.
+warmup:
+  problem: 206
+  note: recursive
+topic: 'Fast/slow pointers: middle, cycle detection, k-th from end, cycle-start proof'
+implement: Draw Floyd's pointers on a 6-node list with a cycle of length 4
+problemsText: 'C: 876, 141, 19 · O: 142'
+problems:
+  - num: 876
+    tier: C
+  - num: 141
+    tier: C
+  - num: 19
+    tier: C
+  - num: 142
+    tier: O
+doneWhen: You can explain why fast meets slow inside a cycle
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="two-speeds" kind="theory" title="Two speeds">
+
+<Include id="theory/linked-lists-stacks-queues/fast-and-slow-pointers" />
+
+<Viz id="ll-middle" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="cycles-detection-and-the-start" kind="theory" title="Cycles: detection and the start">
+
+<Viz id="floyd" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="the-k-th-node-from-the-end" kind="theory" title="The k-th node from the end">
+
+To reach the n-th node from the end in one pass, give `fast` a head start so that when it falls off the end, `slow` is exactly where you need it. For *deletion* (problem 19) you need the node **before** the target, so start both at a dummy and give `fast` n + 1 steps.
+
+<Viz id="nth-end" />
+
+<Exercise id="ex-05" />
+
+<Include id="patterns/fast-and-slow-pointers" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-06" />
+
+</Unit>

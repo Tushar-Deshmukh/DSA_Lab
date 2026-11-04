@@ -1,0 +1,21 @@
+---
+slug: the-three-question-types
+title: The three question types (decide this first)
+module: binary-trees-bst
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 6
+  key: The three question types (decide this first)
+  lines:
+    - 1176
+    - 1182
+---
+
+**The three question types (decide this first).**
+
+1. *Information from children (bottom-up, postorder):* the answer at a node depends on answers from its subtrees. The recursive function **returns** a value. Examples: height, balanced, diameter, max path sum, LCA.
+2. *Information from ancestors (top-down, preorder):* the answer depends on the path from the root. The recursive function **receives** extra parameters (running sum, max so far, allowed range). Examples: path sum, count good nodes, validate BST, max difference between node and ancestor.
+3. *Level-based:* the answer depends on depth or left-to-right order within a level. Use BFS (or DFS with a `depth` parameter). Examples: level order, right side view, zigzag, minimum depth.
+
+Many problems combine 1 and a global answer: the function returns one thing (height) while updating another (diameter) in an outer variable.

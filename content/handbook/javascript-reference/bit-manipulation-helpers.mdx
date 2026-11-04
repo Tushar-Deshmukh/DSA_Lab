@@ -1,0 +1,25 @@
+---
+slug: bit-manipulation-helpers
+section: 6
+title: 6.18 Bit manipulation helpers
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.18 Bit manipulation helpers
+  lines:
+    - 3154
+    - 3166
+---
+
+```js
+const isBitSet = (x, i) => ((x >> i) & 1) === 1;
+const setBit = (x, i) => x | (1 << i);
+const clearBit = (x, i) => x & ~(1 << i);
+const toggleBit = (x, i) => x ^ (1 << i);
+const isPowerOfTwo = (x) => x > 0 && (x & (x - 1)) === 0;
+const toUnsigned = (x) => x >>> 0;
+// 32-bit binary string; works for negatives too
+const toBinary = (x) => (x >>> 0).toString(2).padStart(32, '0');
+```
+
+All of these are valid only for 0 ≤ i ≤ 31 and values within signed 32-bit range.

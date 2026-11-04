@@ -1,0 +1,25 @@
+---
+slug: trie-for-prefix-queries
+number: '7.5'
+title: Trie for prefix queries
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: Pattern 7.5
+  lines:
+    - 1491
+    - 1500
+---
+
+**Pattern 7.5: Trie for prefix queries**
+
+1. *Recognise:* many words share prefixes; queries by prefix or with wildcards.
+2. *Clues:* "prefix", "autocomplete", "starts with", "dictionary of words", "word search with a list of words".
+3. *From brute force:* checking every word for each prefix query is O(N·L); the trie makes it O(L).
+4. *Why it works:* words sharing a prefix share the path for that prefix.
+5. *Template:* Example 4. Wildcard `.` (211): DFS over all children at that position.
+6. *Complexity:* O(L) per operation; O(total characters) space.
+7. *Variations:* 212 word search II (DFS on the grid guided by the trie).
+8. *Inappropriate when:* only exact membership is needed (a `Set` is simpler).

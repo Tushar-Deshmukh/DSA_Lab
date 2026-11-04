@@ -1,0 +1,46 @@
+---
+slug: example-1
+title: Example 1
+module: graphs-traversal
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 8
+  key: Example 1
+  lines:
+    - 1543
+    - 1574
+---
+
+**Example 1: number of islands (200), DFS with an explicit stack.**
+
+```js
+function numIslands(grid) {
+  const m = grid.length, n = grid[0].length;
+  const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  let count = 0;
+  for (let r = 0; r < m; r++) {
+    for (let c = 0; c < n; c++) {
+      if (grid[r][c] !== '1') continue;
+      // found an unvisited island
+      count++;
+      // mark visited when pushing
+      grid[r][c] = '0';
+      const stack = [[r, c]];
+      while (stack.length) {
+        const [cr, cc] = stack.pop();
+        for (const [dr, dc] of dirs) {
+          const nr = cr + dr, nc = cc + dc;
+          if (nr < 0 || nr >= m || nc < 0 || nc >= n) continue;
+          if (grid[nr][nc] !== '1') continue;
+          grid[nr][nc] = '0';
+          stack.push([nr, nc]);
+        }
+      }
+    }
+  }
+  return count;
+}
+```
+
+Each cell is pushed at most once: O(m·n) time and space. Mention to the interviewer that this mutates the input; copy the grid or use a `visited` array if that is not allowed.

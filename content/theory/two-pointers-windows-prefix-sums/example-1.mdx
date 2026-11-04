@@ -1,0 +1,33 @@
+---
+slug: example-1
+title: Example 1
+module: two-pointers-windows-prefix-sums
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 2
+  key: Example 1
+  lines:
+    - 439
+    - 457
+---
+
+**Example 1: Two Sum II (sorted), opposite-end pointers.**
+
+```js
+function twoSumSorted(numbers, target) {
+  let l = 0, r = numbers.length - 1;
+  while (l < r) {
+    const sum = numbers[l] + numbers[r];
+    // problem uses 1-based indices
+    if (sum === target) return [l + 1, r + 1];
+    // numbers[l] is too small even with the largest partner: discard it
+    if (sum < target) l++;
+    // numbers[r] is too large even with the smallest partner: discard it
+    else r--;
+  }
+  return [];
+}
+```
+
+Dry run `[2, 7, 11, 15]`, target 9: (l=0, r=3) 2+15=17 > 9 → r=2; 2+11=13 > 9 → r=1; 2+7=9 → return \[1, 2\]. Each step removes one candidate permanently, so at most n−1 steps: O(n) time, O(1) space, versus O(n) space for the hash map.

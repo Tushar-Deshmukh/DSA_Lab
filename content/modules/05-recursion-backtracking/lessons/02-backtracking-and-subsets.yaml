@@ -1,0 +1,186 @@
+exercises:
+  - id: ex-01
+    legacyId: w5d2-1
+    type: predict
+    tag: The copy
+    q: This version forgets to copy `path`. What does it print?
+    code: |
+      function subsets(nums) {
+        const res = [], path = [];
+        function dfs(i) {
+          if (i === nums.length) { res.push(path); return; }
+          path.push(nums[i]); dfs(i + 1); path.pop();
+          dfs(i + 1);
+        }
+        dfs(0);
+        return res;
+      }
+      console.log(JSON.stringify(subsets([1, 2])));
+    answer: '[[],[],[],[]]'
+    traps:
+      '[[1,2],[1],[2],[]]': That is the correct output. Without a copy, every entry in `res` is the same `path` array, which is empty once the search finishes.
+    explain: '`res.push(path)` stores a reference to the one shared array. Every pop afterwards changes all four entries. Push a snapshot: `res.push([...path])`.'
+    hints:
+      - How many different arrays end up inside res?
+  - id: ex-02
+    legacyId: w5d2-2
+    type: code
+    tag: Include/exclude
+    q: 'Write `subsetSums(nums)`: return the sums of all 2ⁿ subsets, **sorted ascending** (duplicates kept). Use include/exclude recursion with a running sum instead of a path.'
+    fn: subsetSums
+    starter: |
+      function subsetSums(nums) {
+
+      }
+    solution: |
+      function subsetSums(nums) {
+        const out = [];
+        function dfs(i, sum) {
+          if (i === nums.length) { out.push(sum); return; }
+          dfs(i + 1, sum + nums[i]);   // take
+          dfs(i + 1, sum);             // skip
+        }
+        dfs(0, 0);
+        return out.sort((a, b) => a - b);
+      }
+    tests:
+      - args:
+          - - 1
+            - 2
+        expect:
+          - 0
+          - 1
+          - 2
+          - 3
+      - args:
+          - []
+        expect:
+          - 0
+      - args:
+          - - 2
+            - 2
+        expect:
+          - 0
+          - 2
+          - 2
+          - 4
+      - args:
+          - - 5
+            - -1
+            - 3
+        expect:
+          - -1
+          - 0
+          - 2
+          - 3
+          - 4
+          - 5
+          - 7
+          - 8
+        hidden: true
+    explain: 'Passing the sum as a parameter means there is nothing to undo: each call gets its own value. Undo is only needed for shared mutable state like `path`.'
+    hints:
+      - The state is (index, sum so far).
+      - 'Base case: index past the end → record the sum.'
+  - id: ex-03
+    legacyId: w5d2-3
+    type: trace
+    tag: Fill the table yourself
+    q: Subsets II on `[1, 2, 2]` (way B with the skip rule). Answer each question about the run.
+    rows:
+      - prompt: 'In dfs(1), at i = 2: is the branch skipped? (yes/no)'
+        answer: 'yes'
+        why: i = 2 > start = 1 and nums[2] = nums[1].
+      - prompt: 'In dfs(2) (path [1,2]), at i = 2: skipped?'
+        answer: 'no'
+        why: 'i = start = 2: the second 2 is used deeper in the same branch, giving [1,2,2].'
+      - prompt: Total subsets produced
+        answer: '6'
+    verify: |
+      const nums = [1, 2, 2], res = [], path = [], log = [];
+      function dfs(start) { res.push([...path]); for (let i = start; i < nums.length; i++) { const skip = i > start && nums[i] === nums[i - 1]; log.push(start + ':' + i + ':' + skip); if (skip) continue; path.push(nums[i]); dfs(i + 1); path.pop(); } }
+      dfs(0);
+      console.log(log.includes('1:2:true') ? 'yes' : 'no'); console.log(log.includes('2:2:false') ? 'no' : 'yes'); console.log(res.length);
+    explain: Same level (same loop in the same call) → skip the repeat. Deeper level → allowed.
+    hints:
+      - Compare i with start in each call.
+  - id: ex-04
+    legacyId: w5d2-4
+    type: mcq
+    tag: The rule
+    q: Why `i > start` and not `i > 0` in `if (i > start && nums[i] === nums[i - 1]) continue;`?
+    options:
+      - t: With `i > 0`, the second 2 could never be used after the first one in the same branch, so [1,2,2] and [2,2] would be lost.
+        ok: true
+        why: In dfs(2), i = 2 = start, and nums[2] equals nums[1]. With `i > 0` it would be skipped.
+      - t: They are equivalent after sorting.
+        why: 'Try [2, 2]: with i > 0 you never produce [2, 2].'
+        kind: concept
+      - t: '`i > 0` would crash on index −1.'
+        why: Both guards prevent reading nums[−1]; the difference is which branches are skipped.
+        kind: impl
+    explain: The first element tried in each call (i = start) is never a repeat *at that level*, even if it equals its left neighbour.
+    hints:
+      - Run both versions on [2, 2].
+  - id: ex-05
+    legacyId: w5d2-5
+    type: interview
+    title: Letter Case Permutation (LeetCode 784)
+    q: 'Given a string `s` of letters and digits, return every string obtainable by changing each letter to lower or upper case (any order). Example: `"a1b2"` → `["a1b2","a1B2","A1b2","A1B2"]`.'
+    model:
+      clarify: |
+        - Digits stay as they are.
+        - Any output order; length ≤ 12.
+      brute: 'This is already enumeration: 2^(number of letters) outputs. The question is generating them cleanly.'
+      optimize: 'Include/exclude per character: at index i, a digit has one branch; a letter has two (lower, upper). Recurse on i + 1 with a path of characters, record when i = n. Or iteratively: start with [""] and double the list at each letter.'
+      edges: |
+        - no letters `\"12\"` → [\"12\"]
+        - all letters
+        - mixed case input `\"C\"` → [\"c\", \"C\"]
+      complexity: O(n · 2^L) time and output space, where L is the number of letters; O(n) recursion depth.
+    fn: letterCasePermutation
+    compare: unordered
+    starter: |
+      function letterCasePermutation(s) {
+
+      }
+    solution: |
+      function letterCasePermutation(s) {
+        const res = [], path = [];
+        function dfs(i) {
+          if (i === s.length) { res.push(path.join('')); return; }
+          const c = s[i];
+          if (/[a-z]/i.test(c)) {
+            for (const v of [c.toLowerCase(), c.toUpperCase()]) { path.push(v); dfs(i + 1); path.pop(); }
+          } else { path.push(c); dfs(i + 1); path.pop(); }
+        }
+        dfs(0);
+        return res;
+      }
+    tests:
+      - args:
+          - a1b2
+        expect:
+          - a1b2
+          - a1B2
+          - A1b2
+          - A1B2
+      - args:
+          - 3z4
+        expect:
+          - 3z4
+          - 3Z4
+      - args:
+          - '12'
+        expect:
+          - '12'
+      - args:
+          - C
+        expect:
+          - c
+          - C
+        hidden: true
+    explain: 'The decision per level depends on the character: one branch for a digit, two for a letter.'
+    hints:
+      - What decision do you make at each character?
+annotated: []

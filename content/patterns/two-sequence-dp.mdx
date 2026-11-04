@@ -1,0 +1,25 @@
+---
+slug: two-sequence-dp
+number: '11.2'
+title: Two-sequence DP
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Pattern 11.2
+  lines:
+    - 2184
+    - 2193
+---
+
+**Pattern 11.2: Two-sequence DP**
+
+1. *Recognise:* compare, align or transform two strings/arrays.
+2. *Clues:* "common subsequence", "minimum operations to convert", "interleaving", "distinct subsequences".
+3. *From brute force:* recursion on `(i, j)` comparing last characters branches 2–3 ways; there are only m·n distinct pairs.
+4. *Why it works:* any alignment of the prefixes ends by matching, deleting or inserting the last character.
+5. *Template:* (m+1) × (n+1) table; base row/column; fill row by row.
+6. *Complexity:* O(m·n).
+7. *Variations:* 72 edit distance, 583 delete operation, 115 distinct subsequences (Hard, optional).
+8. *Inappropriate when:* the question is about contiguous substrings only (often a sliding window or expand-around-centre).

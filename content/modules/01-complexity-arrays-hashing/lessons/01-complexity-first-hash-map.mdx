@@ -1,0 +1,163 @@
+---
+slug: complexity-first-hash-map
+legacyId: w1d1
+title: Complexity, and the first hash-map optimisation
+goal: Derive the time and space complexity of loops and simple recursion, use the constraints to choose a target, and see your first brute force become O(n).
+why: Every later lesson ends with "complexity, derived". Interviewers ask for it on every problem, and the constraints table tells you, before you write a line, which approaches can possibly pass.
+prereqs:
+  - JavaScript loops, functions and arrays
+  - 'Nothing algorithmic: this is the starting point'
+outcomes:
+  - Explain O, Ω and Θ, and best, average and worst case, with one example each
+  - Count the iterations of nested, halving and doubling loops
+  - Draw a recursion tree and read time and stack space from it
+  - Pick a target complexity from the constraint on n
+  - Turn a nested-loop search into a one-pass `Set` or `Map` solution
+ready:
+  - I analysed all six snippets and wrote the reason for each, not just the answer
+  - For 1 and 217 I stated the brute force and its complexity before the optimal solution
+  - I can say what n ≤ 10⁵ rules out, and why
+summary:
+  - Sequential loops add; nested loops multiply; a halving or doubling index gives log n.
+  - 'Recursion: time = calls × work per call; stack space = deepest chain of calls.'
+  - Say "O(1) average" for hash lookups and "amortised O(1)" for `push`.
+  - 'About 10⁷–10⁸ simple operations per second: n ≤ 10⁵ needs O(n log n) or better.'
+  - 'The key optimisation: find the question the inner loop keeps asking, and store its answers.'
+revision: Without notes, give the complexity of a halving loop, of `f(n) { f(n-1); f(n-1) }`, and of Contains Duplicate with a Set. Then name the target complexity for n ≤ 2·10⁵ and one technique that reaches it.
+warmup:
+  problem: 349
+  note: Diagnostic B2
+topic: Big O/Θ/Ω, cases, loops, recursion trees, amortised cost, auxiliary space, constraints table; JS cost model (6.1)
+implement: Six complexity snippets on paper; three versions of Contains Duplicate
+problemsText: 'C: 1, 217'
+problems:
+  - num: 1
+    tier: C
+  - num: 217
+    tier: C
+doneWhen: All six snippets analysed with reasons; for both problems you stated brute force and its complexity before the optimal solution
+estimate:
+  T: 30
+  I: 25
+  P: 45
+  R: 15
+  'N': 5
+---
+
+<Unit id="intuition-count-then-ignore-constants" kind="theory" title="Intuition: count, then ignore constants">
+
+Complexity is a way to compare algorithms without running them. Count how many basic steps the algorithm takes as a function of the input size n, then keep only the term that dominates for large n. `3n + 20` becomes O(n); `n²/2 + 5n` becomes O(n²). Constants matter in practice, but a better growth rate wins by so much at interview sizes that the growth rate is what you are asked for.
+
+The visualizer at the top of the module overview shows what that means at n = 10⁵: O(n log n) is a few milliseconds, O(n²) is a minute and a half, O(2ⁿ) never finishes.
+
+<Include id="theory/complexity-arrays-hashing/complexity-notation" />
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="counting-loop-iterations" kind="theory" title="Counting loop iterations">
+
+Three rules cover most code:
+
+1. **Sequential loops add.** A loop over n followed by a loop over m is O(n + m).
+2. **Nested loops multiply**, when the inner loop's length does not depend on the outer one: O(n · m). If it does (`j` from `i + 1`), add up the actual counts.
+3. **An index that halves or doubles** runs O(log n) times: you can only halve n about log₂ n times before reaching 1.
+
+Step through each loop and watch the count of `work()` calls.
+
+<Viz id="loop-halving" />
+
+<Viz id="loop-nlogn" />
+
+<Viz id="loop-triangle" />
+
+Now analyse the six snippets from the handbook yourself before looking at the answers.
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+<Exercise id="ex-04" />
+
+<Exercise id="ex-05" />
+
+<Exercise id="ex-06" />
+
+<Exercise id="ex-07" />
+
+Check your answers against the handbook's:
+
+<Include id="theory/complexity-arrays-hashing/example-2" />
+
+</Unit>
+
+<Unit id="recursion-trees" kind="theory" title="Recursion trees">
+
+For recursive code, draw one node per call. **Time** is the number of nodes times the work in each. **Stack space** is the longest root-to-leaf path, because only one path is waiting on the stack at any moment. Step through snippet (e) and watch both numbers.
+
+<Viz id="tree-double" />
+
+</Unit>
+
+<Unit id="amortised-cost-and-space" kind="theory" title="Amortised cost and space">
+
+Some operations are usually cheap and occasionally expensive. `push` on a full array allocates a bigger buffer and copies everything: O(n) for that one push. Because the buffer doubles, the expensive pushes are rare enough that n pushes cost O(n) in total, which is O(1) **amortised** per push. You will step through this in lesson 2.
+
+**Space** means *auxiliary* space unless someone says otherwise: what your algorithm allocates on top of the input. A recursion's call stack counts. Returning a new array of size n is usually mentioned separately ("O(n) for the output").
+
+</Unit>
+
+<Unit id="using-the-constraints" kind="theory" title="Using the constraints">
+
+<Include id="theory/complexity-arrays-hashing/using-constraints-to-choose-an-algorithm" />
+
+<Exercise id="ex-08" />
+
+</Unit>
+
+<Unit id="what-javascript-operations-cost" kind="reference" title="What JavaScript operations cost">
+
+Your complexity is only as good as your knowledge of the built-ins you call. The most common hidden cost is an O(n) method inside a loop.
+
+<Include id="handbook/javascript-reference/cost-model-of-built-ins" />
+
+<Exercise id="ex-09" />
+
+</Unit>
+
+<Unit id="same-output-three-complexities-contains-duplicate" kind="code" title="Same output, three complexities: Contains Duplicate">
+
+Problem 217 is the cleanest example of the most important move in the course. Read the three versions, then step through the Two Sum visualizer below, which applies the same move to pairs.
+
+<Include id="theory/complexity-arrays-hashing/example-1" />
+
+<Exercise id="ex-10" />
+
+<Exercise id="ex-11" />
+
+</Unit>
+
+<Unit id="two-sum-the-brute-force-hash-map-move" kind="code" title="Two Sum: the brute force → hash map move">
+
+<Include id="theory/complexity-arrays-hashing/example-3" />
+
+<Viz id="hash-twosum" />
+
+<Exercise id="ex-12" />
+
+<Include id="patterns/hash-lookup" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-13" />
+
+<Callout kind="interview" title="Say the complexity before you code">
+
+"Brute force compares every stone with every jewel, O(s·j). The inner loop is just a membership test, so I'll put the jewels in a Set: O(s + j) time, O(j) space." Saying the brute force first, with its cost, is step 4–5 of the method and is scored.
+
+</Callout>
+
+</Unit>

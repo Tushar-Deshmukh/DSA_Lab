@@ -1,0 +1,28 @@
+---
+slug: monotonic-stack
+section: 6
+title: 6.19 Monotonic stack
+source:
+  file: source/roadmap.md
+  section: 6
+  key: 6.19 Monotonic stack
+  lines:
+    - 3169
+    - 3184
+---
+
+```js
+// For each i, index of the next element strictly greater (or -1)
+function nextGreaterIndex(a) {
+  // st holds indices, values decreasing
+  const res = new Array(a.length).fill(-1), st = [];
+  for (let i = 0; i < a.length; i++) {
+    while (st.length && a[st[st.length - 1]] < a[i]) res[st.pop()] = i;
+    st.push(i);
+  }
+  return res;
+}
+// Next smaller: flip < to >.
+// Previous greater: iterate from the right, or read the stack top
+// before pushing.
+```

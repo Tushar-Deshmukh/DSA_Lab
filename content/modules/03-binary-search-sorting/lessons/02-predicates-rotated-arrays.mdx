@@ -1,0 +1,84 @@
+---
+slug: predicates-rotated-arrays
+legacyId: w3d2
+title: Predicates and rotated arrays
+goal: Binary-search any monotone predicate, and find the minimum of (or a target in) a rotated sorted array.
+why: 'Once you think in predicates, binary search works on things that are not plain sorted arrays: versions that turn bad, a rotation point, a square root. Rotated arrays are a favourite interview twist because they test whether you understand the invariant or just the template.'
+prereqs:
+  - The previous lesson's half-open `firstTrue` and its proof
+outcomes:
+  - Write `firstTrue(lo, hi, pred)` for an arbitrary monotone predicate
+  - Explain why one half around `mid` is always sorted in a rotated array
+  - Find the minimum of a rotated array by comparing `nums[mid]` with `nums[hi]`
+  - Search a target in a rotated array by checking the sorted half's range
+ready:
+  - I dry-ran 153 on `[4,5,6,7,0,1,2]`, `[1,2,3]` and `[2,1]`
+  - I can justify comparing `nums[mid]` with `nums[hi]` rather than `nums[lo]`
+  - I wrote 278 as a direct use of `firstTrue`
+summary:
+  - Any monotone predicate can be binary-searched; the array need not exist (278).
+  - 'Rotated sorted array: one rising run, then a drop, then a second rising run.'
+  - 'Minimum: `nums[mid] > nums[hi]` → drop is right (`lo = mid + 1`); else `hi = mid`.'
+  - Comparing with `nums[hi]` handles the unrotated case with no special branch.
+  - 'Target search: decide which half is sorted, then whether the target lies in its range.'
+revision: From memory, explain why `nums[mid] > nums[hi]` proves the minimum is right of mid. Then dry-run `findMin([2, 1])`.
+warmup:
+  problem: 34
+topic: 'Boundary search on predicates; rotated arrays: which half is sorted'
+implement: Dry run 153 on `[4,5,6,7,0,1,2]`, `[1,2,3]`, `[2,1]`
+problemsText: 'C: 278, 153 · S: 33'
+problems:
+  - num: 278
+    tier: C
+  - num: 153
+    tier: C
+  - num: 33
+    tier: S
+doneWhen: You can justify comparing `nums[mid]` with `nums[hi]`
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="any-monotone-predicate" kind="theory" title="Any monotone predicate">
+
+First Bad Version (278) has no array at all: versions 1..n, and an API `isBadVersion(v)` that is false up to some version and true from then on. That is a monotone predicate over `[1, n]`, so the first bad version is `firstTrue(1, n + 1, isBadVersion)`. Recognising the predicate is the whole problem.
+
+<Exercise id="ex-01" />
+
+</Unit>
+
+<Unit id="rotated-sorted-arrays" kind="theory" title="Rotated sorted arrays">
+
+<Include id="theory/binary-search-sorting/rotated-sorted-arrays" />
+
+Draw `[4, 5, 6, 7, 0, 1, 2]` as heights: a rising run, a drop, a second rising run whose every value is below the first run's. Wherever `mid` lands, at least one of `[lo, mid]` and `[mid, hi]` contains no drop, so it is sorted.
+
+<Include id="theory/binary-search-sorting/example-2" />
+
+<Viz id="bs-rotated-min" />
+
+<Exercise id="ex-02" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="searching-a-target-in-a-rotated-array-stretch" kind="theory" title="Searching a target in a rotated array (Stretch)">
+
+Problem 33 adds a target. Find the sorted half around `mid` (if `nums[lo] <= nums[mid]`, the left half is sorted). A sorted half has a known range, so two comparisons tell you whether the target can be inside it. If it can, search that half; otherwise search the other.
+
+<Viz id="bs-rotated-search" />
+
+<Exercise id="ex-04" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

@@ -1,0 +1,21 @@
+---
+slug: complexity-notation
+title: Complexity notation
+module: complexity-arrays-hashing
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 1
+  key: Complexity notation
+  lines:
+    - 214
+    - 220
+---
+
+**Complexity notation.** Big O is an upper bound on growth, Big Ω a lower bound, Big Θ a tight bound (both). Interviewers say "O" but mean the tight worst-case bound, so state it as tightly as you can: binary search is O(log n), not "O(n) because that is also an upper bound".
+
+- **Best, average, worst case** describe different inputs. Quicksort is O(n log n) on average and O(n²) in the worst case. Hash lookup is O(1) on average and O(n) in the worst case. Always say which you mean.
+- **Loops:** sequential loops add (O(n) + O(m)); nested loops multiply (O(n·m)). A loop whose index doubles or halves is O(log n). A loop that shrinks the remaining work by half each time is the core of binary search.
+- **Recursion:** total work = (number of calls) × (work per call). Draw the recursion tree. Naive Fibonacci has \~2ⁿ calls with O(1) work each, so O(2ⁿ). Merge sort has log n levels with O(n) work per level, so O(n log n).
+- **Amortised analysis:** the average cost per operation over a worst-case sequence. `arr.push()` is occasionally O(n) when the array grows its buffer, but each resize doubles capacity, so n pushes cost O(n) total: O(1) amortised.
+- **Space:** *auxiliary* space is the extra memory your algorithm allocates; *total* space includes the input. Interviewers usually mean auxiliary. The recursion call stack counts as auxiliary space.

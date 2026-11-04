@@ -1,0 +1,77 @@
+---
+slug: string-partition-dp
+legacyId: w10d5
+title: String partition DP
+goal: Decide whether a string can be split into valid pieces, or count the ways, with a prefix table, and handle decoding rules where some pieces are invalid; track both extremes when negatives can swap them (152).
+why: Word Break and Decode Ways are among the most asked DP problems. Both are the same template, "the prefix is valid if a shorter valid prefix is followed by one valid piece", which also powers many string problems in the next module.
+prereqs:
+  - Lessons 1–3
+  - '`Set` lookups and `slice`'
+outcomes:
+  - Fill the Word Break table for `"leetcode"` with `["leet","code"]`
+  - Count decodings, handling `'0'` (one-digit pieces 1–9, two-digit pieces 10–26)
+  - Count segmentations instead of testing feasibility
+  - Explain 152 with a negative example
+ready:
+  - 91 handles `'0'` correctly
+  - 152 explained with a negative example
+  - I filled the Word Break table and decoded `"226"` and `"06"` by hand
+summary:
+  - '`dp[0] = true` (or 1): the empty prefix.'
+  - '`dp[i] ||= dp[j] && valid(s[j..i))` for feasibility; `+=` for counting.'
+  - '91: add dp[i − 1] if the last digit is 1–9, add dp[i − 2] if the last two are 10–26.'
+  - '152: keep `curMax` and `curMin`; swap them on a negative.'
+  - Listing all partitions is backtracking, not DP.
+revision: Write 139's double loop from memory, then decode `"2101"` by hand and explain each zero.
+warmup:
+  problem: 213
+topic: String partition DP; tracking both max and min
+implement: Word Break table for `"leetcode"` with `["leet","code"]`; decode ways for `"226"` and `"06"`
+problemsText: 'C: 139, 91 · S: 152'
+problems:
+  - num: 139
+    tier: C
+  - num: 91
+    tier: C
+  - num: 152
+    tier: S
+doneWhen: 91 handles `'0'` correctly; 152 explained with a negative example
+estimate:
+  T: 25
+  I: 15
+  P: 60
+  R: 15
+  'N': 5
+---
+
+<Unit id="splitting-into-valid-pieces" kind="theory" title="Splitting into valid pieces">
+
+<Include id="patterns/string-partition-dp" />
+
+<Viz id="word-break" />
+
+<Exercise id="ex-01" />
+
+<Exercise id="ex-02" />
+
+<Viz id="decode-ways" />
+
+<Exercise id="ex-03" />
+
+</Unit>
+
+<Unit id="tracking-both-extremes-stretch-152" kind="theory" title="Tracking both extremes (Stretch: 152)">
+
+<Viz id="max-product" />
+
+<Exercise id="ex-04" />
+
+<Include id="theory/dynamic-programming-1/common-mistakes" />
+
+</Unit>
+
+<Unit id="guided-interview-problem" kind="guided" title="Guided interview problem">
+
+<Exercise id="ex-05" />
+
+</Unit>

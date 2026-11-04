@@ -1,0 +1,48 @@
+---
+slug: example-4
+title: Example 4
+module: linked-lists-stacks-queues
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 4
+  key: Example 4
+  lines:
+    - 890
+    - 923
+---
+
+**Example 4: monotonic deque for the sliding-window maximum (the idea behind 239).** Brute force takes the maximum of every window: O(n·k). Instead keep a deque of indices whose values decrease from front to back. The front is always the maximum of the current window; an index leaves from the front when it falls out of the window and from the back when a larger value arrives.
+
+```js
+function maxSlidingWindow(nums, k) {
+  const dq = [];     // indices; their values decrease from front to back
+  let head = 0;      // dq[head] is the front (a head pointer, not shift())
+  const res = [];
+  for (let i = 0; i < nums.length; i++) {
+    // 1. drop the front index if it has left the window [i - k + 1, i]
+    if (head < dq.length && dq[head] <= i - k) head++;
+    // 2. smaller (or equal) values at the back can never be a maximum again
+    while (dq.length > head && nums[dq[dq.length - 1]] <= nums[i]) dq.pop();
+    dq.push(i);
+    // 3. once the first full window exists, the front is its maximum
+    if (i >= k - 1) res.push(nums[dq[head]]);
+  }
+  return res;
+}
+```
+
+Dry run `nums = [1, 3, -1, -3, 5, 3, 6, 7]`, `k = 3` (deque shown as values, front first):
+
+| i | nums\[i\] | deque after step | window max |
+| --- | --- | --- | --- |
+| 0 | 1 | \[1\] | — |
+| 1 | 3 | \[3\] (1 popped) | — |
+| 2 | −1 | \[3, −1\] | 3 |
+| 3 | −3 | \[3, −1, −3\] | 3 |
+| 4 | 5 | \[5\] (3 left the window; −3, −1 popped) | 5 |
+| 5 | 3 | \[5, 3\] | 5 |
+| 6 | 6 | \[6\] | 6 |
+| 7 | 7 | \[7\] | 7 |
+
+Each index is pushed once and removed at most once, so the loop is O(n). This array-with-head version uses O(n) memory; the circular `Deque` in section 6.5 keeps it at O(k).

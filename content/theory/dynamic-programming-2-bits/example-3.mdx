@@ -1,0 +1,32 @@
+---
+slug: example-3
+title: Example 3
+module: dynamic-programming-2-bits
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 11
+  key: Example 3
+  lines:
+    - 2126
+    - 2143
+---
+
+**Example 3: LIS in O(n²), then the O(n log n) idea.**
+
+```js
+function lengthOfLIS(nums) {
+  // every element alone is an LIS of length 1
+  const dp = new Array(nums.length).fill(1);
+  let best = 1;
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);
+    }
+    best = Math.max(best, dp[i]);
+  }
+  return best;
+}
+```
+
+Faster version, tails dry run on `[10, 9, 2, 5, 3, 7, 101, 18]`: 10 → \[10\]; 9 replaces 10 → \[9\]; 2 → \[2\]; 5 appends → \[2,5\]; 3 replaces 5 → \[2,3\]; 7 → \[2,3,7\]; 101 → \[2,3,7,101\]; 18 replaces 101 → \[2,3,7,18\]. Length 4. `tails` is not an actual subsequence; only its length is meaningful.

@@ -1,0 +1,15 @@
+---
+slug: javascript-has-no-built-in-priority-queue
+title: JavaScript has no built-in priority queue
+module: heaps-intervals-tries
+source:
+  file: source/roadmap.md
+  section: 3
+  week: 7
+  key: JavaScript has no built-in priority queue
+  lines:
+    - 1339
+    - 1339
+---
+
+**JavaScript has no built-in priority queue.** LeetCode's JS runtime has been reported to bundle (not verified for this edition) `@datastructures-js/priority-queue`, but its API has changed across versions and many interviewers will ask you to write your own. Learn the \~35-line `MinHeap` with a comparator in section 6.13; a max-heap is the same class with `(a, b) => b - a`. Store tuples such as `[dist, node]` and compare `a[0] - b[0]`.
