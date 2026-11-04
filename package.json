@@ -23,7 +23,7 @@
     "content:import": "tsx scripts/import-legacy.ts",
     "content:check": "tsx scripts/validate-content.ts",
     "content:lock": "tsx scripts/lock-ids.ts",
-    "content:sync": "tsx --conditions=react-server scripts/sync-content.ts"
+    "content:sync": "tsx scripts/sync-content.ts"
   },
   "dependencies": {
     "@better-auth/mongo-adapter": "1.7.16",
