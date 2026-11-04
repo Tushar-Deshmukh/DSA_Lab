@@ -138,7 +138,7 @@ The course is self-paced, and the brief renames weeks to modules.
 | content/w06.md:408 | `` - Recursion contracts (Week 5 Day 1) `` | `` - Recursion contracts (Module 5 lesson 1) `` |
 | content/w06.md:592 | `` - Backtracking with push/pop (Week 5) `` | `` - Backtracking with push/pop (Module 5) `` |
 | content/w06.md:985 | `` Assessment 3 covers Weeks 5–6: recursion, backtracking and trees… `` | `` Assessment 3 covers Modules 5–6: recursion, backtracking and trees… `` |
-| content/w07.md:19 | `` …rity queue, and every heap problem this week and in Week 9 depends on one. Writing it once from … `` | `` …rity queue, and every heap problem this module and in Module 9 depends on one. Writing it once from … `` |
+| content/w07.md:19 | `` … priority queue, and every heap problem this week and in Week 9 depends on one. Writing it once from … `` | `` … priority queue, and every heap problem in this module and in Module 9 depends on one. Writing it once from … `` |
 | content/w07.md:21 | `` - Complete binary trees (Week 6 Day 1) `` | `` - Complete binary trees (Module 6 lesson 1) `` |
 | content/w07.md:283 | `` - Bucket by frequency (Week 1 Day 4) `` | `` - Bucket by frequency (Module 1 lesson 4) `` |
 | content/w07.md:649 | `` - Sorting with comparators (Week 3 Day 5) `` | `` - Sorting with comparators (Module 3 lesson 5) `` |
@@ -346,8 +346,8 @@ Learners do not take one module per week.
 | source/roadmap.md:206 | `` Each week below follows the same order: objectives, concepts, worked examples with dry runs, then the patterns with recognition clues. Read the week's theory before Day 1 or during each day's theory block. `` | `` Each module below follows the same order: objectives, concepts, worked examples with dry runs, then the patterns with recognition clues. Read the module's theory before lesson 1 or during each lesson's theory block. `` |
 | source/roadmap.md:246 | `` **Common mistakes this week.** Forgetting that `includes`/`indexOf`… `` | `` **Common mistakes in this module.** Forgetting that `includes`/`indexOf`… `` |
 | source/roadmap.md:1883 | `` **The four-step progression used all week.** `` | `` **The four-step progression used throughout this module.** `` |
-| source/roadmap.md:2232 | `` No new data structures this week. The skill being trained is *retrieval … `` | `` No new data structures this module. The skill being trained is *retrieval … `` |
-| source/roadmap.md:2273 | `` …anation drill.** For every problem this week, record or say a 90-second explanation:… `` | `` …anation drill.** For every problem this module, record or say a 90-second explanation:… `` |
+| source/roadmap.md:2232 | `` No new data structures this week. The skill being trained is *retrieval … `` | `` No new data structures in this module. The skill being trained is *retrieval … `` |
+| source/roadmap.md:2273 | `` … explanation drill.** For every problem this week, record or say a 90-second explanation:… `` | `` … explanation drill.** For every problem in this module, record or say a 90-second explanation:… `` |
 | source/roadmap.md:2277 | `` #### C. Practice structure for the week `` | `` #### C. Practice structure for the module `` |
 | source/roadmap.md:2284 | `` #### D. Realistic outcome after 12 weeks `` | `` #### D. Realistic outcome after 12 modules `` |
 | source/roadmap.md:2680 | `` …le to write each one from memory by the week it is first used. Each template says when to change it. `` | `` …le to write each one from memory by the module it is first used in. Each template says when to change it. `` |
@@ -360,38 +360,38 @@ Learners do not take one module per week.
 | content/w01.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w01.md:5 | `` Everything in the next eleven weeks is judged by one question: *how does the work grow as the input grows?* This week gives you the tools to answer it (Day 1), the cost model of JavaScript's arrays (Day 2), the data structure that makes most brute force fast (hash maps, Days 3–4) and the index arithmetic of grids (Day 5). `` | `` Everything in the next eleven modules is judged by one question: *how does the work grow as the input grows?* This module gives you the tools to answer it (lesson 1), the cost model of JavaScript's arrays (lesson 2), the data structure that makes most brute force fast (hash maps, lessons 3–4) and the index arithmetic of grids (lesson 5). `` |
 | content/w02.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w02.md:15 | `` …e": "The brute force every pattern this week improves on"} `` | `` …e": "The brute force every pattern this module improves on"} `` |
-| content/w02.md:44 | `` …ly. Most contiguous-range problems this week turn on one distinction: `` | `` …ly. Most contiguous-range problems this module turn on one distinction: `` |
+| content/w02.md:15 | `` …"title": "The brute force every pattern this week improves on"} `` | `` …"title": "The brute force every pattern in this module improves on"} `` |
+| content/w02.md:44 | `` …refully. Most contiguous-range problems this week turn on one distinction: `` | `` …refully. Most contiguous-range problems in this module turn on one distinction: `` |
 | content/w02.md:1670 | `` … conditions, then a short review of the week. `` | `` … conditions, then a short review of the module. `` |
 | content/w02.md:1677 | `` …the pattern. A low score gives you this week's remediation list; it is not a verdict… `` | `` …the pattern. A low score gives you this module's remediation list; it is not a verdict… `` |
 | content/w03.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w03.md:17 | `` …` shape powers every binary search this week. `` | `` …` shape powers every binary search this module. `` |
+| content/w03.md:17 | `` …tTrue` shape powers every binary search this week. `` | `` …tTrue` shape powers every binary search in this module. `` |
 | content/w04.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w04.md:5 | `` …ueues give you an order of access. This week is about **discipline with references**… `` | `` …ueues give you an order of access. This module is about **discipline with references**… `` |
-| content/w04.md:19 | `` …uilding block of half the problems this week (reorder, palindrome, reverse a sub-ran… `` | `` …uilding block of half the problems this module (reorder, palindrome, reverse a sub-ran… `` |
+| content/w04.md:19 | `` …the building block of half the problems this week (reorder, palindrome, reverse a sub-ran… `` | `` …the building block of half the problems in this module (reorder, palindrome, reverse a sub-ran… `` |
 | content/w05.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w05.md:106 | `` Today's first problem, Fibonacci (509), is the example every later week refers back to. Step through the plain … `` | `` This lesson's first problem, Fibonacci (509), is the example every later module refers back to. Step through the plain … `` |
 | content/w05.md:1066 | `` … 1 under interview conditions, then the weekly re-solves and scorecard. `` | `` … 1 under interview conditions, then the module's re-solves and scorecard. `` |
 | content/w06.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w06.md:5 | `` …e you can draw. Every tree problem this week starts with one decision: **does the an… `` | `` …e you can draw. Every tree problem this module starts with one decision: **does the an… `` |
+| content/w06.md:5 | `` … shape you can draw. Every tree problem this week starts with one decision: **does the an… `` | `` … shape you can draw. Every tree problem in this module starts with one decision: **does the an… `` |
 | content/w07.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w07.md:988 | `` @goal: Mock 2, then the weekly re-solves and scorecard. `` | `` @goal: Mock 2, then the module's re-solves and scorecard. `` |
 | content/w08.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w08.md:5 | `` …who know each other. Every problem this week is a traversal (DFS or BFS) plus one ex… `` | `` …who know each other. Every problem this module is a traversal (DFS or BFS) plus one ex… `` |
+| content/w08.md:5 | `` …ople who know each other. Every problem this week is a traversal (DFS or BFS) plus one ex… `` | `` …ople who know each other. Every problem in this module is a traversal (DFS or BFS) plus one ex… `` |
 | content/w08.md:972 | `` :::tip Milestone week `` | `` :::tip Milestone module `` |
 | content/w09.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w09.md:5 | `` Last week every edge cost the same, so BFS layers were distances. This week edges have weights, sets of nodes merge… `` | `` In the previous module every edge cost the same, so BFS layers were distances. This module edges have weights, sets of nodes merge… `` |
 | content/w09.md:18 | `` …le tests even when they are wrong. This week you practise the habit that protects yo… `` | `` …le tests even when they are wrong. This module you practise the habit that protects yo… `` |
 | content/w09.md:1242 | `` … 3 under interview conditions, then the weekly re-solves and scorecard. `` | `` … 3 under interview conditions, then the module's re-solves and scorecard. `` |
 | content/w10.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w10.md:5 | `` …rsion that remembers. Every lesson this week follows the same four steps on a new sh… `` | `` …rsion that remembers. Every lesson this module follows the same four steps on a new sh… `` |
+| content/w10.md:5 | `` … recursion that remembers. Every lesson this week follows the same four steps on a new sh… `` | `` … recursion that remembers. Every lesson in this module follows the same four steps on a new sh… `` |
 | content/w10.md:23 | `` …progression is the method for the whole week and most of next week. `` | `` …progression is the method for the whole module and most of the next module. `` |
 | content/w10.md:458 | `` … Each item at most once → 0/1 knapsack (next week): iterate amounts downwards. `` | `` … Each item at most once → 0/1 knapsack (in the next module): iterate amounts downwards. `` |
 | content/w10.md:834 | `` … which also powers many string problems next week. `` | `` … which also powers many string problems in the next module. `` |
 | content/w11.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
 | content/w11.md:1004 | `` … 4 under interview conditions, then the weekly re-solves and scorecard. `` | `` … 4 under interview conditions, then the module's re-solves and scorecard. `` |
 | content/w12.md:3 | `` ## How this week fits together `` | `` ## How this module fits together `` |
-| content/w12.md:255 | `` …at does not work. Both are fixable this week. `` | `` …at does not work. Both are fixable this module. `` |
+| content/w12.md:255 | `` …ea that does not work. Both are fixable this week. `` | `` …ea that does not work. Both are fixable in this module. `` |
 | content/w12.md:586 | `` - Run Mock 6 with everything from this week `` | `` - Run Mock 6 with everything from this module `` |
 | content/w12.md:596 | `` - Realistic after 12 weeks: most Easies, about 60–70% of unseen M… `` | `` - Realistic after 12 modules: most Easies, about 60–70% of unseen M… `` |
 | content/w12.md:643 | `` …rview plus 15 of feedback, from the Mock interviews page. Use every habit from this week: the checklist in the first five minute… `` | `` …rview plus 15 of feedback, from the Mocks page. Use every habit from this module: the checklist in the first five minute… `` |
@@ -628,7 +628,7 @@ The sentence depended on a fixed daily or weekly schedule. Each one was rewritte
 | content/w10.md:15 | `` \| Sun \| Rest or Stretch catch-up \| \| `` | `` (removed) `` |
 | content/w10.md:18 | `` That is normal in week one of DP. The roadmap's fall-behind rule: keep 70, 198, 322, 62 and 139 (one per shape), and if it still feels opaque, spend Sunday redoing Monday's four-step exercise on 198. Writing th… `` | `` That is normal at the start of DP. The handbook's short-on-time rule: keep 70, 198, 322, 62 and 139 (one per shape), and if it still feels opaque, spend an extra session redoing lesson 1's four-step exercise on 198. Writing th… `` |
 | content/w11.md:15 | `` \| Sun \| Rest or Stretch catch-up \| \| `` | `` (removed) `` |
-| content/w12.md:5 | `` There is no new theory this week. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every day pairs a short method lesson with timed … `` | `` There is no new theory this module. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every lesson pairs a short method lesson with timed … `` |
+| content/w12.md:5 | `` There is no new theory this week. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every day pairs a short method lesson with timed … `` | `` There is no new theory in this module. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every lesson pairs a short method lesson with timed … `` |
 | content/w12.md:15 | `` \| Sun \| Final self-assessment and next-month plan \| Readiness checklist completed ho… `` | `` \| Final \| Final self-assessment and follow-on plan \| Readiness checklist completed ho… `` |
 
 ## If you fall behind becomes If you are short on time

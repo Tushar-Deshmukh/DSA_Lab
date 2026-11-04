@@ -159,7 +159,7 @@
    "file": "source/roadmap.md",
    "line": 58,
    "before": "The roadmap assumes this profile. The diagnostic checks it.",
-   "after": "The handbook assumes this profile. The diagnostic checks it.",
+   "after": "The course assumes this profile. The diagnostic checks it.",
    "rules": [
     "rename-roadmap"
    ]
@@ -1023,7 +1023,7 @@
    "file": "source/roadmap.md",
    "line": 2232,
    "before": "No new data structures this week. The skill being trained is *retrieval under pressure*: choosing the right tool from 40+ patterns without a topic label.",
-   "after": "No new data structures this module. The skill being trained is *retrieval under pressure*: choosing the right tool from 40+ patterns without a topic label.",
+   "after": "No new data structures in this module. The skill being trained is *retrieval under pressure*: choosing the right tool from 40+ patterns without a topic label.",
    "rules": [
     "relative-week"
    ]
@@ -1032,7 +1032,7 @@
    "file": "source/roadmap.md",
    "line": 2273,
    "before": "**Verbal explanation drill.** For every problem this week, record or say a 90-second explanation: problem in one sentence; brute force and its complexity; the key observation; the algorithm; final complexity; one edge case. If you cannot do it in 90 seconds, you do not yet own the solution.",
-   "after": "**Verbal explanation drill.** For every problem this module, record or say a 90-second explanation: problem in one sentence; brute force and its complexity; the key observation; the algorithm; final complexity; one edge case. If you cannot do it in 90 seconds, you do not yet own the solution.",
+   "after": "**Verbal explanation drill.** For every problem in this module, record or say a 90-second explanation: problem in one sentence; brute force and its complexity; the key observation; the algorithm; final complexity; one edge case. If you cannot do it in 90 seconds, you do not yet own the solution.",
    "rules": [
     "relative-week"
    ]
@@ -2885,7 +2885,7 @@
    "file": "content/w02.md",
    "line": 15,
    "before": "@viz pair-brute {\"title\": \"The brute force every pattern this week improves on\"}",
-   "after": "@viz pair-brute {\"title\": \"The brute force every pattern this module improves on\"}",
+   "after": "@viz pair-brute {\"title\": \"The brute force every pattern in this module improves on\"}",
    "rules": [
     "relative-week"
    ]
@@ -2923,7 +2923,7 @@
    "file": "content/w02.md",
    "line": 44,
    "before": "Before any algorithm, read the problem's nouns carefully. Most contiguous-range problems this week turn on one distinction:",
-   "after": "Before any algorithm, read the problem's nouns carefully. Most contiguous-range problems this module turn on one distinction:",
+   "after": "Before any algorithm, read the problem's nouns carefully. Most contiguous-range problems in this module turn on one distinction:",
    "rules": [
     "relative-week"
    ]
@@ -3224,7 +3224,7 @@
    "file": "content/w03.md",
    "line": 17,
    "before": "@why: Off-by-one errors in binary search are the most common bug in coding interviews. Reasoning about a boundary and an invariant removes them, and the same `firstTrue` shape powers every binary search this week.",
-   "after": "@why: Off-by-one errors in binary search are the most common bug in coding interviews. Reasoning about a boundary and an invariant removes them, and the same `firstTrue` shape powers every binary search this module.",
+   "after": "@why: Off-by-one errors in binary search are the most common bug in coding interviews. Reasoning about a boundary and an invariant removes them, and the same `firstTrue` shape powers every binary search in this module.",
    "rules": [
     "relative-week"
    ]
@@ -3424,7 +3424,7 @@
    "file": "content/w04.md",
    "line": 19,
    "before": "@why: Linked-list questions test whether you can change pointers without losing data. Reversal is the building block of half the problems this week (reorder, palindrome, reverse a sub-range), and the dummy node removes the most common source of edge-case bugs.",
-   "after": "@why: Linked-list questions test whether you can change pointers without losing data. Reversal is the building block of half the problems this module (reorder, palindrome, reverse a sub-range), and the dummy node removes the most common source of edge-case bugs.",
+   "after": "@why: Linked-list questions test whether you can change pointers without losing data. Reversal is the building block of half the problems in this module (reorder, palindrome, reverse a sub-range), and the dummy node removes the most common source of edge-case bugs.",
    "rules": [
     "relative-week"
    ]
@@ -3761,7 +3761,7 @@
    "file": "content/w06.md",
    "line": 5,
    "before": "Trees are recursion with a shape you can draw. Every tree problem this week starts with one decision: **does the answer come from the children, from the ancestors, or from the levels?** That decision chooses postorder with return values, preorder with parameters, or BFS, before you write a line.",
-   "after": "Trees are recursion with a shape you can draw. Every tree problem this module starts with one decision: **does the answer come from the children, from the ancestors, or from the levels?** That decision chooses postorder with return values, preorder with parameters, or BFS, before you write a line.",
+   "after": "Trees are recursion with a shape you can draw. Every tree problem in this module starts with one decision: **does the answer come from the children, from the ancestors, or from the levels?** That decision chooses postorder with return values, preorder with parameters, or BFS, before you write a line.",
    "rules": [
     "relative-week"
    ]
@@ -4025,7 +4025,7 @@
    "file": "content/w07.md",
    "line": 19,
    "before": "@why: Interviewers regularly ask JavaScript candidates to write their own priority queue, and every heap problem this week and in Week 9 depends on one. Writing it once from understanding, not memory, is what makes it reliable under pressure.",
-   "after": "@why: Interviewers regularly ask JavaScript candidates to write their own priority queue, and every heap problem this module and in Module 9 depends on one. Writing it once from understanding, not memory, is what makes it reliable under pressure.",
+   "after": "@why: Interviewers regularly ask JavaScript candidates to write their own priority queue, and every heap problem in this module and in Module 9 depends on one. Writing it once from understanding, not memory, is what makes it reliable under pressure.",
    "rules": [
     "rename-week",
     "relative-week"
@@ -4162,7 +4162,7 @@
    "file": "content/w08.md",
    "line": 5,
    "before": "A graph is any set of things with connections between them: cells in a grid, courses with prerequisites, people who know each other. Every problem this week is a traversal (DFS or BFS) plus one extra idea: count the components, measure distance in layers, respect edge direction, or colour as you go.",
-   "after": "A graph is any set of things with connections between them: cells in a grid, courses with prerequisites, people who know each other. Every problem this module is a traversal (DFS or BFS) plus one extra idea: count the components, measure distance in layers, respect edge direction, or colour as you go.",
+   "after": "A graph is any set of things with connections between them: cells in a grid, courses with prerequisites, people who know each other. Every problem in this module is a traversal (DFS or BFS) plus one extra idea: count the components, measure distance in layers, respect edge direction, or colour as you go.",
    "rules": [
     "relative-week"
    ]
@@ -4641,7 +4641,7 @@
    "file": "content/w10.md",
    "line": 5,
    "before": "Dynamic programming is recursion that remembers. Every lesson this week follows the same four steps on a new shape of problem: write the brute-force recursion, cache it, turn it into a table, then shrink the table. The hard part is never the code; it is the one-sentence definition of the state.",
-   "after": "Dynamic programming is recursion that remembers. Every lesson this module follows the same four steps on a new shape of problem: write the brute-force recursion, cache it, turn it into a table, then shrink the table. The hard part is never the code; it is the one-sentence definition of the state.",
+   "after": "Dynamic programming is recursion that remembers. Every lesson in this module follows the same four steps on a new shape of problem: write the brute-force recursion, cache it, turn it into a table, then shrink the table. The hard part is never the code; it is the one-sentence definition of the state.",
    "rules": [
     "relative-week"
    ]
@@ -5032,7 +5032,7 @@
    "file": "content/w12.md",
    "line": 5,
    "before": "There is no new theory this week. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every day pairs a short method lesson with timed practice.",
-   "after": "There is no new theory this module. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every lesson pairs a short method lesson with timed practice.",
+   "after": "There is no new theory in this module. The work is **retrieval under pressure**: picking the right tool from forty-odd patterns when nobody tells you the topic, inside a 45-minute structure, while explaining yourself. Every lesson pairs a short method lesson with timed practice.",
    "rules": [
     "timetable",
     "relative-week"
@@ -5134,7 +5134,7 @@
    "file": "content/w12.md",
    "line": 255,
    "before": "@why: Interviews are rarely lost on the pattern you know best. They are lost on a weak pattern, or by spending twenty minutes defending an idea that does not work. Both are fixable this week.",
-   "after": "@why: Interviews are rarely lost on the pattern you know best. They are lost on a weak pattern, or by spending twenty minutes defending an idea that does not work. Both are fixable this module.",
+   "after": "@why: Interviews are rarely lost on the pattern you know best. They are lost on a weak pattern, or by spending twenty minutes defending an idea that does not work. Both are fixable in this module.",
    "rules": [
     "relative-week"
    ]

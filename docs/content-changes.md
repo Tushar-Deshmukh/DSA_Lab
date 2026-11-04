@@ -23,7 +23,7 @@ The roadmap document is now the handbook, and the plan is the course (plan 6.6).
 
 | Where | Before | After |
 | --- | --- | --- |
-| source/roadmap.md:58 | `` The roadmap assumes this profile. The diagnostic ch… `` | `` The handbook assumes this profile. The diagnostic ch… `` |
+| source/roadmap.md:58 | `` The roadmap assumes this profile. The diagnostic ch… `` | `` The course assumes this profile. The diagnostic ch… `` |
 | source/roadmap.md:121 | `` ## 2. The 12-week roadmap overview `` | `` ## 2. The 12-module course overview `` |
 | source/roadmap.md:176 | `` …k DP, interval DP) \| 2. If time \| After roadmap \| High effort for lower frequency; tree… `` | `` …k DP, interval DP) \| 2. If time \| After the course \| High effort for lower frequency; tree… `` |
 | source/roadmap.md:3590 | `` ## 12. Post-roadmap practice strategy `` | `` ## 12. Practice strategy after the course `` |

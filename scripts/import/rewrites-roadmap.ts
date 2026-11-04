@@ -76,6 +76,7 @@ export const ROADMAP_EDITS: LineEdit[] = [
     'profile-rename',
   ),
   L(47, '### What an experienced web developer usually looks like at the start', 'personal'),
+  E(58, 'The roadmap assumes this profile.', 'The course assumes this profile.', 'rename-roadmap'),
   E(91, 'leads to exactly one track.', 'leads to exactly one profile.', 'profile-rename'),
   E(
     93,

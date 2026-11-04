@@ -208,10 +208,36 @@ describe('block parser port against the legacy build', () => {
   it('renders the week overviews and extra pages to the text the legacy build shows', () => {
     for (const week of dist.course.weeks) {
       const id = `w${week.n}`;
-      expect(portText(pages[id] as ParsedPage, week.n).text, id).toBe(legacyText(week.overview as LegacyPage).text);
+      expect(portText(pages[id] as ParsedPage, week.n), id).toEqual(legacyText(week.overview as LegacyPage));
     }
+    expect(Object.keys(dist.course.extra)).toHaveLength(4);
     for (const [id, legacyPage] of Object.entries(dist.course.extra)) {
-      expect(portText(pages[id] as ParsedPage, 0).text, id).toBe(legacyText(legacyPage).text);
+      expect(portText(pages[id] as ParsedPage, 0), id).toEqual(legacyText(legacyPage));
+    }
+  });
+
+  it('renders the roadmap sections and week-level text to what the legacy build shows', () => {
+    const shown = Object.entries(dist.course.sections);
+    expect(shown.map(([n]) => Number(n)).sort((a, b) => a - b)).toEqual([0, 1, 2, 6, 7, 8, 9, 10, 11, 12]);
+    for (const [n, legacySection] of shown) {
+      const section = sections[Number(n)];
+      if (!section) throw new Error(`section ${n}`);
+      expect(htmlToText(legacyHtml(section.lead)), `lead of ${n}`).toBe(htmlToText(legacySection.lead));
+      legacySection.subs.forEach((sub, i) => {
+        const port = section.subs[i];
+        expect(port?.title).toBe(sub.title);
+        const html = legacyHtml(port?.md ?? '');
+        expect(htmlToText(html), sub.title).toBe(htmlToText(sub.html));
+        expect(htmlCodeBlocks(html), sub.title).toEqual(htmlCodeBlocks(sub.html));
+      });
+    }
+    const schedule = parseSchedule(lines);
+    for (const week of dist.course.weeks) {
+      const frag = theory[week.n]?.frags['A. Learning objectives'] ?? '';
+      expect(htmlToText(legacyHtml(frag)), `objectives of ${week.n}`).toBe(htmlToText(week.objectives));
+      expect(htmlToText(legacyHtml(schedule.weeks[week.n]?.fallBehind ?? '')), `fall behind in ${week.n}`).toBe(
+        htmlToText(week.fallBehind),
+      );
     }
   });
 });

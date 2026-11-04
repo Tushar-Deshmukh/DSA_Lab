@@ -86,6 +86,51 @@ function renderDoc(title: string, intro: string, rows: Row[], doc: 'date' | 'con
   return out.join('\n');
 }
 
+function renderSlugReview(result: BuildResult): string {
+  const out = [
+    '# Slugs to review',
+    '',
+    'For your review before these are frozen. Once learners have progress stored against a slug, changing it needs an alias (D-010). Module and lesson slugs were written by hand for readability. To change one, say which: renaming now costs nothing.',
+    '',
+    'The slug appears in the address: `/learn/<module>/<lesson>`.',
+    '',
+  ];
+  for (const m of result.slugs.modules) {
+    out.push(`## ${m.number}. ${m.title}`, '', `Module slug: \`${m.slug}\``, '');
+    out.push('| Legacy id | Lesson slug | Title |', '| --- | --- | --- |');
+    for (const r of m.rows) out.push(`| ${r.legacyId} | \`${r.slug}\` | ${r.title} |`);
+    out.push('');
+  }
+  out.push(
+    '## Everything else',
+    '',
+    'These are derived from their titles and frozen in `content/ids.lock.json` at the same time. You do not need to read them all.',
+    '',
+    '| Kind | Count | Example |',
+    '| --- | --- | --- |',
+  );
+  const kinds = [
+    [
+      'unit:',
+      'Units',
+      'two-pointers-windows-prefix-sums/opposite-end-two-pointers/the-three-words-that-decide-the-pattern',
+    ],
+    ['exercise:', 'Exercises', 'two-pointers-windows-prefix-sums/opposite-end-two-pointers/ex-03'],
+    ['theory:', 'Theory fragments', 'two-pointers-windows-prefix-sums/subarray-vs-substring-vs-subsequence'],
+    ['pattern:', 'Patterns', 'opposite-end-two-pointers'],
+    ['handbook:', 'Handbook pages', 'javascript-reference/cost-model-of-built-ins'],
+    ['visualizer:', 'Visualizers', 'pair-brute (legacy ids, unchanged)'],
+    ['problem:', 'Problems', '167 (the LeetCode number)'],
+  ] as const;
+  for (const [prefix, label, example] of kinds) {
+    out.push(
+      `| ${label} | ${result.slugs.ids.filter((id) => id.startsWith(prefix)).length} | \`${example}\` |`,
+    );
+  }
+  out.push('');
+  return out.join('\n');
+}
+
 export function writeImportDocs(result: BuildResult): void {
   fs.mkdirSync(path.dirname(CHANGE_LOG), { recursive: true });
   fs.writeFileSync(CHANGE_LOG, JSON.stringify(result.changes, null, 1) + '\n');
@@ -135,4 +180,5 @@ export function writeImportDocs(result: BuildResult): void {
     '',
   ];
   fs.writeFileSync(path.join(DOCS_DIR, 'import-report.md'), report.join('\n'));
+  fs.writeFileSync(path.join(DOCS_DIR, 'slug-review.md'), renderSlugReview(result));
 }

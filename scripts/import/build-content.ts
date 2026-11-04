@@ -52,6 +52,17 @@ export interface BuildResult {
   counts: Record<string, unknown>;
   drops: { what: string; where: string; reason: string }[];
   warnings: string[];
+  /** For docs/slug-review.md. */
+  slugs: {
+    modules: { number: number; slug: string; title: string; rows: SlugRow[] }[];
+    ids: string[];
+  };
+}
+
+export interface SlugRow {
+  legacyId: string;
+  slug: string;
+  title: string;
 }
 
 const DUMP = { lineWidth: -1, noRefs: true, sortKeys: false } as const;
@@ -325,6 +336,9 @@ export function buildContent(): BuildResult {
     visualizers: {} as Record<string, string>,
   };
   const lockIds = new Set<string>();
+  const slugRows = new Map<string, SlugRow[]>();
+  const addSlugRow = (moduleSlug: string, row: SlugRow) =>
+    slugRows.set(moduleSlug, [...(slugRows.get(moduleSlug) ?? []), row]);
   const vizEmbeds: string[] = [];
   const exerciseCounts: Record<string, number> = {};
   const exerciseByModule: Record<string, number> = {};
@@ -565,6 +579,7 @@ export function buildContent(): BuildResult {
       write(`${base}.yaml`, toYaml(rendered.yamlData));
       legacyIds.lessons[legacyId] = scope;
       lockIds.add(`lesson:${scope}`);
+      addSlugRow(m.slug, { legacyId, slug, title: page.title });
       counts.lessons++;
     });
 
@@ -595,6 +610,7 @@ export function buildContent(): BuildResult {
     write(`${dir}/checkpoint.yaml`, toYaml(rendered.yamlData));
     legacyIds.lessons[`w${w}sat`] = scope;
     lockIds.add(`lesson:${scope}`);
+    addSlugRow(m.slug, { legacyId: `w${w}sat`, slug: 'checkpoint', title: fm.title as string });
     counts.checkpoints++;
     if (cp.kind === 'assessment') legacyIds.assessments[cp.id as string] = gateId as string;
     if (cp.kind === 'mock') legacyIds.mocks[`m${cp.id}`] = gateId as string;
@@ -651,6 +667,7 @@ export function buildContent(): BuildResult {
       parts.push(unit(exUnit, 'practice', exercisesTitle, rendered.body));
       const base = `${dir}/lessons/${lessonFile(index, slug)}`;
       write(`${base}.mdx`, mdxFile({ slug, legacyId, title, legacyTitle: page.title }, parts.join('\n\n')));
+      addSlugRow(m.slug, { legacyId, slug, title });
       write(`${base}.yaml`, toYaml(rendered.yamlData));
       legacyIds.lessons[legacyId] = scope;
       lockIds.add(`lesson:${scope}`);
@@ -893,5 +910,14 @@ export function buildContent(): BuildResult {
     counts: resultCounts,
     drops,
     warnings,
+    slugs: {
+      modules: MODULES.map((m) => ({
+        number: m.number,
+        slug: m.slug,
+        title: m.title,
+        rows: slugRows.get(m.slug) ?? [],
+      })),
+      ids: [...lockIds],
+    },
   };
 }
