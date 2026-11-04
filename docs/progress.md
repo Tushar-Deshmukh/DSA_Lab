@@ -2,7 +2,14 @@
 
 One entry per phase: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
 
-## Phase 0: Read and plan (2026-11-04) — waiting for approval
+## Phase 0: Read and plan (2026-11-04) — approved
+
+Your answers (2026-11-04):
+- Q1: Better Auth.
+- Q4: a free Vercel account and the free MongoDB Atlas tier.
+- Q17: the `Tushar-Deshmukh` git identity and GitHub account.
+
+Every other open question takes its default. Still open: the production email provider (D-025).
 
 ### Built
 

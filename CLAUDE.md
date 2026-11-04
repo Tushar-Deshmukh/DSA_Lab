@@ -4,7 +4,7 @@ Conventions for everyone working in this repository, human or Claude. Read `BUIL
 
 ## Where things stand
 
-- Phase 0 (read and plan) is done. The plan in `docs/plan.md` is **waiting for approval**. The new app does not exist yet.
+- Phase 0 (read and plan) was approved on 2026-11-04. Phase 1 (foundation) is in progress on branch `phase-1-foundation`.
 - The legacy course is at the repository root, as received: `source/`, `content/`, `src/`, `tests/`, `tools/`, `dsa-pattern-lab.html`. The first commit of Phase 1 moves it into `legacy/` with `git mv`. From then on, `legacy/` is never edited.
 - Where to look:
   - `docs/progress.md`: what each phase built and tested.

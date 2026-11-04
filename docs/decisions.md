@@ -1,6 +1,6 @@
 # Decisions
 
-Hard-to-reverse choices, each with the alternatives rejected and the evidence behind it. All entries are **proposed** until the Phase 0 plan is approved. Entries marked **needs your choice** depart from the brief or depend on something only you can decide.
+Hard-to-reverse choices, each with the alternatives rejected and the evidence behind it. The Phase 0 plan was approved on 2026-11-04: you answered questions 1, 4 and 17 and accepted the defaults for the rest, so every entry is **accepted** unless it says otherwise.
 
 Evidence labelled "spike" comes from throwaway experiments whose sources are in [phase-0/spikes/](phase-0/README.md). Counts come from [inventory.md](inventory.md).
 
@@ -21,7 +21,7 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 
 ---
 
-## D-002 Authentication library — **needs your choice**
+## D-002 Authentication library — **Better Auth, approved 2026-11-04**
 
 **Context.** The brief says "Auth.js with the MongoDB adapter". The current state, checked on 2026-11-04:
 - `next-auth` v5 is still beta (`5.0.0-beta.32`). The July 2026 security post says "`next-auth` v5 is still in beta and ships on the `beta` tag". That post fixed four advisories, in `5.0.0-beta.32`, `4.24.15` and `@auth/core` 0.41.3.
@@ -414,3 +414,17 @@ Checked with `npm view` on 2026-11-04. They will be checked again at install tim
 | mongodb-memory-server | 11.3.0 | | @axe-core/playwright | 4.14.0 |
 
 All are open source: MIT, ISC, MIT-0 or Apache-2.0, except `@axe-core/playwright`, which is MPL-2.0 (a test-only dependency). Nothing on this list is a paid service.
+
+---
+
+## D-025 Hosting: Vercel Hobby and MongoDB Atlas M0 (your choice, 2026-11-04)
+
+**Decision.** Deploy on a free Vercel account (Hobby plan) with a free MongoDB Atlas cluster (M0). Git hosting: GitHub, account `Tushar-Deshmukh`.
+
+**Constraints this brings, to be checked at deployment (Phase 8), plus one early check in Phase 1:**
+- **Terms of use:** Vercel describes Hobby as being for personal, non-commercial use. An institute should read the current terms before going live.
+- **Storage:** M0 has 512 MB, shared resources, a connection cap and no automated backups. Content copies are a few megabytes. Learner data is small per person, but export is the only backup.
+- **Connections:** serverless functions open connections per instance, so the MongoDB client is cached per instance with a small pool (`maxPoolSize` about 10) to stay well under the M0 connection cap.
+- **Network access:** Vercel functions have no fixed IP addresses, so Atlas network access must allow them. Either open access with a strong database password, or the Vercel–Atlas integration.
+- **Script policy:** D-006's per-page script hashes have to be verified on a Vercel deployment. That needs the repository on GitHub and connected to Vercel, which only you can do.
+- **Email:** magic links in production need an email provider. That is **still open**, because it receives learners' email addresses.

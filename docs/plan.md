@@ -1,6 +1,6 @@
 # DSA Pattern Lab: build plan
 
-**Status: Phase 0 proposal, waiting for approval.** Nothing below has been built yet. Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
+**Status: approved 2026-11-04.** Answers: question 1 Better Auth; question 4 a free Vercel account and the free MongoDB Atlas tier, with the production email provider still open; question 17 the `Tushar-Deshmukh` git identity and GitHub account. All other questions take their defaults. Phase 1 is in progress; see [progress.md](progress.md) for what is built. Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
 
 ## Contents
 
