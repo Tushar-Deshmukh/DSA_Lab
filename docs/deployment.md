@@ -49,7 +49,9 @@ Paste this string only into Vercel (step 2). Never put it in chat, in a commit o
 
 ## Later
 
-Each of these needs a redeploy afterwards, because the sign-in page is built once.
+**Course content in the database.** Nothing reads it until search arrives in Phase 7. From then on, run `npm run content:sync` with `MONGODB_URI` set to the Atlas connection string, on your own machine, whenever `content/` changes. Do not commit the string.
+
+Each of the following needs a redeploy afterwards, because the sign-in page is built once.
 
 - **Email sign-in:** choose a provider (it receives learners' email addresses), then set `EMAIL_TRANSPORT=smtp`, `SMTP_URL` and `EMAIL_FROM`.
 - **GitHub sign-in:** create an OAuth app on GitHub.

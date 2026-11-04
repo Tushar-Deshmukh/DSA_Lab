@@ -2,7 +2,97 @@
 
 One entry per phase, newest first: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
 
-## Phase 1: Foundation (2026-11-04) — waiting for your review
+## Phase 2: Content pipeline (2026-11-04) — waiting for your review
+
+Branch `phase-2-content`. What I need from you is at the end of this entry.
+
+### Built
+
+- **Importer** (`scripts/import-legacy.ts`, `scripts/import/`). TypeScript ports of the legacy roadmap and block parsers, the rewrite tables and engine, MDX escaping, slugs, the writer, and the reports. Running it again without `--force` refuses to touch `content/`.
+- **`content/`, 444 files.**
+
+  | Item | Count |
+  | --- | --- |
+  | Modules | 13 (Foundations and Modules 1–12) |
+  | Lessons | 63 (60 study, 3 Foundations) |
+  | Checkpoints | 12, each with before, attempt and after phases |
+  | Theory fragments | 150, plus 47 pattern write-ups and 12 learning-objective blocks: all 209 |
+  | Handbook pages | 75 |
+  | Exercises | 421 |
+  | Units | 290 (the 278 legacy sections, plus 12 Foundations assembles) |
+  | Visualizer embeds | 132 of 129 ids |
+  | Problems | 173, plus 6 extension entries (239, 297, 1480, 349, 14, 2) |
+  | Reserved problems | 31, in `content/reserved/` |
+
+- **Rewrites.** 665 changed lines and fields, every one logged with its rule: 578 lines and 87 exercise fields. `docs/date-rewrites.md` and `docs/content-changes.md` list them by rule, and `docs/import/changes.json` is the machine-readable log.
+- **Stable ids.** `content/ids.lock.json` holds every id, and `content/legacy-id-map.json` maps legacy ids for backup import. Modules and lessons have hand-written slugs (`docs/slug-review.md`).
+- **`npm run content:check`.** Schemas, MDX rules, references, slugs, coverage, dates, reserved problems and counts (`lib/content/`). It now runs before every build and in CI.
+- **`npm run content:sync`.** Writes `modules`, `lessons`, `patterns`, `exercises_public`, `problems`, `handbook` and `content_meta`, with a per-item version and a text index.
+- **Public and key split** of every exercise (`lib/content/split.ts`, D-011).
+- **Gated text** (D-027, new). Text that restates a reserved problem or gives an answer away is held back until an event. That is 29 exercises and 3 passages.
+- **Docs.** `docs/content-format.md`, `docs/import-report.md`, decisions D-027 to D-029.
+
+### Tested, and how
+
+| Gate | How | Result |
+| --- | --- | --- |
+| Every count matches the inventory | `lib/content/expected.ts`, typed by hand from `docs/inventory.md`; types, modules, tiers, tests, hidden tests, trace rows and fill alternatives included | passes |
+| The ported parsers match the legacy code | Against `legacy/tools/curriculum.mjs` directly, and against the output of the real legacy build run on a temporary copy: every exercise deep-equal to `dist/exercises.json`, and the rendered text and code blocks of all 72 lesson and Saturday pages, 12 week pages, 4 extra pages and the 10 roadmap sections the app shows equal to `dist/course.json` | passes |
+| Exercises deep-equal the legacy ones | Log replayed over the legacy exercises, compared with `content/`, all 421 | passes |
+| Rendered text equals the legacy text plus logged changes | Log replayed over the legacy files, parsed with the ports, rendered with marked 15.0.12, compared with the compiled and rendered MDX: lessons, checkpoints, overviews, fragments, patterns and handbook pages, with code blocks compared exactly | passes |
+| Frontmatter, bank and reserved files equal the legacy data | Same replay; exact strings | passes |
+| The fidelity tests catch a change | Changed on purpose, one at a time, then restored: a word in a lesson, a hint in an exercise, a code block in a fragment, and one entry removed from the log. Each made the tests fail | passes |
+| Content checks, including dates and reserved problems | `npm run content:check` on the real content, plus 88 tests, nearly all of which break one rule and confirm the check fails | passes |
+| Sync is idempotent | Real MongoDB (in-memory): the second run writes nothing, and every document and `syncedAt` stay the same. A changed item gets a new version, a removed item is deleted. The real `npm run content:sync` command is run too: 781 written, then 0 written | passes |
+| Nothing secret reaches the database | Every reserved title, URL and gated text absent; no gated exercise; no answer field; no explanation or solution as text; no hidden test; no Module 12 pattern, hint, prerequisite or reason; "after" units out of search | passes |
+| Lint, types, format | `npm run lint`, `typecheck`, `format:check` | clean |
+| Vitest | `npm test`: unit, integration and content | 282 passed in 16 files |
+| Playwright | `npm run build:e2e`, then `npx playwright test` in Chromium, Firefox and WebKit | 115 passed, 8 skipped (the budget test measures in Chromium only) |
+| Legacy suite | `npm run legacy:test` on Windows | 119,205, 62,397, 3,644 and 13 checks passed; 100 pages without overflow |
+| CI on GitHub | Linux | CIRESULT |
+
+### Found and fixed in this phase
+
+Each of these is covered by a test.
+
+- **Unseen leaks** (inventory 13): reserved numbers in schedule cells, the §9.2 problem list, and exact statements in "after" units and in drill item 6 are out of public text. The number-only legacy test is replaced by a check on titles, URL slugs, numbers and paraphrases.
+- **Module 12 problems named next to their pattern** in four theory lines, as you agreed (question 5c).
+- **Answers in public pages**: the §1 answer key and the §7.3 drill answers moved behind a gate (D-027).
+- **My own inventory** said some unused exercise fields were in use, and that `kind` is `implementation` where the data says `impl`. Both corrected in `docs/inventory.md`.
+- **`npm run content:sync` crashed on its first real run**: tsx does not allow top-level await in this project's module format, and the tests had only called the function behind it. All the content commands now have tests that run the real command.
+- **Links were not scanned.** The first reserved-problem check read text only, so a link to a reserved problem's URL got through. One of its own tests caught this, and it now reads links as well.
+- **A deprecated Mongoose option** from Phase 1 in the rate limiter (`new: true`) is replaced.
+
+No factual error in the course text turned up during the import. One oddity, unchanged: a hidden test in `w01.md:307` is written as `[0, -0]`, and the legacy parser reads it as `[0, 0]`. Its answer is the same either way (D-008).
+
+### Changes against the plan
+
+- **Gated text is new.** See D-027 and the decision below.
+- **No MDX serialiser.** The importer adds a backslash where one is needed and changes nothing else, so MDX stays byte-for-byte the legacy Markdown otherwise (D-028).
+- **Unit time estimates are not split yet.** Each lesson has its legacy estimate, and every study lesson totals 120 minutes. Dividing those minutes among units (plan 5.3) moves to Phase 5, which is what first shows them.
+- **`content:lock` is added**, so a new id is one command to lock.
+
+### Not done or not tested
+
+- **Visualizer text.** The 104 strings with date words in 53 visualizers are rewritten in Phase 3, when visualizers are ported. Until then the date check cannot read them.
+- **Nothing shows this content yet.** Lessons, the handbook and exercises render from Phase 4 and 5 on.
+- **Nothing reveals gated text yet.** The key endpoint arrives in Phase 4, and gates in Phase 6. The build-output scan for reserved problems (D-012) arrives in Phase 6, when there is output to scan.
+- **`content:sync` has run only against in-memory MongoDB**, not against Atlas or `docker compose`.
+- **Legacy backup import** needs ids for ready checks and the readiness checklist. They are added with that feature in Phase 7.
+- **New material** (glossary, confused-with links, the problem-to-pattern table) waits for question 7. `<Term>` fails the check until there is a glossary.
+- **`--force`** replaces all of `content/`, so it will need changing once hand-written material lives there.
+
+### What I need from you
+
+1. **Slugs:** read `docs/slug-review.md` and say if any should change. They freeze when you approve.
+2. **Rewrites:** skim `docs/date-rewrites.md` and `docs/content-changes.md`.
+3. **Four choices I made that you may want to overrule:**
+   - **Gating drill item 6.** Your answers did not cover it (D-027). It restates a problem of Assessment 1, so it is held back until that assessment is finished.
+   - **Line 941.** Removing only the number 287 would leave "find the duplicate", which names the problem, so the whole clause went.
+   - **After-course durations stay.** "4–6 more weeks", "about 6 hours a week", "two mocks a week" are in the handbook's after-the-course pages, allowlisted with a reason. They are advice about practice after the course, not a timetable. If you want them gone too, say so.
+   - **§0 assumptions table.** The "Start date" and "Holidays" rows are removed, and "Study days" became "About 2 h per lesson".
+
+## Phase 1: Foundation (2026-11-04) — merged (PR #1)
 
 Branch `phase-1-foundation`.
 

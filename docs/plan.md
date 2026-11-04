@@ -1,6 +1,6 @@
 # DSA Pattern Lab: build plan
 
-**Status: approved 2026-11-04.** Answers: question 1 Better Auth; question 4 a free Vercel account and the free MongoDB Atlas tier, with the production email provider still open; question 17 the `Tushar-Deshmukh` git identity and GitHub account. All other questions take their defaults. Phase 1 (foundation) is built and tested and waiting for review; see [progress.md](progress.md). Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
+**Status: approved 2026-11-04. Phase 1 is merged; Phase 2 is waiting for review.** Answers: question 1 Better Auth; question 4 a free Vercel account and the free MongoDB Atlas tier, with the production email provider still open; question 17 the `Tushar-Deshmukh` git identity and GitHub account. All other questions take their defaults. Phase 1 (foundation) is built and tested and waiting for review; see [progress.md](progress.md). Decision numbers (D-0xx) refer to [decisions.md](decisions.md); counts come from [inventory.md](inventory.md). Open questions are in [section 16](#16-open-questions); each has the default I will follow if you agree.
 
 ## Contents
 
@@ -252,6 +252,7 @@ content/
   problems/bank.yaml                 173 problems plus extension entries (239, 297, B1–B4), each flagged
   reserved/assessments.yaml          server-only (D-012)
   reserved/mocks.yaml                server-only
+  reserved/gated.yaml                server-only: text a page shows only after an event (D-027)
   allowlists/dates.yaml              exceptions to the date check, each with a reason
   allowlists/reserved.yaml           exceptions to the reserved check (clue words), each with a reason
   ids.lock.json                      frozen slugs and aliases (D-010)
@@ -274,6 +275,7 @@ Only these components are allowed, with literal props. The validator rejects any
 | `<Problem num>` | a bank problem link with the learner's status |
 | `<PatternLink slug>`, `<LessonLink slug>` | cross-links that the validator checks |
 | `<Term id>` | glossary term (new content, open question 7) |
+| `<Gated id>` | text from `reserved/gated.yaml`, shown after its event (added in Phase 2, D-027) |
 
 ### 6.3 Lesson frontmatter
 
