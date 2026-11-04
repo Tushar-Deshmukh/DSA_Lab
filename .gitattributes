@@ -1,0 +1,13 @@
+# The legacy parsers split text on "\n", and this machine's system git config sets core.autocrlf=true.
+# Pin LF everywhere so a Windows checkout never turns content into CRLF.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
