@@ -49,7 +49,7 @@ Branch `phase-2-content`. What I need from you is at the end of this entry.
 | Vitest | `npm test`: unit, integration and content | 282 passed in 16 files |
 | Playwright | `npm run build:e2e`, then `npx playwright test` in Chromium, Firefox and WebKit | 115 passed, 8 skipped (the budget test measures in Chromium only) |
 | Legacy suite | `npm run legacy:test` on Windows | 119,205, 62,397, 3,644 and 13 checks passed; 100 pages without overflow |
-| CI on GitHub | Linux | CIRESULT |
+| CI on GitHub | Ubuntu 24.04: lint, types, format, content check and Vitest; end-to-end in Chromium; the legacy suite | all three jobs passed on the branch |
 
 ### Found and fixed in this phase
 
