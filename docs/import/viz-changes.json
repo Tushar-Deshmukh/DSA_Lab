@@ -1,0 +1,629 @@
+[
+ {
+  "file": "src/viz/algo-map.js",
+  "item": "shared helper",
+  "line": 13,
+  "start": 1074,
+  "before": "Complexity → everything: you cannot judge an optimisation without it (Week 1).",
+  "after": "Complexity → everything: you cannot judge an optimisation without it (Module 1).",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/algo-map.js",
+  "item": "shared helper",
+  "line": 20,
+  "start": 2091,
+  "before": "Heaps + BFS → Dijkstra (Week 9): Dijkstra is BFS with a priority queue.",
+  "after": "Heaps + BFS → Dijkstra (Module 9): Dijkstra is BFS with a priority queue.",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/algo-map.js",
+  "item": "depmap",
+  "line": 29,
+  "start": 2630,
+  "before": "\nWeek 1        complexity, arrays, hashing             //@w1\nWeeks 2–3     two pointers, windows, prefix sums, binary search, sorting   //@w2\nWeeks 4–6     lists, stacks, recursion, backtracking, trees                //@w4\nWeeks 7–9     heaps, intervals, graphs, Dijkstra, greedy                   //@w7\nWeeks 10–11   dynamic programming                                          //@w10",
+  "after": "\nModule 1        complexity, arrays, hashing             //@w1\nModules 2–3     two pointers, windows, prefix sums, binary search, sorting   //@w2\nModules 4–6     lists, stacks, recursion, backtracking, trees                //@w4\nModules 7–9     heaps, intervals, graphs, Dijkstra, greedy                   //@w7\nModules 10–11   dynamic programming                                          //@w10",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w01.js",
+  "item": "hash-twosum",
+  "line": 173,
+  "start": 12055,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w01.js",
+  "item": "remove-dups",
+  "line": 267,
+  "start": 19177,
+  "before": "Day 2 trace",
+  "after": "Lesson 2 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w01.js",
+  "item": "remove-dups",
+  "line": 267,
+  "start": 19252,
+  "before": "Roadmap example",
+  "after": "Handbook example",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w01.js",
+  "item": "bucket-freq",
+  "line": 491,
+  "start": 36413,
+  "before": "Day 4 trace",
+  "after": "Lesson 4 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w01.js",
+  "item": "bucket-freq",
+  "line": 517,
+  "start": 38730,
+  "before": "Counting O(n), placing O(distinct), scanning O(n): O(n) total, against O(n log n) for sorting by count. Week 7 redoes this with a heap in O(n log k).",
+  "after": "Counting O(n), placing O(distinct), scanning O(n): O(n) total, against O(n log n) for sorting by count. Module 7 redoes this with a heap in O(n log k).",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "two-sum-sorted",
+  "line": 70,
+  "start": 4513,
+  "before": "Roadmap example",
+  "after": "Handbook example",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "dutch-flag",
+  "line": 267,
+  "start": 19213,
+  "before": "Roadmap trace",
+  "after": "Handbook trace",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "kadane",
+  "line": 319,
+  "start": 23000,
+  "before": "Roadmap trace",
+  "after": "Handbook trace",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "win-longest",
+  "line": 402,
+  "start": 29014,
+  "before": "Roadmap trace",
+  "after": "Handbook trace",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "win-longest",
+  "line": 402,
+  "start": 29068,
+  "before": "Day 3 trace",
+  "after": "Lesson 3 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "prefix-map",
+  "line": 632,
+  "start": 46751,
+  "before": "Roadmap trace",
+  "after": "Handbook trace",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w02.js",
+  "item": "diff-array",
+  "line": 677,
+  "start": 51100,
+  "before": "Day 5 trace",
+  "after": "Lesson 5 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w03.js",
+  "item": "shared helper",
+  "line": 16,
+  "start": 1033,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w03.js",
+  "item": "bs-rotated-min",
+  "line": 99,
+  "start": 8438,
+  "before": "Day 2 trace 1",
+  "after": "Lesson 2 trace 1",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w03.js",
+  "item": "bs-answer",
+  "line": 183,
+  "start": 15243,
+  "before": "Day 3 trace",
+  "after": "Lesson 3 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w03.js",
+  "item": "quicksort3",
+  "line": 360,
+  "start": 30544,
+  "before": "Day 5 dry run",
+  "after": "Lesson 5 dry run",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w04.js",
+  "item": "ll-reverse",
+  "line": 17,
+  "start": 1170,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w04.js",
+  "item": "mono-stack",
+  "line": 420,
+  "start": 33236,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w04.js",
+  "item": "mono-deque",
+  "line": 535,
+  "start": 41786,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w05.js",
+  "item": "rec-fib",
+  "line": 60,
+  "start": 4212,
+  "before": "With a cache every n is computed once: O(n) calls, O(n) space. This is top-down dynamic programming (Week 10).",
+  "after": "With a cache every n is computed once: O(n) calls, O(n) space. This is top-down dynamic programming (Module 10).",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w05.js",
+  "item": "bt-subsets-dup",
+  "line": 171,
+  "start": 11588,
+  "before": "Roadmap dry run [1,2,2]",
+  "after": "Handbook dry run [1,2,2]",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w05.js",
+  "item": "bt-combsum",
+  "line": 305,
+  "start": 20207,
+  "before": "Day 4 state table",
+  "after": "Lesson 4 state table",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w05.js",
+  "item": "word-search",
+  "line": 419,
+  "start": 27699,
+  "before": "Day 5 run: \"ABC\"",
+  "after": "Lesson 5 run: \"ABC\"",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "shared helper",
+  "line": 23,
+  "start": 1485,
+  "before": "Roadmap tree [3,9,20,null,null,15,7]",
+  "after": "Handbook tree [3,9,20,null,null,15,7]",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "tree-inorder-iter",
+  "line": 103,
+  "start": 8074,
+  "before": "Roadmap tree",
+  "after": "Handbook tree",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "tree-diameter",
+  "line": 192,
+  "start": 14824,
+  "before": "Roadmap dry run [1,2,3,4,5]",
+  "after": "Handbook dry run [1,2,3,4,5]",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "tree-lca",
+  "line": 267,
+  "start": 20700,
+  "before": "Day 4 trace (p = 6, q = 2)",
+  "after": "Lesson 4 trace (p = 6, q = 2)",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "bst-validate",
+  "line": 308,
+  "start": 24374,
+  "before": "Day 5 trap [5,4,6,null,null,3,7]",
+  "after": "Lesson 5 trap [5,4,6,null,null,3,7]",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w06.js",
+  "item": "tree-construct",
+  "line": 379,
+  "start": 29846,
+  "before": "Day 5 by-hand example",
+  "after": "Lesson 5 by-hand example",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "heap-ops",
+  "line": 62,
+  "start": 3451,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "heap-topk",
+  "line": 117,
+  "start": 7355,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "kway-merge",
+  "line": 150,
+  "start": 9655,
+  "before": "Day 2: three short arrays",
+  "after": "Lesson 2: three short arrays",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "two-heaps",
+  "line": 192,
+  "start": 12749,
+  "before": "Day 3 trace",
+  "after": "Lesson 3 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "iv-merge",
+  "line": 273,
+  "start": 19168,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "iv-select",
+  "line": 350,
+  "start": 25735,
+  "before": "Exchange argument (Week 9): the interval that ends first leaves the most room for the rest, so some optimal answer always includes it.",
+  "after": "Exchange argument (Module 9): the interval that ends first leaves the most room for the rest, so some optimal answer always includes it.",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "sweep",
+  "line": 364,
+  "start": 27033,
+  "before": "Day 4: 2 rooms",
+  "after": "Lesson 4: 2 rooms",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w07.js",
+  "item": "trie",
+  "line": 395,
+  "start": 29493,
+  "before": "Day 5 drawing",
+  "after": "Lesson 5 drawing",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w08.js",
+  "item": "graph-build",
+  "line": 29,
+  "start": 2624,
+  "before": "Day 1 graph (undirected)",
+  "after": "Lesson 1 graph (undirected)",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w08.js",
+  "item": "graph-build",
+  "line": 40,
+  "start": 3393,
+  "before": " empty lists. Use Array.from with a function so every list is a different array (Week 1: the shared-row bug).",
+  "after": " empty lists. Use Array.from with a function so every list is a different array (Module 1: the shared-row bug).",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w08.js",
+  "item": "shared helper",
+  "line": 56,
+  "start": 4756,
+  "before": "Day 1–2 graph",
+  "after": "Lesson 1–2 graph",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w08.js",
+  "item": "rotting",
+  "line": 155,
+  "start": 12346,
+  "before": "Roadmap example",
+  "after": "Handbook example",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w08.js",
+  "item": "kahn",
+  "line": 238,
+  "start": 18984,
+  "before": "Roadmap 4-course example",
+  "after": "Handbook 4-course example",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w09.js",
+  "item": "dijkstra",
+  "line": 14,
+  "start": 1336,
+  "before": "Day 1: 5-node graph",
+  "after": "Lesson 1: 5-node graph",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w09.js",
+  "item": "dijkstra",
+  "line": 14,
+  "start": 1470,
+  "before": "Roadmap 743 dry run",
+  "after": "Handbook 743 dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w09.js",
+  "item": "kruskal",
+  "line": 102,
+  "start": 9707,
+  "before": "Day 3: 5 nodes",
+  "after": "Lesson 3: 5 nodes",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w09.js",
+  "item": "jump-game",
+  "line": 211,
+  "start": 19506,
+  "before": "Roadmap dry run (false)",
+  "after": "Handbook dry run (false)",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w09.js",
+  "item": "gas-station",
+  "line": 275,
+  "start": 24124,
+  "before": "Day 5 trace",
+  "after": "Lesson 5 trace",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w10.js",
+  "item": "house-robber",
+  "line": 46,
+  "start": 4317,
+  "before": "Roadmap dry run",
+  "after": "Handbook dry run",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w10.js",
+  "item": "coin-change",
+  "line": 90,
+  "start": 7592,
+  "before": "Roadmap: [1,3,4], 6",
+  "after": "Handbook: [1,3,4], 6",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w10.js",
+  "item": "word-break",
+  "line": 190,
+  "start": 18027,
+  "before": "Day 5: \"leetcode\"",
+  "after": "Lesson 5: \"leetcode\"",
+  "rules": [
+   "day-to-lesson"
+  ]
+ },
+ {
+  "file": "src/viz/w11.js",
+  "item": "knap01",
+  "line": 27,
+  "start": 3238,
+  "before": "This is the reuse bug: upward iteration turns 0/1 knapsack into the unbounded knapsack from Week 10.",
+  "after": "This is the reuse bug: upward iteration turns 0/1 knapsack into the unbounded knapsack from Module 10.",
+  "rules": [
+   "rename-week"
+  ]
+ },
+ {
+  "file": "src/viz/w11.js",
+  "item": "lis",
+  "line": 78,
+  "start": 8987,
+  "before": "Roadmap example, O(n²)",
+  "after": "Handbook example, O(n²)",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w11.js",
+  "item": "lis",
+  "line": 78,
+  "start": 9085,
+  "before": "Roadmap example, tails",
+  "after": "Handbook example, tails",
+  "rules": [
+   "rename-roadmap"
+  ]
+ },
+ {
+  "file": "src/viz/w11.js",
+  "item": "lis",
+  "line": 80,
+  "start": 9482,
+  "before": "\n// O(n²): dp[i] = length of the longest increasing subsequence ENDING at i\nfor (let i = 0; i < n; i++) { dp[i] = 1;\n  for (let j = 0; j < i; j++) if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1); }  //@dp\n// O(n log n): tails[k] = smallest tail of an increasing subsequence of length k + 1\nfor (const x of nums) {\n  const k = lowerBound(tails, x);           // first tail >= x (Week 3)    //@lb\n  tails[k] = x;                             // append (k = length) or replace  //@put\n}\nreturn tails.length;",
+  "after": "\n// O(n²): dp[i] = length of the longest increasing subsequence ENDING at i\nfor (let i = 0; i < n; i++) { dp[i] = 1;\n  for (let j = 0; j < i; j++) if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1); }  //@dp\n// O(n log n): tails[k] = smallest tail of an increasing subsequence of length k + 1\nfor (const x of nums) {\n  const k = lowerBound(tails, x);           // first tail >= x (Module 3)    //@lb\n  tails[k] = x;                             // append (k = length) or replace  //@put\n}\nreturn tails.length;",
+  "rules": [
+   "rename-week"
+  ]
+ }
+]

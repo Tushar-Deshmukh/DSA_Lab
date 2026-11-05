@@ -3,7 +3,15 @@ import { appReady } from './support';
 
 // Decisions D-006 (page policy with per-page script hashes) and D-007 (runner isolation), in every browser.
 
-const ROUTES = ['/', '/sign-in', '/settings', '/learn', '/no-such-page'];
+const ROUTES = [
+  '/',
+  '/sign-in',
+  '/settings',
+  '/learn',
+  '/visualizers',
+  '/visualizers/two-sum-sorted',
+  '/no-such-page',
+];
 
 for (const route of ROUTES) {
   test(`${route}: hydrates with no policy violations and blocks injected scripts`, async ({ page }) => {
@@ -20,6 +28,8 @@ for (const route of ROUTES) {
       '<meta http-equiv="Content-Security-Policy" content="script-src \'self\' \'sha256-',
     );
     await appReady(page);
+    // A playground fetches its visualizer's chunk after the page starts; the check waits for it to draw.
+    if (route.startsWith('/visualizers/')) await expect(page.locator('section[data-viz]')).toBeVisible();
     expect(await page.evaluate(() => (window as unknown as { __violations: string[] }).__violations)).toEqual(
       [],
     );

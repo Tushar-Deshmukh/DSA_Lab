@@ -44,6 +44,13 @@
 
   --code-bg: #f0f2ee;
   --code-ink: #1d2730;
+  /* Syntax colours from the legacy set. String, number and comment were darkened to reach 4.5:1 on the code
+     background, including the tinted active line of a visualizer. */
+  --tok-kw: #7a3db8;
+  --tok-str: #29712d;
+  --tok-num: #a04a08;
+  --tok-com: #5b646c;
+  --tok-fn: #1f5fbf;
 
   --f-body: var(--nf-reading), 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --f-ui: var(--nf-ui), 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -94,6 +101,11 @@
     --interview-soft: #1c3824;
     --code-bg: #161c22;
     --code-ink: #dbe2e8;
+    --tok-kw: #c79bff;
+    --tok-str: #8fd18f;
+    --tok-num: #f2b36b;
+    --tok-com: #86929d;
+    --tok-fn: #7fb2ff;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
   }
 }
@@ -136,6 +148,11 @@
   --interview-soft: #1c3824;
   --code-bg: #161c22;
   --code-ink: #dbe2e8;
+  --tok-kw: #c79bff;
+  --tok-str: #8fd18f;
+  --tok-num: #f2b36b;
+  --tok-com: #86929d;
+  --tok-fn: #7fb2ff;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
@@ -218,6 +235,24 @@
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Syntax colours (lib/highlight.ts). */
+.tk-kw {
+  color: var(--tok-kw);
+}
+.tk-str {
+  color: var(--tok-str);
+}
+.tk-num {
+  color: var(--tok-num);
+}
+.tk-com {
+  color: var(--tok-com);
+  font-style: italic;
+}
+.tk-fn {
+  color: var(--tok-fn);
 }
 
 .skip-link {

@@ -1,26 +1,30 @@
 // `npm run content:check` (plan 6.7). Runs before every build; any problem fails it.
-import fs from 'node:fs';
 import path from 'node:path';
 import { ContentLoadError, loadContent } from '../lib/content/load';
 import { validateContent } from '../lib/content/validate';
-import { CONTENT_DIR, LEGACY_DIR } from './import/paths';
+import { VIZ_CATALOG, VIZ_LOADERS } from '../lib/viz/registry';
+import { testInputs } from '../lib/viz/test-inputs';
+import { vizTexts, type VizText } from '../lib/viz/text';
+import type { AnyViz } from '../lib/viz/types';
+import { CONTENT_DIR } from './import/paths';
 
-/** Until the engine is ported (Phase 3), the known visualizers are the ones the legacy course defines. */
-export function legacyVisualizerIds(): Set<string> {
-  const dir = path.join(LEGACY_DIR, 'src/viz');
-  const ids = new Set<string>();
-  for (const file of fs.readdirSync(dir)) {
-    if (!/^(w\d+|algo).*\.js$/.test(file)) continue;
-    const text = fs.readFileSync(path.join(dir, file), 'utf8');
-    for (const m of text.matchAll(/(?:\.define|[a-z]Def)\('([\w-]+)'/g)) ids.add(m[1] as string);
+/** The visualizers a page may embed: the ported ones (tests/viz/parity.test.ts proves they are the legacy 129). */
+export const knownVisualizers = (): Set<string> => new Set(VIZ_CATALOG.map((e) => e.id));
+
+/** What every visualizer shows in words, on the default, its presets and its 300 random test inputs. */
+export async function visualizerTexts(): Promise<VizText[]> {
+  const out: VizText[] = [];
+  for (const { id } of VIZ_CATALOG) {
+    const viz = await (VIZ_LOADERS[id] as () => Promise<AnyViz>)();
+    out.push(...vizTexts(viz, testInputs(viz)));
   }
-  return ids;
+  return out;
 }
 
-function main(): void {
+async function main(): Promise<void> {
   let problems: string[];
   try {
-    problems = validateContent(loadContent(CONTENT_DIR), legacyVisualizerIds());
+    problems = validateContent(loadContent(CONTENT_DIR), knownVisualizers(), await visualizerTexts());
   } catch (err) {
     if (!(err instanceof ContentLoadError)) throw err;
     problems = err.problems;
@@ -34,4 +38,4 @@ function main(): void {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]).endsWith(path.join('scripts', 'validate-content.ts')))
-  main();
+  void main();

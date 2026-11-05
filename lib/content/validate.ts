@@ -13,6 +13,11 @@ export interface LearnerText {
   gated?: boolean;
   /** A link target: read by the reserved-problem check, and not wording for the date check. */
   url?: boolean;
+  /**
+   * A visualizer note from a random input, with its numbers blanked (lib/viz/text.ts). The date check reads it; the
+   * reserved-problem check, which looks for problem numbers, reads the same wording on the default and preset inputs.
+   */
+  numbersBlanked?: boolean;
 }
 
 interface InspectedDoc {
@@ -451,8 +456,8 @@ export function checkReserved(bundle: ContentBundle, texts = learnerTexts(bundle
     re: new RegExp(`(?<![\\d.,^])\\b${n}\\b(?![\\d,.]*\\d)`, 'g'),
   }));
 
-  for (const { location, text, gated } of texts) {
-    if (gated) continue;
+  for (const { location, text, gated, numbersBlanked } of texts) {
+    if (gated || numbersBlanked) continue;
     const masked = maskAllowed(text, location, bundle.allowlists.reserved, used);
     let list = location.startsWith('theory:') || location.startsWith('pattern:') ? [...needles, ...m12Theory] : needles;
     // A Module 12 problem's own bank entry may carry its name; the rule is about naming it next to a pattern.
@@ -541,8 +546,13 @@ function sortKeys(value: unknown): unknown {
 
 // ---- all together
 
-export function validateContent(bundle: ContentBundle, knownVisualizers: Set<string>): string[] {
-  const texts = learnerTexts(bundle);
+/** `vizTexts`: what the visualizers show in words (lib/viz/text.ts), checked with the content's own text. */
+export function validateContent(
+  bundle: ContentBundle,
+  knownVisualizers: Set<string>,
+  vizTexts: LearnerText[] = [],
+): string[] {
+  const texts = [...learnerTexts(bundle), ...vizTexts];
   return [
     ...checkMdxRules(bundle),
     ...checkReferences(bundle, knownVisualizers),
