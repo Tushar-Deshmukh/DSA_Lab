@@ -2,9 +2,83 @@
 
 One entry per phase, newest first: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
 
-## Phase 2: Content pipeline (2026-11-04) — waiting for your review
+## Phase 3: Visualizer engine and ports (2026-11-05) — waiting for your review
 
-Branch `phase-2-content`. What I need from you is at the end of this entry.
+Branch `phase-3-visualizers`. What I need from you is at the end of this entry.
+
+### Built
+
+- **All 129 visualizers ported** to `lib/viz/defs/<module>/<id>.ts`, 139 files and 18,039 lines, each its own chunk (`lib/viz/registry.ts`). `run()` and `validate()` are the legacy code with types; `view()` keeps the legacy `render` signature and returns plain data nodes (D-013, Phase 3 notes). The converter is `scripts/import/port-visualizers.ts`; it types the code from what an instrumented copy of the legacy code held on every test input, then from the compiler.
+- **Visualizer text.** 57 strings changed and logged in `docs/import/viz-changes.json`: 31 date rewrites ("Day 3 trace" → "Lesson 3 trace", "Week 10" → "Module 10") and 26 "Roadmap" → "Handbook". They now appear in `docs/date-rewrites.md` and `docs/content-changes.md`, which both generators rewrite. Day words that belong to a problem (Daily Temperatures, the two stock problems) and the growth chart's running times stay, allowlisted with reasons; the Phase 2 count of 104 strings included those.
+- **`content:check` reads what visualizers show:** titles, input labels, presets, legends, code comments, and the notes and view captions of every step on the default, the presets and 300 random inputs each. The date check and the reserved-problem check both run over it. Embedded ids are now checked against the port, not the legacy files.
+- **Engine and modes** (`lib/viz/`, all pure and tested in Node):
+  - the run order and messages of the legacy player, input fields in the legacy format, line tags;
+  - shareable state in the URL hash (`hash.ts`: id, base64url input, step; a damaged or oversized link opens on the defaults);
+  - edge-case inputs: empty, one element, duplicates, all equal, sorted, reversed, each offered only if `validate()` accepts it and it runs (`edge-cases.ts`);
+  - generic Predict questions: which pointer moves, what happens to a stack or a queue, which single cell changes (`predict.ts`);
+  - Compare: 9 pairs from material the course already has (`compare.ts`);
+  - the complexity explorer for 16 visualizers whose steps follow the algorithm's cost (`explorer.ts`);
+  - the variables panel with changes found by diffing steps (`variables.ts`), and syntax colouring ported from the legacy tokenizer (`lib/highlight.ts`).
+- **Primitives and player** (`components/viz/`). Every primitive of plan 7.2, drawn like the legacy renderer, with a non-colour cue for every state (ring, dashed, dotted, check, star, cross, bracket, hatching) and a text equivalent for screen readers. The player has input fields, presets, random and edge-case inputs, Reset, Back, Next, Play with speed, Next decision, a scrubber, the keys ← → space Home End, the code with its active line and click-to-set breakpoints, variables, narration with "Why", an ARIA live region, a narration log, Watch and Predict, and Copy link. Reduced motion uses the Phase 1 setting.
+- **Pages.** `/visualizers`: all 129, filtered by module, pattern and title; patterns come from the lessons that embed each visualizer (`lib/content/public.ts`, which never opens `content/reserved/`). `/visualizers/[id]`: 129 static playgrounds with the state in the address, and Compare and the explorer where they exist, loaded only when opened.
+- **Tokens.** Syntax colours from the legacy set; string, number and comment darkened to 4.5:1 (comments were 3.3:1).
+- **Review sheet.** `scripts/viz-review.ts` puts each legacy visualizer next to the port at the middle step (`.viz-review/index.html`, not committed).
+
+### Tested, and how
+
+| Gate | How | Result |
+| --- | --- | --- |
+| The port behaves exactly like the legacy code | `tests/viz/parity.test.ts`: the real legacy `player.js` in a sandbox. Definition (title, code, line tags, inputs, presets, legend), the 300-draw random generator, and on every test input (default, presets, 300 random each: 38,333 runs) the steps, the rejection message and the view of every step, compared value by value | 389 passed |
+| All 129 pass their references, ≥ 250 of 300 random inputs accepted | `tests/viz/references.test.ts`: `legacy/tests/refs.mjs` imported as it is; random inputs skipped only when `validate()` rejects them; stronger checks for the 7 weak references | 259 passed |
+| Every step validates | Same file: a note on every step, a real code line, and every view node passes a strict schema of its primitive | passes |
+| Modes | Unit tests: hash round trips (and damaged, oversized, foreign links); 313 edge-case buttons on 74 visualizers all match the references; 5,765 Predict questions on 63 visualizers, each answer checked against the next step's view; 9 Compare pairs agree with each other and the references on 50+ inputs each; the explorer finds the expected growth on 3 seeds for its 16 visualizers | passes |
+| Content check with visualizer text | `npm run content:check`, and a test that a date, a year and a day word in visualizer text are caught | passes |
+| Every visualizer draws in a browser | `tests/e2e/viz-visual.spec.ts`: each playground at its middle step, no console error; saves the screenshot | 129 passed |
+| Keyboard and screen reader checks on the gallery and playgrounds | `tests/e2e/visualizers.spec.ts`: filters and links in tab order; ← → Home End space; the live region text; accessible names on every control; axe (WCAG 2.2 AA) on the gallery and a playground in both themes, in Watch and Predict, with Compare and the explorer open; no sideways scroll at 360 px; moving between playgrounds | passes in Chromium, Firefox and WebKit (WebKit's Tab skips links, so the step to the links runs in the other two, as in Phase 1) |
+| Policy | The gallery and a playground added to the D-006 test: no violations, injected scripts blocked | passes in all three browsers |
+| Budget | `/visualizers` within the 200 KB shell budget (168 KB); playgrounds within a new 240 KB budget (192 KB measured, one visualizer chunk) | passes |
+| Lint, types, format | `npm run lint`, `typecheck`, `format:check` | clean |
+| Vitest | `npm test`: unit, integration, content and visualizers | 988 passed in 25 files |
+| Playwright | `npm run build:e2e`, then `npx playwright test` | Chromium 195 passed; Firefox and WebKit 116 passed, 274 skipped (the screenshot and budget specs run in Chromium only) |
+| Legacy suite | `npm run legacy:test` on Windows | 119,205, 62,397, 3,644 and 13 checks passed; 100 pages without overflow |
+
+### Found and fixed in this phase
+
+- **`showField` dropped the brackets of JSON fields and the space after commas.** The legacy player kept both. A test now reads every default and preset back through its field.
+- **A window bound that is `null`** counts as 0 in the legacy comparison, and `undefined` never matches; the port's first version treated both as missing.
+- **The heap** draws its array above its tree, as the legacy one did; the first port put them side by side.
+- **Contrast**: the legacy comment colour (3.3:1), and line numbers at 4.49:1, fixed. **Label in name**: "◀ Back" had the name "Previous step". **Target size**: breakpoint buttons are 24 px high.
+- **A build warning that mattered**: reading content with computed paths made the bundler copy the whole project, `content/reserved/` included, into the server output. The reads are build-time only and are now excluded from tracing.
+- **The visualizer tests once took 2.7 hours** and three timed out; run again, they take 20 seconds. The machine had stalled; nothing in the tests changed.
+- **Playwright's browsers were missing** on this machine and were reinstalled (`npx playwright install`).
+
+No visualizer computed a wrong answer: every reference passes on every input.
+
+### Changes against the plan
+
+- **Views are data, not JSX** (D-013, Phase 3 notes).
+- **Compare has 9 pairs, not about 12,** and covers Modules 1–5, 8 and 11. All 9 come from material that exists: two visualizers with the same input, or a visualizer's own switch (memo, pruning, pivot rule, method). Pairs for Modules 6, 7, 9 and 10 need new brute-force step generators, which is new material (question 7).
+- **The explorer is on 16 visualizers,** not every one with a size. Elsewhere one step narrates several operations (the O(n²) LIS table shows one step per element), or a search ends early on most random inputs, and a measured curve would teach the wrong class. The test fails if any of the 16 drifts from its class.
+- **Next decision** jumps to the next step with a "why", or the next step a Predict question is about.
+- **Steps are computed on the page, not in a Worker.** Oversized inputs (lists of 2,000, numbers of a million, grids of 300 rows, strings of 400) were either rejected by `validate()` or ran in under 300 ms, so the page never stalls; a link's input is capped at 4 KB.
+
+### Not done or not tested
+
+- **Hand-written Predict questions** for one main visualizer per pattern (47). They are new material and need drafting and your review (question 7). The generic questions cover 63 visualizers.
+- **Predict scores feed nothing yet.** Mastery arrives in Phase 6.
+- **Lessons do not show visualizers yet**, and a lesson does not resume a visualizer step. Both come with lesson pages in Phase 5; `VizEmbed` is ready for them.
+- **Screen readers were not tried by hand.** The checks are automated: names, roles, the live region text, axe. A pass with NVDA or VoiceOver is worth doing before learners arrive.
+- **The screenshots need your eyes** (the gate says "reviewed"). I compared five pairs myself: two-sum-sorted, heap-ops, growth, dijkstra and hash-buckets, where the chips were square instead of the legacy pills (fixed).
+
+### What I need from you
+
+1. **Review the screenshots.** Open `.viz-review/index.html` after running the three commands at the top of `scripts/viz-review.ts`, or ask me for the sheet. Each row is the legacy visualizer and the port at the same step.
+2. **Try a playground:** `/visualizers`, then any visualizer. Step with the keys, change the input, try Predict, and open Compare or "How the steps grow" where they appear.
+3. **Say whether the missing new material should be drafted now:** the 47 hand-written Predict question sets and the brute-force generators for the 4 modules without a Compare pair. Both need your review before learners see them.
+
+## Phase 2: Content pipeline (2026-11-04) — merged (PR #3)
+
+Branch `phase-2-content`.
 
 ### Built
 
