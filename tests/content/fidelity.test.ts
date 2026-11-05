@@ -25,6 +25,7 @@ import {
   type ScheduleDay,
 } from '@/scripts/import/roadmap-parser';
 import { HANDBOOK_SECTIONS, MODULES, moduleDir } from '@/scripts/import/slugs';
+import { readVizChanges } from '@/scripts/import/viz-text';
 import { htmlCodeBlocks, htmlToText, legacyHtml, renderLegacyBlocks, renderMdx } from './support';
 
 const log = JSON.parse(fs.readFileSync(CHANGE_LOG, 'utf8')) as { lines: LineChange[]; fields: FieldChange[] };
@@ -105,8 +106,11 @@ describe('the change log', () => {
     const docs = ['date-rewrites.md', 'content-changes.md'].map((f) =>
       fs.readFileSync(path.join(CONTENT_DIR, '..', 'docs', f), 'utf8'),
     );
-    const listed = docs.join('\n').split('\n').filter((l) => l.startsWith('| source/') || l.startsWith('| content/')).length;
+    const rows = docs.join('\n').split('\n');
+    const listed = rows.filter((l) => l.startsWith('| source/') || l.startsWith('| content/')).length;
     expect(listed).toBe(log.lines.length + log.fields.length);
+    // Visualizer text changes: their replay is proven by tests/viz/parity.test.ts.
+    expect(rows.filter((l) => l.startsWith('| src/viz/')).length).toBe(readVizChanges().length);
   });
 });
 
