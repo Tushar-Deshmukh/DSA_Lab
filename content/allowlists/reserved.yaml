@@ -42,3 +42,36 @@ entries:
   - match: Weekly Contest 525
     in: handbook:problem-bank
     reason: The contest number the problem data was checked against, not problem 525.
+  - match: Triangle
+    in: viz:bipartite#preset
+    reason: A triangle graph, the smallest odd cycle, not problem 120 "Triangle".
+  - match: '2101'
+    in: viz:decode-ways#preset
+    reason: The digit string being decoded, not problem 2101.
+  - match: '#120'
+    in: viz:loop-nlogn#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#82'
+    in: viz:loop-nlogn#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#120'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#216'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#343'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#437'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: '#82'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: 'Total: 120 calls'
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.
+  - match: n(n − 1)/2 = 120
+    in: viz:loop-triangle#note
+    reason: A count of work() calls, not a problem number.

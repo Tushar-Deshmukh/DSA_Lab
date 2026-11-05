@@ -17,10 +17,12 @@ import {
 } from '@/lib/content/validate';
 import { EXPECTED_COUNTS } from '@/lib/content/expected';
 import { CONTENT_DIR } from '@/scripts/import/paths';
-import { legacyVisualizerIds } from '@/scripts/validate-content';
+import { knownVisualizers, visualizerTexts } from '@/scripts/validate-content';
+import type { VizText } from '@/lib/viz/text';
 
 let bundle: ContentBundle;
-const known = legacyVisualizerIds();
+let vizTexts: VizText[];
+const known = knownVisualizers();
 
 /** A private copy to break. Maps and nested objects are copied, so tests cannot affect each other. */
 const copy = (): ContentBundle => structuredClone(bundle);
@@ -46,13 +48,14 @@ const firstMcq = (b: ContentBundle) => {
   return e;
 };
 
-beforeAll(() => {
+beforeAll(async () => {
   bundle = loadContent(CONTENT_DIR);
-});
+  vizTexts = await visualizerTexts();
+}, 120_000);
 
 describe('the imported content', () => {
-  it('passes every check', () => {
-    expect(validateContent(bundle, known)).toEqual([]);
+  it('passes every check, with the words the visualizers show', () => {
+    expect(validateContent(bundle, known, vizTexts)).toEqual([]);
   });
 
   it('has the counts in docs/inventory.md', () => {
@@ -149,6 +152,19 @@ describe('the date check', () => {
     const b = copy();
     b.allowlists.dates.entries.push({ match: 'a phrase nobody wrote', reason: 'none' });
     expect(checkDates(b).join('\n')).toContain('matches nothing');
+  });
+
+  it('reads what visualizers show, and blanks numbers only in notes from random inputs', () => {
+    const texts: VizText[] = [
+      { location: 'viz:kadane#preset', text: 'Lesson 3 on Monday' },
+      { location: 'viz:kadane#note', text: 'Checked in 2026.' },
+      { location: 'viz:kadane#note', text: 'Checked in 0, every day.', numbersBlanked: true },
+    ];
+    const found = validateContent(bundle, known, [...vizTexts, ...texts]);
+    expect(found.join('\n')).toContain('viz:kadane#preset: weekday "Monday"');
+    expect(found.join('\n')).toContain('viz:kadane#note: year "2026"');
+    expect(found.join('\n')).toContain('viz:kadane#note: day "day"');
+    expect(vizTexts.filter((t) => t.numbersBlanked).every((t) => !/\d\d/.test(t.text))).toBe(true);
   });
 
   it('applies a scoped allowlist entry in its scope only', () => {
