@@ -41,6 +41,7 @@ Branch `phase-3-visualizers`. What I need from you is at the end of this entry.
 | Vitest | `npm test`: unit, integration, content and visualizers | 988 passed in 25 files |
 | Playwright | `npm run build:e2e`, then `npx playwright test` | Chromium 195 passed; Firefox and WebKit 116 passed, 274 skipped (the screenshot and budget specs run in Chromium only) |
 | Legacy suite | `npm run legacy:test` on Windows | 119,205, 62,397, 3,644 and 13 checks passed; 100 pages without overflow |
+| CI on GitHub | Ubuntu: lint, types, format, content check and Vitest; end-to-end in Chromium; the legacy suite | all three jobs passed, on the branch and on pull request #4 |
 
 ### Found and fixed in this phase
 
