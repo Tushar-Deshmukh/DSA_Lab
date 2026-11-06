@@ -11,9 +11,16 @@ import {
   type ReactNode,
 } from 'react';
 import { flushSync } from 'react-dom';
-import { EMPTY_SNAPSHOT, applyOp, settingsOp, type Snapshot } from '@/lib/domain/ops';
 import {
-  SETTINGS_KEYS,
+  EMPTY_SNAPSHOT,
+  SNAPSHOT_PARTS,
+  applyOp,
+  makeOp,
+  settingsOp,
+  type Snapshot,
+  type SnapshotPartName,
+} from '@/lib/domain/ops';
+import {
   effectiveSettings,
   hasChangedSettings,
   type SettingsKey,
@@ -185,18 +192,20 @@ export function LearnerStateProvider({ children }: { children: ReactNode }) {
     setLocalWrites((n) => n + 1);
     try {
       const guest = await openStore('guest');
-      const guestSettings = (await guest.readSnapshot()).settings;
+      const guestSnapshot = await guest.readSnapshot();
       const deviceId = await store.deviceId();
-      let next: Snapshot | null = null;
-      for (const key of SETTINGS_KEYS) {
-        const at = guestSettings.at[key];
-        const value = guestSettings.values[key];
-        if (at === undefined || value === undefined) continue;
-        // The guest's own timestamps are kept, so a later change made in the account still wins.
-        next = await store.commitOp(settingsOp(key, value, at, deviceId, crypto.randomUUID()), true);
+      // One whole-snapshot merge (D-014): every part goes through its own merge rule, so the guest's
+      // progress, notes and review queue fold into the account without losing either side.
+      const payload: Record<string, unknown> = { settings: guestSnapshot.settings };
+      for (const key of SNAPSHOT_PARTS as readonly SnapshotPartName[]) {
+        if (key !== 'settings') payload[key] = guestSnapshot[key];
       }
+      const next = await store.commitOp(
+        makeOp('snapshot.merge', payload, { deviceId, at: Date.now() }),
+        true,
+      );
       await guest.destroy();
-      if (next) show(next);
+      show(next);
       setMergeOpen(false);
       await engine.queued();
     } finally {
