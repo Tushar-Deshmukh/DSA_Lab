@@ -30,6 +30,11 @@ const config = [
       '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
+  {
+    // Visualizers ported from legacy/src/viz (D-013) keep the legacy code as written, unused names included.
+    files: ['lib/viz/defs/**/*.ts'],
+    rules: { '@typescript-eslint/no-unused-vars': 'off' },
+  },
 ];
 
 export default config;

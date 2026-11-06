@@ -30,5 +30,5 @@ docs/phase-0/scripts/inventory.json
 # end-to-end test server state (database address, captured emails)
 .e2e-server/
 
-# Visualizer review scratch pad (local only)
+# The Phase 3 screenshot review (scripts/viz-review.ts)
 .viz-review/

@@ -278,6 +278,13 @@ Evidence labelled "spike" comes from throwaway experiments whose sources are in 
 
 **Rejected.** Hand-writing 129 stateful React components, which can't be tested without a browser and would drift. Wrapping the legacy DOM code in client islands, which shares no primitives and fights the React lifecycle.
 
+**Phase 3 notes (refinements).**
+- **Views return data, not JSX.** `view(step, stage, input)` keeps the legacy `render` signature and appends plain nodes (`{ kind: 'cells', values, states, … }`) built by `R`, which has the legacy renderer's function signatures. React primitives (`components/viz/`) draw the nodes. Reason: the parity test can run the real legacy `render` with the same `R` and compare the two views value by value, on every step of every test input, without a browser. JSX would only have been comparable as a picture.
+- **The codemod is a converter, and it is the only way the defs change** (`scripts/import/port-visualizers.ts`). It copies the legacy code; a dozen view patches replace the lines that built DOM by hand. Types come from running an instrumented copy of the legacy code on every test input and recording what each parameter, return value and container held, then from a TypeScript compiler loop that adds the annotations it still asks for. No type is written into `run()` by hand except the logged `TYPE_FIXES`.
+- **Proof.** `tests/viz/parity.test.ts` runs the real legacy `player.js` in a sandbox: for 38,333 runs the steps, the rejection messages and every view equal the port's. Text changes are the logged rewrites in `docs/import/viz-changes.json`.
+
+**Rejected in Phase 3.** A JSX codemod (views comparable only as screenshots). Hand-typing 18,000 lines of ported code (drifts from the legacy behaviour with nothing to catch it).
+
 ---
 
 ## D-014 Client state, sync and guest mode

@@ -237,3 +237,48 @@ entries:
   - match: maps daily
     in: handbook:starting-point-assessment/what-an-experienced
     reason: Everyday work experience, not a schedule.
+  - match: Daily Temperatures
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: day
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: Day
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: days
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: Days
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: today
+    in: viz:daily-temps
+    reason: Problem 739 counts days until a warmer temperature.
+  - match: day
+    in: viz:running-min
+    reason: Problem 121 is about buying and selling across days.
+  - match: Day
+    in: viz:running-min
+    reason: Problem 121 is about buying and selling across days.
+  - match: days
+    in: viz:running-min
+    reason: Problem 121 is about buying and selling across days.
+  - match: today
+    in: viz:running-min
+    reason: Problem 121 is about buying and selling across days.
+  - match: day
+    in: viz:stock-cooldown
+    reason: Problem 309 is a state machine over days.
+  - match: Day
+    in: viz:stock-cooldown
+    reason: Problem 309 is a state machine over days.
+  - match: today
+    in: viz:stock-cooldown
+    reason: Problem 309 is a state machine over days.
+  - match: yesterday's
+    in: viz:stock-cooldown
+    reason: Problem 309 is a state machine over days.
+  - match: days at
+    in: viz:growth#note
+    reason: A running time, how long the operations would take at about 10⁸ a second, not a schedule.
