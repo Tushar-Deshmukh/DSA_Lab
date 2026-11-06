@@ -7,8 +7,11 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
+    "predev": "npm run data:build",
     "dev": "next dev",
+    "prebuild": "npm run data:build",
     "build": "npm run content:check && next build && node scripts/csp-hashes.mjs",
+    "data:build": "tsx --conditions react-server scripts/build-runtime-data.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

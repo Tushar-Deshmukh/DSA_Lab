@@ -9,6 +9,9 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 
+# generated runtime data (scripts/build-runtime-data.ts)
+public/data/
+
 # tests
 coverage/
 playwright-report/
