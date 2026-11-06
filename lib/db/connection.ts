@@ -18,7 +18,8 @@ export interface Database {
 const g = globalThis as typeof globalThis & { __dplDatabase?: Promise<Database> };
 
 async function ensureIndexes(db: Db, models: Models): Promise<void> {
-  await Promise.all(Object.values(models).map((m) => m.createIndexes()));
+  const { Part, ...flat } = models;
+  await Promise.all([...Object.values(flat), ...Object.values(Part)].map((m) => m.createIndexes()));
   for (const [collection, specs] of Object.entries(AUTH_INDEXES)) {
     for (const spec of specs) {
       try {

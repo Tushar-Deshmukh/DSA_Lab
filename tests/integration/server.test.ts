@@ -6,7 +6,7 @@ import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GET as syncGet, POST as syncPost } from '@/app/api/sync/route';
 import { closeDatabase, getDatabase } from '@/lib/db/connection';
-import { settingsOp } from '@/lib/domain/ops';
+import { EMPTY_SNAPSHOT, makeOp, settingsOp } from '@/lib/domain/ops';
 import { getAuth, getSessionUser } from '@/lib/server/auth';
 import { checkWriteRequest } from '@/lib/server/http';
 import { hitRateLimit } from '@/lib/server/rate-limit';
@@ -95,7 +95,67 @@ describe('sync service', () => {
   });
 
   it("never touches another learner's documents", async () => {
-    expect(await snapshotFor(bob)).toEqual({ settings: { values: {}, at: {} } });
+    expect(await snapshotFor(bob)).toEqual(EMPTY_SNAPSHOT);
+  });
+
+  it('stores part records and reads them back for another session', async () => {
+    const lessonOp = makeOp(
+      'lesson.unit-done',
+      { lesson: 'm1/l1', unit: 'u1' },
+      { deviceId: DEVICE, at: 1000 },
+    );
+    const exerciseOp = makeOp(
+      'exercise.checked',
+      { slug: 'm1/l1/x1', ev: 'ev-1', ok: true },
+      { deviceId: DEVICE, at: 1100 },
+    );
+    const noteOp = makeOp(
+      'note.set',
+      { id: 'note-0001', target: { type: 'lesson', slug: 'm1/l1' }, body: 'hello', createdAt: 1100 },
+      { deviceId: DEVICE, at: 1200 },
+    );
+    const res = await applyOps(alice, [lessonOp, exerciseOp, noteOp]);
+    expect(res.results.map((r) => r.status)).toEqual(['applied', 'applied', 'applied']);
+    const stored = await snapshotFor(alice);
+    expect(stored.lessons['m1/l1']?.units).toEqual({ u1: 1000 });
+    expect(stored.exercises['m1/l1/x1']?.solved).toBe(true);
+    // The exercise's review item came along (the outcome side-touch, D-016).
+    expect(stored.review['exercise:m1/l1/x1']?.reps).toBe(1);
+    expect(stored.notes['note-0001']?.body).toBe('hello');
+
+    // A replay of the same op ids is a no-op.
+    const replay = await applyOps(alice, [lessonOp, exerciseOp, noteOp]);
+    expect(replay.results.map((r) => r.status)).toEqual(['duplicate', 'duplicate', 'duplicate']);
+    expect(await snapshotFor(alice)).toEqual(stored);
+    // Bob still sees nothing.
+    const bobs = await snapshotFor(bob);
+    expect(bobs.lessons).toEqual({});
+    expect(bobs.review).toEqual({});
+  });
+
+  it('removes deleted records on the next sync', async () => {
+    const deleted = makeOp('note.deleted', { id: 'note-0001' }, { deviceId: DEVICE, at: 1300 });
+    const res = await applyOps(alice, [deleted]);
+    expect(res.results[0]!.status).toBe('applied');
+    expect((await snapshotFor(alice)).notes).toEqual({});
+  });
+
+  it('merges a whole guest snapshot into the account snapshot', async () => {
+    const guest = makeOp(
+      'snapshot.merge',
+      {
+        lessons: { 'm2/l1': { at: 2000, startedAt: 2000, units: { u1: 2000 }, ready: {} } },
+        bookmarks: { 'pattern:p1': { at: 2000, target: { type: 'pattern', slug: 'p1' } } },
+      },
+      { deviceId: 'guest-device', at: 2000 },
+    );
+    const res = await applyOps(alice, [guest]);
+    expect(res.results[0]!.status).toBe('applied');
+    const stored = await snapshotFor(alice);
+    expect(stored.lessons['m2/l1']?.units).toEqual({ u1: 2000 });
+    expect(stored.bookmarks['pattern:p1']).toBeDefined();
+    // The learner's own journal survived the merge.
+    expect(stored.lessons['m1/l1']).toBeDefined();
   });
 });
 
