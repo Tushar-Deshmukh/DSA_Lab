@@ -25,6 +25,9 @@ export interface RenderArgs {
   /** The lesson key when the page records unit progress (lesson and checkpoint pages): each Unit's mark-done
    * control writes `lesson.unit-done` against it (plan 5.2, 10). Omitted on pages that record nothing. */
   lesson?: string;
+  /** Unit minutes of this page, keyed by unit id (plan 5.3): the body units plus the derived ids. A unit
+   * without minutes shows no estimate. */
+  minutes?: Record<string, number>;
 }
 
 export function renderBody(args: RenderArgs, body: string): ReactNode {
@@ -60,13 +63,15 @@ function flow(args: RenderArgs, nodes: AnyNode[], depth: number, inList = false)
       case 'flow:Unit':
         {
           const p = jsxProps(n);
+          const unitId = str(p.id);
           out.push(
             <UnitShell
               key={i}
-              id={str(p.id)}
+              id={unitId}
               kind={str(p.kind)}
               title={str(p.title)}
               phase={optStr(p.phase)}
+              minutes={args.minutes?.[unitId]}
               lesson={args.lesson}
             >
               {flow(args, n.children ?? [], depth, inList)}

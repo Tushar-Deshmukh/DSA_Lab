@@ -5,8 +5,7 @@ import { makeOp } from '@/lib/domain/ops';
 
 // One unit of a page (was a legacy `##` section, plan 5.2): header with the kind label and, on lesson pages,
 // the mark-done control; below it the unit's blocks. Reading alone marks nothing (plan §10) — the learner marks
-// a unit, or a solved exercise inside it records the evidence. The estimates arrive in Phase 5, so minutes is
-// optional for now.
+// a unit, or a solved exercise inside it records the evidence. Minutes come from the page's unit-minutes map (5.3).
 
 /** The header's label per unit kind, in the course's words (plan 5.2). */
 export const UNIT_LABELS: Record<string, string> = {
@@ -29,7 +28,7 @@ export const UNIT_LABELS: Record<string, string> = {
   mock: 'Mock',
   review: 'Review your solutions',
   repair: 'Repair session',
-  summary: 'Summary and revision',
+  summary: 'Summary',
   revision: 'Revision prompt',
   'self-check': 'Ready to move on',
 };
