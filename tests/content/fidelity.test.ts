@@ -126,7 +126,11 @@ describe('exercises', () => {
       if (c.item.includes('#')) continue;
       const target = expected.get(c.item);
       if (!target) throw new Error(`logged change for unknown exercise ${c.item}`);
-      setFieldByPath(target, c.path, c.after);
+      if (c.before === '') {
+        // An addition (the trace-verify rule): the field must not have been in the legacy exercise.
+        if (target[c.path] !== undefined) throw new Error(`logged addition for an existing field: ${c.item}.${c.path}`);
+        target[c.path] = c.after;
+      } else setFieldByPath(target, c.path, c.after);
     }
     let seen = 0;
     for (const { lessons, checkpoint } of bundle.modules) {

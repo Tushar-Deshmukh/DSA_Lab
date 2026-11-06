@@ -5,7 +5,14 @@ import path from 'node:path';
 import { walkTextFields } from '../../lib/content/exercise-text';
 import type { NumberedLine } from './blocks';
 import { LEGACY_DIR } from './paths';
-import { FIELD_EDITS, CONTENT_EDITS, PROTECTED_PHRASES } from './rewrites-content';
+import {
+  FIELD_ADDITIONS,
+  FIELD_EDITS,
+  CONTENT_EDITS,
+  PROTECTED_PHRASES,
+  type FieldAddition,
+  type FieldTextEdit,
+} from './rewrites-content';
 import { ROADMAP_EDITS } from './rewrites-roadmap';
 import {
   applyGenericRules,
@@ -83,7 +90,7 @@ export interface FieldRewriter {
 
 export function createFieldRewriter(): FieldRewriter {
   const changes: FieldChange[] = [];
-  const hits = new Map(FIELD_EDITS.map((edit) => [edit, 0]));
+  const hits = new Map<FieldTextEdit | FieldAddition, number>(FIELD_EDITS.map((edit) => [edit, 0]));
   return {
     changes,
     rewrite(file, itemId, item) {
@@ -117,11 +124,36 @@ export function createFieldRewriter(): FieldRewriter {
           record(edit.codeField, code, after, [edit.rule]);
         }
       }
+      // Additions come last, so the added field skips the generic text rules, as legacy code fields always did.
+      for (const addition of FIELD_ADDITIONS) {
+        if (addition.file !== file || addition.item !== itemId) continue;
+        if (item[addition.path] !== undefined) {
+          throw new Error(
+            `content/${file}: ${itemId} already has ${addition.path}; the logged addition is stale`,
+          );
+        }
+        hits.set(addition, (hits.get(addition) ?? 0) + 1);
+        item[addition.path] = addition.to;
+        changes.push({
+          file: `content/${file}`,
+          item: itemId,
+          path: addition.path,
+          before: '',
+          after: addition.to,
+          rules: [addition.rule],
+        });
+      }
     },
     unmatched() {
-      return [...hits]
-        .filter(([edit, n]) => n !== (edit.count ?? 1))
-        .map(([edit, n]) => `${edit.file}: "${edit.from}" matched ${n} fields, expected ${edit.count ?? 1}`);
+      return [...hits].flatMap(([edit, n]) =>
+        'from' in edit
+          ? n !== (edit.count ?? 1)
+            ? [`${edit.file}: "${edit.from}" matched ${n} fields, expected ${edit.count ?? 1}`]
+            : []
+          : n !== 1
+            ? [`${edit.file}: ${edit.item}.${edit.path} would be added ${n} times, expected 1`]
+            : [],
+      );
     },
   };
 }

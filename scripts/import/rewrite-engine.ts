@@ -28,7 +28,8 @@ export type RuleId =
   | 'reserved-cell'
   | 'answers-gated'
   | 'module-order'
-  | 'profile-rename';
+  | 'profile-rename'
+  | 'trace-verify';
 
 export const RULES: Record<RuleId, { doc: 'date' | 'content'; title: string; reason: string }> = {
   'rename-week': {
@@ -140,6 +141,12 @@ export const RULES: Record<RuleId, { doc: 'date' | 'content'; title: string; rea
     doc: 'content',
     title: 'Tracks A, B and C become depth profiles',
     reason: 'The brief replaces the tracks with Foundations, Standard and Accelerated profiles.',
+  },
+  'trace-verify': {
+    doc: 'content',
+    title: 'The three missing trace-verify scripts',
+    reason:
+      'A trace exercise shows a reference answer, and its verify script keeps that answer honest by running reference-like code. The legacy course had no verify script for these three trace exercises; scripts written from their own code are added (plan 8.4).',
   },
 };
 

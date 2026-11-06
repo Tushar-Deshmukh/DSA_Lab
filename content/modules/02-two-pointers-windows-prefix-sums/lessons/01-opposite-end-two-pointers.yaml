@@ -152,6 +152,16 @@ exercises:
     explain: Negative numbers change nothing. The argument uses only sorted order.
     hints:
       - Start with l = 0 and r = 5. Compute numbers[l] + numbers[r] and compare it with 4.
+    verify: |
+      const numbers = [-3, -1, 0, 2, 5, 8]; const target = 4;
+      let l = 0, r = numbers.length - 1;
+      while (l < r) {
+        const sum = numbers[l] + numbers[r];
+        console.log(sum);
+        if (sum === target) { console.log(JSON.stringify([l + 1, r + 1])); break; }
+        if (sum < target) l++;
+        else r--;
+      }
   - id: ex-05
     legacyId: w2d1-5
     type: complexity

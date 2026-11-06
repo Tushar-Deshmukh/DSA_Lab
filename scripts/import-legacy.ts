@@ -25,11 +25,25 @@ if (result.warnings.length) {
   process.exit(1);
 }
 
+// Allowlists grow by hand after the import: scripts/import/allowlists.ts only seeds them, and the grown YAML files
+// are the source of truth. A --force rebuild keeps what grew instead of undoing it.
+const GROWN_ALLOWLISTS = ['allowlists/dates.yaml', 'allowlists/reserved.yaml'];
+const grown = force
+  ? Object.fromEntries(
+      GROWN_ALLOWLISTS.map((rel) => [
+        rel,
+        fs.existsSync(path.join(CONTENT_DIR, rel))
+          ? fs.readFileSync(path.join(CONTENT_DIR, rel), 'utf8')
+          : undefined,
+      ]),
+    )
+  : {};
+
 fs.rmSync(CONTENT_DIR, { recursive: true, force: true });
 for (const [rel, text] of result.files) {
   const file = path.join(CONTENT_DIR, rel);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, text);
+  fs.writeFileSync(file, grown[rel] ?? text);
 }
 writeImportDocs(result);
 

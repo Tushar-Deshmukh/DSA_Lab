@@ -38,6 +38,14 @@ exercises:
     explain: Writing code before minute 15 without an agreed approach is the most common way to run out of time.
     hints:
       - The handbook's table lists the minutes and the output of each phase.
+    verify: |
+      // The clock the handbook's table teaches: phases end at 5, 15, 35, 42 and the total is 45.
+      const total = 45;
+      const phaseEnd = { clarify: 5, approach: 15, code: 35, verify: 42, wrap: total };
+      console.log(phaseEnd.clarify);
+      console.log(phaseEnd.approach);
+      console.log(phaseEnd.verify - phaseEnd.code);
+      console.log(phaseEnd.wrap - phaseEnd.verify);
   - id: ex-03
     legacyId: w12d1-3
     type: complexity

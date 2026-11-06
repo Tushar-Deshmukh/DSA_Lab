@@ -269,6 +269,69 @@ export const FIELD_EDITS: FieldTextEdit[] = [
   },
 ];
 
+/** A field the legacy exercise did not have at all. Recorded as a field change with an empty before, so the
+ * fidelity tests set it when they rebuild the expected exercise. */
+export interface FieldAddition {
+  file: string;
+  /** The legacy exercise id. */
+  item: string;
+  /** Always `verify` today: a trace exercise's reference script (plan 8.4). */
+  path: string;
+  to: string;
+  rule: RuleId;
+}
+
+// The trailing newline of each script is part of it, as it is for every verify script that comes from the legacy files.
+export const FIELD_ADDITIONS: FieldAddition[] = [
+  {
+    file: 'w02.md',
+    item: 'w2d1-4',
+    path: 'verify',
+    rule: 'trace-verify',
+    to: `const numbers = [-3, -1, 0, 2, 5, 8]; const target = 4;
+let l = 0, r = numbers.length - 1;
+while (l < r) {
+  const sum = numbers[l] + numbers[r];
+  console.log(sum);
+  if (sum === target) { console.log(JSON.stringify([l + 1, r + 1])); break; }
+  if (sum < target) l++;
+  else r--;
+}
+`,
+  },
+  {
+    file: 'w09.md',
+    item: 'w9d3-1',
+    path: 'verify',
+    rule: 'trace-verify',
+    to: `const edges = [[0, 1, 4], [0, 2, 1], [1, 2, 2], [1, 3, 5], [3, 4, 3]];
+const parent = [0, 1, 2, 3, 4];
+const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+const used = []; const skipped = []; let cost = 0;
+for (const [u, v, w] of [...edges].sort((a, b) => a[2] - b[2])) {
+  const ru = find(u), rv = find(v);
+  if (ru === rv) { skipped.push(u + '-' + v); continue; }
+  parent[ru] = rv; cost += w; used.push(u + '-' + v);
+}
+console.log(used[0]); console.log(skipped[0]); console.log(cost); console.log(used.length);
+`,
+  },
+  {
+    file: 'w12.md',
+    item: 'w12d1-2',
+    path: 'verify',
+    rule: 'trace-verify',
+    to: `// The clock the handbook's table teaches: phases end at 5, 15, 35, 42 and the total is 45.
+const total = 45;
+const phaseEnd = { clarify: 5, approach: 15, code: 35, verify: 42, wrap: total };
+console.log(phaseEnd.clarify);
+console.log(phaseEnd.approach);
+console.log(phaseEnd.verify - phaseEnd.code);
+console.log(phaseEnd.wrap - phaseEnd.verify);
+`,
+  },
+];
+
 /** Wording about the problem, not the timetable. Generic rules must not touch it. */
 export const PROTECTED_PHRASES: DomainPhrase[] = [
   { phrase: "yesterday's values", reason: 'State-machine DP over days (309)' },
