@@ -2,6 +2,41 @@
 
 One entry per phase, newest first: what was built, what was tested and how, and what is not done. Nothing is marked done without a test.
 
+## Phase 4: Exercises and runner (2026-11-06) — in progress, milestone 2 committed
+
+Branch `phase-4-8-feature-complete`, commits `fe2b0ed`–`326f8f5` on top of the Phase 3 merge. The runner, the editor, the answer types and the exercise client are built; the phase's own end-to-end gates wait for pages that host exercises (Phase 5) by plan.
+
+### Built
+
+- **All nine answer types + pattern** (`components/exercise/renderers.tsx`, ported from the legacy app): mcq/multi-pick, complexity, predict, bug, fill, trace, code and interview, each with its check, hint ladder, reveal rules, mistake feedback and per-type stored draft (D-011: the client holds one exercise's key at a time, fetched on first Check or reveal; `lib/client/exercise-key.ts`).
+- **The runner client** (`lib/client/runner.ts`): probes the Phase 1 Worker (2.5 s), sends `{type:'run'}` jobs with a 3 s timeout, and reports per-test results in the legacy shape. `public/runner/worker.js` gained the legacy test-harness port: adapters, comparison modes, class tests, hidden tests, captured `console.log` and per-test timing.
+- **The editor** (`components/exercise/editor.tsx`, `lib/client/cm-editor.ts`): CodeMirror 6 loaded on demand (D-019), legacy Tab rule without a keymap module, the Settings font size, and a read-only fallback while the module loads.
+- **The exercise frame** (`components/exercise/exercise-frame.tsx`, `use-exercise.ts`, `exercise.tsx`): one shell for all types — attempt recording, hints as draft state, reveal with its logging note, and `LockedExercise` rendering the gate shell until `useGate` says open (D-027: gated exercises' public parts ship only through `/api/gates/[gateId]`).
+- **The page-body renderer** (`lib/content/render.tsx`): server-side, pure; markdown as the page typography and every registered component in place (`<Unit>` shells record lesson progress and wait for Phase 5 to use minutes, `<Include>` recursion capped at depth 3, `<Viz>` at heading level 3, `<Callout>` per kind, `<Stages>` numbered, `<AnnotatedCode>`, `<Problem>` links, `<Gated>` inline in list items and as cards elsewhere, `<Exercise>` runners). Anything that cannot render becomes a visible alert, never silence. `jsxProps` in `lib/content/mdx.ts`; `CodeBlock`/`highlightLines` learn a fence language (non-JS fences render plain, as the legacy tokenizer did).
+- **Page data** (`lib/content/page-data.ts`): the public halves, annotated blocks, gated ids and problem facts a page needs, nothing reserved (D-011).
+- **Three `verify:` scripts** for the trace exercises that had none (w2d1-4, w9d3-1, w12d1-2), written into the import pipeline as logged field additions with a new rule (`trace-verify`, plan 8.4), so `content/` still equals legacy plus logged changes. The importer now keeps the hand-grown allowlists on a `--force` rebuild instead of undoing them.
+
+### Tested, and how
+
+| Gate | How | Result |
+| --- | --- | --- |
+| Unit, integration and content tests | `npx vitest run` | 1104 passed in 37 files |
+| Page data | `tests/content/page-data.test.ts`: lesson and checkpoint facts, the public split deep-equal to `splitExercise`, hidden/extension/unknown problems, gated text pairs | passes |
+| Page-body renderer | `tests/content/render.test.ts`: every real page's tree inspected as React elements (no rendering, so client hooks never run) — units, includes, visualizers, 421-exercise pages sampled through module 2, callouts per kind and title, stages with their seven labels and numbers, gated text inline or as card, task lists, alerts for what cannot render (missing data, unknown components, too-deep includes) | passes |
+| Trace verify | `tests/content/trace-verify.test.ts`: the 50 traces, each verify script run in `node:vm`, prints its rows' answers in order (the legacy check, ported) | passes |
+| Fidelity of the import | `tests/content/fidelity.test.ts` still passes: content equals legacy plus logged changes, and the log's 117 entries list what `docs/content-changes.md` lists | passes |
+| Static checks | `npm run typecheck`, `npm run lint` (zero warnings), `npm run format:check` | clean |
+| Content check | `npm run content:check` | passes |
+| Production build | `npm run build`: content check, `next build` (144 pages), the CSP hash step | passes |
+| Import reproducibility | `npm run content:import -- --force` twice: identical output, and `git diff` shows exactly the logged changes (the grown allowlists survive) | passes |
+
+### Not done or not tested  (each waits on later phases, per plan)
+
+- **Nothing has run in a browser this milestone.** The exercise UI, editor, runner and gate hook are client components inspected as element trees in unit tests; plan §8.4's end-to-end on every exercise (wrong answer, hint, reset, right answer, persistence across a reload) and the runner isolation re-checks need `npm run test:e2e`, which needs pages that host exercises — Phase 5. `npm run legacy:test` and the axe and 360 px passes also wait for content pages.
+- **Unit progress and minutes** are not wired: `UnitShell` records nothing yet (Phase 5 uses the lesson key and the split unit estimates).
+- **`<LessonLink>` and `<Term>`** have no rendering yet (glossary and lesson links arrive with the pages in Phase 5 and 7).
+- **The `verify` scripts run under Node in the test**: browser Worker parity is exercised in the runner e2e later, not by this check.
+
 ## Phase 3: Visualizer engine and ports (2026-11-05) — waiting for your review
 
 Branch `phase-3-visualizers`. What I need from you is at the end of this entry.
