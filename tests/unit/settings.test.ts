@@ -28,6 +28,11 @@ const CHOICES: { [K in SettingsKey]: SettingsValues[K][] } = {
   defaultSessionMinutes: [15, 30, 60, 90],
   editorFontSize: [12, 15, 18, 24],
   depthProfile: ['standard', 'foundations', 'accelerated'],
+  // One fixed verdict, so random placement results merge deterministically.
+  placementResult: [
+    undefined,
+    { scoreA: 11, scoreB: 4, rule: 'A ≥ 10 and B ≥ 4 → accelerated', profile: 'accelerated', takenAt: 1000 },
+  ],
 };
 
 function randomDoc(rand: () => number): SettingsDoc {
@@ -62,6 +67,31 @@ describe('settings documents', () => {
     const a = setSetting(setSetting(EMPTY_SETTINGS_DOC, 'theme', 'dark', 5), 'theme', 'light', 5);
     const b = setSetting(setSetting(EMPTY_SETTINGS_DOC, 'theme', 'light', 5), 'theme', 'dark', 5);
     expect(a).toEqual(b);
+  });
+
+  it('accept the placement verdict and merge it like any other field', () => {
+    const takenAt = 1001;
+    const verdict = {
+      scoreA: 11,
+      scoreB: 4,
+      rule: 'A ≥ 10 and B ≥ 4 → accelerated',
+      profile: 'accelerated' as const,
+      takenAt,
+    };
+    expect(parseSettingValue('placementResult', verdict)).toEqual(verdict);
+    // An invalid shape is refused, so an op can never carry a malformed verdict.
+    expect(parseSettingValue('placementResult', { ...verdict, scoreA: 13 })).toBeUndefined();
+    const doc = setSetting(EMPTY_SETTINGS_DOC, 'placementResult', verdict, takenAt);
+    expect(doc.values.placementResult).toEqual(verdict);
+    // A later takenAt (set once, then re-taken) wins; clearing is not a set op.
+    const retaken = setSetting(
+      doc,
+      'placementResult',
+      { ...verdict, profile: 'standard' as const, takenAt: 2000 },
+      2000,
+    );
+    expect(retaken.values.placementResult?.profile).toBe('standard');
+    expect(setSetting(doc, 'placementResult', undefined, 5000)).toBe(doc);
   });
 
   it('reject values outside the schema', () => {

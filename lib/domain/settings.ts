@@ -12,6 +12,16 @@ export const SettingsValuesSchema = z.object({
   defaultSessionMinutes: z.union([z.literal(15), z.literal(30), z.literal(60), z.literal(90)]),
   editorFontSize: z.int().check(z.minimum(12), z.maximum(24)),
   depthProfile: z.enum(['standard', 'foundations', 'accelerated']),
+  /** The placement verdict the learner scored themselves (plan §10); absent until the placement check is done. */
+  placementResult: z.optional(
+    z.object({
+      scoreA: z.int().check(z.minimum(0), z.maximum(12)),
+      scoreB: z.int().check(z.minimum(0), z.maximum(5)),
+      rule: z.string().check(z.maxLength(120)),
+      profile: z.enum(['foundations', 'standard', 'accelerated']),
+      takenAt: z.int().check(z.nonnegative()),
+    }),
+  ),
 });
 
 export type SettingsValues = z.infer<typeof SettingsValuesSchema>;
@@ -55,13 +65,16 @@ function compareValues(a: unknown, b: unknown): number {
   return x < y ? -1 : x > y ? 1 : 0;
 }
 
-/** Records one change. Returns the same document when an equal or later change is already there. */
+/** Records one change. Returns the same document when an equal or later change is already there. A `undefined`
+ * value records nothing: optional values (the placement result) are set, never cleared — clearing is the
+ * device-erase op, and an absent value must stay absent on every device. */
 export function setSetting<K extends SettingsKey>(
   doc: SettingsDoc,
   key: K,
   value: SettingsValues[K],
   at: number,
 ): SettingsDoc {
+  if (value === undefined) return doc;
   const prevAt = doc.at[key];
   if (prevAt !== undefined) {
     if (at < prevAt) return doc;
