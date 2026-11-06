@@ -79,8 +79,12 @@ function tokenizeLine(line: string, state: { inBlock: boolean }): Token[] {
   return out;
 }
 
-/** Tokens for each line of JavaScript. A block comment carries over from one line to the next. */
-export function highlightLines(code: string): Token[][] {
+/** Tokens for each line of JavaScript. A block comment carries over from one line to the next. A fence without a
+ * language is JavaScript here, as in the legacy app; any other language is shown plain, tokens stripped. */
+export function highlightLines(code: string, lang?: string | null): Token[][] {
+  if (lang && !/^(js|javascript|ts)$/.test(lang)) {
+    return code.split('\n').map((line): Token[] => [{ kind: 'text', text: line }]);
+  }
   const state = { inBlock: false };
   return code.split('\n').map((line) => tokenizeLine(line, state));
 }

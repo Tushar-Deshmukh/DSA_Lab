@@ -17,6 +17,7 @@ import {
   applyOp,
   makeOp,
   settingsOp,
+  type Op,
   type Snapshot,
   type SnapshotPartName,
 } from '@/lib/domain/ops';
@@ -46,9 +47,14 @@ export interface Account {
 interface LearnerState {
   ready: boolean;
   account: Account | null;
+  /** The learner's documents on this device: exercises, lessons, journal, review queue and the rest (D-014). */
+  snapshot: Snapshot;
   settings: SettingsValues;
   status: SaveStatus;
   setSetting: <K extends SettingsKey>(key: K, value: SettingsValues[K]) => Promise<void>;
+  commit: (op: Op) => Promise<void>;
+  /** The device context for `makeOp`; null before the store has opened. */
+  opContext: () => Promise<{ deviceId: string; at: number } | null>;
   merge: { open: boolean; accept: () => Promise<void>; dismiss: () => void };
   /** Tries to send queued changes, then signs out. Reports changes that could not be sent, or a failed request. */
   signOut: (force?: boolean) => Promise<{ signedOut: boolean; unsent: number; failed?: boolean }>;
@@ -213,6 +219,33 @@ export function LearnerStateProvider({ children }: { children: ReactNode }) {
     }
   }, [show]);
 
+  /** One learner change, from any screen: applied at once, stored, then queued for the sync engine (D-014). */
+  const commit = useCallback(
+    async (op: Op) => {
+      const store = storeRef.current;
+      if (!store) return;
+      const engine = engineRef.current;
+      flushSync(() => {
+        show(applyOp(snapshotRef.current, op) ?? snapshotRef.current);
+        setLocalWrites((n) => n + 1);
+      });
+      try {
+        show(await store.commitOp(op, engine !== null));
+        if (engine) await engine.queued();
+      } finally {
+        setLocalWrites((n) => n - 1);
+      }
+    },
+    [show],
+  );
+
+  /** The device context for `makeOp`; null before the store has opened. */
+  const opContext = useCallback(async () => {
+    const store = storeRef.current;
+    if (!store) return null;
+    return { deviceId: await store.deviceId(), at: Date.now() } as const;
+  }, []);
+
   const dismissMerge = useCallback(() => {
     if (account) {
       try {
@@ -252,9 +285,12 @@ export function LearnerStateProvider({ children }: { children: ReactNode }) {
   const value: LearnerState = {
     ready,
     account,
+    snapshot,
     settings: effectiveSettings(snapshot.settings),
     status,
     setSetting,
+    commit,
+    opContext,
     merge: { open: mergeOpen, accept: acceptMerge, dismiss: dismissMerge },
     signOut,
   };
