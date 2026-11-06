@@ -36,3 +36,9 @@ export async function readJson(req: Request, maxBytes: number): Promise<unknown>
     return undefined;
   }
 }
+
+/** The caller's address: the proxy's x-forwarded-for chain in production, 'local' on a dev box. */
+export function clientIp(req: Request): string {
+  const first = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  return first && first.length > 0 && first.length <= 64 ? first : 'local';
+}

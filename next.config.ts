@@ -6,6 +6,9 @@ const dev = process.env.NODE_ENV === 'development';
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The route handlers read the generated server bundle at runtime (D-011): without this, a serverless
+  // deployment would not trace .generated/ into its lambda. prebuild produces the files.
+  outputFileTracingIncludes: { '/api/**': ['./.generated/**'] },
   async headers() {
     return [
       { source: '/:path*', headers: SECURITY_HEADERS },

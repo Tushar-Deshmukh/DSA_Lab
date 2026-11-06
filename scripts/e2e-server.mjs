@@ -2,12 +2,14 @@
 // `next start`, with sign-in emails written to files the tests can read. Playwright starts this as its web
 // server; run `npm run build` first.
 import crypto from 'node:crypto';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
+
+const resolve = createRequire(import.meta.url).resolve;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = Number(process.env.E2E_PORT ?? 3100);
@@ -27,7 +29,19 @@ const replSet = await MongoMemoryReplSet.create({ replSet: { count: 1 } });
 const mongoUri = replSet.getUri('dsa-pattern-lab-e2e');
 fs.writeFileSync(path.join(OUT, 'env.json'), JSON.stringify({ mongoUri, emailDir: EMAIL_DIR, port: PORT }));
 
-const nextBin = createRequire(import.meta.url).resolve('next/dist/bin/next');
+// The content copies back /api/search; the sync is idempotent and needs the live MongoDB, so it runs here.
+const sync = spawnSync(process.execPath, [resolve('tsx/cli'), 'scripts/sync-content.ts'], {
+  cwd: ROOT,
+  stdio: 'inherit',
+  env: { ...process.env, MONGODB_URI: mongoUri },
+});
+if (sync.status !== 0) {
+  console.error('e2e-server: content sync failed');
+  await replSet.stop();
+  process.exit(1);
+}
+
+const nextBin = resolve('next/dist/bin/next');
 const child = spawn(process.execPath, [nextBin, 'start', '-p', String(PORT)], {
   cwd: ROOT,
   stdio: 'inherit',

@@ -199,3 +199,50 @@ export async function applyOps(userId: string, rawOps: unknown[], now = Date.now
 
   return { results, snapshot: await snapshotFor(userId) };
 }
+
+/** Replaces the learner's documents with an imported snapshot (backup restore, plan §10). One transaction:
+ * wipe every record the learner owns, then write the validated snapshot record by record. The op ledger is
+ * wiped with the data: it describes history that no longer applies. */
+export async function replaceSnapshotFor(
+  userId: string,
+  snapshot: Snapshot,
+): Promise<Record<string, number>> {
+  const { conn, models } = await getDatabase();
+  const uid = toObjectId(userId);
+  const upserts: PartDiff['upserts'] = {
+    settings: { doc: snapshot.settings },
+    readiness: { doc: snapshot.readiness },
+  };
+  for (const part of SNAPSHOT_PARTS) {
+    const value: unknown = snapshot[part];
+    if (part !== 'settings' && part !== 'readiness') upserts[part] = value as Record<string, unknown>;
+  }
+  await conn.transaction(async (session) => {
+    for (const part of SNAPSHOT_PARTS) {
+      if (part === 'settings') await models.Settings.deleteMany({ userId: uid }, { session });
+      else if (part === 'readiness') await models.Readiness.deleteMany({ userId: uid }, { session });
+      else await models.Part[part].deleteMany({ userId: uid }, { session });
+    }
+    await models.SyncOp.deleteMany({ userId: uid }, { session });
+    await writeDiffs(uid, { upserts, deletes: {} }, session);
+  });
+  const counts: Record<string, number> = {};
+  for (const [part, records] of Object.entries(upserts) as [SnapshotPartName, Record<string, unknown>][])
+    counts[part] = Object.keys(records).length;
+  return counts;
+}
+
+/** Erases every learner record (settings, readiness, parts, op ledger). The account itself stays, so signing
+ * in again starts clean rather than failing; sessions stay too, which is Better Auth's own state. */
+export async function eraseLearnerData(userId: string): Promise<void> {
+  const { conn, models } = await getDatabase();
+  const uid = toObjectId(userId);
+  await conn.transaction(async (session) => {
+    for (const part of SNAPSHOT_PARTS) {
+      if (part === 'settings') await models.Settings.deleteMany({ userId: uid }, { session });
+      else if (part === 'readiness') await models.Readiness.deleteMany({ userId: uid }, { session });
+      else await models.Part[part].deleteMany({ userId: uid }, { session });
+    }
+    await models.SyncOp.deleteMany({ userId: uid }, { session });
+  });
+}
