@@ -106,6 +106,28 @@ export interface ComponentUse {
   props: MdxAttributes;
 }
 
+/** The literal props of a JSX node (D-008: `inspectMdx` has already judged them). A spread attribute or a
+ * non-literal prop throws instead of guessing: prerender fails loudly rather than ships a wrong page. */
+export function jsxProps(node: unknown): MdxAttributes {
+  const jsx = node as { attributes?: { type?: string; name?: string; value?: string | { data?: { estree?: { body: { expression?: unknown }[] } } } | null }[] };
+  const out: MdxAttributes = {};
+  for (const attr of jsx.attributes ?? []) {
+    if (attr.type !== 'mdxJsxAttribute' || !attr.name) {
+      throw new Error('spread attribute (content:check should have caught it)');
+    }
+    if (attr.value === null || attr.value === undefined) out[attr.name] = true;
+    else if (typeof attr.value === 'string') out[attr.name] = attr.value;
+    else {
+      const expression = attr.value.data?.estree?.body[0]?.expression;
+      if (!isLiteralEstree(expression)) {
+        throw new Error(`prop ${attr.name} is not a literal (content:check should have caught it)`);
+      }
+      out[attr.name] = estreeValue(expression);
+    }
+  }
+  return out;
+}
+
 export interface MdxFacts {
   /** Rule violations: a non-empty list fails content:check. */
   problems: string[];
